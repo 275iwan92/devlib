@@ -234,6 +234,10 @@
         case 'identity': {
           const name = String(v || '?'), w = name.trim().split(/\s+/), ini = (w[0][0] + (w[1] ? w[1][0] : '')).toUpperCase();
           let h = 0; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) % 360;
+          // 'hue' => nama kolom baris berisi sudut warna 0-359: kotak identitas diwarnai per kelompok (mis. kategori), bukan dari nama.
+          if (c.hue) { const hv = Number(this.val(r, c.hue)); if (Number.isFinite(hv)) h = ((hv % 360) + 360) % 360; }
+          // 'box' => true: tanpa inisial; nama + kode berada di dalam satu persegi panjang berwarna (gradasi dari hue / nama).
+          if (c.box) return `<td><span class="dl-avatar-id dl-avatar-id--box" style="--h:${h}"><span class="dl-avatar-id__txt"><b>${esc(name)}</b>${c.code ? `<small>${esc(this.val(r, c.code))}</small>` : ''}</span></span></td>`;
           return `<td><span class="dl-avatar-id${c.lead ? ' dl-avatar-id--lead' : ''}">${c.avatar === false ? '' : `<span class="dl-avatar-id__pic" style="--h:${h}">${esc(ini)}</span>`}<span class="dl-avatar-id__txt"><b>${esc(name)}</b>${c.code ? `<small>${esc(this.val(r, c.code))}</small>` : ''}</span></span></td>`;
         }
         // Persegi dokumen (Grid Transactional, user 2026-10-02): nomor dokumen di atas, nama pihak ('party') di bawah.

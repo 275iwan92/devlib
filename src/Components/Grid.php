@@ -13,7 +13,7 @@ use Devlib\Lang;
 //
 // columns: [['key', 'label', 'type' => text|identity|doc|integer|number|money|date|time|datetime|badge|toggle,
 //            doc = persegi dokumen Grid Transactional: 'key' = nomor dokumen, 'party' => kolom nama pihak (baris kedua; warna persegi dari nama ini),
-//            'code' => kolom kode (identity), 'avatar' => false (identity tanpa bulatan), 'tones' => [nilai => tone] (badge),
+//            'code' => kolom kode (identity), 'avatar' => false (identity tanpa bulatan), 'box' => true (identity: tanpa inisial, nama + kode di dalam satu persegi panjang berwarna), 'hue' => kolom baris berisi sudut warna 0-359 (identity: warna kotak per kelompok, mis. kategori; kosong = dari nama), 'tones' => [nilai => tone] (badge),
 //            'toneKey' => kolom baris yang membawa tone badge (bila teks badge berubah-ubah, mis. "Late 3 days"); pada type date = tanggal tampil sebagai lencana bertone,
 //            'fallback' => kolom nama (image: tanpa foto -> inisial di kotak yang sama),
 //            'visible' => true, 'sortable' => true, 'sum' => false (money/number)]]

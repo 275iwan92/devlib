@@ -789,6 +789,10 @@ body.dl-page-body{overflow:auto;height:auto;min-height:100vh}
 .dl-avatar-id{display:inline-flex;align-items:center;gap:10px}
 .dl-avatar-id__pic{width:32px;height:32px;border-radius:var(--dl-radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;color:var(--dl-white);font-size:calc(11px * var(--dl-font-scale));font-weight:700;background:linear-gradient(135deg,hsl(var(--h) 60% 55%),hsl(calc(var(--h) + 40) 55% 42%))}
 .dl-avatar-id__pic img{width:100%;height:100%;object-fit:cover}
+/* identity 'box': satu persegi panjang berwarna membungkus nama + kode (grid master, tanpa inisial) */
+.dl-avatar-id--box{display:inline-flex;min-width:170px;max-width:260px;padding:6px 12px;border-radius:var(--dl-radius);color:var(--dl-white);background:linear-gradient(135deg,hsl(var(--h) 60% 55%),hsl(calc(var(--h) + 40) 55% 42%))}
+.dl-avatar-id--box .dl-avatar-id__txt b,.dl-avatar-id--box .dl-avatar-id__txt small{color:var(--dl-white)}
+.dl-avatar-id--box .dl-avatar-id__txt small{opacity:.88}
 .dl-avatar-id--lg .dl-avatar-id__pic{width:48px;height:48px;border-radius:50%;font-size:calc(15px * var(--dl-font-scale))}
 .dl-avatar-id--sm .dl-avatar-id__pic{width:24px;height:24px;font-size:calc(9.5px * var(--dl-font-scale))}
 .dl-avatar-id__txt{display:flex;flex-direction:column;line-height:1.2}
