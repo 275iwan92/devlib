@@ -37,7 +37,7 @@ class LayerShell extends Shell
         };
 
         // Grup menu = submenu (dibuka ke panel berikutnya, ada breadcrumb), bukan judul + daftar panjang (user 2026-09-26).
-        return array_map(fn ($m) => ['label' => $m['label'], 'icon' => $m['icon'] ?? null, 'items' => collect($m['children'] ?? [])
+        return array_map(fn ($m) => ['label' => $m['label'], 'icon' => $m['icon'] ?? null, 'pin' => $m['pin'] ?? null, 'items' => collect($m['children'] ?? [])
             ->map(fn ($c) => $leaf(isset($c['items']) ? $c + ['icon' => 'fa-solid fa-folder'] : $c, null))
             ->values()->all()], $this->modules);
     }
@@ -80,8 +80,8 @@ class LayerShell extends Shell
             // Urutan panel Profile = keputusan user 2026-10-03: Notifications, Chat, AI Assistant | Edit profile, Help & support,
             // (Setup = halaman panel, disisipkan sesudah Help), Change password, Developer Mode (saklar), Sign out.
             ['key' => 'notif', 'label' => Lang::text('Notifications'), 'icon' => 'notification'],
-            ['key' => 'chat', 'label' => 'Chat', 'icon' => 'fa-comment-dots'],
-            ['key' => 'ai', 'label' => Lang::text('AI Assistant'), 'icon' => 'ai'],
+            in_array('chat', $this->without) ? null : ['key' => 'chat', 'label' => 'Chat', 'icon' => 'fa-comment-dots'],
+            in_array('ai', $this->without) ? null : ['key' => 'ai', 'label' => Lang::text('AI Assistant'), 'icon' => 'ai'],
             ['key' => 'edit', 'label' => Lang::text('Edit profile'), 'icon' => 'fa-user-pen', 'sep' => true],
             ['key' => 'help', 'label' => Lang::text('Help & support'), 'icon' => 'help'],
             ['key' => 'pass', 'label' => Lang::text('Change password'), 'icon' => 'password'],

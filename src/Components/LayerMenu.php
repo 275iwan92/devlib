@@ -16,7 +16,7 @@ use Devlib\Icon;
 //                 Back / avatar = menu lengkap melayang di atas layar, menutup setelah layar dipilih atau klik di luar.
 //   home        = logo + nama aplikasi bisa diklik -> event dl:layer-menu-action {key:'home'} (user 2026-10-02). Di
 //                 x-dl::layer-shell: semua tab ditutup dan opening screen tampil (Shell::goHome); posisi menu tetap.
-// items: [['label','icon'?,'key'?,'url'?,'badge'?,'tone'?,'group'?,'items' => [ITEM..]]] — `group` = judul kelompok
+// items: [['label','icon'?,'key'?,'url'?,'badge'?,'tone'?,'group'?,'pin'? (akar saja: baris menempel di dasar panel, dekat baris pengguna),'items' => [ITEM..]]] — `group` = judul kelompok
 // di layer itu (item berurutan dengan group sama tampil di bawah satu judul). Tanpa `items` = layar akhir.
 // Klik layar akhir -> event dl:layer-menu {key,label,url,path} (cancelable). Posisi layer terakhir diingat per browser.
 //
@@ -63,7 +63,7 @@ class LayerMenu extends DevlibComponent
     {
         return array_map(function ($it) {
             $n = ['label' => $it['label'], 'icon' => $this->fa($it['icon'] ?? 'fa-circle-dot')];
-            foreach (['key', 'url', 'badge', 'tone', 'group'] as $k) {
+            foreach (['key', 'url', 'badge', 'tone', 'group', 'pin'] as $k) {
                 if (isset($it[$k])) {
                     $n[$k] = $it[$k];
                 }

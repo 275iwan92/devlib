@@ -151,9 +151,11 @@
           ? `<em class="dl-lm__badge dl-lm__badge--icon is-${esc(n.tone || 'accent')}" title="${esc(n.badgeTitle || '')}"><i class="${esc(String(n.badge).slice(5))}"></i></em>`
           : `<em class="dl-lm__badge is-${esc(n.tone || 'accent')}">${esc(n.badge)}</em>`) : '';
         const lbl = `<span class="dl-lm__ico"><i class="${esc(n.icon)}"></i></span><span class="dl-lm__t">${esc(n.label)}</span>${badge}`;
-        h += n.items
+        // pin (hanya akar): baris menempel di dasar panel, dekat baris pengguna (mis. menu Keamanan).
+        const row = n.items
           ? `<button type="button" class="dl-lm__a" data-lm-x="${x}" title="${esc(n.label)}">${lbl}${counts ? `<span class="dl-lm__n">${this.count(n)}</span>` : ''}<i class="fa-solid fa-chevron-right dl-lm__chev"></i></button>`
           : `<a href="${esc(n.url || '#')}" class="dl-lm__a${n.key === this.sel ? ' is-active' : ''}" data-lm-x="${x}" title="${esc(n.label)}">${lbl}</a>`;
+        h += n.pin && !d ? `<div class="dl-lm__pin">${row}</div>` : row;
       });
       return h;
     }

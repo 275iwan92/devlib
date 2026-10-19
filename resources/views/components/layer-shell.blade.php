@@ -2,8 +2,10 @@
     <x-dl::layer-menu class="dl-shell__lm" id="shell" :items="$views() ? [] : $layerTree()" :views="$views()" :initial-view="$startView()" :title="\Devlib\Lang::raw($brand)" :tagline="$tagline" :logo="$logo" search home :user="$user['name']" :role="$user['role'] ?? null" :login="$user['email'] ?? null" dock="[data-dl-lm-dock]" :actions="$actions()">
         <x-slot:profile>
             {{-- Setup = rumah pengaturan tampilan yang akan bertambah (tema, bahasa, ...); Theme & Language anaknya (user 2026-10-03). --}}
-            <section data-lm-page="setup" data-label="{{ \Devlib\Lang::text('Setup') }}" data-icon="fa-sliders" data-lm-children="theme,lang"></section>
-            <section data-lm-page="theme" data-label="{{ \Devlib\Lang::text('Theme') }}" data-icon="fa-palette"><x-dl::theme-picker /></section>
+            @unless (in_array('theme', $without))
+                <section data-lm-page="setup" data-label="{{ \Devlib\Lang::text('Setup') }}" data-icon="fa-sliders" data-lm-children="theme,lang"></section>
+                <section data-lm-page="theme" data-label="{{ \Devlib\Lang::text('Theme') }}" data-icon="fa-palette"><x-dl::theme-picker /></section>
+            @endunless
             <section data-lm-page="lang" data-label="{{ \Devlib\Lang::text('Language') }}" data-icon="fa-globe"><x-dl::lang-switch /></section>
             {{ $profilePages ?? '' }}
         </x-slot:profile>
@@ -17,5 +19,5 @@
 
     <form method="POST" action="{{ $logoutAction }}" data-dl-logout hidden>@csrf</form>
     {{-- Chat = laci kanan Shell, bukan panel kiri (user 2026-10-03). --}}
-    @include('devlib::components.shell.overlays', ['chatDrawer' => true])
+    @include('devlib::components.shell.overlays', ['chatDrawer' => ! in_array('chat', $without)])
 </div>
