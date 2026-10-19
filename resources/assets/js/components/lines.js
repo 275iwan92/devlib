@@ -65,7 +65,7 @@
         if (x.closest('[data-l-dup]')) { const i = +x.closest('tr[data-i]').dataset.i; this.rows.splice(i + 1, 0, {...this.rows[i]}); this.body(); this.changed(); return; }
         const del = x.closest('[data-l-del]');
         if (del) {
-          const i = +del.closest('tr[data-i]').dataset.i, go = () => { const [gone] = this.rows.splice(i, 1); if (this.cfg.keyField && gone && gone[this.cfg.keyField]) this.removed.push(gone[this.cfg.keyField]); this.keepPrimary(gone); this.body(); this.changed(); };
+          const i = +del.closest('tr[data-i]').dataset.i, go = () => { const [gone] = this.rows.length <= this.cfg.minRows ? this.rows.splice(i, 1, this.blank()) : this.rows.splice(i, 1); if (this.cfg.keyField && gone && gone[this.cfg.keyField]) this.removed.push(gone[this.cfg.keyField]); this.keepPrimary(gone); this.body(); this.changed(); };
           if (this.filled(this.rows[i])) confirmBox({message: Tf('l_delete_row_n', {n: i + 1}), tone: 'danger'}).then(ok => ok && go()); else go();
           return;
         }
@@ -195,7 +195,7 @@
 
     body() {
       const exp = i => this.more.length ? `<button type="button" class="dl-lines__exp ${this.open.has(i) ? 'is-open' : ''} ${this.more.some(c => String(this.rows[i][c.key] ?? '').trim() !== '') ? 'has-val' : ''}" data-l-exp="${i}" title="${esc(Tf('l_row_detail', {cols: this.more.map(c => c.label).join(', ')}))}"><i class="fa-solid fa-chevron-right"></i></button>` : '';
-      $(this.el, '[data-l-body]').innerHTML = this.rows.map((r, i) => `<tr data-i="${i}"><td class="dl-lines__no">${exp(i)}${i + 1}</td>${this.tcols.map(c => this.cell(c, r, i)).join('')}${this.ro ? '' : `<td class="dl-lines__act">${this.cfg.duplicable === false ? '' : '<button type="button" class="dl-iconbtn dl-iconbtn--plain" data-l-dup title="' + esc(T('l_dup_row')) + '"><i class="fa-solid fa-copy"></i></button>'}${this.cfg.rowLock && !r[this.cfg.rowLock] ? '' : `<button type="button" class="dl-iconbtn dl-iconbtn--plain dl-iconbtn--danger" data-l-del title="${esc(T('l_delete_row'))}" ${this.rows.length <= this.cfg.minRows ? 'disabled' : ''}><i class="fa-solid fa-trash-can"></i></button>`}</td>`}</tr>${this.more.length && this.open.has(i) ? this.panel(r, i) : ''}`).join('')
+      $(this.el, '[data-l-body]').innerHTML = this.rows.map((r, i) => `<tr data-i="${i}"><td class="dl-lines__no">${exp(i)}${i + 1}</td>${this.tcols.map(c => this.cell(c, r, i)).join('')}${this.ro ? '' : `<td class="dl-lines__act">${this.cfg.duplicable === false ? '' : '<button type="button" class="dl-iconbtn dl-iconbtn--plain" data-l-dup title="' + esc(T('l_dup_row')) + '"><i class="fa-solid fa-copy"></i></button>'}${this.cfg.rowLock && !r[this.cfg.rowLock] ? '' : `<button type="button" class="dl-iconbtn dl-iconbtn--plain dl-iconbtn--danger" data-l-del title="${esc(T('l_delete_row'))}"><i class="fa-solid fa-trash-can"></i></button>`}</td>`}</tr>${this.more.length && this.open.has(i) ? this.panel(r, i) : ''}`).join('')
         || `<tr><td colspan="${this.tcols.length + 2}" class="dl-lines__empty">${esc(T('l_no_rows'))}${$(this.el, '[data-l-add]') ? ' ' + Tf('l_click_x', {x: `<b>${esc($(this.el, '[data-l-add]').textContent.trim())}</b>`}) : ''}</td></tr>`;
       this.refresh();
     }

@@ -102,7 +102,8 @@
 
     validate() {
       $$(this.el, '.dl-tabs__err').forEach(x => x.remove());
-      const bad = $$(this.el, '.dl-field').filter(f => !f.closest('.dl-lines') && $(f, '.dl-field__req') && !hasValue(f));
+      const inModal = f => { const m = f.closest('[data-dl-modal-id]'); return !!m && this.el.contains(m) && m !== this.el; };  // dialog bersarang di form: bukan isian form ini
+      const bad = $$(this.el, '.dl-field').filter(f => !f.closest('.dl-lines') && !inModal(f) && $(f, '.dl-field__req') && !hasValue(f));
       bad.forEach(f => { f.classList.add('is-invalid'); const er = $(f, '[data-dl-field-error]'); if (er) er.textContent = T('f_required'); });
       const lineBad = $$(this.el, '[data-dl-lines]').reduce((n, l) => n + (l.dlLines ? l.dlLines.validate() : 0), 0);
       const panels = new Map();

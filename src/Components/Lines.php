@@ -30,7 +30,7 @@ class Lines extends DevlibComponent
         public array $rows = [],
         public string $title = 'Item',
         public string $addLabel = '+ Add Row',
-        public int $minRows = 1, // 0 = boleh kosong (tanpa baris awal); tombol hapus mati bila jumlah baris <= minRows
+        public int $minRows = 1, // 0 = boleh kosong (tanpa baris awal); pada jumlah baris <= minRows tombol hapus MENGOSONGKAN barisnya (baris tetap ada), bukan tombol mati
         public array $totals = [],
         public ?string $totalKey = null,
         public ?string $countKey = null,
