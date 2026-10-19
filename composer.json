@@ -1,6 +1,6 @@
 {
     "name": "jo/devlib",
-    "description": "DevLib — library induk komponen UI/UX ERP Contoh Makmur (dipakai mockuperp & tmerp)",
+    "description": "DevLib — library induk komponen UI/UX ERP Contoh Makmur (repo sendiri, dipakai tmerp, situs devlib.test, dan proyek lain)",
     "type": "library",
     "license": "proprietary",
     "require": {

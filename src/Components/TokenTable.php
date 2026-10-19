@@ -15,7 +15,7 @@ class TokenTable extends DevlibComponent
 
     public function source(): string
     {
-        return 'packages/devlib/resources/assets/devlib.css (:root) + tema aktif';
+        return 'resources/assets/devlib.css (:root) + tema aktif';
     }
 
     public function render()
