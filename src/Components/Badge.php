@@ -15,7 +15,11 @@ class Badge extends DevlibComponent
         public string $tone = 'neutral',
         public bool $pill = true,
         public ?string $icon = null,
-    ) {}
+    ) {
+        if (config('devlib.translate_fixed')) {
+            $this->label = \Devlib\Lang::text($this->label);
+        }
+    }
 
     public function tag(): string
     {

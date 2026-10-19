@@ -150,7 +150,15 @@ class Form extends DevlibComponent
     }
 
     // Bar tahapan (pola form PO Master-Detail yang disetujui user): Draft > Confirmed > Closed; Cancelled = tahap merah.
+    // Label tahapan ikut kamus aplikasi bila config devlib.translate_fixed menyala.
     public function steps(): array
+    {
+        $fixed = config('devlib.translate_fixed');
+
+        return array_map(fn ($s) => [$fixed ? Lang::text($s[0]) : $s[0], $s[1]], $this->rawSteps());
+    }
+
+    private function rawSteps(): array
     {
         if ($this->approvalLevels > 0) {
             return $this->approvalSteps();

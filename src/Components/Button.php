@@ -31,6 +31,10 @@ class Button extends DevlibComponent
             $this->type ??= $type;
         }
         $this->type ??= 'button';
+        // Aplikasi satu bahasa (config devlib.translate_fixed): istilah tombol ikut kamus aplikasi, tidak dipaksa English.
+        if (config('devlib.translate_fixed')) {
+            $this->label = \Devlib\Lang::text($this->label);
+        }
     }
 
     // Aksi umum berlabel BAKU (LOCKED): satu kata sama di semua layar, ikut bahasa.
