@@ -4,9 +4,9 @@
 //   <nama>.jpg           1920x1080 (16:9), JPEG kualitas 80  -> layar lebar
 //   <nama>-portrait.jpg  1080x1920 (9:16), JPEG kualitas 80  -> HP tegak
 // Dipotong dari tengah (cover), jadi tidak ada yang gepeng.
-// Pakai: php tools/import-bg.php <folder-sumber> <kelompok, mis. login>
+// Pakai: php tools/import-bg.php <folder-sumber> <kelompok, mis. devlib>
 
-[$_, $src, $group] = $argv + [null, null, 'login'];
+[$_, $src, $group] = $argv + [null, null, 'devlib'];
 if (! $src || ! is_dir($src)) {
     exit("Pakai: php tools/import-bg.php <folder-sumber> <kelompok>\n");
 }

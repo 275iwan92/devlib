@@ -11,7 +11,7 @@ namespace Devlib\Components;
  * Status: aktif.
  */
 // Yang cukup disebut:
-//   bg       = folder (atau file) di media/bg, mis. "login" atau "login/contoh-01-navy.jpg"
+//   bg       = folder (atau file) di media/bg, mis. "devlib" atau "devlib/devlib-room.jpg"
 //   bg-order = random | sequence (urut, lanjut tiap kali halaman dibuka)
 //   bg-interval = detik ganti gambar selama halaman terbuka (0 = tidak berganti)
 //   box      = center | left | right | top | bottom | full   (di HP selalu penuh layar)
@@ -24,7 +24,7 @@ class Frame extends DevlibComponent
     public const POSITIONS = ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right', 'middle-left', 'middle-right'];
 
     public function __construct(
-        public string $bg = 'login',
+        public string $bg = 'devlib',
         public string $bgOrder = 'random',
         public int $bgInterval = 0,
         public string $overlay = 'dark',

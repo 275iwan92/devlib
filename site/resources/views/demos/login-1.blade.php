@@ -4,7 +4,7 @@ Sumber hulu: folder devlib/public/media/bg/devlib (dua wallpaper: laptop berisi 
 Input: variabel action, error, username dari route login (routes/web.php).
 Output: x-dl::frame + x-dl::login-box; gambar latar dipilih acak dari dua wallpaper di atas.
 Dipakai oleh: view login.blade.php (config devlib.login_variant = 1, bawaan).
-Status: aktif; varian 2 dan 3 tetap memakai kumpulan gambar bg/login.
+Status: aktif; semua halaman masuk, lupa password, dan daftar memakai satu folder gambar: bg/devlib.
 --}}
 <x-dl::frame bg="devlib" bg-order="random" box="right" color="light" resizable widgets="brand@top-left, clock@top-right, quote@bottom-left">
     <x-dl::login-box show="support, lang, title, username, password, forgot, button, register" :action="$action" :error="$error" :username="$username" />
