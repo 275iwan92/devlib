@@ -74,6 +74,15 @@ Kriteria:
 - Cegah kirim ganda: layout memuat penjaga `submit` (ada di `sstock/resources/views/layout.blade.php`) — jangan dibuang.
 - Riwayat: tab History otomatis; isi `:created-at`, `:updated-at`, `:log`.
 
+## Help: selalu dua bagian, UG dan TG
+
+Setiap proyek punya Help dengan dua bagian terpisah, dibuat bersama modulnya. Keduanya dibuka dari satu menu Help & support sebagai dua tab (User's Guide, Technical Guide). UG terlihat semua pengguna; TG hanya Administrator (seperti sstock).
+
+- **TG (Technical Guide) — bahasa English.** Untuk developer/administrator. Semua yang teknis di sini: data flow, system flow, workflow (mis. siklus dokumen Draft > Confirmed > Cancelled), tabel dan database (model data, relasi, kolom penting), akses/hak, konvensi, operasional. Contoh: `../sstock/resources/views/help/technical-guide.blade.php`.
+- **UG (User's Guide) — bahasa Indonesia.** Untuk pengguna, tuntunan cara pakai: penjelasan **grid** (cari, filter, kolom, export, klik 2x buka, `+ New Record`, Aktif/Nonaktif), penjelasan **form** (isian wajib, Save, Confirm, Undo, Back, tab Riwayat), cara pakai tiap layar bertahap, **daftar isi modul**, dan **fitur tiap modul**.
+- **Batas:** diagram, tabel database, dan alur sistem tidak masuk UG; langkah pakai dan istilah awam tidak masuk TG.
+- Proyek baru: sediakan kedua bagian sejak awal. sstock saat ini baru punya TG (UG belum dibuat).
+
 ## Kebiasaan lintas proyek
 
 - Label layar boleh English; aplikasi satu bahasa menambah terjemahan ke kamus aplikasi (`Lang::text`), pesan validasi di `lang/<kode>/validation.php`. Mata uang tampil kode (`IDR`), bukan simbol.
