@@ -16,8 +16,11 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   slug `rules-<berkas>`; tanpa salinan, judul dari dokumen, tidak dihitung sebagai objek QC). Bagian Flow: `p10-system-flow`, `p10-data-flow`,
   `p10-work-flow` (contoh fiktif `x-dl::flow`, belum ditinjau). Library: modul Shell boleh memuat `section` (judul kelompok di Layer Menu; Shell biasa
   mengabaikannya); tanpa `section` perilaku lama.
-  `x-dl::layer-menu` menerima `fold-groups` (opt-in): judul kelompok jadi tombol lipat, anak menunya menggulung ke atas di belakang judul dan
-  keadaannya diingat per browser (mode mini selalu terbuka); `x-dl::layer-shell` menyalakannya otomatis hanya bila ada modul ber-`section`.
+  `x-dl::layer-menu` menerima `fold-groups` (opt-in): judul kelompok di layer akar jadi tombol lipat, anak menunya menggulung ke atas di belakang judul,
+  keadaannya diingat per browser (mode mini selalu terbuka). `'1'` = tiap judul sendiri-sendiri, `'accordion'` = satu kelompok terbuka sekali waktu (awal:
+  kelompok layar aktif) dengan jumlah halaman di tiap judul; `x-dl::layer-shell` memakai `accordion` otomatis hanya bila ada modul ber-`section`.
+  Tema: token `side-2`, `side-hover`, `side-scroll` kini diturunkan dari warna sidebar tiap tema (sebelumnya biru bawaan, tampak biru di tema hijau/merah);
+  tema bawaan `navy` tidak berubah. Situs acuan memakai `config('devlib.theme') = 'pastel_green'` (hijau pastel); pilihan pengguna tetap menang.
 
 - **Aturan membangun object** (`skills/devlib/object.md`, dokumen; tanpa perubahan kode): daftar periksa membuat komponen (kelas PHP + JS berpasangan,
   header REMARK, CSS token, manifest, tes kontrak, halaman katalog), aturan baku, cara mewariskan, uji layak jadi object, dan versi. Butir yang belum

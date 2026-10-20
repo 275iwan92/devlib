@@ -6,6 +6,9 @@ return [
     // Isi DEVLIB_LOGIN_BYPASS=false untuk mencoba alur login contohnya (/login).
     'login_bypass' => (bool) env('DEVLIB_LOGIN_BYPASS', true),
 
+    // Tema bawaan situs katalog (user 2026-10-21): hijau pastel. Pilihan pengguna di browser (Themes / Setup & Security) tetap menang; kode tema: Devlib\Theme::ALL.
+    'theme' => 'pastel_green',
+
     // Satu-satunya akun: model login/security untuk proyek lain (bukan pengamanan). Cadangan login pemilik = baris johiwan di tabel sec_user (hash, bukan di sini).
     'users' => [
         ['login' => 'admin', 'password' => 'admin', 'name' => 'Administrator DevLib', 'email' => 'admin@devlib.test', 'role' => 'Administrator', 'developer' => true],

@@ -48,7 +48,7 @@ class CatalogLayoutTest extends TestCase
 
     public function test_layer_menu_folds_section_captions_only_when_modules_have_sections(): void
     {
-        $this->get('/')->assertOk()->assertSee('data-fold-groups="1"', false);
+        $this->get('/')->assertOk()->assertSee('data-fold-groups="accordion"', false);
         $plain = \Illuminate\Support\Facades\Blade::render('<x-dl::layer-menu :items="$items" />', ['items' => [['label' => 'A', 'group' => 'G', 'url' => '#']]]);
         $this->assertStringContainsString('data-fold-groups="0"', $plain);
     }

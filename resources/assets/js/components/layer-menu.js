@@ -15,8 +15,14 @@
       this.key = 'dl-lm-' + this.el.dataset.id;
       this.path = [];     // cabang yang sedang dibuka, path[d-1] = induk layer d
       this.sel = null;    // key layar akhir terpilih
-      // foldGroups: judul kelompok bisa dilipat; yang terlipat diingat per browser (daftar label).
-      this.fold = new Set(); try { this.fold = new Set(JSON.parse(localStorage.getItem('dl-lm-' + this.el.dataset.id + '-fold') || '[]')); } catch (e) {}
+      // foldGroups: judul kelompok di layer akar bisa dilipat, diingat per browser. '1' = tiap judul sendiri-sendiri (daftar yang terlipat);
+      // 'accordion' = satu kelompok terbuka sekali waktu (nama yang terbuka; belum ada = kelompok layar aktif, atau yang pertama).
+      this.foldMode = this.el.dataset.foldGroups || '0';
+      this.fold = new Set(); this.open = undefined;
+      try {
+        const f = JSON.parse(localStorage.getItem('dl-lm-' + this.el.dataset.id + '-fold') || 'null');
+        if (this.foldMode === 'accordion') this.open = f && !Array.isArray(f) ? f.open : undefined; else if (Array.isArray(f)) this.fold = new Set(f);
+      } catch (e) {}
       this.st = {chat: false, dock: false, show: 'menu'};   // show = menu | chat | profile (yang tampil di panel kiri)
       this.initViews();
       this.track.addEventListener('click', e => { const t = e.target.closest('button, a'); if (t) this.click(e, t); });
@@ -146,15 +152,24 @@
         h += BACK + `<div class="dl-lm__title" title="${esc(p.label)}"><i class="${esc(p.icon)}"></i><b>${esc(p.label)}</b></div>`;
       } else h += `<div class="dl-lm__cap">${esc(this.views.length ? this.views[this.view].label : this.el.dataset.root)}</div>`;
       let g = null, open = false;
-      const foldable = this.el.dataset.foldGroups === '1', shut = () => { if (open) { h += '</div></div>'; open = false; } };
-      this.nodes(d).forEach((n, x) => {
+      const foldable = !d && this.foldMode !== '0', shut = () => { if (open) { h += '</div></div>'; open = false; } };
+      const nodes = this.nodes(d), size = {};
+      if (foldable) {
+        let cur = null;
+        nodes.forEach(n => { if (n.group) cur = n.group; if (cur && !(n.pin && !d)) size[cur] = (size[cur] || 0) + this.count(n); });
+        if (this.foldMode === 'accordion' && this.open === undefined) {
+          const trail = this.sel ? this.find(this.sel) : null;
+          this.open = trail && trail[0].group ? trail[0].group : (nodes.find(n => n.group) || {}).group || null;
+        }
+      }
+      nodes.forEach((n, x) => {
         if (n.group && n.group !== g) {
           g = n.group; shut();
           if (!foldable) h += `<div class="dl-lm__cap">${esc(g)}</div>`;
           else {
             // Judul = tombol lipat; anak menunya dalam satu pembungkus yang menggulung ke atas di belakang judul.
-            const folded = this.fold.has(g);
-            h += `<button type="button" class="dl-lm__cap dl-lm__cap--fold" data-lm-fold="${esc(g)}" aria-expanded="${folded ? 'false' : 'true'}"><span>${esc(g)}</span><i class="fa-solid fa-chevron-down"></i></button><div class="dl-lm__grp${folded ? ' is-folded' : ''}"${folded ? ' inert' : ''}><div>`;
+            const folded = this.isFolded(g), tally = counts ? `<em class="dl-lm__cap-n">${size[g] || 0}</em>` : '';
+            h += `<button type="button" class="dl-lm__cap dl-lm__cap--fold" data-lm-fold="${esc(g)}" aria-expanded="${folded ? 'false' : 'true'}"><span>${esc(g)}</span>${tally}<i class="fa-solid fa-chevron-down"></i></button><div class="dl-lm__grp${folded ? ' is-folded' : ''}"${folded ? ' inert' : ''}><div>`;
             open = true;
           }
         }
@@ -192,12 +207,18 @@
     back() { this.path.pop(); this.draw(); this.track.children[this.path.length]?.querySelector('.dl-lm__a')?.focus({preventScroll: true}); }
 
     // Lipat / buka satu kelompok tanpa menggambar ulang panel (supaya gulungannya beranimasi).
+    isFolded(g) { return this.foldMode === 'accordion' ? this.open !== g : this.fold.has(g); }
+
     toggleFold(t) {
-      const g = t.dataset.lmFold, grp = t.nextElementSibling, shut = !this.fold.has(g);
-      shut ? this.fold.add(g) : this.fold.delete(g);
-      t.setAttribute('aria-expanded', String(!shut));
-      grp.classList.toggle('is-folded', shut); grp.inert = shut;
-      try { localStorage.setItem('dl-lm-' + this.el.dataset.id + '-fold', JSON.stringify([...this.fold])); } catch (e) {}
+      const g = t.dataset.lmFold;
+      if (this.foldMode === 'accordion') this.open = this.open === g ? null : g;
+      else this.fold.has(g) ? this.fold.delete(g) : this.fold.add(g);
+      // Semua judul di panel disesuaikan (accordion: yang lain menutup), tanpa menggambar ulang supaya gulungannya beranimasi.
+      t.closest('.dl-lm__pane').querySelectorAll('[data-lm-fold]').forEach(b => {
+        const shut = this.isFolded(b.dataset.lmFold), grp = b.nextElementSibling;
+        b.setAttribute('aria-expanded', String(!shut)); grp.classList.toggle('is-folded', shut); grp.inert = shut;
+      });
+      try { localStorage.setItem('dl-lm-' + this.el.dataset.id + '-fold', JSON.stringify(this.foldMode === 'accordion' ? {open: this.open} : [...this.fold])); } catch (e) {}
     }
 
     click(e, t) {

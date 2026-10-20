@@ -24,8 +24,9 @@ use Devlib\Icon;
 //   search      = tampilkan ikon cari -> event dl:layer-menu-action {key:'palette'}
 //   collapsible = ikon kecilkan menu: panel jadi satu lajur ikon (diingat per browser). Saat mini, klik cabang /
 //                 Back / avatar = menu lengkap melayang di atas layar, menutup setelah layar dipilih atau klik di luar.
-//   foldGroups  = judul kelompok (`group`) jadi tombol lipat: klik = anak menunya tergulung ke atas di belakang judul, klik lagi = terbuka (diingat per browser;
-//                 mode mini selalu terbuka). Tanpa ini judul tetap teks biasa. x-dl::layer-shell menyalakannya otomatis bila ada modul ber-`section`.
+//   foldGroups  = judul kelompok (`group`) di layer akar jadi tombol lipat, anak menunya tergulung ke atas di belakang judul (diingat per browser; mode
+//                 mini selalu terbuka). '1' = tiap judul sendiri-sendiri; 'accordion' = satu kelompok terbuka sekali waktu (awal: kelompok layar aktif).
+//                 Kosong = judul tetap teks biasa. x-dl::layer-shell memakai 'accordion' otomatis bila ada modul ber-`section`.
 //   home        = logo + nama aplikasi bisa diklik -> event dl:layer-menu-action {key:'home'} (user 2026-10-02). Di
 //                 x-dl::layer-shell: semua tab ditutup dan opening screen tampil (Shell::goHome); posisi menu tetap.
 // items: [['label','icon'?,'key'?,'url'?,'badge'?,'tone'?,'group'?,'pin'? (akar saja: baris menempel di dasar panel, dekat baris pengguna),'items' => [ITEM..]]] — `group` = judul kelompok
@@ -63,7 +64,7 @@ class LayerMenu extends DevlibComponent
         public bool $search = false,
         public bool $collapsible = true,
         public bool $home = false,
-        public bool $foldGroups = false,
+        public string $foldGroups = '',
     ) {
         $this->title ??= Brand::identity()['name'];
     }
@@ -113,7 +114,7 @@ class LayerMenu extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <aside {{ $attributes->class('dl-lm') }} {!! $dl() !!} data-dl-layer-menu data-id="{{ $id }}" data-active="{{ $active }}" data-counts="{{ $counts ? 1 : 0 }}" data-fold-groups="{{ $foldGroups ? 1 : 0 }}" data-root="{{ \Devlib\Lang::text($rootCaption) }}" data-dock="{{ $dock }}" data-tree="{{ $views ? '[]' : json_encode($tree()) }}" data-views="{{ json_encode($viewData()) }}" data-view="{{ $initialView }}">
+            <aside {{ $attributes->class('dl-lm') }} {!! $dl() !!} data-dl-layer-menu data-id="{{ $id }}" data-active="{{ $active }}" data-counts="{{ $counts ? 1 : 0 }}" data-fold-groups="{{ $foldGroups === '' ? 0 : $foldGroups }}" data-root="{{ \Devlib\Lang::text($rootCaption) }}" data-dock="{{ $dock }}" data-tree="{{ $views ? '[]' : json_encode($tree()) }}" data-views="{{ json_encode($viewData()) }}" data-view="{{ $initialView }}">
                 <div class="dl-lm__head" @if ($home) data-lm-home role="button" tabindex="0" title="{{ \Devlib\Lang::text('Opening screen (closes all tabs)') }}" @endif>
                     <span class="dl-logo-badge dl-logo-badge--sm">@if ($logo)<img src="{{ $logo }}" alt="{{ $title }}">@endif</span>
                     <span class="dl-lm__brand"><b>{{ $title }}<x-dl::env-badge part="title" variant="title" /></b>@if ($tagline)<small class="dl-lm__tag" data-lm-tag>{{ $tagline }}</small>@endif<small data-lm-mode hidden></small></span>

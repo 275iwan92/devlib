@@ -50,6 +50,8 @@ final class Theme
             'accent-soft-2' => "color-mix(in srgb, $primary 20%, var(--dl-surface))",
             'accent-ring' => "color-mix(in srgb, $primary 15%, transparent)",
             'side' => $sidebar, 'navy' => $sidebar, 'navy-2' => "color-mix(in srgb, $sidebar 80%, #fff)",
+            // Baris/judul menu, hover dan scrollbar panel ikut warna sidebar tema (bukan biru bawaan), supaya tema hijau/merah tidak berbaur biru.
+            'side-2' => "color-mix(in srgb, $sidebar 90%, #fff)", 'side-hover' => "color-mix(in srgb, $sidebar 80%, #fff)", 'side-scroll' => "color-mix(in srgb, $sidebar 65%, #fff)",
             'topbar' => "color-mix(in srgb, $sidebar 70%, #000)",
             'f-line' => "color-mix(in srgb, $primary 22%, #d1d5db)",
             'f-badge' => "color-mix(in srgb, $primary 14%, #fff)",
