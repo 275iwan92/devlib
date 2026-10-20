@@ -13,8 +13,8 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Foundation\Application;
 
 // Pengindeks latar belakang Assistant (docs/assistant-indexer.md). Dipanggil scheduler program, mis. ->hourly(); pemicu dibatasi
-// sekali per jam (IndexThrottle) dan tiap potongan dibatasi Budget, jadi aman dipanggil lebih sering. Hanya terdaftar bila program
-// mengikat IndexStore; sumbernya = tag container `devlib.index-source`. Jalankan:  php artisan devlib:index   |   --force
+// sekali per jam (IndexThrottle) dan tiap potongan dibatasi Budget, jadi aman dipanggil lebih sering. Selalu terdaftar; bila program
+// belum mengikat IndexStore ia hanya mencetak petunjuk dan selesai tanpa galat. Sumbernya = tag container `devlib.index-source`. Jalankan:  php artisan devlib:index   |   --force
 class Index extends Command
 {
     protected $signature = 'devlib:index {--force : abaikan pembatas sekali per jam}';
@@ -23,6 +23,11 @@ class Index extends Command
 
     public function handle(Application $app): int
     {
+        if (! $app->bound(IndexStore::class)) {
+            $this->warn('Belum ada penyimpanan indeks yang terpasang. Ikat IndexStore di register() provider program (bukan boot()); lihat skills/devlib/assistant.md, bagian Pengindeks.');
+
+            return self::SUCCESS;
+        }
         $sources = iterator_to_array($app->tagged('devlib.index-source'), false);
         if (! $sources) {
             $this->warn('Tidak ada sumber indeks: tag IndexSource dengan `devlib.index-source` di container.');

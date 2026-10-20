@@ -93,7 +93,7 @@ Asisten makin cepat menemukan menu / layar / Help karena program membacakan meta
 Memasang di program (5 langkah):
 
 1. Tulis `IndexSource` dari menu / Help / frasa Tool program (`IndexEntry`; label modul dan `sensitivity` yang benar adalah tugas program) dan `IndexStore` berbasis tabel program (`hashes`, `put`, `forget`, `search` yang menyaring dengan `IndexAccess::may`); `MemoryIndexStore` tinggal dicontoh.
-2. Di `register()` provider program: `$this->app->singleton(IndexStore::class, ...)` dan `$this->app->tag([MenuSource::class, HelpSource::class], 'devlib.index-source')` (diikat di `register()`, bukan `boot()`, supaya perintah `devlib:index` terdaftar; opsional: `DataPolicy`, `Budget`, `IndexThrottle`).
+2. Di `register()` provider program: `$this->app->singleton(IndexStore::class, ...)` dan `$this->app->tag([MenuSource::class, HelpSource::class], 'devlib.index-source')` (diikat di `register()`, bukan `boot()`; perintah `devlib:index` selalu ada dan, bila `IndexStore` belum terikat, hanya mencetak petunjuk; opsional: `DataPolicy`, `Budget`, `IndexThrottle`).
 3. `new Assistant(..., policy: $policy, index: $app->make(IndexStore::class))`.
 4. Scheduler: `Schedule::command('devlib:index')->hourly();`.
 5. Satu tes wajib: `$this->assertSame([], IndexAudit::leaks($sumber, $policy, $kataTerlarang, $orangTerlindung));`.

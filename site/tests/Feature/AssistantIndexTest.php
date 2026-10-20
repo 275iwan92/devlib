@@ -383,7 +383,9 @@ class AssistantIndexTest extends TestCase
 
     public function test_the_command_is_opt_in_and_runs_with_a_bound_store(): void
     {
-        $this->assertArrayNotHasKey('devlib:index', $this->app->make(Kernel::class)->all());  // program tanpa IndexStore: tidak terdaftar
+        // program tanpa IndexStore: perintah tetap ada, hanya mencetak petunjuk dan selesai tanpa galat (tidak diam-diam hilang)
+        $this->assertArrayHasKey('devlib:index', $this->app->make(Kernel::class)->all());
+        $this->artisan('devlib:index')->expectsOutputToContain('Belum ada penyimpanan indeks')->assertSuccessful();
 
         $store = new MemoryIndexStore;
         $this->app->instance(IndexStore::class, $store);

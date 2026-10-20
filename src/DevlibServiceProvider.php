@@ -23,8 +23,7 @@ class DevlibServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'devlib');
         Blade::componentNamespace('Devlib\\Components', 'dl');
-        $this->commands([Console\QcReviews::class, Console\Lint::class, Console\Manifest::class]);  // php artisan qc:reviews -- untuk agen, sama di semua proyek
-        $this->app->bound(Assistant\Index\IndexStore::class) && $this->commands([Console\Index::class]);  // opt-in: hanya bila program mengikat IndexStore
+        $this->commands([Console\QcReviews::class, Console\Lint::class, Console\Manifest::class, Console\Index::class]);  // php artisan qc:reviews -- untuk agen, sama di semua proyek; devlib:index selalu ada (tanpa IndexStore hanya mencetak petunjuk)
 
         Route::get('/_devlib/{file}', function (string $file) {
             if ($file === 'devlib.js') {
