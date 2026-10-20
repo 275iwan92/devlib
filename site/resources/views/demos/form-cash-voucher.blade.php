@@ -28,7 +28,7 @@
 </div>
 <x-dl::form :title="$isNew ? 'Cash Voucher · New'.($dup ? ' (copy)' : '') : 'Cash Voucher · '.$src['cv_no']" :subtitle="$blank ? null : $v('payee')"
     panel="top" kind="document" :status="$status" :strict="true" :log="$log"
-    :action="url()->current()" method="POST" :back="$flow['back']" :print-url="route('lib', ['slug' => 'p5-print-doc'])" :hidden="['status' => $status, 'from' => $flow['back']]"
+    :action="url()->current()" method="POST" :back="$flow['back']" :print-url="\App\Support\FlowDemo::printUrl('p5-flow-single', $flow['id'], '', $status, null)" :hidden="['status' => $status, 'from' => $flow['back']]"
     :created-by="$isNew ? null : 'cashier'" :created-at="$isNew ? null : '2026-10-02 08:12:00'" :updated-by="$isNew ? null : 'cashier'" :updated-at="$isNew ? null : '2026-10-02 09:40:00'">
     <x-dl::form.row :cols="3">
         <x-dl::field.text name="cv_no" label="Voucher No." :value="$v('cv_no')" placeholder="(automatic)" code readonly :case-toggle="false" hint="Made on the first Save." />

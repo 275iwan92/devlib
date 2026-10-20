@@ -132,6 +132,17 @@ Route::middleware('devlib.auth')->group(function () {
         ]);
     })->where('id', '[A-Za-z0-9_-]+')->name('lib.flow.form');
 
+    // Cetakan form alur: status dokumen (dan approval) dibawa dari form lewat query.
+    Route::get('/lib/{slug}/print/{id}', function (Request $r, string $slug, string $id) {
+        abort_unless(FlowDemo::has($slug) && ! FlowDemo::isMaster($slug), 404);
+        $doc = FlowDemo::doc($slug, $r->query('doc'));
+        $row = FlowDemo::row($slug, $doc, $id) ?? FlowDemo::rows($slug, $doc)[0];
+        $status = (string) $r->query('status', FlowDemo::status($slug, $doc, $row));
+        $approval = $r->query('approval', $row['approval'] ?? null);
+
+        return view('flow-print', ['doc' => \App\Support\FlowPrintDoc::make($slug, $doc, $row, $status, $approval)]);
+    })->where('id', '[A-Za-z0-9_-]+')->name('lib.flow.print');
+
     Route::post('/lib/{slug}/form/{id}', function (Request $r, string $slug, string $id) {
         abort_unless(FlowDemo::has($slug), 404);
 

@@ -18,6 +18,7 @@
       this.strict = this.el.hasAttribute('data-f-strict');  // siklus ketat: tersimpan = terkunci, Edit membuka isian (Save + Undo)
       this.snapshot = null;
       this.saved = this.values();  // titik kembali Undo = isi saat form dibuka
+      requestAnimationFrame(() => { this.linesSaved = this.snapLines(); });  // baris detail diinisialisasi sesudah form
       if (this.viewMode) this.setView(true);
       this.el.addEventListener('input', e => { const f = e.target.closest('.dl-field.is-invalid'); if (f && hasValue(f)) { f.classList.remove('is-invalid'); const x = $(f, '[data-dl-field-error]'); if (x) x.textContent = ''; } }, true);
       this.el.addEventListener('submit', e => {
@@ -33,7 +34,11 @@
         if (this.viewMode) { this.snapshot = null; this.setView(true); }
         const layer = this.el.closest('[data-dl-modal-id],[data-dl-drawer-id]'); if (layer) closeLayer(layer);
       });
+      // Baris detail yang berubah (tambah, ubah, hapus) = form berubah: Save + Undo muncul dan penjaga perubahan ikut aktif.
+      this.el.addEventListener('change', e => { if (e.target.closest('[data-dl-lines]')) { dirtyForms.add(this.el); this.el.classList.add('is-dirty'); } });
       this.el.addEventListener('click', e => {
+        // Siklus ketat: aksi baris detail (Edit/Delete/Add) membuka dokumen untuk diubah, supaya Save + Undo muncul.
+        if (this.strict && this.el.classList.contains('is-view') && e.target.closest('[data-dl-lines] [data-l-edit], [data-dl-lines] [data-l-del], [data-dl-lines] [data-l-add]')) this.startEdit();
         if (e.target.closest('[data-f-edit]')) { this.fs.forEach(f => { f.disabled = false; }); this.snapshot = {}; new FormData(this.el).forEach((v, k) => { this.snapshot[k] = v; }); $$(this.el, 'input[type=checkbox][name]').forEach(c => { this.snapshot[c.name] = c.checked; }); this.setView(false); $(this.el, '.dl-form__body input:not([type=hidden]),.dl-form__body textarea')?.focus(); return; }
         const act = e.target.closest('[data-f-act]')?.dataset.fAct;
         if (act === 'back' && !e.target.closest('a[href]')) return history.back();
@@ -75,21 +80,27 @@
       if (!this.el.classList.contains('is-dirty')) { if (editing) return this.endEdit(); return toast(T('f_nothing_undo')); }
       confirmBox({message: T('f_discard_all'), tone: 'warn'}).then(ok => {
         if (!ok) return;
-        fillForm(this.el, this.saved, false);
+        fillForm(this.el, this.saved, false); this.restoreLines();
         $$(this.el, '.dl-field.is-invalid').forEach(f => f.classList.remove('is-invalid')); $$(this.el, '.dl-tabs__err').forEach(x => x.remove());
         dirtyForms.delete(this.el); this.el.classList.remove('is-dirty'); toast(T('f_changes_discarded'));
         if (editing) this.endEdit();
       });
     }
 
+    // Baris detail (x-dl::lines) ikut Undo: salinan isi tersimpan, dipulihkan dengan set().
+    snapLines() { return $$(this.el, '[data-dl-lines]').map(l => l.dlLines ? JSON.parse(JSON.stringify(l.dlLines.rows)) : null); }
+
+    restoreLines() { if (this.linesSaved) $$(this.el, '[data-dl-lines]').forEach((l, i) => { if (l.dlLines && this.linesSaved[i]) l.dlLines.set(this.linesSaved[i]); }); }
+
     // Edit (siklus ketat): isian terbuka, tombol jadi Save + Undo; Undo = kembali ke isi tersimpan dan terkunci lagi.
     startEdit() {
-      this.saved = this.values();
+      this.saved = this.values(); this.linesSaved = this.snapLines();
       this.fs.forEach(f => { f.disabled = false; });
       this.el.classList.remove('is-view'); this.el.classList.add('is-editing');
     }
 
     endEdit() {
+      this.restoreLines();
       this.fs.forEach(f => { f.disabled = true; });
       this.el.classList.remove('is-editing'); this.el.classList.add('is-view');
     }

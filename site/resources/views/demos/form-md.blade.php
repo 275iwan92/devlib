@@ -73,7 +73,7 @@
 </div>
 @endunless
 <x-dl::form :title="$isNew ? 'Customer Order · New'.($dup ? ' (copy of '.$co['co_no'].')' : '') : 'Customer Order · '.$co['co_no']" :subtitle="$blank ? null : $co['customer']"
-    panel="top" kind="document" :status="$status" :pipeline="true" :can-reopen="true" :strict="(bool) $flow" :approval="$apv" :can-approve="$canApprove" :otp-url="$flow ? url()->current() : null" :print-url="$flow ? route('lib', ['slug' => 'p5-print-doc']) : null" :log="$log"
+    panel="top" kind="document" :status="$status" :pipeline="true" :can-reopen="true" :strict="(bool) $flow" :approval="$apv" :can-approve="$canApprove" :otp-url="$flow ? url()->current() : null" :print-url="$flow ? \App\Support\FlowDemo::printUrl($fs, $flow['id'], $fdoc, $status, $apv) : null" :log="$log"
     :action="$flow ? $here : $here.'#form-md'" :method="$flow ? 'POST' : 'GET'" :back="$flow['back'] ?? \App\Support\FlowDemo::gridUrl('p5-flow-document', $me)"
     :new-url="$flow ? \App\Support\FlowDemo::formUrl($fs, 'new', $fdoc, $flow['back']) : $here.'?'.$me.'_new=1#form-md'" :hidden="['doc' => $fdoc] + ($flow ? ['status' => $status, 'from' => $flow['back'], 'as' => $as] + ($apv ? ['approval' => $apv] : []) : [])"
     :tabs="['general' => 'General', 'party' => 'Customer', 'finance' => 'Finance', 'delivery' => 'Delivery', 'files' => 'Attachments & Notes']"

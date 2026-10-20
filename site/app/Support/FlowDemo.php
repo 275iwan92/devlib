@@ -36,6 +36,12 @@ final class FlowDemo
     // Save pada record baru: demo tanpa penyimpanan, jadi form pindah ke record contoh bernomor ini (…/form/999).
     public const CREATED_ID = '999';
 
+    // Cetakan form alur (tab baru): membawa status dokumen dan approval yang sedang tampil.
+    public static function printUrl(string $slug, string $id, string $doc, string $status, ?string $approval): string
+    {
+        return '/lib/'.$slug.'/print/'.$id.'?'.http_build_query(array_filter(['doc' => $doc ?: null, 'status' => $status, 'approval' => $approval]));
+    }
+
     public static function has(string $slug): bool
     {
         return isset(self::FLOWS[$slug]);

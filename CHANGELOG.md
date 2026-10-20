@@ -39,6 +39,8 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   `:approval` = field TERPISAH dari status (`waiting|approved|hold|rejected`, hanya saat Confirmed): Cancel pembuat hanya sebelum diputuskan, APPROVED hanya
   bisa menjadi REJECTED, REJECTED hanya tampil di tab Rejected, Duplicate oleh pembuat, REJECTED → APPROVED oleh pemeriksa dengan OTP (`:otp-url`; dialog OTP
   lewat `Devlib.confirm({otp:true})`; penerbitan OTP urusan proyek). Master: `:deletable` (Delete hanya administrator untuk data yang belum dipakai). Aturan lint F110.
+  `x-dl::lines` di dalam form `:strict` tidak baca-saja saat Draft tersimpan (tombol baris selalu ada); aksi atau perubahan baris membuka mode Edit (Save + Undo), menandai form berubah, dan ikut Undo (isi baris dikembalikan).
+  Print di form membuka cetakan contoh (`/lib/{slug}/print/{id}`) yang memuat status dokumen dan approval ("CONFIRMED · REJECTED", tanda air untuk Draft / Hold / Rejected / Cancelled).
   `x-dl::wizard` menerima `:done` (layar Done + Start again, tanpa Back). Tanpa `:strict` / `:approval` / `:done` perilaku lama tidak berubah.
   Situs acuan: grup menu "Grid and Form" (pohon dua tingkat: Grid Report | Grid Pre-Entry > Transactional (Master-Detail, Single, Approval), Master, Lookup | Form
   Wizard), halaman baru `p5-flow-single` (Cash Voucher) dan `p5-flow-approval`, contoh Master-Detail Customer Order lalu Purchase Order. Halaman APPROVED lama

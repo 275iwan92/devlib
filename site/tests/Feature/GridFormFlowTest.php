@@ -260,6 +260,23 @@ class GridFormFlowTest extends TestCase
         $this->post('/lib/p5-flow-master/form/1', $base + ['_action' => 'confirm', 'status' => 'active'])->assertSessionHas('flow_flash.0', 'warn');
     }
 
+    public function test_print_always_carries_the_document_status_and_the_approval_status(): void
+    {
+        $print = fn (string $url) => $this->plain($this->get($url)->assertOk()->getContent());
+        $cv = DemoData::cashVouchers()[4];
+        $this->assertStringContainsString('DRAFT', $print('/lib/p5-flow-single/print/'.$cv['id'].'?status=draft'));
+        $this->assertStringContainsString('CONFIRMED', $print('/lib/p5-flow-single/print/'.$cv['id'].'?status=confirmed'));
+        $this->assertStringContainsString('CANCELLED', $print('/lib/p5-flow-single/print/'.$cv['id'].'?status=cancelled'));
+        $rej = $print('/lib/p5-flow-approval/print/'.$this->approvalId('rejected').'?status=confirmed&approval=rejected');
+        $this->assertStringContainsString('CONFIRMED · REJECTED', $rej);
+        $this->assertStringContainsString('CO-2610-', $rej);
+        $this->assertStringContainsString('CONFIRMED · APPROVED', $print('/lib/p5-flow-approval/print/'.$this->approvalId('approved').'?status=confirmed&approval=approved'));
+        $this->assertStringContainsString('PURCHASE ORDER', strtoupper($print('/lib/p5-flow-document/print/1?doc=po&status=draft')));
+        $this->get('/lib/p5-flow-master/print/1')->assertNotFound();
+        // tombol Print di form membuka cetakan itu
+        $this->assertStringContainsString('/lib/p5-flow-single/print/'.$cv['id'].'?status=confirmed', $this->plain($this->get('/lib/p5-flow-single/form/'.$cv['id'].'?status=confirmed')->getContent()));
+    }
+
     public function test_unknown_row_goes_back_to_the_grid_with_a_toast(): void
     {
         $this->get('/lib/p5-flow-master/form/99999?'.http_build_query(['from' => '/lib/p5-flow-master']))->assertRedirect('/lib/p5-flow-master')->assertSessionHas('flow_flash.0', 'danger');
