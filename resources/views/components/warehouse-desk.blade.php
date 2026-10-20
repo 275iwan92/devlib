@@ -13,7 +13,7 @@
     @else
         <x-dl::action-form method="get" action="{{ $d['home'] }}">
             <x-dl::action-bar align="start">
-                <x-dl::field.select name="wh" label="Building" :options="$d['options']" :value="$d['wh']" :source="$src('tm2mst.wh_warehouse')" />
+                <x-dl::field.select name="wh" label="Building" :options="$d['options']" :value="$d['wh']" :source="$srcFor('building')" />
                 @if (! empty($d['pickOptions']))<x-dl::field.select name="pick" label="Pick allocation" :options="$d['pickOptions']" :value="$d['pick'] ?? null" placeholder="None" hint="Shows where an open pick list takes its material. None = the plain map." />@endif
                 <x-dl::field.checkbox name="putaway" label="Layer" text="Putaway" :value="! empty($d['putaway'])" hint="Shows the suggested bin (P) of every open putaway task." />
                 <x-dl::button variant="secondary" icon="fa-rotate" label="Show" type="submit" />
@@ -31,14 +31,14 @@
         @else
             <x-dl::wh-map id="wh-map-{{ $d['wh'] }}" :title="Lang::raw($d['title'])" :width="$m['width']" :height="$m['height']" :outline="$m['outline']"
                 :floors="$m['floors']" :bins="$m['bins']" :floor="$m['floor']" :selected="$m['selected']" :save-url="$m['saveUrl']" :restack-url="$m['restackUrl']"
-                source="{{ $src('tm2mst.wh_warehouse', 'tm2mst.wh_zone', 'tm2mst.wh_loc', 'tm2inv.v_rm_onhand', 'tm2inv.v_sfg_onhand', 'tm2inv.v_fg_onhand', 'tm2inv.inv_pallet (stack_no, unit_kind)') }}"
+                :source="$srcFor('map')"
                 :actions="$m['actions']" :layer="$m['layer'] ?? []" />
             <x-dl::card title="Capacity per Floor" icon="fa-ruler-combined" description="Floor area and clear height give the room volume. Storage volume = area of the storage areas x their stacking height. In use = estimated volume and weight of the stock (paper: sheets x size x thickness).">
                 <x-slot:actions>
                     <x-dl::button size="sm" variant="secondary" icon="fa-building" label="Building Size & Height" :href="$d['buildingsUrl']" />
                     <x-dl::button size="sm" variant="secondary" icon="fa-vector-square" label="Stacking Height per Area" :href="$d['zonesUrl']" />
                 </x-slot:actions>
-                <x-dl::grid id="wh-capacity-{{ $d['wh'] }}" mode="report" :per-page="10" search="Search..." source="{{ $src('tm2mst.wh_warehouse (length, width, height per floor)', 'tm2mst.wh_zone (size, stack height)', 'tm2mst.wh_loc.capacity_kg') }}"
+                <x-dl::grid id="wh-capacity-{{ $d['wh'] }}" mode="report" :per-page="10" search="Search..." :source="$srcFor('capacity')"
                     :rows="$m['capacity']" :columns="$capacityColumns()" />
                 @if ($m['missingHeight'])
                     <x-dl::alert tone="warn" message="A floor without a clear height has no volume. Fill in the height of every floor in Buildings (and the stacking height per area in Storage Areas if it is lower than the ceiling)." />
@@ -53,7 +53,7 @@
         <x-dl::modal id="wh-generate" title="Generate Bins" icon="fa-wand-magic-sparkles" size="md">
             <x-dl::action-form action="{{ $g['action'] }}" id="wh-generate-form">
                 <x-dl::form.row :cols="1">
-                    <x-dl::field.select name="zone_id" label="Storage area" required :source="$src('tm2mst.wh_zone')" :options="$g['zones']"
+                    <x-dl::field.select name="zone_id" label="Storage area" required :source="$srcFor('zone')" :options="$g['zones']"
                         hint="Floor area: lanes and slots. Rack area: racks, columns and levels. Open area: one bin, the numbers are ignored." />
                 </x-dl::form.row>
                 <x-dl::form.row :cols="4">

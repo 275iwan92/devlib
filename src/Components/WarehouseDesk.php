@@ -18,7 +18,7 @@ namespace Devlib\Components;
 // ukuran, peta lengkap. Layar hanya menyerahkan $desk (array siap pakai dari kelas data aplikasi, kunci: wh, home, title, options, links, generate, map); isi bin dan kapasitas dihitung
 // oleh aplikasi pemakai.
 // Objek DevLib (dulu x-mp::inv.warehouse-desk, user 2026-10-07): data contoh lengkap ada di devlib.test; MockupParts\...\WarehouseDesk
-// turunannya hanya mengganti penerjemah tooltip sumber data (src()).
+// turunannya menimpa sources() (nama sumber data per peran) dan penerjemah src().
 class WarehouseDesk extends DevlibComponent
 {
     public function __construct(
@@ -48,6 +48,21 @@ class WarehouseDesk extends DevlibComponent
             ['key' => 'pct_kg', 'label' => 'Weight Used %', 'type' => 'progress'],
             ['key' => 'bins', 'label' => 'Bins', 'type' => 'number', 'sum' => true],
         ];
+    }
+
+    // Sumber data untuk tooltip, per peran: building, map, capacity, zone => daftar nama sumber. Netral: aplikasi pemakai menimpanya
+    // dengan nama tabel/kolomnya sendiri; tanpa sumber, tooltip dilewati.
+    protected function sources(): array
+    {
+        return [];
+    }
+
+    // Dipakai view: tooltip sumber data untuk satu peran, null bila aplikasi tidak menyebut sumbernya.
+    public function srcFor(string $role): ?string
+    {
+        $refs = $this->sources()[$role] ?? [];
+
+        return $refs ? $this->src(...$refs) : null;
     }
 
     public function src(string ...$tables): ?string
