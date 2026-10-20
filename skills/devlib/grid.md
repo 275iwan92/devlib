@@ -1,0 +1,22 @@
+# DevLib: aturan baku Grid
+
+Aturan penuh `x-dl::grid`; ditegakkan kode oleh `Devlib\Lint\GridRules` (`php artisan devlib:lint`, Mode Developer). Prop & tipe kolom: komentar kepala `src/Components/Grid.php` / `components.md`.
+
+Dua grid entry: **`kind="master"`** dan **`kind="transactional"`** — `kind` mengatur `actions` dan gaya kolom pertama otomatis (kolom pertama master = `box`, transaksional = polos; `type => doc` lama ikut jadi polos). Tulis `kind`, tidak perlu `actions`/`box`/`avatar` manual. Tanpa `kind` = perilaku lama. Report tetap `mode="report"`.
+
+Semua dari satu komponen; bedanya `mode`, `actions`, dan kolom depan. Daftar prop & tipe kolom lengkap: komentar kepala `src/Components/Grid.php`.
+
+| Tipe | Pengaturan | Kolom depan | Aksi baris |
+|---|---|---|---|
+| **Master** (data sedikit: barang, kategori, supplier, ...) | `mode="entry"` (bawaan), `actions="master"`, `:toggle-url="url('x/{id}/toggle')"` | kotak warna-warni berisi nama tebal + kode kecil: `'type'=>'identity','code'=>'<kolom kode>','box'=>true` (`'hue'=>'hue'` bila warna bermakna) | Edit + Aktif/Nonaktif |
+| **Transaksional** (bisa ribuan baris, harus cepat: PO, penerimaan, ...) | `kind="transactional"` (plain; baris selang-seling warna lembut otomatis) | nomor dokumen **teks tebal saja, TANPA kotak/avatar warna**: `'type'=>'identity','code'=>'party','avatar'=>false` (nama pihak = baris kecil di bawah nomor; jangan `type => doc`) | **Buka saja** |
+| **Report** | `mode="report"` (otomatis: tanpa centang/Aksi/New Record, rapat, filter terbuka) | bebas | tidak ada |
+| **Daftar lain** (bukan master/transaksi: grup, modul, pengguna keamanan) | `actions="worklist"` atau `none` | `'type'=>'identity','code'=>..,'avatar'=>false` | Buka / tidak ada |
+
+Kriteria:
+- **Alasan pembedaan (keputusan user 2026-10-20):** data transaksi bisa ribuan baris, jadi grid **PLAIN demi kecepatan memuat**: baris selang-seling warna lembut (otomatis dari `kind="transactional"`), kolom pertama hanya teks tebal, hanya kolom **Status** yang boleh berwarna. Data master jauh lebih sedikit, jadi kolom pertama berupa **box / persegi dokumen** berwarna.
+- **Master**: grid master baru wajib berkotak (`box => true`), jangan `avatar => false`. Aktif/Nonaktif hanya untuk master dan **wajib** `toggle-url`, kalau tidak hanya pratinjau.
+- **Transaksional**: bentuk lama "persegi dokumen" (`type => doc`) TIDAK dipakai di grid transaksional. Kolom nilai `money` dengan `'sum'=>true` memberi baris Total. **5–8 kolom tampil** (sisanya tersembunyi), **tanpa kolom jumlah item/baris**; Expand (`detail`) = tabel anak **maks 7 kolom, selalu memuat nama item/product**, tanpa harga, judul tanpa jumlah baris. Wajib kolom **Status** `type => badge` + `tones` (satu-satunya warna di baris; hijau terkonfirmasi/disetujui, abu draf, kuning menunggu, merah batal/ditolak). Tanpa `rowTone` dan tanpa warna lain di grid transaksional. **Confirm / Approve / Cancel / Delete TIDAK ada di grid**, hanya di form dokumen. Transaksi tidak pernah dinonaktifkan.
+- **Report**: periode (`Period + Show`) bila laporan berbasis tanggal; cetakan lewat `x-dl::report`.
+- **ATURAN BARU (user 2026-10-20) — ZEBRA:** grid **transaksional** dan grid **report** wajib baris selang-seling warna lembut supaya mudah dibaca. Otomatis dari `kind="transactional"` dan `mode="report"`; jangan dibuat manual. Baris terpilih dan baris bertone (grid lain) tidak ditimpa zebra.
+- Semua grid entry: `+ New Record` via `:new-url`; sembunyikan (`:new-record="null"`) bagi yang tak berhak; `:open-url="url('x/{id}')"` (klik 2x/Buka/Edit); `search` menyebut kolom yang dicari; `stats` = kotak hitung yang berfungsi sebagai filter. Toolbar (cari, filter, kolom, export CSV) datang otomatis — jangan dibuat manual. Bulk hanya bila diminta.

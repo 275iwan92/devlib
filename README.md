@@ -31,7 +31,7 @@ Tailwind 4: karena paket berada di luar akar proyek, daftarkan sumbernya di CSS 
 ## Skill Claude Code
 
 Skill acuan untuk semua proyek, sumbernya di repo ini:
-- `skills/devlib/SKILL.md` = membangun proyek apa pun dengan DevLib (pasang, layout, pola layar, aturan grid / form / Help).
+- `skills/devlib/SKILL.md` = membangun proyek apa pun dengan DevLib (pasang, layout, pola layar, aturan grid / form / Help); inti pendek, rujukan `install.md`, `grid.md`, `form.md`, `transaction-lifecycle.md`, `help.md`, dan `components.md` (manifest otomatis `php artisan devlib:manifest`). Penegak aturan: `php artisan devlib:lint`.
 - `skills/inventory/SKILL.md` = aturan domain inventori lintas proyek (kode barang vs batch, FEFO, Reorder Point, satuan stok / beli / pakai + Conversions).
 
 Agar aktif di semua proyek, tautkan ke folder skill pribadi (sekali per mesin):

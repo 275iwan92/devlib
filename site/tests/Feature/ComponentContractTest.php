@@ -87,4 +87,16 @@ class ComponentContractTest extends TestCase
         }
         $this->assertGreaterThan(100, count($this->concrete()));
     }
+
+    public function test_skill_is_modular_and_references_exist(): void
+    {
+        $dir = dirname(__DIR__, 3).'/skills/devlib';
+        $core = (string) file_get_contents($dir.'/SKILL.md');
+        $this->assertLessThan(90, substr_count($core, "
+"), 'SKILL.md inti harus pendek');
+        foreach (['install', 'grid', 'form', 'transaction-lifecycle', 'help', 'components', 'engine', 'inheritance'] as $f) {
+            $this->assertFileExists("{$dir}/{$f}.md");
+            $this->assertStringContainsString("`{$f}.md`", $core, "SKILL.md harus merujuk {$f}.md");
+        }
+    }
 }
