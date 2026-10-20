@@ -99,6 +99,12 @@ Berlaku untuk SEMUA data transaksional, baik master-detail (dokumen dengan baris
 **AUTHORITY (persetujuan atasan)**
 - Data transaksional dapat memakai mode authority: permohonan ke atasan. Authority **bisa bertingkat** (lebih dari satu level, berurutan).
 
+**Form master-detail: dua STATE per baris detail** (aturan pemilik 2026-10-20)
+- **STATE AWAL** (baris baru, sedang diisi): tombol **SAVE** dan **UNDO**.
+- **STATE TELAH DITULIS** (baris sudah disimpan): tombol **EDIT** dan **DELETE**.
+- Mode **DRAFT**: tombol baris SELALU tampil. Mode **CONFIRMED**: tombol baris DISEMBUNYIKAN (detail readonly). Begitu pula CANCELLED.
+- Status DevLib: komponen `x-dl::lines` saat ini hanya punya hapus baris (+ salin bila `duplicable`); state per baris SAVE/UNDO/EDIT/DELETE BELUM didukung. Membangunnya = perubahan DevLib yang harus OPT-IN (tmerp memakai perilaku lama), lalu commit di repo devlib.
+
 **Data MASTER**
 - TIDAK ada DRAFT/CONFIRMED. Hanya `ACTIVATED` / `DEACTIVATED` (nama lain: `ENABLE` / `DISABLE`). Di grid master ini adalah Aktif/Nonaktif.
 
