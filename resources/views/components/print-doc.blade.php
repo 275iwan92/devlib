@@ -16,14 +16,7 @@
         <section class="dl-pdoc__sheet is-{{ $paper }}" data-pd-sheet data-pd-type="{{ $doc->type }}"
             style="--pd-info-rows:{{ $doc->infoRows }};--pd-rh:{{ $doc->rowHeight }}mm;--pd-tail:{{ $doc->tailHeight }}mm">
             @if ($wm = $doc->watermark())<div class="dl-pdoc__wm {{ mb_strlen($wm) > 9 ? 'is-long' : '' }}" aria-hidden="true">{{ $wm }}</div>@endif
-            <header class="dl-pdoc__kop">
-                <div class="dl-pdoc__co">
-                    @if (! $co['logo'])<span class="dl-pdoc__logo">{{ $co['initials'] }}</span>@endif
-                    <div>@if ($co['logo'])<img class="dl-pdoc__brand" src="{{ $co['logo'] }}" alt="{{ $co['name'] }}">@else<b>{{ $co['name'] }}</b>@endif @foreach ($co['lines'] as $line)<small>{{ $line }}</small>@endforeach @if ($co['npwp'])<small>NPWP {{ $co['npwp'] }}</small>@endif</div>
-                </div>
-                <h1 @class(['is-compact' => $doc->titleCompact])>{{ $t($doc->title) }}@if ($doc->subtitle)<small>{{ $t($doc->subtitle) }}</small>@endif</h1>
-                <div class="dl-pdoc__kopr"><small>{{ $t('Scan for') }}<br>{{ $t($doc->qrHint) }}</small><span class="dl-pdoc__qr" data-pd-qr></span></div>
-            </header>
+            @include('devlib::partials.print-doc-kop', ['title' => $t($doc->title), 'subtitle' => $doc->subtitle ? $t($doc->subtitle) : null, 'compact' => $doc->titleCompact])
 
             <div class="dl-pdoc__info">
                 <div>
@@ -79,5 +72,9 @@
 
             <footer class="dl-pdoc__foot"><span>{{ $doc->printedLine() }}</span><span>{{ $t('Sheet') }} {{ $sheet['page'] }}/{{ $sheet['pages'] }}</span></footer>
         </section>
+    @endforeach
+    @php($aps = $doc->appendices())
+    @foreach ($aps as $ap)
+        @include('devlib::partials.print-doc-appendix', ['ap' => $ap, 'n' => $loop->iteration, 'total' => count($aps)])
     @endforeach
 </div>

@@ -279,6 +279,18 @@ abstract class Document
         return '# '.$words.' #';
     }
 
+    /**
+     * Lembar lampiran A4 setelah lembar dokumen (mis. syarat, alternatif, gambar). Tiap lampiran: ['title' => ..., 'blocks' => [...]] dengan blok
+     * kind facts (rows [label, nilai]) / table (head, rows, num, note) / list (items) / text (text), dan/atau 'view' + 'data' milik aplikasi.
+     * Dokumen yang punya lampiran wajib memakai kertas A4 (override paper()).
+     *
+     * @return list<array{title: string, blocks?: list<array>, view?: string, data?: array}>
+     */
+    public function appendices(): array
+    {
+        return [];
+    }
+
     /** @return list<array{0: string, 1: string}> catatan zona penutup: terbilang (bila berharga) + catatan dokumen */
     public function notes(): array
     {

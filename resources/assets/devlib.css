@@ -2956,6 +2956,20 @@ a.dl-ycal__d:hover{background:var(--dl-hover);outline:1px solid var(--dl-accent)
 /* 7. Kaki */
 .dl-pdoc__foot{display:flex;justify-content:space-between;margin-top:1.2mm;padding-top:.8mm;border-top:.15mm solid #bbb;font-size:7pt;color:#444}
 .dl-pdoc__items+.dl-pdoc__foot{margin-top:auto}
+/* Lembar lampiran: blok facts / table / list / text di bawah kop (Document::appendices). Hitam di atas putih, tanpa abu-abu. */
+.dl-pdoc__appx-body{display:flex;flex-direction:column;gap:4mm;padding-top:4mm;flex:1;min-height:0;overflow:hidden}
+.dl-pdoc__blk h5{font-size:8.5pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-bottom:.3mm solid #222;padding-bottom:.8mm;margin-bottom:1.4mm}
+.dl-pdoc__kv{display:grid;grid-template-columns:42mm 1fr;gap:2mm;font-size:9pt;line-height:1.35;border-bottom:.15mm dotted #9a9a9a;padding:.6mm 0}
+.dl-pdoc__kv b{font-weight:600}
+.dl-pdoc__tbl{width:100%;border-collapse:collapse;font-size:9pt}
+.dl-pdoc__tbl th{background:#222;color:#fff;font-size:8pt;font-weight:700;letter-spacing:.04em;text-align:left;padding:1.2mm 2mm;text-transform:uppercase}
+.dl-pdoc__tbl td{padding:1mm 2mm;border-bottom:.15mm dotted #9a9a9a}
+.dl-pdoc__tbl .is-num{text-align:right;font-variant-numeric:tabular-nums}
+.dl-pdoc__ol{margin-left:5mm;font-size:9pt;line-height:1.45}
+.dl-pdoc__ol li{padding-left:1mm}
+.dl-pdoc__txt{font-size:9pt;line-height:1.45;white-space:pre-line}
+.dl-pdoc__cap{font-size:8pt;line-height:1.4;margin-top:1.2mm}
+.dl-pdoc__appx-body .dl-card,.dl-pdoc__appx-body .dl-box{break-inside:avoid}
 /* Cetak langsung dari browser (Ctrl+P) dan halaman dokumen online: lembar saja, tanpa latar abu-abu */
 @media print{.dl-pdoc{background:none;padding:0;gap:0;border-radius:0;display:block}.dl-pdoc__sheet{box-shadow:none;break-after:page}}
 .dl-share-page__doc .dl-pdoc{background:none;padding:0}
