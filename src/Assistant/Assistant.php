@@ -7,7 +7,7 @@ use Devlib\Lang;
 
 // Mesin jawab asisten aplikasi (kontrak baku: skills/devlib/assistant.md). Opt-in: tidak terdaftar otomatis.
 // Urutan keputusan:
-//   0. (opt-in DataPolicy) pertanyaan menyebut gaji / payroll -> DENIED tetap; Tool Value hanya untuk ValueAsker
+//   0. (opt-in DataPolicy) pertanyaan menyebut gaji / payroll / formula HPP -> DENIED tetap; Tool Value hanya untuk ValueAsker
 //   1. frasa Tool cocok -> gerbang hak (modul + level) -> Tool menjawab        (angka hanya dari Tool, tidak dari model)
 //   2. kata "cara / how" + topik bantuan cocok -> langkah dari Knowledge
 //   3. nama layar cocok -> layar (Open + How to use)
@@ -39,7 +39,7 @@ final class Assistant
     ) {
         foreach ($tools as $tool) {
             if ($tool instanceof Classified && $tool->sensitivity() === Sensitivity::Forbidden) {
-                throw new AssistantException("Tool [{$tool->key()}] is declared Forbidden: salary / payroll never become tools.");
+                throw new AssistantException("Tool [{$tool->key()}] is declared Forbidden: salary / payroll / costing formulas never become tools.");
             }
             $this->policy?->assertTool($tool);
         }
@@ -270,7 +270,7 @@ final class Assistant
     private function forbidden(): Reply
     {
         return new Reply(Reply::DENIED, Lang::text('Not available for your account'),
-            Lang::text('The assistant does not handle salary or payroll, for any user.'));
+            Lang::text('The assistant does not handle salary, payroll or costing formulas, for any user.'));
     }
 
     private function declined(): Reply

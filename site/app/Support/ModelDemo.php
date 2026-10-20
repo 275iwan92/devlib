@@ -4,7 +4,6 @@ namespace App\Support;
 
 use Devlib\Assistant\Asker;
 use Devlib\Assistant\Assistant;
-use Devlib\Assistant\DataPolicy;
 use Devlib\Assistant\EngineTool;
 use Devlib\Assistant\Knowledge;
 use Devlib\Assistant\MemoryHistory;
@@ -92,13 +91,13 @@ class ModelDemo
         });
         $today = new EngineTool($engines, 'orders-today', ['order masuk hari ini', 'order yang masuk hari ini', 'orders today'], fn () => ['date' => date('Y-m-d')], sensitivity: Sensitivity::Value);
 
-        return new Assistant($navigator, $knowledge, [$today], history: new MemoryHistory, outOfScope: 'Saya hanya memahami perihal program ini, lainnya saya belum paham', policy: new DataPolicy);
+        return new Assistant($navigator, $knowledge, [$today], history: new MemoryHistory, outOfScope: 'Saya hanya memahami perihal program ini, lainnya saya belum paham');
     }
 
     /** @return list<string> */
     public static function questions(): array
     {
-        return ['order yang masuk hari ini', 'di mana menu untuk buat PO', 'how to use grid', 'bagaimana cetak PO dengan logo perusahaan', 'cuaca di Surabaya besok', 'berapa gaji bulan ini'];
+        return ['order yang masuk hari ini', 'di mana menu untuk buat PO', 'how to use grid', 'bagaimana cetak PO dengan logo perusahaan', 'cuaca di Surabaya besok'];
     }
 
     /** ChatService di atas data memori dengan lima orang fiktif; kembalian = data siap untuk <x-dl::chat>. */

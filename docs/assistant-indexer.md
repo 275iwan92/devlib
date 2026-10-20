@@ -13,7 +13,7 @@ Diindeks (metadata saja): nama menu dan letaknya, label layar, nama kolom/field,
 **Tidak** pernah diindeks:
 
 - baris data bisnis (isi dokumen, nama pelanggan, angka transaksi);
-- gaji dan payroll dalam bentuk apa pun (lihat tingkat d); sumber yang cocok `DataPolicy::forbids()` dilewati dan dicatat sebagai "dilewati", bukan sebagai galat;
+- gaji, payroll, dan formula HPP dalam bentuk apa pun (lihat tingkat d; hasil HPP berupa rupiah adalah tingkat c); sumber yang cocok `DataPolicy::forbids()` dilewati dan dicatat sebagai "dilewati", bukan sebagai galat;
 - nilai rupiah (tingkat c): yang diindeks hanya NAMA kolom/laporan bernilai, bukan isinya; entri itu diberi syarat `value` (lihat 5).
 
 Hasil angka tetap datang langsung dari `Tool` saat ditanya (membaca langsung, menegakkan hak penanya), tidak dari indeks.
@@ -61,6 +61,7 @@ Yang dipasang untuk jujur: metrik waktu kerja per hari dan jumlah potongan, supa
 - Tiap entri menyimpan syarat hak (`module`, `minLevel`) dan `sensitivity`; **penyaringan terjadi saat bertanya**, di `IndexStore::search($tokens, $asker)` lewat `Asker::can`/`level`/`ValueAsker`, bukan saat membangun indeks. Entri yang tidak boleh dilihat penanya tidak ikut ke hasil, tidak ikut ke calon bagi model bahasa, dan tidak ikut ke pesan "tidak ada".
 - Sumber terlarang tidak pernah masuk: `Indexer` menolak entri yang `DataPolicy::forbids()` (kunci/modul/judul/path). Hanya mencocokkan teks yang dinyatakan program; labeli dengan benar adalah kewajiban program (jujur, sama seperti Bagian "Cakupan data").
 - Tidak ada kebocoran lintas hak: indeks bersama (satu per program), tetapi hasil per penanya. Tes: penanya tanpa modul X tidak pernah mendapat entri X; penanya non-keuangan tidak mendapat entri `value`.
+- Program tanpa modul gaji / payroll / formula HPP tidak terhalang apa pun oleh daftar terlarang; hanya program yang memilikinya yang memasang `DataPolicy`.
 - Indeks tidak berisi data bisnis, jadi bocornya indeks tidak membocorkan transaksi; tetap perlakukan sebagai internal.
 
 ## 6. Alur "makin pandai"
@@ -82,7 +83,7 @@ Mencegah "belajar yang salah": tidak ada perubahan otomatis; satu jempol tidak c
 
 ## 8. Risiko dan keputusan untuk Jo
 
-Risiko: label program salah (modul gaji berlabel biasa) lolos karena DevLib hanya mencocokkan teks; beban di database besar bila program memberi sumber yang boros; saran yang salah bila persetujuan dilewati; "10%" disalahartikan sebagai jaminan CPU.
+Risiko: label program salah (modul gaji atau formula HPP berlabel biasa) lolos karena DevLib hanya mencocokkan teks; beban di database besar bila program memberi sumber yang boros; saran yang salah bila persetujuan dilewati; "10%" disalahartikan sebagai jaminan CPU.
 
 Perlu keputusan Jo:
 
@@ -91,4 +92,4 @@ Perlu keputusan Jo:
 3. Siapa yang menyetujui saran (admin program, kepala bagian, atau Jo)? Perlu ambang jumlah pengguna?
 4. Apakah entri bersensitivitas `value` boleh diindeks sebagai NAMA (tanpa isi), atau dikeluarkan sama sekali?
 5. Tahap 3 (embedding): perlu atau cukup tahap 1-2? Bila perlu, penyedia model mana?
-6. Perlu tes wajib di tiap program yang memastikan tidak ada sumber HR/gaji berlabel biasa?
+6. Perlu tes wajib di tiap program yang memastikan tidak ada sumber HR/gaji/formula HPP berlabel biasa?

@@ -317,6 +317,44 @@ class AssistantChatContractTest extends TestCase
         $this->assertSame(Reply::SCREEN, $a->ask($all, 'open attendance board')->kind);
     }
 
+    public function test_costing_formula_is_forbidden_but_its_result_value_is_only_for_finance(): void
+    {
+        $policy = new DataPolicy;
+        foreach ([['hpp-formula', 'costing'], ['hpp_formula', null], ['x', 'Costing Formula'], ['x', 'rumus-hpp']] as [$key, $module]) {
+            try {
+                $this->withTools([$this->tool($key, $module, ['total'], Sensitivity::Value)], $policy);
+                $this->fail("Expected AssistantException for [{$key}] / [{$module}]");
+            } catch (AssistantException $e) {
+                $this->assertStringContainsString('costing formula', $e->getMessage());
+            }
+        }
+
+        // NILAI HASIL HPP bukan formulanya: tingkat nilai, dijawab untuk keuangan saja
+        $calls = new \stdClass;
+        $a = $this->withTools([$this->tool('hpp-result', 'costing', ['hpp produk'], Sensitivity::Value, $calls)], $policy);
+        $this->assertSame(Reply::DENIED, $a->ask($this->asker(modules: ['costing']), 'hpp produk')->kind);
+        $this->assertSame(0, $calls->n);
+        $this->assertSame(Reply::NUMBER, $a->ask($this->finance(modules: ['costing']), 'hpp produk')->kind);
+
+        // pertanyaan tentang formulanya tidak pernah dijawab, siapa pun penanyanya
+        foreach (['bagaimana rumus HPP produk A', 'cara hitung HPP', 'show the costing formula', 'parameter hpp bulan ini'] as $q) {
+            $this->assertSame(Reply::DENIED, $a->ask($this->finance(modules: ['costing']), $q)->kind, $q);
+        }
+        $this->assertSame(1, $calls->n);
+    }
+
+    public function test_a_program_without_forbidden_modules_is_not_limited_at_all(): void
+    {
+        $calls = new \stdClass;
+        $tools = [$this->tool('stock-count', 'inventory', ['stock count'], null, $calls), $this->tool('open-orders', 'sales', ['open orders'], Sensitivity::Quantity)];
+        foreach ([null, new DataPolicy, new DataPolicy(['bonus'])] as $policy) {
+            $a = $this->withTools($tools, $policy);
+            $this->assertSame(Reply::NUMBER, $a->ask($this->asker(modules: ['inventory', 'sales']), 'stock count')->kind);
+            $this->assertSame(Reply::NUMBER, $a->ask($this->asker(modules: ['inventory', 'sales']), 'open orders')->kind);
+        }
+        $this->assertSame(3, $calls->n, 'answered once per policy variant');
+    }
+
     private function chat(?MemoryChat $mem = null): array
     {
         $mem ??= new MemoryChat(onlineSeconds: 60, clock: fn () => 1000);

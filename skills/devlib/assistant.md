@@ -50,16 +50,18 @@ Empat tingkat. DevLib netral: **program** yang menetapkan modul/sumber mana masu
 | (a) Pengetahuan | menu, layar, Help, prosedur, struktur | sesuai hak layar (`Navigator` sudah menyaring per penanya) | bawaan |
 | (b) Kuantitas | jumlah, stok, order, jumlah baris, kehadiran / absensi | hak modul penanya (`Asker::can`) | `Sensitivity::Quantity` (bawaan Tool) |
 | (c) Nilai rupiah | harga, total, piutang, biaya, nilai persediaan, dsb. | hanya penanya yang dinyatakan program sebagai orang keuangan | `Sensitivity::Value` + `ValueAsker::canSeeValue()`; selain itu `Reply::DENIED` |
-| (d) Gaji dan payroll | semua data gaji / payroll | **tidak seorang pun**, termasuk keuangan dan admin | terlarang total: tidak dibaca, tidak diindeks, tidak dijawab, tidak boleh jadi Tool / Navigator / Knowledge sumber |
+| (d) Gaji, payroll, formula HPP | semua data gaji dan payroll; rumus / cara hitung / komponen / parameter perhitungan HPP (costing formula) | **tidak seorang pun**, termasuk keuangan dan admin | terlarang total: tidak dibaca, tidak diindeks, tidak dijawab, tidak boleh jadi Tool / Navigator / Knowledge sumber |
 
-Absensi / kehadiran **bukan** payroll dan tetap boleh (tingkat b).
+Absensi / kehadiran **bukan** payroll dan tetap boleh (tingkat b). Nilai HASIL HPP berupa rupiah adalah tingkat (c), bukan (d): hanya untuk penanya keuangan; yang terlarang adalah FORMULA-nya.
+
+**Tanpa modul yang cocok, tidak ada pembatasan.** Larangan (d) hanya berlaku bagi program yang memang punya modul gaji / payroll / formula HPP dan memasang `DataPolicy`; program tanpa modul itu (dan situs katalog DevLib) berperilaku bebas, tidak ada yang diblokir.
 
 Penegakan di kode (semuanya opt-in; yang tidak memakainya berperilaku seperti sebelumnya):
 
 - `Classified` (interface opsional pada `Tool`): `sensitivity(): Sensitivity` (`Quantity`, `Value`, `Forbidden`). Tool tanpa `Classified` dianggap `Quantity`. `EngineTool` menerima argumen `sensitivity:`.
 - `ValueAsker extends Asker` (opsional): `canSeeValue()`. `Asker` biasa dianggap **tidak** boleh melihat nilai, jadi bawaan untuk Tool `Value` adalah menolak (paling aman). Gerbang nilai berlaku setelah gerbang modul + level.
 - `Sensitivity::Forbidden`: `new Assistant(...)` melempar `AssistantException`, dengan atau tanpa `DataPolicy`.
-- `DataPolicy` (argumen `policy:` pada `Assistant`): daftar kata terlarang bawaan `payroll`, `payslip`, `salary`, `gaji` (mencakup "slip gaji" dan "penggajian") + kata tambahan program (`new DataPolicy(['bonus'])`). Dengan `policy` terpasang: (1) Tool yang kunci / modul / judul / frasanya memuat kata itu ditolak saat `Assistant` dibuat (`AssistantException`); (2) layar (kunci, label, path) dan topik bantuan (kunci, judul) yang memuatnya tidak pernah ditawarkan; (3) pertanyaan yang menyebut kata itu dijawab `DENIED` tetap, tanpa memanggil Tool. Pengindeks nanti memakai `DataPolicy::forbids()` yang sama (`docs/assistant-indexer.md`).
+- `DataPolicy` (argumen `policy:` pada `Assistant`): daftar kata terlarang bawaan `payroll`, `payslip`, `salary`, `gaji` (mencakup "slip gaji" dan "penggajian") dan frasa formula HPP (`hpp formula`, `formula hpp`, `rumus hpp`, `cara hitung hpp`, `komponen hpp`, `parameter hpp`, `costing formula`, dsb.; tanda baca dan garis bawah dianggap spasi, jadi `hpp_formula` cocok, tetapi `hpp-result` TIDAK, karena hasil HPP adalah tingkat nilai) + kata tambahan program (`new DataPolicy(['bonus'])`). Dengan `policy` terpasang: (1) Tool yang kunci / modul / judul / frasanya memuat kata itu ditolak saat `Assistant` dibuat (`AssistantException`); (2) layar (kunci, label, path) dan topik bantuan (kunci, judul) yang memuatnya tidak pernah ditawarkan; (3) pertanyaan yang menyebut kata itu dijawab `DENIED` tetap, tanpa memanggil Tool. Pengindeks nanti memakai `DataPolicy::forbids()` yang sama (`docs/assistant-indexer.md`).
 
 Batas yang jujur: DevLib **hanya mencocokkan teks yang dinyatakan program** (kunci, modul, judul, frasa, path). Ia tidak memahami arti data dan tidak bisa menangkap Tool yang diberi label salah (mis. Tool total gaji berkunci `report-17` dan bersensitivitas `Quantity`), atau Tool `Quantity` yang isi jawabannya memuat rupiah. **Program bertanggung jawab memberi label yang benar** dan memasang `DataPolicy`; tes proyek sebaiknya memastikan tidak ada Tool bermodul keuangan/HR yang berlabel `Quantity`.
 
@@ -86,6 +88,6 @@ $this->app->singleton(\Devlib\Assistant\Assistant::class, fn ($app) => new \Devl
 
 - Menaruh nama proyek / data client di `src/Assistant` atau contoh `site/`. Adaptor yang menyebut tabel proyek hidup di proyek, bukan di DevLib.
 - Membiarkan model menghasilkan angka, SQL, atau teks bantuan.
-- Membuat Tool / layar / topik untuk gaji atau payroll, atau memberi label `Quantity` pada Tool yang menampilkan rupiah.
+- Membuat Tool / layar / topik untuk gaji, payroll, atau formula HPP, atau memberi label `Quantity` pada Tool yang menampilkan rupiah.
 - Menjadikan Auto/Flow engine sebagai tool; perubahan data selalu lewat layar + officer.
 - Menambah perilaku asisten ke proyek bila bisa jadi perubahan opt-in di DevLib (prop/kontrak baru, default lama).
