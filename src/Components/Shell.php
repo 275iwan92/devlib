@@ -65,7 +65,7 @@ class Shell extends DevlibComponent
         // Help & support "banyak aspek, windownya harus besar"): ['edit' => ['label', 'icon' => 'fa-...', 'url'], 'help' => [...]].
         // Tanpa laci: 'edit' = modal kecil nama / e-mail / telepon, 'help' = tab Bantuan.
         public array $drawers = [],
-        // Fitur menu profil yang disembunyikan (aplikasi sederhana): 'chat' (aksi Chat + laci), 'ai' (aksi Asisten AI), 'theme' (pilihan Tema;
+        // Fitur menu profil yang disembunyikan (aplikasi sederhana): 'chat' (aksi Chat + laci), 'ai' (aksi Asisten AI), 'help' (aksi Help & support), 'theme' (pilihan Tema;
         // tanpa Tema, halaman Setup diganti langsung halaman Bahasa).
         public array $without = [],
     ) {

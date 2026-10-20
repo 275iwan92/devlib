@@ -83,7 +83,7 @@ class LayerShell extends Shell
             in_array('chat', $this->without) ? null : ['key' => 'chat', 'label' => 'Chat', 'icon' => 'fa-comment-dots'],
             in_array('ai', $this->without) ? null : ['key' => 'ai', 'label' => Lang::text('AI Assistant'), 'icon' => 'ai'],
             ['key' => 'edit', 'label' => Lang::text('Edit profile'), 'icon' => 'fa-user-pen', 'sep' => true],
-            ['key' => 'help', 'label' => Lang::text('Help & support'), 'icon' => 'help'],
+            in_array('help', $this->without) ? null : ['key' => 'help', 'label' => Lang::text('Help & support'), 'icon' => 'help'],
             ['key' => 'pass', 'label' => Lang::text('Change password'), 'icon' => 'password'],
             $this->developer ? ['key' => 'devmode', 'label' => Lang::text('Developer Mode'), 'icon' => 'fa-bug'] : null,
             $this->classic ? ['key' => 'menu-classic', 'label' => Lang::text('Classic Menu'), 'icon' => 'fa-table-columns'] : null,
