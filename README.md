@@ -24,6 +24,14 @@ Tailwind 4: karena paket berada di luar akar proyek, daftarkan sumbernya di CSS 
 @source '../../../devlib/resources';
 ```
 
+## Skill Claude Code
+
+`skills/devlib/SKILL.md` = skill untuk membangun proyek apa pun dengan DevLib (pasang, layout, pola layar). Sumbernya di repo ini; agar aktif di semua proyek, tautkan ke folder skill pribadi (sekali per mesin):
+
+```powershell
+New-Item -ItemType Junction -Path "$HOME\.claude\skills\devlib" -Target "C:\Users\iwanp\Herd\devlib\skills\devlib"
+```
+
 ## Bekerja di DevLib
 
 - Perubahan DevLib di-commit di repo ini, bukan di git aplikasi yang memakainya.
