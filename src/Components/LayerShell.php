@@ -47,7 +47,8 @@ class LayerShell extends Shell
         };
 
         // Grup menu = submenu (dibuka ke panel berikutnya, ada breadcrumb), bukan judul + daftar panjang (user 2026-09-26).
-        return array_map(fn ($m) => ['label' => $m['label'], 'icon' => $m['icon'] ?? null, 'pin' => $m['pin'] ?? null, 'items' => collect($m['children'] ?? [])
+        // 'section' (opsional) pada modul = judul kelompok di layer akar: modul berurutan dengan section sama tampil di bawah satu judul.
+        return array_map(fn ($m) => ['label' => $m['label'], 'icon' => $m['icon'] ?? null, 'pin' => $m['pin'] ?? null, 'group' => $m['section'] ?? null, 'items' => collect($m['children'] ?? [])
             ->map(fn ($c) => $leaf(isset($c['items']) ? $c + ['icon' => 'fa-solid fa-folder'] : $c, null))
             ->values()->all()], $this->modules);
     }

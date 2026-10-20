@@ -27,7 +27,7 @@ namespace Devlib\Components;
 // menyerahkan array $modules.
 //
 // $modules = [
-//   ['code' => 'SALES', 'short' => 'SLS' (opsional: tampil di bilah atas, nama lengkap di tooltip), 'label' => 'Sales', 'icon' => 'fa-solid fa-…', 'children' => [
+//   ['code' => 'SALES', 'short' => 'SLS' (opsional: tampil di bilah atas, nama lengkap di tooltip), 'section' => 'Operations' (opsional: judul kelompok modul di Layer Menu; Shell biasa mengabaikannya), 'label' => 'Sales', 'icon' => 'fa-solid fa-…', 'children' => [
 //       ['label' => 'Transactions', 'items' => [ITEM, …]],   // grup
 //       ITEM,                                              // item langsung
 //   ]],
