@@ -19,7 +19,7 @@ use Devlib\Lang;
 //   cari semua kolom tampil, sort (panah selalu tampil), Filters + chip, Tab, kotak
 //   statistik = filter, pilih kolom, kerapatan + baris per sel, grup lipat + subtotal,
 //   centang (Shift = rentang) + aksi massal, baris bisa dibuka, klik 2x = buka (LOCKED),
-//   export CSV = kolom yang tampil, pagination ala ScriptCase, setelan diingat per grid.
+//   export CSV / XLSX (menu di tombol Export) = kolom yang tampil, pagination ala ScriptCase, setelan diingat per grid.
 //
 // columns: [['key', 'label', 'type' => text|identity|doc|integer|number|money|date|time|datetime|badge|toggle,
 //            doc = (LAMA, jangan dipakai di grid baru; kind="transactional" mengubahnya jadi teks tebal polos) 'key' = nomor dokumen, 'party' => kolom nama pihak (baris kedua; warna persegi dari nama ini),

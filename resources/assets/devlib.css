@@ -3983,3 +3983,10 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-wizard__donetitle{font-size:calc(20px * var(--dl-font-scale));font-weight:700;color:var(--dl-ink-strong)}
 .dl-wizard__done p{margin:0 0 10px;color:var(--dl-muted)}
 .dl-wizard__done[hidden],.dl-wizard [hidden]{display:none}
+/* Export grid: tombol membuka dua pilihan format (CSV, XLSX) */
+.dl-grid__export{position:relative;display:inline-flex}
+.dl-grid__export [data-g-export]::after{content:"\25BE";margin-left:6px;font-size:.85em}
+.dl-grid__expmenu{position:absolute;right:0;top:calc(100% + 4px);z-index:30;display:flex;flex-direction:column;min-width:110px;padding:4px;background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius-md);box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.dl-grid__expmenu[hidden]{display:none}
+.dl-grid__expmenu button{padding:7px 12px;border:0;background:none;color:var(--dl-ink);font:inherit;text-align:left;border-radius:6px;cursor:pointer}
+.dl-grid__expmenu button:hover{background:var(--dl-accent-soft)}

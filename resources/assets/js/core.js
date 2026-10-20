@@ -827,6 +827,37 @@ window.Devlib = window.Devlib || {};
   }
   const csvCell = v => /[",;\n\t]/.test(String(v ?? '')) ? `"${String(v).replace(/"/g, '""')}"` : String(v ?? '');
   const downloadCsv = (name, lines) => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + lines.map(r => r.map(csvCell).join(';')).join('\r\n')], {type: 'text/csv'})); a.download = name; a.click(); };
+
+  // XLSX minimal tanpa pustaka (user 2026-10-21): satu lembar, ZIP tanpa kompresi, teks inline, angka sebagai angka.
+  const XLS_HEAD = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+  const crcTable = (() => { const t = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  const crc32 = b => { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = crcTable[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+  const xlsxBlob = rows => {
+    const enc = new TextEncoder(), x = s => String(s).replace(/[&<>"]/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[m]));
+    const col = i => { let s = ''; for (i++; i > 0; i = Math.floor((i - 1) / 26)) s = String.fromCharCode(65 + (i - 1) % 26) + s; return s; };
+    const cell = (v, i, j) => typeof v === 'number' && isFinite(v) ? `<c r="${col(j)}${i + 1}"><v>${v}</v></c>` : `<c r="${col(j)}${i + 1}" t="inlineStr"><is><t xml:space="preserve">${x(v ?? '')}</t></is></c>`;
+    const rel = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships', pkg = 'http://schemas.openxmlformats.org/package/2006/relationships', ns = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+    const files = [
+      ['[Content_Types].xml', `${XLS_HEAD}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>`],
+      ['_rels/.rels', `${XLS_HEAD}<Relationships xmlns="${pkg}"><Relationship Id="rId1" Type="${rel}/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+      ['xl/workbook.xml', `${XLS_HEAD}<workbook xmlns="${ns}" xmlns:r="${rel}"><sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets></workbook>`],
+      ['xl/_rels/workbook.xml.rels', `${XLS_HEAD}<Relationships xmlns="${pkg}"><Relationship Id="rId1" Type="${rel}/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`],
+      ['xl/worksheets/sheet1.xml', `${XLS_HEAD}<worksheet xmlns="${ns}"><sheetData>${rows.map((r, i) => `<row r="${i + 1}">${r.map((v, j) => cell(v, i, j)).join('')}</row>`).join('')}</sheetData></worksheet>`],
+    ].map(([name, text]) => ({name: enc.encode(name), data: enc.encode(text)}));
+    const parts = [], central = [];
+    let offset = 0;
+    const u16 = v => [v & 255, v >>> 8 & 255], u32 = v => [v & 255, v >>> 8 & 255, v >>> 16 & 255, v >>> 24 & 255];
+    files.forEach(f => {
+      const crc = crc32(f.data), shared = [...u16(20), ...u16(0x0800), ...u16(0), ...u16(0), ...u16(0x21), ...u32(crc), ...u32(f.data.length), ...u32(f.data.length), ...u16(f.name.length), ...u16(0)];
+      parts.push(new Uint8Array([0x50, 0x4B, 3, 4, ...shared]), f.name, f.data);
+      central.push(new Uint8Array([0x50, 0x4B, 1, 2, ...u16(20), ...shared.slice(0, 26), ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(offset)]), f.name);
+      offset += 30 + f.name.length + f.data.length;
+    });
+    const cdSize = central.reduce((n, p) => n + p.length, 0);
+    parts.push(...central, new Uint8Array([0x50, 0x4B, 5, 6, 0, 0, 0, 0, ...u16(files.length), ...u16(files.length), ...u32(cdSize), ...u32(offset), 0, 0]));
+    return new Blob(parts, {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  };
+  const downloadXlsx = (name, rows) => { const a = document.createElement('a'); a.href = URL.createObjectURL(xlsxBlob(rows)); a.download = name; a.click(); };
   // Angka ketikan dalam bahasa tampilan -> Number (NaN bila bukan angka).
   const parseNum = v => { const c = numStr(v); return c === '' ? NaN : +c; };
   // Ketikan tanggal -> ISO yyyy-mm-dd (null = tidak sah). Lewat objek DlDate.
@@ -906,6 +937,6 @@ window.Devlib = window.Devlib || {};
 
   // Asal data kolom (grid/lines): {src: 'sales.iqp_inquiry.qty'} -> tooltip Mode Developer di header kolom.
   const srcAttr = (c, kind = 'kolom') => c && c.src ? ` data-dl="${kind} ${esc(c.label || c.key)}" data-dl-class="kolom" data-dl-src="${esc(c.src)}"` : '';
-  Devlib.h = {srcAttr, $, $$, esc, showQr, CASES, CASE_LABEL, applyCase, idNum, bindPanel, calcPanel, pickIndex, dayOfYear, WMO, LOGIN_T, typeIcon, HOME, setDevMode, initDevMode, PRESET_T, toast, confirmBox, layer, openLayer, closeLayer, T, Tf, t, dirtyForms, markDirty, askDirty, submitForm, resetWorkspace, keyName, visible, BUILTIN, showShortcuts, initDevToggle, TZ, fmt, applyMask, fieldErr, CC, luhn, setField, setOptions, fillForm, hasValue, fieldText, W_ID, W_EN, W_EN_T, W_SC_ID, W_SC_EN, wScale, wId, wEn, words, parseCsv, csvCell, downloadCsv, parseNum, numStr, numIn, numFmt, NUM, MON_EN, dow2, DlDate, DlNumber, DlTime, DlDateTime, DlText, parseDate, CH_TONES, chNum, niceMax, libOnce, loadLib, AUTH_T, at, authLang, fieldMsg, fld, val, passCheck, emit};
+  Devlib.h = {srcAttr, $, $$, esc, showQr, CASES, CASE_LABEL, applyCase, idNum, bindPanel, calcPanel, pickIndex, dayOfYear, WMO, LOGIN_T, typeIcon, HOME, setDevMode, initDevMode, PRESET_T, toast, confirmBox, layer, openLayer, closeLayer, T, Tf, t, dirtyForms, markDirty, askDirty, submitForm, resetWorkspace, keyName, visible, BUILTIN, showShortcuts, initDevToggle, TZ, fmt, applyMask, fieldErr, CC, luhn, setField, setOptions, fillForm, hasValue, fieldText, W_ID, W_EN, W_EN_T, W_SC_ID, W_SC_EN, wScale, wId, wEn, words, parseCsv, csvCell, downloadCsv, xlsxBlob, downloadXlsx, parseNum, numStr, numIn, numFmt, NUM, MON_EN, dow2, DlDate, DlNumber, DlTime, DlDateTime, DlText, parseDate, CH_TONES, chNum, niceMax, libOnce, loadLib, AUTH_T, at, authLang, fieldMsg, fld, val, passCheck, emit};
   Object.assign(Devlib, {toast, setDevMode, fmt, confirm: confirmBox, open: openLayer, close: id => closeLayer(layer(id)), fill: fillForm, setField, words, resetWorkspace}, {initDevMode});
 })();

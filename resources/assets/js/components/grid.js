@@ -1,7 +1,7 @@
 /* DevLib · Grid */
 (function (Devlib) {
   'use strict';
-  const {srcAttr, $, $$, esc, toast, fmt, at, val, emit, parseNum, DlDateTime, DlTime, T, Tf} = Devlib.h;
+  const {srcAttr, $, $$, esc, toast, fmt, at, val, emit, parseNum, DlDateTime, DlTime, T, Tf, downloadXlsx} = Devlib.h;
   /* ============================ GRID ============================ */
   // Mesin grid sisi-browser (DevLib, tanpa DB). Di aplikasi pemakai, versi server (Livewire) memakai
   // markup & kelas yang sama; hanya sumber data & query-nya yang berpindah ke server.
@@ -69,7 +69,9 @@
         const ba = x.closest('[data-g-bulk-action]'); if (ba) { if (!ba.dataset.gBulkQuiet) toast(`${ba.textContent.trim()}: ${Tf('g_rows_preview', {n: fmt.number(this.sel.size)})}`, 'success'); this.el.dispatchEvent(new CustomEvent('dl:grid-bulk', {bubbles: true, detail: {action: ba.dataset.gBulkAction, ids: [...this.sel]}})); return; }
         const act = x.closest('[data-g-act]'); if (act) { const r = this.rows.find(v => String(v[this.cfg.rowKey]) === act.dataset.id); if (act.dataset.gAct === 'toggle' && this.cfg.activeKey && this.cfg.toggleUrl) { this.saveToggle(r, act.dataset.id); } else if (act.dataset.gAct === 'toggle' && this.cfg.activeKey) { r[this.cfg.activeKey] = !r[this.cfg.activeKey]; toast(T(r[this.cfg.activeKey] ? 'g_activated' : 'g_deactivated') + ': ' + (r.name || act.dataset.id), 'success'); this.redraw(); } else if (this._emit('dl:grid-open', {id: act.dataset.id, action: act.dataset.gAct})) toast(`${act.title.split(' (')[0]}: ${r.name || r[this.cfg.rowKey]} (${T('preview')})`); return; }
         if (x.closest('[data-g-new]')) { if (this._emit('dl:grid-new', {})) toast(`+ New Record (${T('preview')})`); return; }
-        if (x.closest('[data-g-export]')) return this.exportCsv();
+        { const em = this.q('[data-g-expmenu]'); if (em && !em.hidden && !x.closest('.dl-grid__export')) em.hidden = true; }  // klik di luar menu Export menutupnya
+        if (x.closest('[data-g-export]')) { const m = this.q('[data-g-expmenu]'); m.hidden = !m.hidden; return; }
+        const fmt = x.closest('[data-g-fmt]'); if (fmt) { this.q('[data-g-expmenu]').hidden = true; return this.exportFile(fmt.dataset.gFmt); }
         if (x.closest('[data-g-fopen]')) return this.openFilter();
         if (x.closest('[data-g-fclose]') || x.matches('[data-g-fmodal]')) return this.closeFilter();
         if (x.closest('[data-g-fapply]')) return this.applyFilter();
@@ -387,10 +389,18 @@
       this.rows.unshift(r); this.redraw(); this._emit('dl:grid-add', {row: r}); toast(T('g_row_added'), 'success'); const f = this.q('[data-g-qa]'); if (f) f.focus();
     }
 
-    exportCsv() {
-      const vis = this.shown(), list = this.sorted(this.filtered()), cellTxt = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
-      const csv = [vis.map(c => cellTxt(c.label)).join(';'), ...list.map(r => vis.map(c => cellTxt(c.type === 'identity' && c.code ? `${this.val(r, c.key)} (${this.val(r, c.code)})` : c.type === 'doc' && c.party ? `${this.val(r, c.key)} (${this.val(r, c.party)})` : this.val(r, c.key))).join(';'))].join('\r\n');
-      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], {type: 'text/csv'})); a.download = this.cfg.id + '.csv'; a.click();
+    // Export = kolom yang tampil, urutan dan saringan saat ini; dua format: CSV dan XLSX (angka tetap angka di XLSX).
+    exportFile(format) {
+      const vis = this.shown(), list = this.sorted(this.filtered());
+      const cell = (r, c) => c.type === 'identity' && c.code ? `${this.val(r, c.key)} (${this.val(r, c.code)})` : c.type === 'doc' && c.party ? `${this.val(r, c.key)} (${this.val(r, c.party)})` : this.val(r, c.key);
+      if (format === 'xlsx') {
+        const num = ['number', 'money', 'integer', 'decimal'];
+        downloadXlsx(this.cfg.id + '.xlsx', [vis.map(c => c.label), ...list.map(r => vis.map(c => { const v = cell(r, c); return num.includes(c.type) && v !== '' && v != null && isFinite(Number(v)) ? Number(v) : v; }))]);
+      } else {
+        const cellTxt = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+        const csv = [vis.map(c => cellTxt(c.label)).join(';'), ...list.map(r => vis.map(c => cellTxt(cell(r, c))).join(';'))].join('\r\n');
+        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], {type: 'text/csv'})); a.download = this.cfg.id + '.csv'; a.click();
+      }
       toast(Tf('g_export_done', {n: fmt.number(list.length), c: vis.length}), 'success');
     }
   }

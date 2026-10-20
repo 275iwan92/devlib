@@ -23,6 +23,10 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   header REMARK, CSS token, manifest, tes kontrak, halaman katalog), aturan baku, cara mewariskan, uji layak jadi object, dan versi. Butir yang belum
   punya aturan tertulis ditandai **BELUM ADA ATURAN**. Ditautkan dari `SKILL.md`.
 
+- **Export grid: CSV dan XLSX.** Tombol Export di toolbar `x-dl::grid` kini membuka menu dua pilihan (CSV, XLSX). XLSX dibuat di peramban tanpa pustaka
+  (`Devlib.h.xlsxBlob` / `downloadXlsx`: satu lembar, ZIP tanpa kompresi, angka tetap angka). Berlaku untuk semua grid, termasuk halaman APPROVED
+  (hanya tombolnya: bertambah panah dan menu). Isi export tidak berubah (kolom yang tampil, urutan dan saringan saat itu).
+
 - **Menu "Grid and Form" dan siklus form ketat** (opt-in, aturan pemilik 2026-10-21; rinci `skills/devlib/grid-form-flow.md`).
   `x-dl::form` menerima `:strict`: record baru = Undo + Save (Draft, atau Active untuk master, isian bawaan terisi); tersimpan = terkunci, **Edit** membuka
   isian (Save + Undo); Save dan Confirm tetap di form; Delete (Yes/No) dan Back kembali ke grid; tanpa New / Email / Back to Draft; cap status dokumen
@@ -34,7 +38,6 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   Situs acuan: grup menu "Grid and Form" (pohon dua tingkat: Grid Report | Grid Pre-Entry > Transactional (Master-Detail, Single, Approval), Master, Lookup | Form
   Wizard), halaman baru `p5-flow-single` (Cash Voucher) dan `p5-flow-approval`, contoh Master-Detail Customer Order lalu Purchase Order. Halaman APPROVED lama
   (`p5-grid-tx`, `p5-grid-master`, `p5-form-single`, `p5-form-md`, `p5-form-approval`) tidak diubah dan hanya keluar dari menu.
-  Belum ada: Export XLSX di toolbar grid (Export grid masih CSV saja).
 
 - **Alur Grid → Form → kembali** (opt-in). `x-dl::grid` menerima `restore`: cari, halaman, dan kotak statistik disimpan saat form dibuka lewat
   `openUrl` / `newUrl` dan dipulihkan sekali saat kembali; `?hl=<id>` menyorot baris yang baru disimpan (halaman diloncati). `boot.js` menampilkan
