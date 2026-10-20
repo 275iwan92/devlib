@@ -8,7 +8,7 @@
     };
     $isNew = $status === 'new';
     $sample = [
-        'employee_code' => 'TM-00012', 'full_name' => 'Budi Santoso', 'nickname' => 'Budi', 'company_id' => '1', 'position_id' => '1',
+        'employee_code' => 'MCD-00012', 'full_name' => 'Budi Santoso', 'nickname' => 'Budi', 'company_id' => '1', 'position_id' => '1',
         'join_date' => '2018-01-02', 'work_status' => 'WORKING', 'work_status_since' => '2018-01-02', 'payment_frequency' => 'WEEKLY',
         'default_shift_id' => '1', 'default_machine_id' => '1', 'device_pin' => '1012', 'personal_file_complete' => true, 'deposit_status' => 'ADA',
         'gender' => 'L', 'birth_place' => 'Sidoarjo', 'birth_date' => '1990-03-14', 'religion' => 'ISL', 'marital_status' => 'KAWIN',
@@ -42,7 +42,7 @@
         <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="url()->current().'?'.http_build_query(['as' => $as, 'status' => $sk])" />
     @endforeach
 </div>
-<x-dl::form :title="$dup ? 'Pegawai · Baru (salinan TM-00012)' : ($isNew ? 'Pegawai · Baru' : 'Pegawai · TM-00012 '.$name)" panel="top" kind="document" :status="$status"
+<x-dl::form :title="$dup ? 'Pegawai · Baru (salinan MCD-00012)' : ($isNew ? 'Pegawai · Baru' : 'Pegawai · MCD-00012 '.$name)" panel="top" kind="document" :status="$status"
     :action="url()->current()" method="GET" :new-url="url()->current().'?new=1&as='.$as" :can-reopen="$canReopen" :can-input="$canInput" :hidden="['as' => $as]"
     :tabs="['utama' => 'Utama', 'pribadi' => 'Data Pribadi', 'alamat' => 'Alamat & Kontak', 'darurat' => 'Kontak Darurat']"
     :created-by="$isNew ? null : 'johiwan'" :created-at="$isNew ? null : '2018-01-02 08:10:00'"
