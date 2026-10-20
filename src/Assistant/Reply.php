@@ -4,6 +4,7 @@ namespace Devlib\Assistant;
 
 // Satu jawaban asisten sebagai data; bentuk toArray() = bentuk yang dibaca laci "AI Assistant" di x-dl::shell (prop assistant).
 //   SCREEN layar ditemukan    HELP kutipan bantuan    NUMBER hasil Tool    DENIED di luar hak penanya    UNKNOWN tidak ada jawabannya
+//   OUT_OF_SCOPE pertanyaan di luar program (kalimat tetap dari aplikasi; opt-in lewat Assistant::$outOfScope, bukan bahan menambah Help)
 // actions: ['label','url','code','icon'] = buka sebagai tab | ['label','topic'] = tanya bantuan topik itu.
 final class Reply
 {
@@ -16,6 +17,8 @@ final class Reply
     public const DENIED = 'DENIED';
 
     public const UNKNOWN = 'UNKNOWN';
+
+    public const OUT_OF_SCOPE = 'OUT_OF_SCOPE';
 
     /**
      * @param  list<array{0: string, 1: string}>  $rows  rincian [label, nilai]
@@ -51,7 +54,7 @@ final class Reply
 
     public function answered(): bool
     {
-        return $this->kind !== self::UNKNOWN;
+        return ! in_array($this->kind, [self::UNKNOWN, self::OUT_OF_SCOPE], true);
     }
 
     public function toArray(): array

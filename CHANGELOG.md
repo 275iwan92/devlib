@@ -7,7 +7,14 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
 
-Kosong. Perubahan sesudah commit dokumen versi dicatat di sini.
+### Ditambahkan
+
+- **Asisten: jawaban "di luar program"** (opt-in). `Assistant` menerima `outOfScope`
+  (kalimat tetap milik aplikasi); bila diisi dan tidak ada kata pertanyaan yang cocok
+  dengan layar, bantuan, atau Tool aplikasi, jawabannya `Reply::OUT_OF_SCOPE`. Pertanyaan
+  dalam lingkup yang belum ada jawabannya tetap `UNKNOWN`; tanpa `outOfScope` perilaku
+  lama tidak berubah. Halaman katalog `p7-assistant` memakai contoh pengguna aplikasi
+  (order hari ini, letak menu PO, di luar program) dan judul kolom satu bahasa.
 
 ## [0.1.0] - 2026-10-20
 

@@ -12,7 +12,8 @@ use Devlib\Lang;
 //   3. nama layar cocok -> layar (Open + How to use)
 //   4. topik bantuan cocok -> kegunaan topik
 //   5. belum yakin dan model aktif -> model memilih SATU dari calon terdekat
-//   6. tidak tahu (UNKNOWN), tercatat di riwayat
+//   6. tidak tahu: bila aplikasi mengisi $outOfScope DAN tidak satu kata pun dari pertanyaan ada di layar / bantuan / Tool
+//      aplikasi -> OUT_OF_SCOPE (kalimat tetap milik aplikasi); selain itu UNKNOWN, tercatat di riwayat
 // Teks bantuan hanya kutipan; model bahasa tidak pernah menyusun isi jawaban.
 final class Assistant
 {
@@ -32,6 +33,7 @@ final class Assistant
         private array $tools = [],
         private LanguageModel $model = new NullModel,
         private ?HistoryStore $history = null,
+        private ?string $outOfScope = null,
     ) {}
 
     public function ask(Asker $asker, string $question): Reply
@@ -105,7 +107,22 @@ final class Assistant
             }
         }
 
-        return $this->unknown();
+        return $this->outOfScope !== null && ! $this->related($query, $screens, $topics) ? $this->declined() : $this->unknown();
+    }
+
+    // Ada satu kata pertanyaan yang muncul di kosakata aplikasi (layar, bantuan, Tool)? Tidak ada = jelas di luar program.
+    private function related(array $query, array $screens, array $topics): bool
+    {
+        $texts = [...array_map(fn ($s) => $s['label'].' '.($s['path'] ?? '').' '.($s['words'] ?? '').' '.($s['about'] ?? ''), $screens),
+            ...array_map(fn ($t) => $t['title'].' '.($t['words'] ?? '').' '.($t['purpose'] ?? ''), $topics),
+            ...array_map(fn (Tool $t) => $t->title().' '.implode(' ', $t->phrases()), $this->tools)];
+        foreach ($texts as $text) {
+            if ($this->score($query, $text) > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function tool(string $question): ?Tool
@@ -216,5 +233,10 @@ final class Assistant
     private function unknown(): Reply
     {
         return new Reply(Reply::UNKNOWN, Lang::text("I don't know that yet"), Lang::text('I only answer from the screens, the Help and the calculations of this application. Try another wording.'));
+    }
+
+    private function declined(): Reply
+    {
+        return new Reply(Reply::OUT_OF_SCOPE, $this->outOfScope);
     }
 }

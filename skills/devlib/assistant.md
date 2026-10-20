@@ -9,7 +9,8 @@ Acuan baku untuk SEMUA proyek yang punya asisten ("AI Assistant" di menu profil 
 3. **Hak akses milik proyek.** Semua "boleh / tidak" ditanyakan ke `Asker` (modul + level). Di luar hak = `Reply::DENIED`, tool tidak dijalankan.
 4. **Model bahasa hanya pemilih.** Ia diberi pertanyaan dan calon terdekat (maks 5), lalu menjawab SATU kunci. Ia tidak menulis SQL, tidak menghitung, tidak menyusun jawaban. Tanpa model (`NullModel`, bawaan) atau saat mati, asisten tetap jalan dengan pencocokan kata kunci.
 5. **Asisten tidak menulis data.** `EngineTool` hanya menerima engine mode `Calc` dan `Suggest`; `Auto` / `Flow` ditolak (`AssistantException`). Hasil Suggest tampil sebagai draf: officer yang Save/Confirm di layar.
-6. **Kegagalan tidak diam.** `EngineException` dari tool menjadi `Reply::UNKNOWN` bertuliskan sebabnya (bukan `catch` kosong, bukan `null`).
+6. **Di luar program dijawab satu kalimat tetap, bukan "tidak tahu".** "Belum ada jawabannya di Help" (`UNKNOWN`, bahan menambah Help) berbeda dari "pertanyaan ini tidak berhubungan dengan program" (`OUT_OF_SCOPE`). Opt-in: hanya bila aplikasi mengisi `outOfScope` (kalimatnya milik aplikasi, mis. "Saya hanya memahami perihal program ini, lainnya saya belum paham"); tanpa itu perilaku lama (`UNKNOWN`).
+7. **Kegagalan tidak diam.** `EngineException` dari tool menjadi `Reply::UNKNOWN` bertuliskan sebabnya (bukan `catch` kosong, bukan `null`).
 
 ## Kontrak (`Devlib\Assistant`)
 
@@ -22,7 +23,7 @@ Acuan baku untuk SEMUA proyek yang punya asisten ("AI Assistant" di menu profil 
 | `Knowledge` (interface) | topik bantuan: `key,title,purpose?,words?,steps?` | ya |
 | `LanguageModel` (interface) + `NullModel` | adaptor model bahasa: `available()`, `choose($pertanyaan, $pilihan, $riwayat)` | ya, opsional |
 | `HistoryStore` (interface) + `MemoryHistory` | riwayat percakapan per user + jempol (`store`, `recent`, `feedback`) | ya |
-| `Reply` | jawaban sebagai data (`SCREEN`, `HELP`, `NUMBER`, `DENIED`, `UNKNOWN`); `toArray()` = bentuk yang dibaca laci AI Assistant `x-dl::shell` | - |
+| `Reply` | jawaban sebagai data (`SCREEN`, `HELP`, `NUMBER`, `DENIED`, `UNKNOWN`, `OUT_OF_SCOPE`); `toArray()` = bentuk yang dibaca laci AI Assistant `x-dl::shell` | - |
 | `Assistant` | mesin jawab: `ask()`, `topic()`, `history()`, `feedback()`, `suggestions()` | dibuat aplikasi |
 
 ## Urutan keputusan (`Assistant::ask`)
@@ -32,7 +33,7 @@ Acuan baku untuk SEMUA proyek yang punya asisten ("AI Assistant" di menu profil 
 3. nama layar cocok -> layar (tombol Open + How to use);
 4. topik bantuan cocok -> kegunaan topik;
 5. belum yakin dan model aktif -> model memilih satu dari calon;
-6. tidak tahu -> `UNKNOWN`.
+6. tidak tahu -> bila `outOfScope` diisi DAN tidak satu kata pun dari pertanyaan ada di kosakata aplikasi (nama/letak/kata cari/kegunaan layar, judul/kata cari/kegunaan topik, judul/frasa Tool) -> `OUT_OF_SCOPE` (kalimat tetap, penilaian murni pencocokan kata, bukan model); selain itu `UNKNOWN`. Satu kata yang cocok saja sudah dianggap dalam lingkup (condong ke `UNKNOWN`, supaya pertanyaan yang sah tidak ditolak). Model bahasa tidak ikut menilai lingkup.
 Setiap `ask()` tersimpan di `HistoryStore` (bila diikat); `Reply::$id` dipakai untuk jempol naik/turun.
 
 ## Memasang di proyek
@@ -46,6 +47,7 @@ $this->app->singleton(\Devlib\Assistant\Assistant::class, fn ($app) => new \Devl
         ['reorder point', 'titik pesan ulang'], fn ($asker, $q) => ['item' => ...], module: 'inventory')],
     model: $app->make(MyLanguageModel::class),          // opsional; implements LanguageModel
     history: $app->make(MyHistoryStore::class),         // opsional; implements HistoryStore (tabel milik proyek)
+    outOfScope: 'Saya hanya memahami perihal program ini, lainnya saya belum paham',   // opsional; kalimat tetap pertanyaan di luar program
 ));
 ```
 

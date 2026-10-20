@@ -38,7 +38,7 @@ class AssistantChatContractTest extends TestCase
         };
     }
 
-    private function assistant(?LanguageModel $model = null, int $minLevel = 0, ?MemoryHistory $history = null): Assistant
+    private function assistant(?LanguageModel $model = null, int $minLevel = 0, ?MemoryHistory $history = null, ?string $outOfScope = null): Assistant
     {
         $registry = app(EngineRegistry::class);
         $nav = new class implements Navigator
@@ -57,7 +57,7 @@ class AssistantChatContractTest extends TestCase
         };
         $tool = new EngineTool($registry, 'volume-discount', ['volume discount'], fn () => ['qty' => 600, 'unit_price' => 1000], 'sales', $minLevel);
 
-        return new Assistant($nav, $kb, [$tool], $model ?? new \Devlib\Assistant\NullModel, $history);
+        return new Assistant($nav, $kb, [$tool], $model ?? new \Devlib\Assistant\NullModel, $history, $outOfScope);
     }
 
     public function test_tool_answers_from_the_engine_and_checks_access(): void
@@ -79,6 +79,29 @@ class AssistantChatContractTest extends TestCase
         $this->assertSame(Reply::HELP, $how->kind);
         $this->assertSame(['Open Stock Overview', 'Pick a location'], $how->steps);
         $this->assertSame(Reply::UNKNOWN, $a->ask($this->asker(), 'weather in Paris')->kind);
+    }
+
+    public function test_out_of_scope_is_a_fixed_sentence_only_when_set_and_only_when_nothing_relates(): void
+    {
+        $sentence = 'Saya hanya memahami perihal program ini, lainnya saya belum paham';
+        $a = $this->assistant(outOfScope: $sentence);
+
+        $out = $a->ask($this->asker(), 'cuaca di Surabaya besok');
+        $this->assertSame(Reply::OUT_OF_SCOPE, $out->kind);
+        $this->assertSame($sentence, $out->title);
+        $this->assertFalse($out->answered());
+        $this->assertSame(['kind' => Reply::OUT_OF_SCOPE, 'title' => $sentence], $out->toArray());
+
+        // dalam lingkup (ada kata yang dikenal) tetapi belum ada jawabannya: tetap UNKNOWN, bukan di luar lingkup
+        $this->assertSame(Reply::UNKNOWN, $a->ask($this->asker(), 'how to print stock labels with a logo')->kind);
+        // tanpa pengaturan (bawaan, opt-in) perilaku lama: UNKNOWN
+        $this->assertSame(Reply::UNKNOWN, $this->assistant()->ask($this->asker(), 'cuaca di Surabaya besok')->kind);
+
+        // jawaban yang sudah ada tidak berubah
+        $this->assertSame(Reply::NUMBER, $a->ask($this->asker(), 'volume discount')->kind);
+        $this->assertSame(Reply::SCREEN, $a->ask($this->asker(), 'open stock overview')->kind);
+        $this->assertSame(Reply::HELP, $a->ask($this->asker(), 'how to use stock overview')->kind);
+        $this->assertSame(Reply::DENIED, $a->ask($this->asker(modules: []), 'volume discount')->kind);
     }
 
     public function test_language_model_only_picks_among_candidates(): void
