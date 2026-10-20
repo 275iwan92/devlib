@@ -84,6 +84,6 @@ ada tonggak yang jelas, hanya rangkaian kerja bersama proyek induk lama.
       tanpa tambalan lokal.
 - [ ] `warehouse-desk` tidak lagi mengikat nama tabel milik proyek lain
       (sumber data di prop `source`) (lihat `resources/views/components/warehouse-desk.blade.php`).
-- [ ] Halaman katalog `p7-assistant` dan `p7-chat-model` sudah disetujui Jo
-      (sekarang sengaja belum masuk daftar APPROVED).
+- [x] Halaman katalog `p7-assistant` dan `p7-chat-model` sudah disetujui Jo
+      (2026-10-20, "untuk saat ini"; tercatat di `Catalog::APPROVED`).
 - [ ] `devlib:lint` bersih di situs sendiri.

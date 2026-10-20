@@ -12,6 +12,8 @@ final class Catalog
     // Halaman yang sudah DISETUJUI user (slug => tanggal). Hanya ditambah atas persetujuan eksplisit user.
     public const APPROVED = [
         'p7-layer' => '2026-09-24',   // Layer Menu
+        'p7-assistant' => '2026-10-20',   // AI Assistant model (contracts): disetujui user "untuk saat ini"
+        'p7-chat-model' => '2026-10-20',   // Chat model (contracts): disetujui user "untuk saat ini"
         'shell' => '2026-09-24',      // menu utama = Layer Shell (tanpa top bar)
         'p5-grid-tx' => '2026-09-30',     // Grid Pre-Entry > Transactional -- DISETUJUI & DIKUNCI user; jangan ubah tanpa perintah user
         'p5-grid-master' => '2026-09-30', // Grid Pre-Entry > Grid Master (dulu Non-Transactional) -- tata letak = Transactional + kotak per baris

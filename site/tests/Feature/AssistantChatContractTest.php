@@ -15,6 +15,7 @@ use Devlib\Assistant\Navigator;
 use Devlib\Assistant\Reply;
 use Devlib\Assistant\Sensitivity;
 use Devlib\Assistant\Tool;
+use Devlib\Assistant\ScopedValueAsker;
 use Devlib\Assistant\ValueAsker;
 use Devlib\Chat\ChatException;
 use Devlib\Chat\ChatService;
@@ -317,7 +318,7 @@ class AssistantChatContractTest extends TestCase
         $this->assertSame(Reply::SCREEN, $a->ask($all, 'open attendance board')->kind);
     }
 
-    public function test_costing_formula_is_forbidden_but_its_result_value_is_only_for_finance(): void
+    public function test_costing_formula_is_forbidden_but_its_result_value_is_only_for_value_askers(): void
     {
         $policy = new DataPolicy;
         foreach ([['hpp-formula', 'costing'], ['hpp_formula', null], ['x', 'Costing Formula'], ['x', 'rumus-hpp']] as [$key, $module]) {
@@ -341,6 +342,39 @@ class AssistantChatContractTest extends TestCase
             $this->assertSame(Reply::DENIED, $a->ask($this->finance(modules: ['costing']), $q)->kind, $q);
         }
         $this->assertSame(1, $calls->n);
+    }
+
+    public function test_value_rights_can_be_split_per_tool_so_sales_sees_only_the_hpp_result(): void
+    {
+        $a = $this->withTools([
+            $this->tool('hpp-result', 'costing', ['hpp produk'], Sensitivity::Value),
+            $this->tool('stock-value', 'inventory', ['stock worth'], Sensitivity::Value),
+        ], new DataPolicy);
+
+        $sales = new class implements ScopedValueAsker
+        {
+            public function id(): string { return 's1'; }
+
+            public function name(): string { return 'Sales'; }
+
+            public function level(): int { return 9; }
+
+            public function can(string $module): bool { return true; }
+
+            public function canSeeValue(): bool { return false; }
+
+            public function canSeeValueOf(string $toolKey): bool { return $toolKey === 'hpp-result'; }
+        };
+
+        $this->assertSame(Reply::NUMBER, $a->ask($sales, 'hpp produk')->kind, 'sales sees the HPP result');
+        $this->assertSame(Reply::DENIED, $a->ask($sales, 'stock worth')->kind, 'but not other monetary values');
+
+        $finance = $this->finance(modules: ['costing', 'inventory']);   // ValueAsker global: perilaku sebelumnya, semua nilai
+        $this->assertSame(Reply::NUMBER, $a->ask($finance, 'hpp produk')->kind);
+        $this->assertSame(Reply::NUMBER, $a->ask($finance, 'stock worth')->kind);
+
+        $noValue = $this->finance(false, ['costing', 'inventory']);
+        $this->assertSame(Reply::DENIED, $a->ask($noValue, 'hpp produk')->kind);
     }
 
     public function test_a_program_without_forbidden_modules_is_not_limited_at_all(): void

@@ -49,10 +49,10 @@ Empat tingkat. DevLib netral: **program** yang menetapkan modul/sumber mana masu
 |---|---|---|---|
 | (a) Pengetahuan | menu, layar, Help, prosedur, struktur | sesuai hak layar (`Navigator` sudah menyaring per penanya) | bawaan |
 | (b) Kuantitas | jumlah, stok, order, jumlah baris, kehadiran / absensi | hak modul penanya (`Asker::can`) | `Sensitivity::Quantity` (bawaan Tool) |
-| (c) Nilai rupiah | harga, total, piutang, biaya, nilai persediaan, dsb. | hanya penanya yang dinyatakan program sebagai orang keuangan | `Sensitivity::Value` + `ValueAsker::canSeeValue()`; selain itu `Reply::DENIED` |
+| (c) Nilai rupiah | harga, total, piutang, biaya, nilai persediaan, dsb. | hanya penanya yang dinyatakan program sebagai orang keuangan; pengecualian yang ditetapkan Jo: HASIL HPP juga untuk sales (program membagi hak per Tool lewat `ScopedValueAsker`) | `Sensitivity::Value` + `ValueAsker::canSeeValue()` atau `ScopedValueAsker::canSeeValueOf($kunciTool)`; selain itu `Reply::DENIED` |
 | (d) Gaji, payroll, formula HPP | semua data gaji dan payroll; rumus / cara hitung / komponen / parameter perhitungan HPP (costing formula) | **tidak seorang pun**, termasuk keuangan dan admin | terlarang total: tidak dibaca, tidak diindeks, tidak dijawab, tidak boleh jadi Tool / Navigator / Knowledge sumber |
 
-Absensi / kehadiran **bukan** payroll dan tetap boleh (tingkat b). Nilai HASIL HPP berupa rupiah adalah tingkat (c), bukan (d): hanya untuk penanya keuangan; yang terlarang adalah FORMULA-nya.
+Absensi / kehadiran **bukan** payroll dan tetap boleh (tingkat b). Nilai HASIL HPP berupa rupiah adalah tingkat (c), bukan (d): untuk penanya keuangan DAN sales (keputusan Jo, 2026-10-20; sales memakai hasil HPP untuk penawaran); yang terlarang adalah FORMULA-nya. Sales tidak otomatis boleh melihat nilai rupiah lain: hanya Tool yang kuncinya dinyatakan program lewat `ScopedValueAsker`.
 
 **Tanpa modul yang cocok, tidak ada pembatasan.** Larangan (d) hanya berlaku bagi program yang memang punya modul gaji / payroll / formula HPP dan memasang `DataPolicy`; program tanpa modul itu (dan situs katalog DevLib) berperilaku bebas, tidak ada yang diblokir.
 
@@ -60,6 +60,7 @@ Penegakan di kode (semuanya opt-in; yang tidak memakainya berperilaku seperti se
 
 - `Classified` (interface opsional pada `Tool`): `sensitivity(): Sensitivity` (`Quantity`, `Value`, `Forbidden`). Tool tanpa `Classified` dianggap `Quantity`. `EngineTool` menerima argumen `sensitivity:`.
 - `ValueAsker extends Asker` (opsional): `canSeeValue()`. `Asker` biasa dianggap **tidak** boleh melihat nilai, jadi bawaan untuk Tool `Value` adalah menolak (paling aman). Gerbang nilai berlaku setelah gerbang modul + level.
+- `ScopedValueAsker extends ValueAsker` (opsional): `canSeeValueOf(string $kunciTool)`. Untuk program yang membagi hak nilai per Tool (mis. keuangan melihat semua nilai, sales hanya hasil HPP); bila diimplementasikan, ia menjadi satu-satunya penentu untuk Tool `Value`. Penanya yang hanya `ValueAsker` tetap memakai `canSeeValue()` (global), jadi perilaku lama tidak berubah.
 - `Sensitivity::Forbidden`: `new Assistant(...)` melempar `AssistantException`, dengan atau tanpa `DataPolicy`.
 - `DataPolicy` (argumen `policy:` pada `Assistant`): daftar kata terlarang bawaan `payroll`, `payslip`, `salary`, `gaji` (mencakup "slip gaji" dan "penggajian") dan frasa formula HPP (`hpp formula`, `formula hpp`, `rumus hpp`, `cara hitung hpp`, `komponen hpp`, `parameter hpp`, `costing formula`, dsb.; tanda baca dan garis bawah dianggap spasi, jadi `hpp_formula` cocok, tetapi `hpp-result` TIDAK, karena hasil HPP adalah tingkat nilai) + kata tambahan program (`new DataPolicy(['bonus'])`). Dengan `policy` terpasang: (1) Tool yang kunci / modul / judul / frasanya memuat kata itu ditolak saat `Assistant` dibuat (`AssistantException`); (2) layar (kunci, label, path) dan topik bantuan (kunci, judul) yang memuatnya tidak pernah ditawarkan; (3) pertanyaan yang menyebut kata itu dijawab `DENIED` tetap, tanpa memanggil Tool. Pengindeks nanti memakai `DataPolicy::forbids()` yang sama (`docs/assistant-indexer.md`).
 

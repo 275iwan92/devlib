@@ -151,15 +151,25 @@ final class Assistant
         return null;
     }
 
+    // Hak nilai rupiah: ScopedValueAsker menentukan per Tool; ValueAsker biasa global; Asker biasa = tidak boleh (bawaan paling aman).
+    private function maySeeValue(Asker $asker, Tool $tool): bool
+    {
+        return match (true) {
+            $asker instanceof ScopedValueAsker => $asker->canSeeValueOf($tool->key()),
+            $asker instanceof ValueAsker => $asker->canSeeValue(),
+            default => false,
+        };
+    }
+
     private function run(Asker $asker, Tool $tool, string $question): Reply
     {
         if (($tool->module() !== null && ! $asker->can($tool->module())) || $asker->level() < $tool->minLevel()) {
             return new Reply(Reply::DENIED, Lang::text('Not available for your account'),
                 Lang::text('This answer follows the access rights of your account: it needs access to its module and a high enough security level.'), key: $tool->key());
         }
-        if ($tool instanceof Classified && $tool->sensitivity() === Sensitivity::Value && ! ($asker instanceof ValueAsker && $asker->canSeeValue())) {
+        if ($tool instanceof Classified && $tool->sensitivity() === Sensitivity::Value && ! $this->maySeeValue($asker, $tool)) {
             return new Reply(Reply::DENIED, Lang::text('Not available for your account'),
-                Lang::text('This answer contains monetary values, which only finance users can see.'), key: $tool->key());
+                Lang::text('This answer contains monetary values, which only users with value access (such as finance) can see.'), key: $tool->key());
         }
         try {
             $reply = $tool->answer($asker, $question);

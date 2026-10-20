@@ -9,6 +9,9 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Asisten: hak nilai rupiah per Tool** (opt-in). `ScopedValueAsker::canSeeValueOf($kunciTool)`:
+  program dapat memberi sales hanya hasil HPP sementara keuangan melihat semua nilai rupiah. Penanya
+  `ValueAsker` biasa tetap memakai `canSeeValue()` global (perilaku sebelumnya tidak berubah).
 - **Asisten: cakupan data dan sensitivitas** (opt-in). `Sensitivity` + `Classified` (Tool menyatakan
   qty / nilai / terlarang), `ValueAsker` (hanya orang keuangan melihat nilai rupiah; `Asker` biasa
   ditolak), dan `DataPolicy` (kata terlarang gaji / payroll / formula HPP: Tool ditolak saat dibuat, layar dan
