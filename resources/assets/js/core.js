@@ -707,8 +707,8 @@ window.Devlib = window.Devlib || {};
 
 
 
-  /* ============================ MASTER ============================ */
-  // Isi satu field library dari nilai (dipakai Master, bisa dipakai layar lain lewat Devlib.fill).
+  /* ============================ FIELD HELPERS ============================ */
+  // Isi satu field library dari nilai (dipakai layar lewat Devlib.fill).
   // Ganti daftar pilihan field select (dropdown bersambung). opts = [[value, label], ...] atau {value: label}.
   // Nilai lama dikosongkan; disabled = kotak dikunci (mis. tak ada pilihan).
   function setOptions(form, name, opts, {disabled = false} = {}) {

@@ -6,7 +6,7 @@
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
  * Input        : name, columns, rows, title, addLabel, minRows, totals, totalKey, countKey, readonly, … (17 prop).
  * Output       : Markup Blade inline (render() kelas ini).
- * Dipakai oleh : form-md-po, form-md, master-detail-po (layar katalog/proyek).
+ * Dipakai oleh : form-md-po, form-md (layar katalog/proyek).
  * Status       : Aktif (DevLib).
  */
 
@@ -33,7 +33,7 @@ use Devlib\Lookup;
 // :row-state=true (opt-in, aturan master-detail pemilik 2026-10-20): tiap baris punya 2 state -- awal (baru diisi: Save + Undo) dan tersimpan (Edit + Delete);
 //   baris tersimpan terkunci sampai Edit; Undo membuang baris baru / mengembalikan isi sebelum Edit. Form Confirmed (readonly) = tanpa tombol; Draft = tombol selalu ada.
 // Slot tools = kontrol tambah baris milik layar (mis. pilih Master Item + tombol) di bar judul Details.
-// Terkirim: name[i][kolom] per baris, name_discount, name_ppn. Di dalam x-dl::master: baris = data[name].
+// Terkirim: name[i][kolom] per baris, name_discount, name_ppn.
 class Lines extends DevlibComponent
 {
     public function __construct(

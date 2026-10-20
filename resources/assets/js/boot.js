@@ -73,7 +73,6 @@
     Devlib.mountOne("Approval");
     Devlib.mountOne("Lines");
     Devlib.mountOne("FlowConfig");
-    Devlib.mountOne("Master");
     Devlib.mountOne("AccGroup");
     Devlib.mountOne("Slider");
     Devlib.mountOne("Rating");

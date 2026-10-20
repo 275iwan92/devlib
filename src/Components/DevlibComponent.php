@@ -91,7 +91,7 @@ abstract class DevlibComponent extends Component
     private const GROUP_OF = [
         'buttons' => ['Button', 'IconButton', 'SplitButton', 'MenuButton', 'BackButton', 'CodeButton', 'ActionBar'],
         'grid' => ['Grid', 'LookupGrid', 'Sheet', 'Table', 'Pivot', 'Report', 'Pagination', 'Coverage', 'Drilldown', 'PickMatrix', 'Lines', 'Kanban', 'Gantt'],
-        'form' => ['Form', 'ActionForm', 'Wizard', 'Field', 'Import', 'Approval', 'CodeChain', 'Master'],
+        'form' => ['Form', 'ActionForm', 'Wizard', 'Field', 'Import', 'Approval', 'CodeChain'],
         'print' => ['PrintDoc', 'PrintOut', 'DocFooter', 'DocShare', 'Label', 'LabelSheet', 'LabelGuide', 'Barcode', 'Qr'],
         'messages' => ['Alert', 'Modal', 'Announce', 'EmptyState', 'ErrorPage', 'Tooltip', 'LockScreen', 'Skeleton', 'Spinner'],
         'menu' => ['LayerMenu', 'LayerShell', 'MegaMenu', 'SideMenu', 'Breadcrumb', 'Shell', 'Ribbon', 'Tabs', 'Accordion', 'AccordionGroup'],

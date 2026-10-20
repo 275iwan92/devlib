@@ -553,11 +553,6 @@ Grid lookup kecil = Sheet mode lookup; meneruskan saveUrl, reorderUrl, reasonOnS
 - Berkas: `src/Components/LookupGrid.php`
 - Prop: columns:array=[], rows:array=[], rowKey:string='id', title:string='', source:?string=NULL, saveUrl:?string=NULL, stats:array=[], addRows:bool=true, reorderUrl:?string=NULL, reasonOnSave:?string=NULL, links:array=[], autoSave:bool=false, addLabel:?string=NULL, deleteUrl:?string=NULL, searchable:bool=true, showCount:bool=true, deleteLabel:?string=NULL, resetUrl:?string=NULL, resetLabel:?string=NULL
 
-## `<x-dl::master>`
-Layar Master = grid + form edit dalam satu layar (mockup master customer/employee):.
-- Berkas: `src/Components/Master.php`
-- Prop: title:string='', nameKey:string='name', codeKey:?string='code', pipeline:array=[], pipelineKey:string='status'
-
 ## `<x-dl::media>`
 Gambar atau frame dokumen (img / iframe) sebagai objek, supaya layar tidak menulis tag media mentah.
 - Berkas: `src/Components/Media.php`

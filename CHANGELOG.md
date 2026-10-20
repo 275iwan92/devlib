@@ -49,6 +49,11 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Dihapus
 
+- **Merusak: komponen `x-dl::master`** (grid + form edit dalam satu layar): `Devlib\Components\Master`, `master.js` (`data-dl-master`, event
+  `dl:master-save`), CSS `.dl-master*`, dan di situs acuan halaman `p5-master`, `p5-master-detail` (generasi lama, disetujui 2026-09-26) beserta demo
+  `master-employee` dan `master-detail-po`. Penggantinya alur grid → form di halaman terpisah (`grid-form-flow.md`, `x-dl::grid restore` + `x-dl::form :back`).
+  Sebelum dihapus dipastikan tmerp dan sstock tidak memakainya (tmerp: hanya teks di `docs/`; sstock: nol). Ini menghapus komponen publik,
+  jadi rilis berikutnya sebaiknya naik minor (`0.2.0`) sesuai `docs/versioning.md`.
 - **Grup Special Forms (10 layar `sf-*`) dari situs acuan**: layar Customer Plan Delivery, Edit Profile, Master Product,
   Customer 360, Petty Cash, Label Printing, Pallet Label, Track via QR / Barcode, Material Planning and Booking dan Assign Crew
   dipindah ke aplikasi pemakai (tmerp) sebagai layar pembanding. Ikut dihapus 10 demo, 12 komponen `x-mp::*` yang hanya

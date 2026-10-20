@@ -27,9 +27,7 @@ final class Catalog
         'p5-grid-drilldown' => '2026-09-26',
         'p5-grid-pivot' => '2026-09-26',
         // Menu Dokumen disetujui user 2026-09-26. Menu Form (p5-form-single/-md/-special, form) DICABUT ke Review 2026-09-30:
-        // user belum QC, "single form bukan seperti ini".
-        'p5-master' => '2026-09-26',
-        'p5-master-detail' => '2026-09-26',
+        // user belum QC, "single form bukan seperti ini". p5-master / p5-master-detail (x-dl::master) dihapus 2026-10-20 atas keputusan user.
         'p5-print' => '2026-09-26',
         'p5-print-doc' => '2026-10-07',   // Print Document (A5 / A4) -- disetujui user
         'p6-greeting-card' => '2026-10-07', // Widget sapaan (Greeting Card) -- tampilan disetujui user
@@ -165,8 +163,6 @@ final class Catalog
                 ]],
             ['code' => 'DK', 'short' => 'DK', 'label' => 'Documents', 'icon' => 'fa-solid fa-file-lines',
                 'pages' => [
-                    'p5-master' => $page('Master', 'fa-solid fa-address-book', ['master-employee' => ['Employee Master (grid + edit form)', $c('Master', 'Grid')]], 'mockup_master_customer.html'),
-                    'p5-master-detail' => $page('Master-Detail', 'fa-solid fa-file-invoice', ['master-detail-po' => ['Purchase Order (header + item lines)', $c('Master', 'Lines', 'Grid')]], 'mockup_purchase_requisition.html'),
                     'p5-print' => $page('Print Out', 'fa-solid fa-print', ['print-co' => ['Customer Order Note (prices, VAT, amount in words, multi-page)', $c('PrintOut')], 'print-spb' => ['Goods Receipt Note (multi-level header, no prices)', $c('PrintOut')], 'doc-share' => ['Print ▾ (PDF / JPEG / HTML online + QR / Printer) + Email (with contact picker) — on every form', $c('DocShare')]], 'nota_co_mockup.html', [...$c('PrintOut', 'DocShare'), 'Devlib\\Terbilang']),
                     'p5-print-doc' => $page('Print Document (A5 / A4)', 'fa-solid fa-file-invoice', ['print-doc-a5' => ['Delivery Note — A5 landscape (1-5 rows, no amounts, no total)', $c('PrintDoc', 'DocShare')], 'print-doc-a4' => ['Purchase Order — A4 portrait (more than 5 rows, prices, VAT, amount in words)', $c('PrintDoc', 'DocShare')], 'print-doc-draft' => ['Draft document — big slanted DRAFT watermark on the sheet (status DRAFT)', $c('PrintDoc', 'DocShare')]]),
                     'p5-report' => $page('Report', 'fa-solid fa-file-lines', ['report-stock-card' => ['Stock Card (running balance, per month)', $c('Report')], 'report-master-stock' => ['Stock Master (KPI, groups + subtotal, highlight < MIN)', $c('Report')]], 'mockup_print_master_stock.html'),
