@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Footer dokumen Master-Detail untuk layar yang totalnya dihitung SERVER (mis. CoOrder::totals()) -- tampilan sama dengan.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : tabs, summary, words.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : layar proyek lewat x-dl::doc-footer.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Footer dokumen Master-Detail untuk layar yang totalnya dihitung SERVER (mis. CoOrder::totals()) -- tampilan sama dengan

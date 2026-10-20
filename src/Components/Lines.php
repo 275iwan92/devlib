@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tabel baris item dokumen (detail dari Master-Detail: PO, PR, CO, Stock In, ...).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : name, columns, rows, title, addLabel, minRows, totals, totalKey, countKey, readonly, … (17 prop).
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : form-md-po, form-md, master-detail-po (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Lookup;

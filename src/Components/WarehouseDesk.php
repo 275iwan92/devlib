@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Form khusus Warehouse Map (user 2026-10-02, docs/warehouselayout_tier1.md): pemilih gedung + pintasan ke Buildings / Storage.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : desk.
+ * Output       : Markup dari resources/views/components/warehouse-desk.blade.php.
+ * Dipakai oleh : warehouse-desk (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Form khusus Warehouse Map (user 2026-10-02, docs/warehouselayout_tier1.md): pemilih gedung + pintasan ke Buildings / Storage

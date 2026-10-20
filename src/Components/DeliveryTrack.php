@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Jejak pengiriman skematis (SVG, tanpa peta): gudang -> pelanggan, truk bergerak di sepanjang rute dan berhenti di titik.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : stage, from, to, position, times, title, subtitle.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : delivery-track (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Jejak pengiriman skematis (SVG, tanpa peta): gudang -> pelanggan, truk bergerak di sepanjang rute dan berhenti di titik

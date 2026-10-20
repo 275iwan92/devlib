@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tanggal dengan kalender popover.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : name, label, tooltip, hint, error, value, placeholder, required, disabled, readonly, … (14 prop).
+ * Output       : Markup dari resources/views/components/field/date.blade.php.
+ * Dipakai oleh : basic-density, basic-locale, card-actionbar, doc-share dan 6 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Tanggal dengan kalender popover.

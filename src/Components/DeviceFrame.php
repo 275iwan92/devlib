@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Bingkai pratinjau Laptop / Tablet (768px) / Smartphone (390px) dari mockup form.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : mode.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : layar proyek lewat x-dl::device-frame.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Bingkai pratinjau Laptop / Tablet (768px) / Smartphone (390px) dari mockup form.

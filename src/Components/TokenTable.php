@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tabel dokumentasi token Basic (DevLib): nama token, nilai terkini, contoh tampilan.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : tokens, kind.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : basic-breakpoints, basic-colors, basic-density, basic-shape dan 1 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Tabel dokumentasi token Basic (DevLib): nama token, nilai terkini, contoh tampilan.

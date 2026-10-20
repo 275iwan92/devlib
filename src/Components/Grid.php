@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Grid induk (griduistandard + perilaku tabel Filament/PowerGrid yang dipilih user).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : id, columns, rows, rowKey, stats, tabs, filters, groups, bulk, expand, … (27 prop).
+ * Output       : Markup dari resources/views/components/grid.blade.php.
+ * Dipakai oleh : grid-drilldown, grid-group, grid-master-detail, grid-master dan 10 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Lang;

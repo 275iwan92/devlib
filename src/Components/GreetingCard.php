@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Widget sapaan berdiri sendiri (user 2026-10-07, tampilan disetujui): salam + jabatan + ringkasan hari ini,.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : board, source.
+ * Output       : Markup dari resources/views/components/greeting-card.blade.php.
+ * Dipakai oleh : greeting-card (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Widget sapaan berdiri sendiri (user 2026-10-07, tampilan disetujui): salam + jabatan + ringkasan hari ini,

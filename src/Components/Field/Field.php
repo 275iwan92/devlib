@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Induk SEMUA field (acuan mockup UIUX_components_part1.html). Bingkai yang.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : name, label, tooltip, hint, error, value, placeholder, required, disabled, readonly, … (14 prop).
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : layar proyek lewat x-dl::field.field.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 use Devlib\Components\DevlibComponent;

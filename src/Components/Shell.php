@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : kerangka aplikasi setelah login (sidebar, mega menu modul, tab MDI, Ctrl+K, laci); induk LayerShell.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : modules, user, brand, tagline, logo, logoutAction, menuSource, developer, chat, open, … (18 prop).
+ * Output       : Markup dari resources/views/components/shell.blade.php.
+ * Dipakai oleh : layar proyek lewat x-dl::shell.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 /* REMARK

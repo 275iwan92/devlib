@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Side Screen (user 2026-10-04): jendela layar PENUH untuk layar akun yang "banyak aspek" (Help & support, Edit profile).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : id, title, subtitle, icon, url, search, width, height.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : side-screen (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Side Screen (user 2026-10-04): jendela layar PENUH untuk layar akun yang "banyak aspek" (Help & support, Edit profile).

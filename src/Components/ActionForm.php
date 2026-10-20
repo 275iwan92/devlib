@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Form aksi kecil: pembungkus <form> TANPA judul / panel / tombol sendiri -- untuk tombol aksi (Post, Cancel, Create),.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : method, action.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : generator, history (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Form aksi kecil: pembungkus <form> TANPA judul / panel / tombol sendiri -- untuk tombol aksi (Post, Cancel, Create),

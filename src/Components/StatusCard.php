@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kartu status (mesin, dokumen, layanan): ikon + judul + badge status + nilai + keterangan + waktu.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : title, status, tone, icon, value, desc, meta, filter, active.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : status-card (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Kartu status (mesin, dokumen, layanan): ikon + judul + badge status + nilai + keterangan + waktu.

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Isi kotak Lupa Password. mode="email" (mockup forgot-password.html): isi email -> pesan selalu sama.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : mode, action, loginUrl, question.
+ * Output       : Markup dari resources/views/components/forgot-box.blade.php.
+ * Dipakai oleh : forgot-1, forgot-2 (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Isi kotak Lupa Password. mode="email" (mockup forgot-password.html): isi email -> pesan selalu sama

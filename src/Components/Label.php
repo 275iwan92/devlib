@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Label tempel gudang. Tiga jenis yang SENGAJA tampak berbeda (kind): location (bin / rak), item (isi satu bin),.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : code, title, name, lines, qr, barcode, size, tone, footer, kind, … (14 prop).
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : wh-labels (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Label tempel gudang. Tiga jenis yang SENGAJA tampak berbeda (kind): location (bin / rak), item (isi satu bin),

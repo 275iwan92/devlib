@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Matriks kelengkapan: satu baris per kelompok (mis. set mesin), kolom = jenis dokumen / item, tiap sel = chip status yang.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : columns, rows, filters, head, subHead, search, empty, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : grid-coverage (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Matriks kelengkapan: satu baris per kelompok (mis. set mesin), kolom = jenis dokumen / item, tiap sel = chip status yang

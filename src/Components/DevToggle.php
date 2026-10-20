@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Saklar Mode Developer (tooltip asal-usul objek + tanda merah objek non-library). Hanya untuk admin/developer.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : floating.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : dev-mode (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Saklar Mode Developer (tooltip asal-usul objek + tanda merah objek non-library). Hanya untuk admin/developer.

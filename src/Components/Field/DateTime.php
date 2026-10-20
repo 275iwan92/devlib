@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tanggal + jam dalam satu popover (mockup form: "Select Date & Time").
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : minuteStep, name, label, tooltip, hint, error, value, placeholder, required, disabled, … (15 prop).
+ * Output       : Markup dari resources/views/components/field/date-time.blade.php.
+ * Dipakai oleh : field-date-time (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Tanggal + jam dalam satu popover (mockup form: "Select Date & Time").

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Papan Kanban (mockup_UIUX_kanban, kanbanboardstandard). Layar cukup deklarasi kolom + kartu.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : columns, cards, transitions, members, addColumn, addCard, me, source, moveUrl, readonly.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : kanban-production (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Papan Kanban (mockup_UIUX_kanban, kanbanboardstandard). Layar cukup deklarasi kolom + kartu.

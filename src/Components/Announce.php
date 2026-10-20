@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Pengumuman bergantian (dari file teks lewat x-dl::frame announce="...").
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : lines, interval.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : layar proyek lewat x-dl::announce.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Pengumuman bergantian (dari file teks lewat x-dl::frame announce="...").

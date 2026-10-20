@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Grid Summary -> Detail (drill-down): slot "summary" = grid ringkasan, slot bawaan = grid detail.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : link, labelKey, title.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : grid-drilldown (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Grid Summary -> Detail (drill-down): slot "summary" = grid ringkasan, slot bawaan = grid detail.

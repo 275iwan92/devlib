@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Lampu status (scorecard): green | amber | red (+ label & keterangan). Dipakai di baris KPI / scorecard.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : status, label, note.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : indicators (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Lampu status (scorecard): green | amber | red (+ label & keterangan). Dipakai di baris KPI / scorecard.

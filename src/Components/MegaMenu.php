@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Menu atas ala ScriptCase: bilah berwarna berisi item; item bisa tautan, dropdown biasa (bisa bertingkat), atau.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : items, brand, tone, active.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : mega-menu (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Icon;

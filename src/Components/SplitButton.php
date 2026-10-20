@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tombol utama + panah pilihan aksi (mockup form: Save / Download / Export). Aksi terpilih dikirim sebagai input _action.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : actions, name.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : button (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Tombol utama + panah pilihan aksi (mockup form: Save / Download / Export). Aksi terpilih dikirim sebagai input _action.

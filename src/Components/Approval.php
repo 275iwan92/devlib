@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Approval Center (mockup pr/po_approval_center): daftar dokumen menunggu (kiri) + detail (kanan):.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : docs, lineColumns, title, approveLabel, holdLabel, rejectLabel, me, source, action, log.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : approval-po (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Approval Center (mockup pr/po_approval_center): daftar dokumen menunggu (kiri) + detail (kanan):

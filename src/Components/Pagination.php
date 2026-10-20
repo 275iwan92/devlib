@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kaki halaman ala ScriptCase: Go to + baris/halaman | navigasi | info total.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : total, perPage, page, sizes.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : pagination (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Kaki halaman ala ScriptCase: Go to + baris/halaman | navigasi | info total.

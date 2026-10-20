@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Layar Master = grid + form edit dalam satu layar (mockup master customer/employee):.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : title, nameKey, codeKey, pipeline, pipelineKey.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : master-detail-po, master-employee (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Layar Master = grid + form edit dalam satu layar (mockup master customer/employee):

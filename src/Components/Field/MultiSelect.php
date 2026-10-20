@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Dropdown pilihan ganda bertanda centang.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : options, emptyText, noun, name, label, tooltip, hint, error, value, placeholder, … (17 prop).
+ * Output       : Markup dari resources/views/components/field/multi-select.blade.php.
+ * Dipakai oleh : field-multi-select (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Dropdown pilihan ganda bertanda centang.

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Jendela modal. Dibuka tombol ber-atribut data-dl-open="<id>" atau Devlib.modal.open(id). Slot "footer" = tombol bawah.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : id, title, size, open, icon, tone.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : modal-drawer (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Jendela modal. Dibuka tombol ber-atribut data-dl-open="<id>" atau Devlib.modal.open(id). Slot "footer" = tombol bawah.

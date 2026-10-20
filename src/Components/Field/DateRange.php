@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Rentang tanggal awal s.d. akhir + durasi otomatis.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : nameEnd, valueEnd, duration, name, label, tooltip, hint, error, value, placeholder, … (17 prop).
+ * Output       : Markup dari resources/views/components/field/date-range.blade.php.
+ * Dipakai oleh : field-date-range (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Rentang tanggal awal s.d. akhir + durasi otomatis.

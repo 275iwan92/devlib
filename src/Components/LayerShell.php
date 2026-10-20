@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kerangka aplikasi dengan navigasi x-dl::layer-menu di kiri dan TANPA top bar. Tab MDI, laci, modal.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : modules, user, brand, tagline, logo, logoutAction, menuSource, developer, chat, open, … (18 prop).
+ * Output       : Markup dari resources/views/components/layer-shell.blade.php.
+ * Dipakai oleh : layar proyek lewat x-dl::layer-shell.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Lang;

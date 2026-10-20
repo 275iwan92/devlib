@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Chat ala WhatsApp. Daftar kiri = orang yang SEDANG LOGIN (avatar berwarna cerah + titik hijau) + percakapan lain yang.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : me, people, convos, api, compact, height, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : chat-model, chat, layer-menu (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Chat ala WhatsApp. Daftar kiri = orang yang SEDANG LOGIN (avatar berwarna cerah + titik hijau) + percakapan lain yang

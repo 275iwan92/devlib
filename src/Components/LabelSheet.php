@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Lembar cetak label: isi slot = deretan x-dl::label. Tombol Print mencetak labelnya saja (bilah dan layar lain tidak.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : title, back, count, size, paper.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : wh-labels (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Lembar cetak label: isi slot = deretan x-dl::label. Tombol Print mencetak labelnya saja (bilah dan layar lain tidak

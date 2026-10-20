@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Dropdown yang saling terkait dan MENYUSUN KODE (Material Category -> kode item, user 2026-10-03; pola yang sama untuk Product).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : nodes, levels, value, name, codeLabel, navigate, addUrl, inactive, disabled, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : code-chain (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Lang;

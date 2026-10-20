@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Daftar ENGINE (mesin hitung / aturan bisnis) sebuah aplikasi: untuk tiap engine tampil kegunaan, cara memanggil.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : engines, open, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : engines (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Daftar ENGINE (mesin hitung / aturan bisnis) sebuah aplikasi: untuk tiap engine tampil kegunaan, cara memanggil

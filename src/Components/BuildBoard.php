@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Papan Build Progress: berapa objek, modul, layar, form, grid, laporan dan engine yang sudah dibangun, modul mana yang.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : build, library, enginesUrl, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : build, home, summary (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Lang;

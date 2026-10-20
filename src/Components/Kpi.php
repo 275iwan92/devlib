@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kartu KPI dashboard: label, nilai, perubahan vs periode lalu (▲▼, warna sesuai arah yang BAIK),.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : label, value, format, previous, goodWhen, spark, target, hint, icon, tone, … (11 prop).
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : indicators, profile-banner (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Components\Field\Slider;

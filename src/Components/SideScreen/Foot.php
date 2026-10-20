@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Baris aksi LENGKET di dasar bagian Side Screen (user 2026-10-04): tombol form (Request Correction, Send ticket, Save).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : hint, align.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : side-screen (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\SideScreen;
 
 use Devlib\Components\ActionBar;

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Satu kotak centang dengan teksnya sendiri (mis. "Ingat saya", "Setuju syarat").
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : text, name, label, tooltip, hint, error, value, placeholder, required, disabled, … (15 prop).
+ * Output       : Markup dari resources/views/components/field/checkbox.blade.php.
+ * Dipakai oleh : field-checkbox, form-single, generator (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Satu kotak centang dengan teksnya sendiri (mis. "Ingat saya", "Setuju syarat").

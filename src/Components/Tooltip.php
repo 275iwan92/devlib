@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Keterangan saat kursor diarahkan ke isi slot.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : text, position.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : tooltip (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Keterangan saat kursor diarahkan ke isi slot.

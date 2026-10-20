@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Label status kecil. tone: neutral|accent|success|warn|danger|info|violet. Status dokumen -> Badge::forStatus("APPROVED").
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : label, tone, pill, icon.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : badge, doc-share, tooltip, generator dan 1 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Label status kecil. tone: neutral|accent|success|warn|danger|info|violet. Status dokumen -> Badge::forStatus("APPROVED").

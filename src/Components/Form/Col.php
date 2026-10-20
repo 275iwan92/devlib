@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Satu kolom form: field disusun ke bawah.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : (tanpa prop).
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : dirty-guard, generator (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Form;
 
 use Devlib\Components\DevlibComponent;

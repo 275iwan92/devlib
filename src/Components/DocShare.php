@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Print + Email untuk SETIAP form/dokumen (user 2026-09-29). Layar cukup menaruh 1 tag dan menunjuk area dokumennya:.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : target, type, docId, number, title, emailTo, subject, message, endpoint, orientation, … (14 prop).
+ * Output       : Markup dari resources/views/components/doc-share.blade.php.
+ * Dipakai oleh : doc-share, print-doc-a4, print-doc-a5, print-doc-draft (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Theme;

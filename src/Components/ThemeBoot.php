@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Dipasang SEKALI di <head>: CSS 12 tema (dari Devlib\Theme) + skrip kecil yang.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : theme.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : layout (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Theme;

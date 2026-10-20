@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kerangka abu-abu berdenyut selama data dimuat. type: text | table | card | form.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : type, lines, rows, cols.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : skeleton (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Kerangka abu-abu berdenyut selama data dimuat. type: text | table | card | form.

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Umpan gaya blog / berita (user 2026-10-07): banyak narasi dibaca berurutan di satu halaman, tanpa membuka satu per satu.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : posts, empty.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : feed, history (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Illuminate\Support\Str;

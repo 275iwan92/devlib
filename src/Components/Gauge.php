@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Gauge setengah lingkaran: zona warna dari bands [[batas atas, tone]] + jarum + nilai.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : value, min, max, bands, label, unit, target.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : indicators (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Gauge setengah lingkaran: zona warna dari bands [[batas atas, tone]] + jarum + nilai.

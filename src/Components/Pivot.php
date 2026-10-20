@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Grid Pivot: data datar -> tabel silang yang bisa diatur user di layar.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : rows, fields, measures, rowsBy, colBy, value, agg, formats, title, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : grid-pivot (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Grid Pivot: data datar -> tabel silang yang bisa diatur user di layar.

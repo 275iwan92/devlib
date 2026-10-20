@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Form bertahap. Isi = beberapa x-dl::wizard.step. Next mengecek isian wajib langkah itu;.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : title, action, review, finishLabel.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : wizard-customer (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Form bertahap. Isi = beberapa x-dl::wizard.step. Next mengecek isian wajib langkah itu;

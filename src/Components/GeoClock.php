@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Absen berbasis lokasi (GPS geofencing, dipakai ponsel): membaca posisi perangkat, menanyakan jarak ke lokasi kerja ke server.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : checkUrl, clockUrl, radius, history, title, subtitle, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : geo-clock (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Lang;

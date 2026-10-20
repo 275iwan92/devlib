@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Import data dari CSV (perilaku ImportAction Filament): 1 Upload (+ template) -> 2 Cocokkan kolom.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : title, columns, template, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : import-items (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Lookup;

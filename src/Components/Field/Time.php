@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Jam dengan pemilih jam:menit.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : name, label, tooltip, hint, error, value, placeholder, required, disabled, readonly, … (14 prop).
+ * Output       : Markup dari resources/views/components/field/time.blade.php.
+ * Dipakai oleh : basic-locale, field-time (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Jam dengan pemilih jam:menit.

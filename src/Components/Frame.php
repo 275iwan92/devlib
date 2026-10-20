@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : bingkai layar penuh (gambar latar + widget + kotak isi) untuk HP/tablet/laptop/desktop di resolusi apa pun.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : bg, bgOrder, bgInterval, overlay, box, boxStyle, color, boxWidth, resizable, widgets, … (20 prop).
+ * Output       : Markup dari resources/views/components/frame.blade.php.
+ * Dipakai oleh : forgot-1, forgot-2, login-1, login-2 dan 2 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 /* REMARK

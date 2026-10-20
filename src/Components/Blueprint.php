@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kanvas CAD / blueprint: grid minor+mayor, zoom-pan (viewBox), crosshair, HUD koordinat, garis dimensi.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : width, height, minor, major, unit, dims, heightCss.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : layar proyek lewat x-dl::blueprint.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Kanvas CAD / blueprint: grid minor+mayor, zoom-pan (viewBox), crosshair, HUD koordinat, garis dimensi.

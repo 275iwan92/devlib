@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tab: judul di atas (vertical = daftar di kiri, seperti halaman Setup & Security), isi berganti.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : tabs, active, vertical.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : security, tabs-accordion (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Tab: judul di atas (vertical = daftar di kiri, seperti halaman Setup & Security), isi berganti.

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Cuaca terkini dari internet (Open-Meteo, gratis tanpa kunci API), diambil oleh browser.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : city, lat, lon.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : layar proyek lewat x-dl::weather.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Cuaca terkini dari internet (Open-Meteo, gratis tanpa kunci API), diambil oleh browser.

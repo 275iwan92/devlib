@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Matriks pilih pemenang: baris = kebutuhan (mis. baris PR), kolom = penawar (mis. supplier), tiap sel = satu radio.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : name, columns, rows, empty, unit, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : pick-matrix (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Matriks pilih pemenang: baris = kebutuhan (mis. baris PR), kolom = penawar (mis. supplier), tiap sel = satu radio.

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Daftar pasangan nama - nilai (mis. spesifikasi barang) + tambah/hapus baris.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : keyLabel, valueLabel, name, label, tooltip, hint, error, value, placeholder, required, … (16 prop).
+ * Output       : Markup dari resources/views/components/field/key-value.blade.php.
+ * Dipakai oleh : field-key-value (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Daftar pasangan nama - nilai (mis. spesifikasi barang) + tambah/hapus baris.

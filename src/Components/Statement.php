@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Laporan keuangan baris demi baris (Neraca, Laba Rugi, Arus Kas): judul kelompok, baris biasa, subtotal, total akhir. Objek ini tidak tahu database:.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : rows, columns, title, subtitle, currency, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : statement (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Locale;

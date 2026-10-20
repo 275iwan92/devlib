@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Isi kotak Daftar Akun (mockup register.html), dipasang di x-dl::frame seperti login.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : action, loginUrl, types.
+ * Output       : Markup dari resources/views/components/register-box.blade.php.
+ * Dipakai oleh : register (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Isi kotak Daftar Akun (mockup register.html), dipasang di x-dl::frame seperti login.

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Isian label berganda: ketik lalu Enter/koma = jadi label; klik x untuk hapus.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : suggestions, name, label, tooltip, hint, error, value, placeholder, required, disabled, … (15 prop).
+ * Output       : Markup dari resources/views/components/field/tags.blade.php.
+ * Dipakai oleh : field-tags (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Isian label berganda: ketik lalu Enter/koma = jadi label; klik x untuk hapus.

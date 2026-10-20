@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Geser tanggal (satu tanggal atau rentang). Nilai dikirim ISO (YYYY-MM-DD), tampil dalam format lokal WIB;.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : from, until, range, valueTo, nameTo, orientation, height, name, label, tooltip, … (21 prop).
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : field-date-slider (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 use DateTimeImmutable;

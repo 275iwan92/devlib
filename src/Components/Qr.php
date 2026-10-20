@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kode QR (qrcodejs, dimuat sekali dari cdnjs saat dibutuhkan). Isi = teks/URL/ID.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : text, size, caption.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : codes (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Kode QR (qrcodejs, dimuat sekali dari cdnjs saat dibutuhkan). Isi = teks/URL/ID.

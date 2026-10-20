@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Dokumen cetak (nota_co_mockup, nota_pv_spb, printnotastandard). Layar cukup deklarasi isi dokumen.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : title, subtitle, number, date, status, company, companyPpn, ppn, parties, columns, … (23 prop).
+ * Output       : Markup dari resources/views/components/print-out.blade.php.
+ * Dipakai oleh : print-co, print-spb (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Terbilang;

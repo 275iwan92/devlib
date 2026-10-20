@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Daftar notifikasi (mockup_notification): ikon berwarna, judul, titik belum dibaca, keterangan, waktu relatif.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : items, title, markAll.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : notification-list (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Daftar notifikasi (mockup_notification): ikon berwarna, judul, titik belum dibaca, keterangan, waktu relatif.

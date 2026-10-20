@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Pilih dari data master (bukan ketik bebas) + isi otomatis field lain.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : lookup, fill, create, params, name, label, tooltip, hint, error, value, … (18 prop).
+ * Output       : Markup dari resources/views/components/field/lookup.blade.php.
+ * Dipakai oleh : card-actionbar, dev-mode, field-lookup, input-theme dan 2 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Pilih dari data master (bukan ketik bebas) + isi otomatis field lain.

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Hak akses grup per objek (mockup security.html "Hak Akses Grup"): pilih grup -> tiap objek Form/Grid diberi.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : objects, groups, perms, levels, default, source, saveUrl.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : security (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Hak akses grup per objek (mockup security.html "Hak Akses Grup"): pilih grup -> tiap objek Form/Grid diberi

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Opening screen setelah login (Beranda): salam + jam + cuaca, tombol Job Description & SOP jabatan,.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : board, source.
+ * Output       : Markup dari resources/views/components/dashboard.blade.php.
+ * Dipakai oleh : dashboard-general, dashboard-management, dashboard-sales, home (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Opening screen setelah login (Beranda): salam + jam + cuaca, tombol Job Description & SOP jabatan,

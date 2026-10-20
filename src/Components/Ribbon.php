@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Ribbon ala Microsoft Excel: tab -> grup berlabel -> tombol besar (ikon di atas teks) / kecil (3 bertumpuk per kolom).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : tabs, file, quick, title, active.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : ribbon (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Icon;

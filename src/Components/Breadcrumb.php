@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Jejak lokasi halaman: Modul › Grup › Layar [› current].
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : items, menu, current.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : breadcrumb, screen-nav, lib-cat (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Jejak lokasi halaman: Modul › Grup › Layar [› current].

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Bullet chart (Stephen Few): rentang kualitatif (buruk/cukup/baik), batang nilai, garis target.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : label, value, target, ranges, max, format, sub.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : indicators (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Bullet chart (Stephen Few): rentang kualitatif (buruk/cukup/baik), batang nilai, garis target.

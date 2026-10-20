@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tombol + daftar pilihan (dropdown) -- mis. Print ▾ / Email ▾ bila satu form punya lebih dari satu dokumen cetak.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : items, preset, label, icon, variant, size.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : button (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Tombol + daftar pilihan (dropdown) -- mis. Print ▾ / Email ▾ bila satu form punya lebih dari satu dokumen cetak

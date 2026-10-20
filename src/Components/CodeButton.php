@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Ikon kecil </> di pojok layar (Mode Developer): klik -> jendela berisi.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : code, file, classes, mockupUrl.
+ * Output       : Markup dari resources/views/components/code-button.blade.php.
+ * Dipakai oleh : lib-cat, lib (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Illuminate\Support\Str;

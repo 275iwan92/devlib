@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tanda sedang memproses. overlay=true menutupi induknya (mis. kartu/grid) selama proses.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : label, size, overlay.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : spinner (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Tanda sedang memproses. overlay=true menutupi induknya (mis. kartu/grid) selama proses.

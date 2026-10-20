@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Grafik SVG tanpa library luar. Satu format data untuk semua tipe:.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : type, labels, series, title, subtitle, format, height, legend, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : chart-bars, chart-lines, chart-pies (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Grafik SVG tanpa library luar. Satu format data untuk semua tipe:

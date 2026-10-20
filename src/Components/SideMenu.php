@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Menu panel samping (kiri ATAU kanan). Mode lebar: akordeon bertingkat (grup -> sub -> item), cari (buka otomatis.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : items, side, title, id, collapsed, search, favorites, active.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : side-menu (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Icon;

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Pemilih tampilan: 12 tema (keluarga x corak) + density + skala huruf.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : (tanpa prop).
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : basic-density, basic-themes, layer-menu, security (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Theme;

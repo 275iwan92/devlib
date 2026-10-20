@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Pilihan bahasa (bendera). Daftar bahasa = Locale::languages() (aplikasi: sys_languages yang aktif), jadi bahasa baru.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : langs, active, reload.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : i18n, misc (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Locale;

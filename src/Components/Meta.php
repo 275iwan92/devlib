@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Info rekaman: dibuat/diubah oleh siapa & kapan (WIB), asal data. Mode Developer menampilkan tabel & ID.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : createdBy, createdAt, updatedBy, updatedAt, origin, table, recordId.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : metadata (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Info rekaman: dibuat/diubah oleh siapa & kapan (WIB), asal data. Mode Developer menampilkan tabel & ID.

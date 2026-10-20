@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Catatan berformat (tebal, miring, garis bawah, daftar). Disimpan sebagai HTML --.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : rows, name, label, tooltip, hint, error, value, placeholder, required, disabled, … (15 prop).
+ * Output       : Markup dari resources/views/components/field/rich-text.blade.php.
+ * Dipakai oleh : field-rich-text (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Catatan berformat (tebal, miring, garis bawah, daftar). Disimpan sebagai HTML --

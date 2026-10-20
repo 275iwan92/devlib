@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Pilihan tombol berderet (segmented), satu yang aktif. Mis. Harian / Mingguan / Bulanan.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : options, name, label, tooltip, hint, error, value, placeholder, required, disabled, … (15 prop).
+ * Output       : Markup dari resources/views/components/field/toggle-group.blade.php.
+ * Dipakai oleh : field-toggle-group (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Pilihan tombol berderet (segmented), satu yang aktif. Mis. Harian / Mingguan / Bulanan.

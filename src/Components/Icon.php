@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Ikon baku: sebut ARTINYA (save, delete, print, ...), bukan nama Font Awesome.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : name, label.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : basic-icons (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Ikon baku: sebut ARTINYA (save, delete, print, ...), bukan nama Font Awesome.

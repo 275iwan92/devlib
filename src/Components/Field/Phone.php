@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Telepon per negara (Devlib\PhoneFormat): mask otomatis, buang 0 / +kode di depan, cek pola & panjang.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : countries, country, kind, name, label, tooltip, hint, error, value, placeholder, … (17 prop).
+ * Output       : Markup dari resources/views/components/field/phone.blade.php.
+ * Dipakai oleh : field-phone, form-md-po, form-md, form-single dan 3 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Telepon per negara (Devlib\PhoneFormat): mask otomatis, buang 0 / +kode di depan, cek pola & panjang.

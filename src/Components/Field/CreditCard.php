@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kartu kredit/debit: nomor ber-mask per jenis (Visa/Mastercard/Amex/JCB/Discover/Diners/UnionPay),.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : holder, preview, name, label, tooltip, hint, error, value, placeholder, required, … (16 prop).
+ * Output       : Markup dari resources/views/components/field/credit-card.blade.php.
+ * Dipakai oleh : field-credit-card (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Kartu kredit/debit: nomor ber-mask per jenis (Visa/Mastercard/Amex/JCB/Discover/Diners/UnionPay),

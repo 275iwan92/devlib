@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Cincin progres (persentase tercapai), warna otomatis dari ambang atau tone tetap.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : value, label, tone, size, caption.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : indicators (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Cincin progres (persentase tercapai), warna otomatis dari ambang atau tone tetap.

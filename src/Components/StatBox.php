@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kotak statistik grid; filter=true -> bisa diklik sebagai penyaring data (klik lagi = lepas).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : label, value, tone, sub, filter, active.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : stat-box, summary (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Kotak statistik grid; filter=true -> bisa diklik sebagai penyaring data (klik lagi = lepas).

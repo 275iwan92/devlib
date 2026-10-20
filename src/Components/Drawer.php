@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Panel geser dari samping (kanan/kiri). Dibuka data-dl-open="<id>" atau Devlib.drawer.open(id).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : id, title, side, width, icon, maximize.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : modal-drawer (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Panel geser dari samping (kanan/kiri). Dibuka data-dl-open="<id>" atau Devlib.drawer.open(id).

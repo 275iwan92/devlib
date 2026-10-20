@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Saklar aktif/nonaktif.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : onLabel, offLabel, name, label, tooltip, hint, error, value, placeholder, required, … (16 prop).
+ * Output       : Markup dari resources/views/components/field/toggle.blade.php.
+ * Dipakai oleh : field-toggle, master-employee, wizard-customer (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Saklar aktif/nonaktif.

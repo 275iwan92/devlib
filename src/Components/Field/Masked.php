@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Input bermask angka, mis. NIK 6.6.4 digit.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : mask, invalidText, name, label, tooltip, hint, error, value, placeholder, required, … (16 prop).
+ * Output       : Markup dari resources/views/components/field/masked.blade.php.
+ * Dipakai oleh : field-masked, form-md-po, form-md, form-single dan 1 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Input bermask angka, mis. NIK 6.6.4 digit.

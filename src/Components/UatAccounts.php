@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Ikon support kecil; diklik -> popup daftar akun uji coba (UAT). HAPUS dari login sebelum rilis produksi.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : accounts, password.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : layar proyek lewat x-dl::uat-accounts.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Ikon support kecil; diklik -> popup daftar akun uji coba (UAT). HAPUS dari login sebelum rilis produksi.

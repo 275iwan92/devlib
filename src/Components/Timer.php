@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Stopwatch display (hh:mm:ss). The server gives the seconds already elapsed when the page was made; the browser keeps counting while running.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : seconds, running, label, tone.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : timer (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Stopwatch display (hh:mm:ss). The server gives the seconds already elapsed when the page was made; the browser keeps counting while running.

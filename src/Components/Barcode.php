@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Barcode 1D (JsBarcode dari cdnjs): format CODE128 (default) | EAN13 | EAN8 | CODE39 | ITF14 | UPC.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : value, format, height, width, text.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : codes (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Barcode 1D (JsBarcode dari cdnjs): format CODE128 (default) | EAN13 | EAN8 | CODE39 | ITF14 | UPC.

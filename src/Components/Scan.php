@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kotak pindai QR / barcode. Scanner USB / Bluetooth bekerja seperti keyboard: kode masuk ke kotak lalu Enter. Di HP.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : name, label, placeholder, value, action, hint, autofocus.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : wh-scan (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Kotak pindai QR / barcode. Scanner USB / Bluetooth bekerja seperti keyboard: kode masuk ke kotak lalu Enter. Di HP

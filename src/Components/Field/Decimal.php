@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Angka desimal (otomatis .00 saat keluar) + satuan.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : decimals, unit, toggle, name, label, tooltip, hint, error, value, placeholder, … (17 prop).
+ * Output       : Markup dari resources/views/components/field/decimal.blade.php.
+ * Dipakai oleh : basic-locale, doc-share, field-decimal, form-md-po dan 1 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Angka desimal (otomatis .00 saat keluar) + satuan.

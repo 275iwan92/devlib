@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Rating bintang. half = boleh setengah bintang (klik sisi kiri bintang). readonly = tampil saja.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : max, half, name, label, tooltip, hint, error, value, placeholder, required, … (16 prop).
+ * Output       : Markup dari resources/views/components/field/rating.blade.php.
+ * Dipakai oleh : field-rating (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Rating bintang. half = boleh setengah bintang (klik sisi kiri bintang). readonly = tampil saja.

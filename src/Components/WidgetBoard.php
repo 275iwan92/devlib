@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Papan widget (opening screen yang bisa diatur pemiliknya): kisi 12 kolom berisi widget dari katalog aplikasi.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : widgets, catalog, actionUrl, editable, editing, title, id, source, periods, period, … (12 prop).
+ * Output       : Markup dari resources/views/components/widget-board.blade.php.
+ * Dipakai oleh : widget-board (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Papan widget (opening screen yang bisa diatur pemiliknya): kisi 12 kolom berisi widget dari katalog aplikasi.

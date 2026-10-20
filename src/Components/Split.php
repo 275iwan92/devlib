@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tata letak dokumen: isi utama (lebar) + panel samping (sempit) mis. ringkasan & pajak, atau pohon kelompok di kiri.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : aside, side.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : split (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Tata letak dokumen: isi utama (lebar) + panel samping (sempit) mis. ringkasan & pajak, atau pohon kelompok di kiri

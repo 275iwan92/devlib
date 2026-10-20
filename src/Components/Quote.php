@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kata motivasi dari daftar (biasanya dari file teks lewat x-dl::frame quotes="...").
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : quotes, order, interval.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : layar proyek lewat x-dl::quote.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Kata motivasi dari daftar (biasanya dari file teks lewat x-dl::frame quotes="...").

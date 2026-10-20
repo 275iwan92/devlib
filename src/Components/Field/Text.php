@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Teks satu baris / banyak baris (auto-tinggi) + tombol huruf aa/Aa/AA.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : multiline, caseToggle, type, autocomplete, code, prefix, suffix, maxlength, counter, name, … (23 prop).
+ * Output       : Markup dari resources/views/components/field/text.blade.php.
+ * Dipakai oleh : basic-density, basic-themes, card-actionbar, dirty-guard dan 16 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Teks satu baris / banyak baris (auto-tinggi) + tombol huruf aa/Aa/AA.

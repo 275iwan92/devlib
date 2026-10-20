@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Salam sesuai waktu: Selamat pagi / siang / sore / malam (ikut bahasa aktif).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : name, timezone.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : layar proyek lewat x-dl::greeting.
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Salam sesuai waktu: Selamat pagi / siang / sore / malam (ikut bahasa aktif).

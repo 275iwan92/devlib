@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tombol ikon persegi (kolom Aksi grid, toolbar). icon = arti baku (edit, delete, open, ...).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : icon, title, variant, href, confirm.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : confirm, icon-button, permissions (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Tombol ikon persegi (kolom Aksi grid, toolbar). icon = arti baku (edit, delete, open, ...).

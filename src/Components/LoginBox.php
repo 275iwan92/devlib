@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Isi kotak login. Cukup SEBUT bagian yang tampil, berurutan, dipisah koma:.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : show, action, button, error, username, forgotUrl, registerUrl, brand, tagline.
+ * Output       : Markup dari resources/views/components/login-box.blade.php.
+ * Dipakai oleh : login-1, login-2, login-3 (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Isi kotak login. Cukup SEBUT bagian yang tampil, berurutan, dipisah koma:

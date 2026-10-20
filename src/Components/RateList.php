@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Daftar hasil kerja yang dinilai: satu baris per item (form / grid / report / engine / objek / fitur) dengan pembuat,.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : items, types, qc, agents, action, csrf, canRate, only, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : summary (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Daftar hasil kerja yang dinilai: satu baris per item (form / grid / report / engine / objek / fitur) dengan pembuat,

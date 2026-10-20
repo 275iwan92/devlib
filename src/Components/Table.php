@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tabel sederhana (di dalam form/kartu). columns: key => label, atau key => [label, num=>true]. Angka rata kanan.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : columns, rows, empty, striped, totals, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : assistant, doc-share, side-screen, table dan 2 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Tabel sederhana (di dalam form/kartu). columns: key => label, atau key => [label, num=>true]. Angka rata kanan.

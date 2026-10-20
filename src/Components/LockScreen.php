@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Layar kunci: menutup aplikasi setelah tidak ada aktivitas `idle` menit (0 = hanya manual), atau lewat tombol.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : user, idle, logoutAction, id.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : lock-screen (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Layar kunci: menutup aplikasi setelah tidak ada aktivitas `idle` menit (0 = hanya manual), atau lewat tombol

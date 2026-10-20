@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Bilah QC cepat di tepi bawah halaman: status tahap ini + dua tombol, Approved (satu klik, langsung tersimpan beserta.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : key, name, stage, status, note, by, at, action, csrf, canReview, … (12 prop).
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : lib-cat, lib (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Bilah QC cepat di tepi bawah halaman: status tahap ini + dua tombol, Approved (satu klik, langsung tersimpan beserta

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Kalender acara (mockup_UIUX_calendar): kiri = Create Event + kalender mini + cari; tengah = Day/Week/Month;.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : events, display, date, weekStart, scrollHour, sidebar, source.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : calendar-events (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Kalender acara (mockup_UIUX_calendar): kiri = Create Event + kalender mini + cari; tengah = Day/Week/Month;

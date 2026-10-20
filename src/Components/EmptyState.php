@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tampilan saat data kosong: ikon, judul, keterangan, dan tombol aksi (slot).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : title, message, icon.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : build, empty-state, engines, material-planning dan 1 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Tampilan saat data kosong: ikon, judul, keterangan, dan tombol aksi (slot).

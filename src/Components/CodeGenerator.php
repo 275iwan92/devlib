@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Pembuat kode QR dan barcode: pilih jenis, ketik isinya, hasil tampil langsung, lalu unduh PNG / SVG atau cetak.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : type, value, title, hint.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : code-generator (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Lang;

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Pilihan tunggal dengan kotak cari (mis. lokasi Kota, Provinsi, Negara).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : options, searchPlaceholder, name, label, tooltip, hint, error, value, placeholder, required, … (16 prop).
+ * Output       : Markup dari resources/views/components/field/select.blade.php.
+ * Dipakai oleh : basic-themes, field-select, form-md-po, form-md dan 5 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Pilihan tunggal dengan kotak cari (mis. lokasi Kota, Provinsi, Negara).

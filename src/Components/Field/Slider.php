@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Geser nilai. range = dua gagang (min-max; nilai kedua dikirim sebagai name_to / nameTo).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : min, max, step, format, range, valueTo, nameTo, orientation, height, ticks, … (24 prop).
+ * Output       : Markup dari resources/views/components/field/slider.blade.php.
+ * Dipakai oleh : field-slider (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Geser nilai. range = dua gagang (min-max; nilai kedua dikirim sebagai name_to / nameTo).

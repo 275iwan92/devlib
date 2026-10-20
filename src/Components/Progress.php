@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Batang kemajuan; tone otomatis dari nilai bila tone="auto" (>=80 hijau, >=50 kuning, sisanya merah).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : value, tone, label, text.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : avatar-progress (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Batang kemajuan; tone otomatis dari nilai bila tone="auto" (>=80 hijau, >=50 kuning, sisanya merah).

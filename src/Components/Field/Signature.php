@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Tanda tangan: kanvas mouse / pena / jari. Nilai = gambar PNG (data URL) di input tersembunyi.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : height, name, label, tooltip, hint, error, value, placeholder, required, disabled, … (15 prop).
+ * Output       : Markup dari resources/views/components/field/signature.blade.php.
+ * Dipakai oleh : field-signature (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Field;
 
 // Tanda tangan: kanvas mouse / pena / jari. Nilai = gambar PNG (data URL) di input tersembunyi.

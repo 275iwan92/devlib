@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Satu langkah di dalam x-dl::wizard. icon = arti baku (Devlib\Icon) atau kelas fa-*.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : title, icon, hint.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : wizard-customer (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Wizard;
 
 use Devlib\Components\DevlibComponent;

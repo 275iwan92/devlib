@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Panduan ukuran label + cara cetak (user 2026-10-02: "jelaskan ukuran label agar mudah di cetak"): tabel tiga ukuran.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : size, colors, open.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : wh-labels (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 use Devlib\Lang;

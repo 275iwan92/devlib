@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Garis pemisah dengan teks di tengah (mis. "atau").
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : label, i18n.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : misc (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Garis pemisah dengan teks di tengah (mis. "atau").

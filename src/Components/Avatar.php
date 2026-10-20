@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Foto orang/objek; tanpa foto = inisial dengan warna tetap per nama.
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : name, photo, size, sub.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : avatar-progress (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components;
 
 // Foto orang/objek; tanpa foto = inisial dengan warna tetap per nama.

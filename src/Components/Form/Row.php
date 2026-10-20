@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * REMARK
+ * Tujuan       : Satu baris form: field berdampingan (default 2 sama lebar).
+ * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
+ * Input        : cols.
+ * Output       : Markup Blade inline (render() kelas ini).
+ * Dipakai oleh : basic-locale, card-actionbar, doc-share, field-display dan 11 lainnya (layar katalog/proyek).
+ * Status       : Aktif (DevLib).
+ */
+
 namespace Devlib\Components\Form;
 
 use Devlib\Components\DevlibComponent;
