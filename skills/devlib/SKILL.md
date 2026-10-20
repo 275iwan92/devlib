@@ -105,6 +105,11 @@ Berlaku untuk SEMUA data transaksional, baik master-detail (dokumen dengan baris
 - Mode **DRAFT**: tombol baris SELALU tampil. Mode **CONFIRMED**: tombol baris DISEMBUNYIKAN (detail readonly). Begitu pula CANCELLED.
 - Status DevLib: komponen `x-dl::lines` saat ini hanya punya hapus baris (+ salin bila `duplicable`); state per baris SAVE/UNDO/EDIT/DELETE BELUM didukung. Membangunnya = perubahan DevLib yang harus OPT-IN (tmerp memakai perilaku lama), lalu commit di repo devlib.
 
+**Baris detail (form master-detail, `x-dl::lines :row-state="true"`)** (aturan pemilik, 2026-10-20)
+- Setiap pengisian baris punya 2 STATE. **State awal** (baru diisi): tombol **SAVE** dan **UNDO**. **State telah ditulis**: tombol **EDIT** dan **DELETE**.
+- Saat form **CONFIRMED** (readonly) tombol baris **HIDDEN**; selama **DRAFT** tombol selalu ada.
+- Opt-in lewat prop `:row-state="true"` (tanpa itu `x-dl::lines` memakai tombol lama: salin + hapus). Baris tersimpan terkunci sampai EDIT; UNDO membuang baris baru atau mengembalikan isi sebelum EDIT; data semua baris tetap terkirim saat Save form.
+
 **Data MASTER**
 - TIDAK ada DRAFT/CONFIRMED. Hanya `ACTIVATED` / `DEACTIVATED` (nama lain: `ENABLE` / `DISABLE`). Di grid master ini adalah Aktif/Nonaktif.
 

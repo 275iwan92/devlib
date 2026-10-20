@@ -20,6 +20,10 @@
       if (this.ro) $$(this.el, '.dl-lines__footer input, .dl-lines__footer select').forEach(x => { if (x.type === 'checkbox' || x.tagName === 'SELECT') x.disabled = true; else x.readOnly = true; });
       this.rows = JSON.parse(this.el.dataset.rows || '[]');
       this.removed = [];
+      // rowState (opt-in): tiap baris punya 2 state. 'edit' = baru diisi (tombol Save + Undo); 'saved' = sudah ditulis (tombol Edit + Delete).
+      // Form terkunci (Confirmed): tanpa tombol. Draft: tombol selalu ada. Data baris tetap terkirim di kedua state.
+      this.state = new WeakMap(); this.snap = new WeakMap();
+      if (this.cfg.rowState) this.rows.forEach(r => this.state.set(r, this.complete(r) ? 'saved' : 'edit'));
       // Rumus aman: hanya nama kolom, angka, dan + - * / ( ).
       this.cols.forEach(c => {
         if (!c.formula) return;
@@ -62,6 +66,18 @@
         if (pr) { const i = +pr.closest('tr[data-i]').dataset.i; this.rows.forEach((r, j) => { r[pr.dataset.lPrimary] = j === i; }); this.body(); this.changed(); return; }
         const bo = x.closest('[data-l-bool]');
         if (bo) { const r = this.rowOf(bo); r[bo.dataset.lBool] = !r[bo.dataset.lBool]; this.body(); this.changed(); return; }
+        const rowOfBtn = b => this.rows[+b.closest('tr[data-i]').dataset.i];
+        const sv = x.closest('[data-l-save]');
+        if (sv) { const r = rowOfBtn(sv), i = this.rows.indexOf(r), miss = this.cols.filter(c => c.required && String(r[c.key] ?? '').trim() === '');
+          if (!this.filled(r) || miss.length) { (miss.length ? miss : this.cols.filter(c => c.required)).forEach(c => $(this.el, `tr[data-i="${i}"] [data-k="${c.key}"]`)?.closest('td').classList.add('is-invalid')); return; }
+          this.state.set(r, 'saved'); this.snap.delete(r); this.body(); this.changed(); return; }
+        const ed = x.closest('[data-l-edit]');
+        if (ed) { const r = rowOfBtn(ed), i = this.rows.indexOf(r); this.snap.set(r, {...r}); this.state.set(r, 'edit'); this.body(); $(this.el, `tr[data-i="${i}"] .dl-lines__in`)?.focus(); return; }
+        const un = x.closest('[data-l-undo]');
+        if (un) { const r = rowOfBtn(un), i = this.rows.indexOf(r), was = this.snap.get(r);
+          if (was) { Object.keys(r).forEach(k => delete r[k]); Object.assign(r, was); this.state.set(r, 'saved'); this.snap.delete(r); }
+          else { this.rows.length <= this.cfg.minRows ? this.rows.splice(i, 1, this.blank()) : this.rows.splice(i, 1); }
+          this.body(); this.changed(); return; }
         if (x.closest('[data-l-dup]')) { const i = +x.closest('tr[data-i]').dataset.i; this.rows.splice(i + 1, 0, {...this.rows[i]}); this.body(); this.changed(); return; }
         const del = x.closest('[data-l-del]');
         if (del) {
@@ -80,7 +96,7 @@
 
       this.el.dlLines = {
         get rows() { return self.rows.filter(self.filled).map(r => ({...r})); },
-        set(list) { self.rows = (list || []).map(r => ({...r})); while (self.rows.length < Math.max(1, self.cfg.minRows)) self.rows.push(self.blank()); self.body(); $$(self.el, '[data-l-err]').forEach(x => { x.textContent = ''; }); },
+        set(list) { self.rows = (list || []).map(r => ({...r})); if (self.cfg.rowState) self.rows.forEach(r => self.state.set(r, self.complete(r) ? 'saved' : 'edit')); while (self.rows.length < Math.max(1, self.cfg.minRows)) self.rows.push(self.blank()); self.body(); $$(self.el, '[data-l-err]').forEach(x => { x.textContent = ''; }); },
         validate: this.validate, total: this.total,
       };
       this.head();
@@ -126,7 +142,27 @@
 
     // Kolom 'primary' (tepat satu baris bernilai true, mis. tier/bahan Utama): baris pertama otomatis Utama.
     blank() {
-      return Object.fromEntries(this.cols.map(c => [c.key, c.type === 'primary' ? !this.rows.some(r => r[c.key]) : c.type === 'bool' ? !!c.default : c.default ?? '']));
+      const r = Object.fromEntries(this.cols.map(c => [c.key, c.type === 'primary' ? !this.rows.some(r => r[c.key]) : c.type === 'bool' ? !!c.default : c.default ?? '']));
+      if (this.cfg.rowState) this.state.set(r, 'edit');
+      return r;
+    }
+
+    // Baris lengkap = terisi dan semua kolom wajibnya terisi (baris dari server yang belum lengkap, mis. hanya jumlah bawaan, tetap terbuka).
+    complete(r) {
+      return this.filled(r) && this.cols.every(c => !c.required || String(r[c.key] ?? '').trim() !== '');
+    }
+
+    // rowState: baris 'saved' tampil terkunci (teks); 'edit' = isian terbuka.
+    saved(r) {
+      return !!this.cfg.rowState && this.state.get(r) === 'saved';
+    }
+
+    // Tombol aksi per baris: rowState = (Save + Undo) atau (Edit + Delete); lainnya = Duplikat + Hapus seperti biasa.
+    acts(r) {
+      const b = (att, icon, title, cls = '') => `<button type="button" class="dl-iconbtn dl-iconbtn--plain ${cls}" ${att} title="${esc(title)}"><i class="fa-solid ${icon}"></i></button>`;
+      const del = this.cfg.rowLock && !r[this.cfg.rowLock] ? '' : b('data-l-del', 'fa-trash-can', T('l_delete_row'), 'dl-iconbtn--danger');
+      if (this.cfg.rowState) return this.saved(r) ? b('data-l-edit', 'fa-pen', T('l_edit_row')) + del : b('data-l-save', 'fa-floppy-disk', T('l_save_row')) + b('data-l-undo', 'fa-rotate-left', T('l_undo_row'));
+      return (this.cfg.duplicable === false ? '' : b('data-l-dup', 'fa-copy', T('l_dup_row'))) + del;
     }
 
     // Baris Utama dihapus -> baris pertama yang tersisa menjadi Utama.
@@ -163,11 +199,12 @@
       const v = r[c.key] ?? '', req = c.required ? ' data-req' : '', ph = c.placeholder ? ` placeholder="${esc(c.placeholder)}"` : '';
       // readonlyUnless: sel hanya bisa diisi bila kolom bool lain di baris yang sama bernilai true (mis. Biaya hanya bila Biaya Baru = Ya).
       const lock = c.readonlyUnless && !r[c.readonlyUnless] ? ' readonly tabindex="-1"' : '';
+      const frozen = this.ro || this.saved(r);
       if (c.type === 'primary' || c.type === 'bool') {
         const on = !!v, [yes, no] = c.labels || (c.type === 'primary' ? [T('l_primary'), T('l_pick')] : [T('l_yes'), T('l_no')]);
-        return `<td class="dl-lines__pick"><button type="button" class="dl-btn dl-btn--sm ${on ? 'dl-btn--primary' : 'dl-btn--secondary'}" data-l-${c.type}="${esc(c.key)}" ${this.ro ? 'disabled' : ''}>${esc(on ? yes : no)}</button></td>`;
+        return `<td class="dl-lines__pick"><button type="button" class="dl-btn dl-btn--sm ${on ? 'dl-btn--primary' : 'dl-btn--secondary'}" data-l-${c.type}="${esc(c.key)}" ${frozen ? 'disabled' : ''}>${esc(on ? yes : no)}</button></td>`;
       }
-      if (c.fn || c.landed || c.type === 'display' || this.ro) return `<td class="${this.num(c) ? 'num' : ''} dl-lines__ro" data-k="${esc(c.key)}">${esc(c.type === 'lookup' ? (r[c.key + '_label'] ?? v) : this.show(c, v))}</td>`;
+      if (c.fn || c.landed || c.type === 'display' || frozen) return `<td class="${this.num(c) ? 'num' : ''} dl-lines__ro" data-k="${esc(c.key)}">${esc(c.type === 'lookup' ? (r[c.key + '_label'] ?? v) : this.show(c, v))}</td>`;
       switch (c.type) {
         case 'select': return `<td${req}><select class="dl-lines__in" data-k="${esc(c.key)}"><option value=""></option>${Object.entries(c.options || {}).map(([k, l]) => `<option value="${esc(k)}" ${String(k) === String(v) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></td>`;
         case 'date': return `<td${req}><input type="date" class="dl-lines__in" data-k="${esc(c.key)}" value="${esc(v)}"></td>`;
@@ -195,7 +232,7 @@
 
     body() {
       const exp = i => this.more.length ? `<button type="button" class="dl-lines__exp ${this.open.has(i) ? 'is-open' : ''} ${this.more.some(c => String(this.rows[i][c.key] ?? '').trim() !== '') ? 'has-val' : ''}" data-l-exp="${i}" title="${esc(Tf('l_row_detail', {cols: this.more.map(c => c.label).join(', ')}))}"><i class="fa-solid fa-chevron-right"></i></button>` : '';
-      $(this.el, '[data-l-body]').innerHTML = this.rows.map((r, i) => `<tr data-i="${i}"><td class="dl-lines__no">${exp(i)}${i + 1}</td>${this.tcols.map(c => this.cell(c, r, i)).join('')}${this.ro ? '' : `<td class="dl-lines__act">${this.cfg.duplicable === false ? '' : '<button type="button" class="dl-iconbtn dl-iconbtn--plain" data-l-dup title="' + esc(T('l_dup_row')) + '"><i class="fa-solid fa-copy"></i></button>'}${this.cfg.rowLock && !r[this.cfg.rowLock] ? '' : `<button type="button" class="dl-iconbtn dl-iconbtn--plain dl-iconbtn--danger" data-l-del title="${esc(T('l_delete_row'))}"><i class="fa-solid fa-trash-can"></i></button>`}</td>`}</tr>${this.more.length && this.open.has(i) ? this.panel(r, i) : ''}`).join('')
+      $(this.el, '[data-l-body]').innerHTML = this.rows.map((r, i) => `<tr data-i="${i}"><td class="dl-lines__no">${exp(i)}${i + 1}</td>${this.tcols.map(c => this.cell(c, r, i)).join('')}${this.ro ? '' : `<td class="dl-lines__act">${this.acts(r)}</td>`}</tr>${this.more.length && this.open.has(i) ? this.panel(r, i) : ''}`).join('')
         || `<tr><td colspan="${this.tcols.length + 2}" class="dl-lines__empty">${esc(T('l_no_rows'))}${$(this.el, '[data-l-add]') ? ' ' + Tf('l_click_x', {x: `<b>${esc($(this.el, '[data-l-add]').textContent.trim())}</b>`}) : ''}</td></tr>`;
       this.refresh();
     }

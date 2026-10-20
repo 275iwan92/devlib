@@ -20,6 +20,8 @@ use Devlib\Lookup;
 // Layar server-driven: 'keyField' => 'id_item' -> terkirim name[<id>][kolom] (bukan indeks); 'removeField' => 'remove' -> baris
 // ber-id yang dihapus terkirim remove[<id>]=1; :addable=false -> tambah baris lewat tombol layar;
 // :duplicable=false = tanpa tombol salin baris; row-lock="editable" = baris dgn nilai false tidak bisa dihapus (mis. snapshot quotation) (mis. pilih Master Product).
+// :row-state=true (opt-in, aturan master-detail pemilik 2026-10-20): tiap baris punya 2 state -- awal (baru diisi: Save + Undo) dan tersimpan (Edit + Delete);
+//   baris tersimpan terkunci sampai Edit; Undo membuang baris baru / mengembalikan isi sebelum Edit. Form Confirmed (readonly) = tanpa tombol; Draft = tombol selalu ada.
 // Slot tools = kontrol tambah baris milik layar (mis. pilih Master Item + tombol) di bar judul Details.
 // Terkirim: name[i][kolom] per baris, name_discount, name_ppn. Di dalam x-dl::master: baris = data[name].
 class Lines extends DevlibComponent
@@ -41,6 +43,7 @@ class Lines extends DevlibComponent
         public bool $addable = true,
         public bool $duplicable = true,
         public ?string $rowLock = null,
+        public bool $rowState = false,
     ) {}
 
     public function tag(): string
@@ -105,7 +108,7 @@ class Lines extends DevlibComponent
             return $c;
         }, $this->columns);
 
-        return ['name' => $this->name, 'columns' => array_values($cols), 'minRows' => $this->minRows, 'totals' => $this->totals, 'readonly' => $this->readonly, 'keyField' => $this->keyField, 'removeField' => $this->removeField, 'addable' => $this->addable, 'duplicable' => $this->duplicable, 'rowLock' => $this->rowLock];
+        return ['name' => $this->name, 'columns' => array_values($cols), 'minRows' => $this->minRows, 'totals' => $this->totals, 'readonly' => $this->readonly, 'keyField' => $this->keyField, 'removeField' => $this->removeField, 'addable' => $this->addable, 'duplicable' => $this->duplicable, 'rowLock' => $this->rowLock, 'rowState' => $this->rowState];
     }
 
     public function render()
