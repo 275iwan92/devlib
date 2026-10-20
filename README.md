@@ -1,6 +1,6 @@
 # DevLib (`jo/devlib`)
 
-Library induk komponen UI/UX ERP Contoh Makmur: objek `x-dl::*` (PHP + JS berpasangan), helper `raw()`, tema, bahasa, dan aset.
+Library induk komponen UI/UX, dibuat oleh Jo: objek `x-dl::*` (PHP + JS berpasangan), helper `raw()`, tema, bahasa, dan aset.
 Berdiri sendiri: tanpa kode `App\` milik aplikasi mana pun, tanpa database.
 
 Lokasi: `C:\Users\iwanp\Herd\devlib`, setara `tmerp` (dipindah dari `tmerp/packages/devlib` pada 2026-10-19; riwayat 280 commit ikut terbawa,
@@ -35,5 +35,5 @@ New-Item -ItemType Junction -Path "$HOME\.claude\skills\devlib" -Target "C:\User
 ## Bekerja di DevLib
 
 - Perubahan DevLib di-commit di repo ini, bukan di git aplikasi yang memakainya.
-- Demo dan katalog ada di situs `tmerp/devlib` (devlib.test); proyek lain membuat situs katalognya sendiri bila perlu.
-- Aturan: DevLib membuat, aplikasi mewarisi (skill `devlib-oo`, `devlib-inheritance` di repo tmerp).
+- Situs acuan + katalog DevLib ada di `site/` (situs Laravel mandiri, devlib.test, link Herd -> folder `site`); tidak bergantung pada tmerp. Proyek lain (sstock, tmerp, ...) cukup memakai paket ini lewat path repo `../devlib`.
+- Aturan: DevLib membuat, proyek mewarisi (satu arah, berlaku untuk semua proyek): `skills/devlib/SKILL.md` (cara pakai + aturan baku), `skills/devlib/inheritance.md` (arah warisan, OO), `skills/devlib/examples/` (contoh baku), `skills/devlib/engine.md` (kontrak engine `src/Engine`).

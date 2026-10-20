@@ -34,7 +34,7 @@ class LayerMenu extends DevlibComponent
 {
     public function __construct(
         public array $items = [],
-        public string $title = 'Contoh Makmur',
+        public ?string $title = null,  // null = Brand::identity() (config devlib.brand.*)
         public ?string $logo = null,
         public ?string $tagline = null,
         public string $id = 'layer',
@@ -51,7 +51,9 @@ class LayerMenu extends DevlibComponent
         public bool $search = false,
         public bool $collapsible = true,
         public bool $home = false,
-    ) {}
+    ) {
+        $this->title ??= Brand::identity()['name'];
+    }
 
     public function tag(): string
     {

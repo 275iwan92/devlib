@@ -1,6 +1,7 @@
 {
     "name": "jo/devlib",
-    "description": "DevLib — library induk komponen UI/UX ERP Contoh Makmur (repo sendiri, dipakai tmerp, situs devlib.test, dan proyek lain)",
+    "description": "DevLib — library induk komponen UI/UX (x-dl::*) dan acuan engine untuk proyek Laravel; dibuat oleh Jo, dipakai semua proyek",
+    "authors": [{ "name": "Jo" }],
     "type": "library",
     "license": "proprietary",
     "require": {

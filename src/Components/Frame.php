@@ -5,7 +5,7 @@ namespace Devlib\Components;
 /* REMARK
  * Tujuan: bingkai layar penuh (gambar latar + widget + kotak isi) untuk HP/tablet/laptop/desktop di resolusi apa pun.
  * Sumber hulu: media/bg/<kelompok>/*.jpg, media/text/*.txt, config devlib.brand (nama, tagline, logo pojok kiri atas).
- * Input: prop di bawah; brand/tagline/logo kosong = ambil config('devlib.brand.*'), lalu bawaan Contoh Makmur.
+ * Input: prop di bawah; brand/tagline/logo kosong = ambil config('devlib.brand.*'), lalu bawaan DevLib.
  * Output: view devlib::components.frame (widget brand/clock/quote/... + slot kotak isi).
  * Dipakai oleh: halaman login dan lupa password (devlib/resources/views/demos/*), dashboard nanti.
  * Status: aktif.

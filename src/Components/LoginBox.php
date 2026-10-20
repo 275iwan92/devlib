@@ -18,8 +18,8 @@ class LoginBox extends DevlibComponent
         public string $username = '',
         public string $forgotUrl = '#',
         public string $registerUrl = '#',
-        public string $brand = 'CONTOH MAKMUR',
-        public string $tagline = 'packaging solution',
+        public ?string $brand = null,  // null = Brand::identity() (config devlib.brand.*)
+        public ?string $tagline = null,
     ) {}
 
     public function tag(): string

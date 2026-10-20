@@ -15,6 +15,7 @@ class DevlibServiceProvider extends ServiceProvider
     public function register(): void
     {
         require_once __DIR__.'/helpers.php';  // raw() -- nilai data di prop teks x-dl::*
+        $this->app->singleton(\Devlib\Engine\EngineRegistry::class);  // opt-in: kosong sampai aplikasi mendaftarkan engine-nya
     }
 
     public function boot(): void

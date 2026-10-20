@@ -5,7 +5,7 @@ description: Pakai DevLib (jo/devlib, komponen x-dl::*) di proyek Laravel apa pu
 
 # DevLib di proyek baru
 
-DevLib = library UI/UX (`x-dl::*`, PHP + JS berpasangan, tema, bahasa, aset) di repo sendiri `C:\Users\iwanp\Herd\devlib`. Proyek yang memakainya: `tmerp`, `sstock` (contoh paling ringkas), situs `devlib.test`.
+DevLib = library UI/UX (`x-dl::*`, PHP + JS berpasangan, tema, bahasa, aset) di repo sendiri `C:\Users\iwanp\Herd\devlib`. Dipakai SEMUA proyek (sstock, tmerp, proyek baru) dan situs acuan `site/`. Arah satu jalur: **DevLib membuat, proyek mewarisi** (bukan sebaliknya), lihat `inheritance.md`; contoh baku ada di `examples/`.
 Prinsip: **layar = deklarasi `x-dl::*`, bukan bangunan.** Tanpa HTML mentah, JS inline, atau hex warna di layar.
 
 ## 1. Pasang (proyek baru / belum ada DevLib)
@@ -23,8 +23,8 @@ Cek dulu `composer.json` proyek: bila `jo/devlib` sudah ada, lewati langkah ini.
    @source '../../../devlib/src';
    @source '../../../devlib/resources';
    ```
-3. `config/devlib.php` — salin dari `../sstock/config/devlib.php` lalu ubah `brand`, `company`, `lang`, `timezone`. Kunci: `brand`, `company`, `lang`, `translate_fixed` (aplikasi satu bahasa), `back_history` (**set `false`**, lihat bagian Form), `timezone`, `timezone_label`, `media_path/url`, `lookup_middleware`, `abilities`.
-4. Layout — salin `../sstock/resources/views/layout.blade.php`. Intinya di `<head>`:
+3. `config/devlib.php` — salin dari `examples/config/devlib.php` (folder skill ini) lalu ubah `brand`, `company`, `lang`, `timezone`. Kunci: `brand`, `company`, `lang`, `translate_fixed` (aplikasi satu bahasa), `back_history` (**set `false`**, lihat bagian Form), `timezone`, `timezone_label`, `media_path/url`, `lookup_middleware`, `abilities`.
+4. Layout — salin `examples/layout.blade.php`. Intinya di `<head>`:
    ```blade
    <link rel="stylesheet" href="{{ \Devlib\DevlibServiceProvider::asset('devlib.css') }}">
    <x-dl::theme-boot />
@@ -38,7 +38,7 @@ Cek dulu `composer.json` proyek: bila `jo/devlib` sudah ada, lewati langkah ini.
 1. **Cari objek terdekat dulu** — jangan tulis dari nol:
    - Daftar komponen: `../devlib/src/Components/*.php` (+ `Field/`, `Form/`, `Wizard/`, `SideScreen/`).
    - **Konstruktor kelas = daftar prop (API-nya)**; tampilannya di `../devlib/resources/views/components/<nama-kebab>.blade.php`. Baca kelas yang dipakai saja, bukan semuanya.
-   - Contoh pemakaian nyata: `../sstock/resources/views/` (`categories/index.blade.php` = grid master, `categories/form.blade.php` = form master, `layout.blade.php`, `login.blade.php`). Katalog lengkap + demo: situs `devlib.test` (`../tmerp/devlib`).
+   - Contoh baku: `examples/` (`categories/index.blade.php` = grid master, `categories/form.blade.php` = form master, `layout.blade.php`, `login.blade.php`). Katalog lengkap + contoh hidup: situs `devlib.test` (`site/` di repo devlib).
 2. Pola baku:
    - Daftar data → `<x-dl::grid id=".." :rows=".." :columns="[..]" actions="master" :new-url=".." :open-url="url('x/{id}')" :stats="[..]" />`
    - Form dokumen/master → `<x-dl::form title=".." kind="master" :action=".." :back=".."> <x-dl::form.row :cols="3"> <x-dl::field.text name=".." label=".." /> ...`; form kecil → `x-dl::action-form`.
@@ -55,15 +55,16 @@ Semua dari satu komponen; bedanya `mode`, `actions`, dan kolom depan. Daftar pro
 | Tipe | Pengaturan | Kolom depan | Aksi baris |
 |---|---|---|---|
 | **Master** (data sedikit: barang, kategori, supplier, ...) | `mode="entry"` (bawaan), `actions="master"`, `:toggle-url="url('x/{id}/toggle')"` | kotak warna-warni berisi nama tebal + kode kecil: `'type'=>'identity','code'=>'<kolom kode>','box'=>true` (`'hue'=>'hue'` bila warna bermakna) | Edit + Aktif/Nonaktif |
-| **Transaksional** (bisa ribuan baris, harus cepat: PO, penerimaan, ...) | `mode="entry"`, `actions="worklist"` | nomor dokumen **tebal saja, TANPA kotak/avatar warna**: `'type'=>'identity','code'=>'party','avatar'=>false` (nama pihak = baris kecil di bawah nomor; jangan `type => doc`) | **Buka saja** |
+| **Transaksional** (bisa ribuan baris, harus cepat: PO, penerimaan, ...) | `kind="transactional"` (plain; baris selang-seling warna lembut otomatis) | nomor dokumen **teks tebal saja, TANPA kotak/avatar warna**: `'type'=>'identity','code'=>'party','avatar'=>false` (nama pihak = baris kecil di bawah nomor; jangan `type => doc`) | **Buka saja** |
 | **Report** | `mode="report"` (otomatis: tanpa centang/Aksi/New Record, rapat, filter terbuka) | bebas | tidak ada |
 | **Daftar lain** (bukan master/transaksi: grup, modul, pengguna keamanan) | `actions="worklist"` atau `none` | `'type'=>'identity','code'=>..,'avatar'=>false` | Buka / tidak ada |
 
 Kriteria:
-- **Alasan pembedaan (keputusan user):** data transaksi bisa ribuan baris, jadi kolom pertama polos (tebal saja) supaya tampil cepat. Data master jauh lebih sedikit, jadi kolom pertama boleh berkotak warna-warni.
+- **Alasan pembedaan (keputusan user 2026-10-20):** data transaksi bisa ribuan baris, jadi grid **PLAIN demi kecepatan memuat**: baris selang-seling warna lembut (otomatis dari `kind="transactional"`), kolom pertama hanya teks tebal, hanya kolom **Status** yang boleh berwarna. Data master jauh lebih sedikit, jadi kolom pertama berupa **box / persegi dokumen** berwarna.
 - **Master**: grid master baru wajib berkotak (`box => true`), jangan `avatar => false`. Aktif/Nonaktif hanya untuk master dan **wajib** `toggle-url`, kalau tidak hanya pratinjau.
-- **Transaksional**: aturan lama tmerp "persegi dokumen" (`type => doc`) TIDAK dipakai di proyek baru. Kolom nilai `money` dengan `'sum'=>true` memberi baris Total. **5–8 kolom tampil** (sisanya tersembunyi), **tanpa kolom jumlah item/baris**; Expand (`detail`) = tabel anak **maks 7 kolom, selalu memuat nama item/product**, tanpa harga, judul tanpa jumlah baris. Wajib kolom **Status** `type => badge` + `tones` (satu-satunya warna di baris; hijau terkonfirmasi/disetujui, abu draf, kuning menunggu, merah batal/ditolak). Warna baris: `rowTone` + kolom teks yang menyebut artinya (jangan hanya warna). **Confirm / Approve / Cancel / Delete TIDAK ada di grid**, hanya di form dokumen. Transaksi tidak pernah dinonaktifkan.
+- **Transaksional**: bentuk lama "persegi dokumen" (`type => doc`) TIDAK dipakai di grid transaksional. Kolom nilai `money` dengan `'sum'=>true` memberi baris Total. **5–8 kolom tampil** (sisanya tersembunyi), **tanpa kolom jumlah item/baris**; Expand (`detail`) = tabel anak **maks 7 kolom, selalu memuat nama item/product**, tanpa harga, judul tanpa jumlah baris. Wajib kolom **Status** `type => badge` + `tones` (satu-satunya warna di baris; hijau terkonfirmasi/disetujui, abu draf, kuning menunggu, merah batal/ditolak). Tanpa `rowTone` dan tanpa warna lain di grid transaksional. **Confirm / Approve / Cancel / Delete TIDAK ada di grid**, hanya di form dokumen. Transaksi tidak pernah dinonaktifkan.
 - **Report**: periode (`Period + Show`) bila laporan berbasis tanggal; cetakan lewat `x-dl::report`.
+- **ATURAN BARU (user 2026-10-20) — ZEBRA:** grid **transaksional** dan grid **report** wajib baris selang-seling warna lembut supaya mudah dibaca. Otomatis dari `kind="transactional"` dan `mode="report"`; jangan dibuat manual. Baris terpilih dan baris bertone (grid lain) tidak ditimpa zebra.
 - Semua grid entry: `+ New Record` via `:new-url`; sembunyikan (`:new-record="null"`) bagi yang tak berhak; `:open-url="url('x/{id}')"` (klik 2x/Buka/Edit); `search` menyebut kolom yang dicari; `stats` = kotak hitung yang berfungsi sebagai filter. Toolbar (cari, filter, kolom, export CSV) datang otomatis — jangan dibuat manual. Bulk hanya bila diminta.
 
 ## Form: hal yang sering terlewat
@@ -71,7 +72,7 @@ Kriteria:
 - **Tombol Back harus ke grid modulnya.** Isi `:back="route('x.index')"` di `x-dl::form` **dan** set `'back_history' => false` di `config/devlib.php`. Tanpa itu Back memakai `history.back()` → setelah Save, "layar sebelumnya" adalah form isian (risiko input ganda). Jangan pakai `history.back()` / `url()->previous()` di form.
 - Form dokumen: `kind="document"` (+ `:pipeline`, `:status`); tombol Save/Confirm/Delete/Cancel/Print/Back to Draft **datang dari status DevLib** — jangan dibuat manual. Controller membaca `_action` (save, confirm, delete, cancel, approve, reject). Pakai kata **Confirm**, bukan Submit. Form master: `kind="master"`.
 - Isian wajib: `required`; error server: `:error="$errors->first('x')"`; nilai ulang: `old()`. Isian di dalam modal bersarang tidak ikut validasi form induk.
-- Cegah kirim ganda: layout memuat penjaga `submit` (ada di `sstock/resources/views/layout.blade.php`) — jangan dibuang.
+- Cegah kirim ganda: layout memuat penjaga `submit` (ada di `examples/layout.blade.php`) — jangan dibuang.
 - Riwayat: tab History otomatis; isi `:created-at`, `:updated-at`, `:log`.
 
 ## Data transaksional: mode dan tombol (aturan pemilik, 2026-10-20)
@@ -91,7 +92,7 @@ Berlaku untuk SEMUA data transaksional, baik master-detail (dokumen dengan baris
 **CANCELLED**
 - Pada record readonly (CONFIRMED) harus ada tombol **CANCEL** = record dibatalkan; mode menjadi `CANCELLED`.
 - Record CANCELLED **selalu tetap tersimpan** (beda dengan DELETE, yang menghapus total).
-- Bila pembatalan membuat data tidak cocok (mis. stok, saldo), sistem membuat record **ADJUSTMENT pembalik secara OTOMATIS**.
+- Bila pembatalan membuat data tidak cocok (mis. stok, saldo), sistem membuat record **ADJUSTMENT pembalik secara OTOMATIS**. Di DevLib: dokumen implement `Devlib\Engine\Adjustable`, pembatalan lewat `Devlib\Engine\Cancellation::run(...)` (satu transaksi), rinci di `engine.md`.
 
 **PRINT**
 - Print out selalu memuat tulisan **MODE** record: `DRAFT` / `CONFIRMED` / `CANCELLED`.
@@ -99,15 +100,9 @@ Berlaku untuk SEMUA data transaksional, baik master-detail (dokumen dengan baris
 **AUTHORITY (persetujuan atasan)**
 - Data transaksional dapat memakai mode authority: permohonan ke atasan. Authority **bisa bertingkat** (lebih dari satu level, berurutan).
 
-**Form master-detail: dua STATE per baris detail** (aturan pemilik 2026-10-20)
-- **STATE AWAL** (baris baru, sedang diisi): tombol **SAVE** dan **UNDO**.
-- **STATE TELAH DITULIS** (baris sudah disimpan): tombol **EDIT** dan **DELETE**.
-- Mode **DRAFT**: tombol baris SELALU tampil. Mode **CONFIRMED**: tombol baris DISEMBUNYIKAN (detail readonly). Begitu pula CANCELLED.
-- Status DevLib: komponen `x-dl::lines` saat ini hanya punya hapus baris (+ salin bila `duplicable`); state per baris SAVE/UNDO/EDIT/DELETE BELUM didukung. Membangunnya = perubahan DevLib yang harus OPT-IN (tmerp memakai perilaku lama), lalu commit di repo devlib.
-
-**Baris detail (form master-detail, `x-dl::lines :row-state="true"`)** (aturan pemilik, 2026-10-20)
-- Setiap pengisian baris punya 2 STATE. **State awal** (baru diisi): tombol **SAVE** dan **UNDO**. **State telah ditulis**: tombol **EDIT** dan **DELETE**.
-- Saat form **CONFIRMED** (readonly) tombol baris **HIDDEN**; selama **DRAFT** tombol selalu ada.
+**Baris detail (form master-detail, `x-dl::lines :row-state="true"`)** (aturan pemilik, 2026-10-20; sudah didukung DevLib)
+- Setiap baris punya 2 STATE. **State awal** (baru diisi): tombol **SAVE** dan **UNDO**. **State telah ditulis**: tombol **EDIT** dan **DELETE**.
+- Selama **DRAFT** tombol baris selalu ada; saat **CONFIRMED** dan **CANCELLED** (readonly) tombol baris **HIDDEN**.
 - Opt-in lewat prop `:row-state="true"` (tanpa itu `x-dl::lines` memakai tombol lama: salin + hapus). Baris tersimpan terkunci sampai EDIT; UNDO membuang baris baru atau mengembalikan isi sebelum EDIT; data semua baris tetap terkirim saat Save form.
 
 **Data MASTER**
@@ -115,30 +110,34 @@ Berlaku untuk SEMUA data transaksional, baik master-detail (dokumen dengan baris
 
 Di DevLib: `<x-dl::form kind="document" :pipeline="true" :status="'draft|confirmed|cancelled'">` menyediakan tombol dan cetakan bermode ini; authority bertingkat = `:approval-levels` (1-3), `:approval-at`, `:can-approve`. Grid-nya: kolom Status `badge` (lihat Tipe grid).
 
-Catatan: proyek yang perilakunya berbeda dari aturan ini mencatat selisihnya di skill proyek (lihat `stoku`, bagian "Selisih dengan aturan transaksional pemilik").
+Catatan: proyek yang perilakunya berbeda dari aturan ini mencatat selisihnya di skill proyek itu sendiri, bukan di DevLib.
 
 ## Help: selalu dua bagian, UG dan TG
 
-Setiap proyek punya Help dengan dua bagian terpisah, dibuat bersama modulnya. Keduanya dibuka dari satu menu Help & support sebagai dua tab (User's Guide, Technical Guide). UG terlihat semua pengguna; TG hanya Administrator (seperti sstock).
+Setiap proyek punya Help dengan dua bagian terpisah, dibuat bersama modulnya. Keduanya dibuka dari satu menu Help & support sebagai dua tab (User's Guide, Technical Guide). UG terlihat semua pengguna; TG hanya Administrator (Administrator saja).
 
-- **TG (Technical Guide) — bahasa English.** Untuk developer/administrator. Semua yang teknis di sini: data flow, system flow, workflow (mis. siklus dokumen Draft > Confirmed > Cancelled), tabel dan database (model data, relasi, kolom penting), akses/hak, konvensi, operasional. Contoh: `../sstock/resources/views/help/technical-guide.blade.php`.
+- **TG (Technical Guide) — bahasa English.** Untuk developer/administrator. Semua yang teknis di sini: data flow, system flow, workflow (mis. siklus dokumen Draft > Confirmed > Cancelled), tabel dan database (model data, relasi, kolom penting), akses/hak, konvensi, operasional. 
 - **UG (User's Guide) — bahasa Indonesia.** Untuk pengguna, tuntunan cara pakai: penjelasan **grid** (cari, filter, kolom, export, klik 2x buka, `+ New Record`, Aktif/Nonaktif), penjelasan **form** (isian wajib, Save, Confirm, Undo, Back, tab Riwayat), cara pakai tiap layar bertahap, **daftar isi modul**, dan **fitur tiap modul**.
 - **Flow = gambar SVG** (keputusan user): setiap flow (data flow, system flow, workflow/status, alur pemakaian di UG) berupa diagram SVG, bukan daftar teks/tabel. Sumber di `resources/help/diagrams/*.svg` dan disisipkan lewat Blade (inline atau `<img src="data:image/svg+xml;base64,...">`), BUKAN di `public/`, supaya diagram TG ikut terlindung hak akses Administrator. Label diagram TG English, diagram UG Indonesia; warna dari token tema (terang/gelap terbaca); `viewBox` + `max-width: 100%` agar muat di layar sempit; tiap gambar punya keterangan dan `alt`. Alur harus dicocokkan dengan kode (status, tombol, nama tabel), jangan menebak.
 - **Batas:** diagram, tabel database, dan alur sistem tidak masuk UG; langkah pakai dan istilah awam tidak masuk TG.
-- Proyek baru: sediakan kedua bagian sejak awal. sstock saat ini baru punya TG (UG belum dibuat).
+- Proyek baru: sediakan kedua bagian sejak awal.
+
+## Engine (otomasi proses)
+
+Mesin hitung / aturan bisnis memakai kontrak DevLib `Devlib\Engine\*` (opt-in): mode Suggest/Auto/Calc/Flow, hasil `Result`, `EngineRegistry`, kegagalan `EngineException`, serta alur CANCEL + ADJUSTMENT otomatis. Aturan baku dan contoh: `engine.md`.
 
 ## Kebiasaan lintas proyek
 
 - Label layar boleh English; aplikasi satu bahasa menambah terjemahan ke kamus aplikasi (`Lang::text`), pesan validasi di `lang/<kode>/validation.php`. Mata uang tampil kode (`IDR`), bukan simbol.
 - Seeder data contoh idempoten (`updateOrCreate` berkunci kode alami), bukan di migrasi; ubah skema = ubah seeder pada perubahan yang sama.
-- Perubahan DevLib harus **opt-in** (default lama tetap jalan): proyek lain (tmerp) memakai perilaku lama. Satu opsi config/prop baru + default lama, bukan mengubah perilaku.
+- Perubahan DevLib harus **opt-in** (default lama tetap jalan): proyek yang sudah memakainya tetap pada perilaku lama. Satu opsi config/prop baru + default lama, bukan mengubah perilaku.
 - Selesai satu perubahan: commit (repo proyek dan, bila DevLib berubah, repo devlib). Verifikasi tampilan nyata di `http://<proyek>.test`, bukan hanya tes.
 
 ## 3. Kalau komponen belum ada / kurang
 
 Ubah **di DevLib, bukan di proyek**:
 - Edit di `C:\Users\iwanp\Herd\devlib`, **commit di repo itu** (git proyek tidak melihatnya). Karena symlink, semua proyek pemakai langsung ikut.
-- Paket berdiri sendiri: `src/` tidak boleh memakai `App\...`, model, atau service proyek. Data masuk lewat props/kontrak. Helper global milik paket di `src/helpers.php`.
+- Paket berdiri sendiri: `src/` tidak boleh memakai `App\...`, model, atau service proyek mana pun. Data masuk lewat props/kontrak. Helper global milik paket di `src/helpers.php`. Rinci arah warisan dan cara berpikir OO: `inheritance.md`.
 - Komponen baru: kelas turunan `DevlibComponent` (`tag()`, `source()`, `jsClass()` bila ada JS) + view Blade; JS satu kelas per file di `resources/assets/js/components/`.
 
 ## Jangan

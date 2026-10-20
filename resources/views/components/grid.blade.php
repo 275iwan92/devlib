@@ -1,4 +1,4 @@
-<div {{ $attributes->class(['dl-grid', 'dl-grid--report' => $isReport(), 'dl-grid--entry' => $isEntry()]) }} {!! $dl() !!} data-dl-grid data-config="{{ json_encode($config()) }}" data-rows="{{ json_encode($rows) }}">
+<div {{ $attributes->class(['dl-grid', 'dl-grid--report' => $isReport(), 'dl-grid--entry' => $isEntry(), 'dl-grid--tx' => $kind === 'transactional']) }} {!! $dl() !!} data-dl-grid data-config="{{ json_encode($config()) }}" data-rows="{{ json_encode($rows) }}">
     <div class="dl-grid__panel">
         {{-- Satu baris filter (user 2026-10-02): status (stats) | jenis (tabs) sebagai teks + jumlah; garis bawah bergeser & berganti warna. --}}
         @if ($stats || $tabs)<div class="dl-grid__fbar" data-g-fbar><span class="dl-grid__fgroup" data-g-stats></span><span class="dl-grid__fsep" data-g-fsep hidden></span><span class="dl-grid__fgroup" data-g-tabs></span><i class="dl-grid__find" data-g-find="stats"></i><i class="dl-grid__find" data-g-find="tabs"></i></div>@endif

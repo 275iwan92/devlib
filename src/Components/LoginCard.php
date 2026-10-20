@@ -53,7 +53,7 @@ class LoginCard extends DevlibComponent
             <div {{ $attributes->class('dl-logincard') }} {!! $dl() !!} data-dl-logincard>
                 <div class="dl-logincard__head">{{ $title }}</div>
                 <div class="dl-logincard__body">
-                    <div class="dl-logincard__org">{{ \Devlib\Lang::text('CONTOH MAKMUR ERP — hand this card to the employee') }}</div>
+                    <div class="dl-logincard__org">{{ \Devlib\Components\Brand::identity()['name'] }} — {{ \Devlib\Lang::text('hand this card to the employee') }}</div>
                     <div><small>{{ \Devlib\Lang::text('Name') }}</small><b>{{ $name }}@if ($code) ({{ $code }})@endif</b></div>
                     <div><small>{{ \Devlib\Lang::text('Username') }}</small><span class="dl-logincard__mono">{{ $login }}</span></div>
                     <div><small>{{ \Devlib\Lang::text('Initial password') }}</small><span class="dl-logincard__mono">{{ $password }}</span></div>

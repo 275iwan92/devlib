@@ -12,7 +12,7 @@ use Devlib\Lang;
 //   export CSV = kolom yang tampil, pagination ala ScriptCase, setelan diingat per grid.
 //
 // columns: [['key', 'label', 'type' => text|identity|doc|integer|number|money|date|time|datetime|badge|toggle,
-//            doc = persegi dokumen Grid Transactional: 'key' = nomor dokumen, 'party' => kolom nama pihak (baris kedua; warna persegi dari nama ini),
+//            doc = (LAMA, jangan dipakai di grid baru; kind="transactional" mengubahnya jadi teks tebal polos) 'key' = nomor dokumen, 'party' => kolom nama pihak (baris kedua; warna persegi dari nama ini),
 //            'code' => kolom kode (identity), 'avatar' => false (identity tanpa bulatan), 'box' => true (identity: tanpa inisial, nama + kode di dalam satu persegi panjang berwarna), 'hue' => kolom baris berisi sudut warna 0-359 (identity: warna kotak per kelompok, mis. kategori; kosong = dari nama), 'tones' => [nilai => tone] (badge),
 //            'toneKey' => kolom baris yang membawa tone badge (bila teks badge berubah-ubah, mis. "Late 3 days"); pada type date = tanggal tampil sebagai lencana bertone,
 //            'fallback' => kolom nama (image: tanpa foto -> inisial di kotak yang sama),
@@ -28,7 +28,8 @@ use Devlib\Lang;
 //   toggle (saklar, bisa diubah -> dl:grid-cell), rating, spark (array angka), button ('text', 'action' -> dl:grid-action).
 // detail: ['key' => kolom array baris anak, 'columns' => [[key,label,type,'strong' => true (tebal)]], 'title'] -> baris dibuka = tabel detail bersarang.
 //   Judul boleh memuat {kolom} baris induk (mis. 'Product: {product}'); jumlah baris tidak ditulis (user 2026-10-02).
-// Aturan Grid Transactional (user 2026-10-02): kolom pertama = persegi dokumen (type doc); baris induk 5-8 kolom tampil,
+// Aturan Grid Transactional (user 2026-10-20, menggantikan aturan 2026-10-02): demi kecepatan memuat ribuan baris bentuknya PLAIN: tanpa kotak/avatar,
+//   baris selang-seling (zebra) warna lembut (kind="transactional"; zebra juga wajib di mode="report", user 2026-10-20), kolom pertama hanya teks tebal, hanya kolom Status yang boleh berwarna; baris induk 5-8 kolom tampil,
 //   tanpa kolom "jumlah item"; baris anak (detail) paling banyak 7 kolom dan SELALU memuat nama item / product.
 // cards: ['image','title','sub','badge','tones','meta' => [kolom..]] -> tombol Tabel/Kartu (CardView).
 // openUrl: alamat buka baris, {id} diganti nilai rowKey (klik 2x / tombol Buka / Edit langsung pindah layar);
@@ -109,7 +110,7 @@ class Grid extends DevlibComponent
     }
 
     // Dua grid entry (user 2026-10-20): kind="master" (data sedikit: kolom pertama = kotak warna-warni, Edit + Aktif/Nonaktif) dan
-    // kind="transactional" (data ribuan: kolom pertama = nomor dokumen tebal polos, Buka saja). Tanpa kind = perilaku lama (actions + kolom apa adanya).
+    // kind="transactional" (data ribuan: plain, baris selang-seling warna lembut, kolom pertama = nomor dokumen tebal polos, Buka saja). Tanpa kind = perilaku lama (actions + kolom apa adanya).
     private function applyKind(): void
     {
         if (! in_array($this->kind, ['master', 'transactional'], true)) {

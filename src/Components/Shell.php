@@ -5,7 +5,7 @@ namespace Devlib\Components;
 /* REMARK
  * Tujuan: kerangka aplikasi setelah login (sidebar, mega menu modul, tab MDI, Ctrl+K, laci); induk LayerShell.
  * Sumber hulu: array modules (setara sys_app_menu), user, chat, account dari layar pemakai; brand / tagline / logo
- * kosong = Brand::identity() (config devlib.brand.*, lalu Contoh Makmur).
+ * kosong = Brand::identity() (config devlib.brand.*, lalu DevLib).
  * Input: prop konstruktor di bawah.
  * Output: view devlib::components.shell (atau layer-shell untuk turunan).
  * Dipakai oleh: tmerp resources/views/v2/home.blade.php (mengirim brand sendiri) dan devlib.test home / demo shell.

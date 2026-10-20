@@ -31,7 +31,7 @@ class TokenTable extends DevlibComponent
                             <td>
                                 @switch($kind)
                                     @case('color') <span class="dl-tokens__swatch" style="background:var({{ $name }})"></span> @break
-                                    @case('font') <span style="font-size:calc(var({{ $name }}) * var(--dl-font-scale))">Contoh Makmur 123</span> @break
+                                    @case('font') <span style="font-size:calc(var({{ $name }}) * var(--dl-font-scale))">DevLib 123</span> @break
                                     @case('radius') <span class="dl-tokens__box" style="border-radius:var({{ $name }})"></span> @break
                                     @case('shadow') <span class="dl-tokens__box dl-tokens__box--shadow" style="box-shadow:var({{ $name }})"></span> @break
                                     @case('space') <span class="dl-tokens__bar" style="width:var({{ $name }})"></span> @break
