@@ -2,18 +2,20 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+// Login situs ini hanya contoh tampilan untuk proyek lain: bawaan langsung masuk (DEVLIB_LOGIN_BYPASS); dimatikan = alur login contoh.
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_redirects_guest_to_login(): void
+    public function test_guest_sees_the_home_page_by_default(): void
     {
-        $response = $this->get('/');
+        $this->get('/')->assertOk();
+    }
 
-        $response->assertRedirect();  // tamu dialihkan ke halaman login
+    public function test_guest_is_redirected_to_the_sample_login_when_bypass_is_off(): void
+    {
+        config(['devlib.login_bypass' => false]);
+
+        $this->get('/')->assertRedirect(route('login'));
     }
 }

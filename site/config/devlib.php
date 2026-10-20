@@ -2,6 +2,10 @@
 
 // Situs DevLib TANPA database: akun & pilihan tampilan disimpan di sini.
 return [
+    // Login di situs ini hanya CONTOH TAMPILAN untuk proyek lain, bukan pengamanan: bawaan langsung masuk sebagai akun contoh pertama.
+    // Isi DEVLIB_LOGIN_BYPASS=false untuk mencoba alur login contohnya (/login).
+    'login_bypass' => (bool) env('DEVLIB_LOGIN_BYPASS', true),
+
     'users' => [
         ['login' => 'admin', 'password' => 'admin', 'name' => 'Administrator DevLib', 'email' => 'admin@devlib.test', 'role' => 'Administrator', 'developer' => true],
         // Contoh opening screen per jabatan (data pegawai & jabatan = tm2mst emp_employee / org_position di tmerp).

@@ -8,8 +8,9 @@ Berlaku untuk SEMUA proyek pemakai (sstock, tmerp, proyek baru), bukan hanya sat
 2. **Paket berdiri sendiri.** `src/` tidak memakai `App\...` (tanpa `use`, `new`, panggilan statis), model, service, atau kamus milik proyek mana pun; menyebutnya di komentar boleh. Kebutuhan data masuk lewat props atau kontrak (interface, kelas dasar). Helper global milik paket ada di `src/helpers.php` (dibungkus `function_exists`). Pakai `\Devlib\Lang::text()`, `\Devlib\Lang::raw()`, `\Devlib\Locale::*` di demo dan view paket.
 3. **Opt-in.** Perubahan DevLib tidak mengubah perilaku proyek yang sudah memakainya: satu prop/config baru dengan default lama.
 4. **Situs acuan harus tampil mandiri.** `devlib.test` (`site/`) berjalan tanpa kode proyek mana pun; tidak membaca folder proyek lain. Data contoh ada di `site/`.
-5. **Contoh baku milik DevLib** (`skills/devlib/examples/`), bukan menyalin dari proyek lain.
-6. Mengubah DevLib = edit di repo devlib dan **commit di repo itu**; git proyek tidak melihatnya.
+5. **Login dan security = acuan / library.** Komponen login, hak akses, dan keamanan DevLib (`x-dl::frame`, `login-box`, `Access`, `permission-matrix`, ...) adalah acuan bagi proyek yang sudah dan akan dibuat. Situs `site/` hanya memakainya sebagai contoh tampilan (login bisa dilewati lewat `DEVLIB_LOGIN_BYPASS`), bukan sebagai pengamanan; pengamanan nyata ada di proyek pemakai.
+6. **Contoh baku milik DevLib** (`skills/devlib/examples/`), bukan menyalin dari proyek lain.
+7. Mengubah DevLib = edit di repo devlib dan **commit di repo itu**; git proyek tidak melihatnya.
 
 ## Cara berpikir object oriented
 

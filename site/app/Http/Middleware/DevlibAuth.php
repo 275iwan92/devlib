@@ -11,7 +11,12 @@ class DevlibAuth
     public function handle(Request $request, Closure $next)
     {
         if (! $request->session()->has('devlib_user')) {
-            return redirect()->guest(route('login'));
+            // Login situs ini hanya contoh tampilan (bukan pengamanan): bawaan masuk otomatis sebagai akun contoh pertama (DEVLIB_LOGIN_BYPASS).
+            if (config('devlib.login_bypass')) {
+                $request->session()->put('devlib_user', collect(config('devlib.users')[0])->except('password')->all());
+            } else {
+                return redirect()->guest(route('login'));
+            }
         }
 
         return $next($request);
