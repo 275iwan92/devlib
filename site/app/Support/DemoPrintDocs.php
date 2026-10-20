@@ -5,7 +5,7 @@ namespace App\Support;
 use Devlib\PrintDoc\Document;
 
 // Contoh pemakaian Devlib\PrintDoc\Document untuk halaman demo x-dl::print-doc: satu dokumen = satu kelas turunan yang
-// hanya mendeklarasikan field; data contoh diserahkan saat dibuat. Aplikasi (tmerp) membaca datanya dari database.
+// hanya mendeklarasikan field; data contoh diserahkan saat dibuat. Aplikasi membaca datanya dari database.
 final class DemoPrintDocs
 {
     // Istilah Indonesia milik dokumen contoh (teks English => Indonesia); istilah baku sudah ada di Devlib\PrintDoc\Labels.

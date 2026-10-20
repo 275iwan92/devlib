@@ -7,7 +7,7 @@ namespace Devlib\Components;
  * Sumber hulu: prop dari pemanggil; identity() = identitas bawaan situs (config devlib.brand.*, lalu DevLib).
  * Input: name, tagline, tone, logo (url gambar; kosong = lencana gradasi bawaan).
  * Output: div.dl-brand (lencana + nama + tagline).
- * Dipakai oleh: Frame (login), Shell / LayerShell (sidebar), LoginBox, layar identitas tmerp.
+ * Dipakai oleh: Frame (login), Shell / LayerShell (sidebar), LoginBox, layar identitas aplikasi.
  * Status: aktif.
  */
 class Brand extends DevlibComponent
@@ -43,7 +43,7 @@ class Brand extends DevlibComponent
 
     public function source(): string
     {
-        return 'identitas perusahaan (tmerp: Settings > Identifikasi)';
+        return 'identitas perusahaan (aplikasi: Settings > Identifikasi)';
     }
 
     public function render()

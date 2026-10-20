@@ -7,7 +7,7 @@ use Closure;
 // Hak akses untuk komponen: <x-dl::button preset="approve" can="po.approve" />
 // Tanpa hak = komponen TIDAK dirender (bukan disembunyikan CSS).
 // Aplikasi memasang cara ceknya sekali: Access::resolveUsing(fn ($ability) => ...).
-// tmerp: SecUser::canAccessModule()/policy; DevLib (tanpa DB): config devlib.abilities.
+// aplikasi: SecUser::canAccessModule()/policy; DevLib (tanpa DB): config devlib.abilities.
 final class Access
 {
     private static ?Closure $resolver = null;

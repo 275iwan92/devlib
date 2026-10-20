@@ -4,7 +4,7 @@ namespace Devlib;
 
 // Kamus teks antarmuka baku (ID/EN) untuk komponen library. Satu tempat:
 // ubah kata di sini = semua layar ikut. Aplikasi boleh menambah kamusnya sendiri
-// lewat Lang::extend(); tmerp nanti menyambungkan ke Translator/sys_translation.
+// lewat Lang::extend(); aplikasi nanti menyambungkan ke Translator/sys_translation.
 final class Lang
 {
     private static array $extra = [];
@@ -851,7 +851,7 @@ final class Lang
 
     // Teks tampilan yang DITULIS ENGLISH (label layar/komponen, LOCKED user 2026-10-01) -> bahasa tampilan.
     // Kata DevLib sendiri dikenali dari DICT (jalan tanpa database, mis. devlib.test); selain itu lewat kamus aplikasi
-    // (tmerp: sys_dictionary, yang juga mencatat teks baru otomatis). Tidak ada terjemahan -> English apa adanya.
+    // (aplikasi: sys_dictionary, yang juga mencatat teks baru otomatis). Tidak ada terjemahan -> English apa adanya.
     public static function text(?string $en): string
     {
         if ($en === null || trim($en) === '') {
@@ -861,7 +861,7 @@ final class Lang
             return self::mixed($en);
         }
         $lang = Locale::lang();
-        // Kamus aplikasi (tmerp: sys_dictionary, bisa diubah user di Translation Dictionary) MENANG atas kamus bawaan DICT
+        // Kamus aplikasi (aplikasi: sys_dictionary, bisa diubah user di Translation Dictionary) MENANG atas kamus bawaan DICT
         // (user 2026-10-03); DICT = cadangan supaya DevLib jalan tanpa database. Translator mengembalikan null bila tidak ada.
         if (self::$translator && ($t = (self::$translator)($en, $lang, self::$hint)) !== null) {
             return $t;

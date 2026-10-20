@@ -2,7 +2,7 @@
 
 namespace Devlib\Components;
 
-// Struktur organisasi (Organization-Structure-Mockup + org chart tmerp): pohon bergaris, kartu jabatan
+// Struktur organisasi (Organization-Structure-Mockup + org chart aplikasi): pohon bergaris, kartu jabatan
 // berisi satu/lebih pemegang (kosong = "Lowong"). Drag pegangan kartu ke kartu lain = pindah atasan
 // (beserta bawahannya; tidak boleh ke bawahannya sendiri), Undo, Simpan (dl:orgchart-save), Unduh HTML,
 // cari pegawai (sorot + buka cabang + gulir), lipat/buka cabang, zoom.

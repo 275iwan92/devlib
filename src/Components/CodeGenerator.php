@@ -13,7 +13,7 @@ class CodeGenerator extends DevlibComponent
 
     // kunci => [label, JsBarcode format (null = QR), petunjuk isi, contoh isi]
     public const TYPES = [
-        'QR' => ['QR Code', null, 'Any text, link or ID', 'https://tmerp.test/doc/CO2600011'],
+        'QR' => ['QR Code', null, 'Any text, link or ID', 'https://example.test/doc/CO2600011'],
         'CODE128' => ['Code 128 (auto)', 'CODE128', 'Any letters, digits and symbols; the densest 1D code', 'RM-KRT-0012'],
         'CODE128A' => ['Code 128 A', 'CODE128A', 'Capital letters, digits and control characters', 'LOT-2608-A'],
         'CODE128B' => ['Code 128 B', 'CODE128B', 'Letters (upper and lower case), digits and symbols', 'Lot-2608-a'],

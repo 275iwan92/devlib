@@ -21,7 +21,7 @@ class UatAccounts extends DevlibComponent
 
     public function source(): string
     {
-        return 'sec_user akun contoh UAT (tmerp)';
+        return 'sec_user akun contoh UAT (aplikasi pemakai)';
     }
 
     public function render()

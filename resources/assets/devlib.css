@@ -7,7 +7,7 @@
  * Output       : Kelas dl-* dan token --dl-*. ATURAN TEKS (user 2026-10-13): teks HITAM (di atas latar terang) atau TERANG
  *                (di atas latar gelap), tanpa abu-abu; abu-abu HANYA --dl-disabled; read-only dibedakan lewat latar.
  *                Sheet: judul kolom, nomor baris, sel baca-saja = token --dl-sheet-head / --dl-sheet-ro (satu tempat, semua layar).
- * Dipakai oleh : Semua layar v2 (devlib.test, mockup.test, tmerp.test) lewat _devlib/devlib.css.
+ * Dipakai oleh : Semua layar v2 (devlib.test dan situs proyek pemakai) lewat _devlib/devlib.css.
  * Status       : Aktif.
  * ===================================================================== */
 :root{
@@ -177,7 +177,7 @@ body.dl-body{margin:0;font-family:var(--dl-font);background:var(--dl-bg);color:v
 .dl-brand--auto{color:var(--dl-box-strong,var(--dl-ink-strong));margin-bottom:22px}
 .dl-brand--auto span:not(.dl-logo-badge){color:var(--dl-box-muted,var(--dl-muted))}
 
-/* ================= LOGIN BOX (ukuran = login tmerp) ================= */
+/* ================= LOGIN BOX (ukuran = login aplikasi) ================= */
 .dl-loginbox{flex:1;display:flex;flex-direction:column;width:100%}
 .dl-loginbox__top{display:flex;justify-content:flex-end;align-items:center;gap:7px;flex-shrink:0}
 .dl-loginbox__form{width:100%;max-width:380px;margin:auto}

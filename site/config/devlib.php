@@ -57,7 +57,7 @@ return [
 
     // Variasi login yang dipakai halaman /login = resources/views/demos/login-<n>.blade.php.
     // Identitas cetak contoh. Non PPN = nama dagang; PPN = badan usaha terdaftar + NPWP (keputusan user 2026-09-23).
-    // Di tmerp nilainya dari Settings > Identifikasi (sys_constant COMPANY_NAME / COMPANY_LEGAL_NAME / NPWP).
+    // Di aplikasi pemakai nilainya dari Settings > Identifikasi (sys_constant COMPANY_NAME / COMPANY_LEGAL_NAME / NPWP).
     'company' => ['name' => 'Contoh Makmur', 'initials' => 'CM', 'tagline' => 'Offset Printing & Packaging', 'address' => 'Jl. Contoh Industri No. 42, Surabaya (contoh)', 'contact' => 'Telp. (031) 000-0000 · contoh@contoh.test'],
     'company_ppn' => ['name' => 'CV. Langgeng Jaya Makmur', 'initials' => 'LJ', 'tagline' => 'Offset Printing & Packaging', 'address' => 'Jl. Contoh Industri No. 42, Surabaya (contoh)', 'contact' => 'Telp. (031) 000-0000', 'npwp' => '00.000.000.0-000.000 (contoh)'],
 
@@ -69,7 +69,7 @@ return [
     // Folder aplikasi induk tempat `php artisan devlib:generate` dijalankan (kosong = fitur Generate Now nonaktif).
     'generate_path' => env('DEVLIB_GENERATE_PATH'),
 
-    // Data contoh untuk halaman komponen (di tmerp nanti dari Lookup/tabel master).
+    // Data contoh untuk halaman komponen (di aplikasi nanti dari Lookup/tabel master).
     'demo' => [
         'locations' => [
             'Surabaya, Jawa Timur, Indonesia', 'Malang, Jawa Timur, Indonesia', 'Sidoarjo, Jawa Timur, Indonesia',
@@ -82,10 +82,10 @@ return [
         ],
     ],
 
-    // Data contoh Lookup (di tmerp: query tabel/VIEW master). Nama sengaja fiktif.
+    // Data contoh Lookup (di aplikasi pemakai: query tabel/VIEW master). Nama sengaja fiktif.
     'lookups' => [
         'supplier' => [
-            'source' => 'tm2mst.sup_supplier (contoh)',
+            'source' => 'master.sup_supplier (contoh)',
             'key' => 'id', 'label' => 'name',
             'columns' => ['code' => 'Kode', 'name' => 'Nama Supplier', 'city' => 'Kota', 'term' => 'Syarat Bayar'],
             'fill' => ['payment_term' => 'term', 'ship_address' => 'address'],
@@ -97,7 +97,7 @@ return [
             ],
         ],
         'item' => [
-            'source' => 'tm2mst.mat_raw (contoh)',
+            'source' => 'master.mat_raw (contoh)',
             'key' => 'code', 'label' => 'name',
             'columns' => ['code' => 'Kode', 'name' => 'Nama Item', 'uom' => 'Satuan', 'price_txt' => 'Harga'],
             'fill' => ['spec' => 'spec', 'uom' => 'uom', 'price' => 'price'],
@@ -113,7 +113,7 @@ return [
         ],
         // Barang jadi untuk baris Customer Order (contoh Form Master-Detail).
         'product' => [
-            'source' => 'tm2mst.prod_product (contoh)',
+            'source' => 'master.prod_product (contoh)',
             'key' => 'code', 'label' => 'name',
             'columns' => ['code' => 'Kode', 'name' => 'Nama Produk', 'uom' => 'Satuan', 'price_txt' => 'Harga'],
             'fill' => ['uom' => 'uom', 'price' => 'price', 'color' => 'color'],
@@ -126,7 +126,7 @@ return [
             ],
         ],
         'uom' => [
-            'source' => 'tm2mst.uom_unit (contoh)',
+            'source' => 'master.uom_unit (contoh)',
             'key' => 'code', 'label' => 'code',
             'columns' => ['code' => 'Kode', 'name' => 'Satuan'],
             'rows' => [['code' => 'PCS', 'name' => 'Pieces'], ['code' => 'LBR', 'name' => 'Lembar'], ['code' => 'RIM', 'name' => 'Rim (500 lembar)'], ['code' => 'KG', 'name' => 'Kilogram'], ['code' => 'ROLL', 'name' => 'Roll']],

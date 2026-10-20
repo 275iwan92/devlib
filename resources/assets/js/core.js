@@ -472,7 +472,7 @@ window.Devlib = window.Devlib || {};
 
   /* ======================= GLOBAL BEHAVIORS ======================= */
   // Kamus aplikasi (LOCKED 2026-10-01: tulis ENGLISH di kode). window.DL_DICT dari server = teks English -> terjemahan bahasa
-  // halaman ('' = belum diterjemahkan). Teks yang belum dikenal dicatat ke server (DL_DICT_URL, tmerp: sys_dictionary) supaya
+  // halaman ('' = belum diterjemahkan). Teks yang belum dikenal dicatat ke server (DL_DICT_URL, aplikasi: sys_dictionary) supaya
   // muncul di Setup > Translation Dictionary. T(kunci) = kamus DevLib [ID, EN]; bahasa lain lewat kamus aplikasi.
   const DICT = window.DL_DICT || {}, dictQ = new Set(); let dictTimer = null;
   const dictSend = () => {
@@ -898,7 +898,7 @@ window.Devlib = window.Devlib || {};
 
 
 
-  // Asal data kolom (grid/lines): {src: 'tm2sdi.iqp_inquiry.qty'} -> tooltip Mode Developer di header kolom.
+  // Asal data kolom (grid/lines): {src: 'sales.iqp_inquiry.qty'} -> tooltip Mode Developer di header kolom.
   const srcAttr = (c, kind = 'kolom') => c && c.src ? ` data-dl="${kind} ${esc(c.label || c.key)}" data-dl-class="kolom" data-dl-src="${esc(c.src)}"` : '';
   Devlib.h = {srcAttr, $, $$, esc, showQr, CASES, CASE_LABEL, applyCase, idNum, bindPanel, calcPanel, pickIndex, dayOfYear, WMO, LOGIN_T, typeIcon, HOME, setDevMode, initDevMode, PRESET_T, toast, confirmBox, layer, openLayer, closeLayer, T, Tf, t, dirtyForms, markDirty, askDirty, submitForm, resetWorkspace, keyName, visible, BUILTIN, showShortcuts, initDevToggle, TZ, fmt, applyMask, fieldErr, CC, luhn, setField, setOptions, fillForm, hasValue, fieldText, W_ID, W_EN, W_EN_T, W_SC_ID, W_SC_EN, wScale, wId, wEn, words, parseCsv, csvCell, downloadCsv, parseNum, numStr, numIn, numFmt, NUM, MON_EN, dow2, DlDate, DlNumber, DlTime, DlDateTime, DlText, parseDate, CH_TONES, chNum, niceMax, libOnce, loadLib, AUTH_T, at, authLang, fieldMsg, fld, val, passCheck, emit};
   Object.assign(Devlib, {toast, setDevMode, fmt, confirm: confirmBox, open: openLayer, close: id => closeLayer(layer(id)), fill: fillForm, setField, words, resetWorkspace}, {initDevMode});

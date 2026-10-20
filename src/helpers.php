@@ -1,7 +1,7 @@
 <?php
 
 // Helper global milik library (dimuat DevlibServiceProvider::register): situs devlib.test dan semua aplikasi
-// pemakai (tmerp, ...) mewarisinya. Bukan composer "files" supaya tidak perlu dump-autoload di tiap checkout.
+// pemakai (proyek apa pun) mewarisinya. Bukan composer "files" supaya tidak perlu dump-autoload di tiap checkout.
 
 use Devlib\Lang;
 

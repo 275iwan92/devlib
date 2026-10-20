@@ -4,7 +4,7 @@ namespace Devlib\Components;
 
 use Devlib\Locale;
 
-// Pilihan bahasa (bendera). Daftar bahasa = Locale::languages() (tmerp: sys_languages yang aktif), jadi bahasa baru
+// Pilihan bahasa (bendera). Daftar bahasa = Locale::languages() (aplikasi: sys_languages yang aktif), jadi bahasa baru
 // muncul sendiri. Memicu event "dl:lang" di dokumen (cookie perangkat + teks [data-dl-t]).
 // reload: halaman dimuat ulang setelah bahasa dipilih supaya teks yang dirender server ikut berganti, dan pilihannya
 // disimpan ke akun user lewat config devlib.lang_url. Bawaan: aktif bila ada user yang login; halaman tamu (login /
@@ -34,7 +34,7 @@ class LangSwitch extends DevlibComponent
 
     public function source(): string
     {
-        return 'sys_languages + sec_user.lang_code (tmerp)';
+        return 'sys_languages + sec_user.lang_code (aplikasi pemakai)';
     }
 
     public function render()

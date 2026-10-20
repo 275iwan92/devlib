@@ -5,7 +5,7 @@ namespace Devlib;
 // Lookup = definisi SEKALI per data ("supplier", "customer", "uom", ...) dipakai
 // semua layar lewat <x-dl::field.lookup lookup="supplier" />. Mengurangi ketik:
 // user memilih, dan field lain terisi otomatis (fill).
-//   rows    : baris data (DevLib: config devlib.lookups; tmerp: query tabel/VIEW)
+//   rows    : baris data (DevLib: config devlib.lookups; aplikasi: query tabel/VIEW)
 //   key     : kolom nilai tersimpan      label : kolom teks tampil
 //   columns : kolom yang tampil & bisa dicari di daftar pilihan
 //   fill    : nama field lain => kolom sumber (isi otomatis saat dipilih)

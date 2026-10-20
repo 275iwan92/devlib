@@ -1,4 +1,4 @@
-{{-- Print + Email: 1 tag per form/dokumen, tunjuk area dokumennya lewat target. Di tmerp endpoint = /v2/doc-share (config devlib.doc_share_url)
+{{-- Print + Email: 1 tag per form/dokumen, tunjuk area dokumennya lewat target. Di aplikasi pemakai endpoint = /v2/doc-share (config devlib.doc_share_url)
      -> HTML online + QR + Email aktif; di situs DevLib (tanpa database) hanya PDF / JPEG / Printer.
      Bahasa cetak (ID | EN) di menu Print: beda dari bahasa layar -> halaman ini dirender ulang dengan ?print_lang, jadi label
      (kamus Lang), angka (NumberValue) & tanggal (DateValue) di hasil cetak ikut bahasa cetak. --}}
@@ -17,7 +17,7 @@
 <x-dl::card id="demo-doc" :title="$t('dsd_title').' · IQ-2609-0012'" :description="$t('dsd_desc')">
     <x-dl::action-bar align="between">
         <x-dl::badge label="Draft" />
-        {{-- :contacts = daftar statis untuk "Find contact" di dialog Email (di tmerp ditambah pencarian server lewat contacts-url). --}}
+        {{-- :contacts = daftar statis untuk "Find contact" di dialog Email (di aplikasi pemakai ditambah pencarian server lewat contacts-url). --}}
         <x-dl::doc-share target="#demo-doc" type="demo" doc-id="12" number="IQ-2609-0012" :title="$t('dsd_title')" email-to="purchasing@customer.test"
             :contacts="[
                 ['name' => 'Rina Wulandari', 'email' => 'rina@customer.test', 'group' => 'PT Contoh Baterai'],

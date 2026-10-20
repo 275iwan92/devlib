@@ -4,7 +4,7 @@ namespace App\Support;
 
 // Contoh papan widget (x-dl::widget-board) untuk devlib.test: isi widget diambil dari profil Management di
 // DashboardData (angka contoh), susunan papan disimpan di sesi browser -- situs DevLib tanpa database.
-// Di aplikasi (tmerp): katalog = tabel sys_widget, susunan = sys_user_widget, angka = kelas widget yang membaca database.
+// Di aplikasi: katalog = tabel sys_widget, susunan = sys_user_widget, angka = kelas widget yang membaca database.
 class BoardDemo
 {
     private const SESSION = 'devlib_board';

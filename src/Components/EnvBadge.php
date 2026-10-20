@@ -8,7 +8,7 @@ namespace Devlib\Components;
  * Sumber hulu  : binding container 'devlib.env_title' / 'devlib.env_where' yang diisi aplikasi (kosong / tidak ada = tidak tampil); DevLib tidak tahu isinya.
  * Input        : part title|where, variant title|side|login, label (opsional).
  * Output       : <small class="dl-envbadge">teks</small> atau kosong.
- * Dipakai oleh : LayerMenu (judul logo + bawah nama pengguna) dan halaman login tmerp (judul logo + bawah form).
+ * Dipakai oleh : LayerMenu (judul logo + bawah nama pengguna) dan halaman login aplikasi (judul logo + bawah form).
  * Status       : Aktif. Teks terang di sidebar gelap (token --dl-side-ink), hitam di login (varian login); tanpa pil, latar, atau bingkai.
  */
 class EnvBadge extends DevlibComponent

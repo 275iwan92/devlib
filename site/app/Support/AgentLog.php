@@ -4,7 +4,7 @@ namespace App\Support;
 
 use Illuminate\Support\Facades\Cache;
 
-// Agent Log devlib.test (user 2026-10-07): log pekerjaan (commit) agen Iwan dan Jo, bisa disaring. Sumber = git log repo tmerp;
+// Agent Log devlib.test (user 2026-10-07): log pekerjaan (commit) agen Iwan dan Jo, bisa disaring. Sumber = git log repo devlib;
 // agen = trailer `Agent:` di pesan commit. Commit tanpa tanda = "Before tracking" (tidak ditebak dari hari).
 final class AgentLog
 {

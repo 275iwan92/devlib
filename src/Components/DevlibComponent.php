@@ -76,7 +76,7 @@ abstract class DevlibComponent extends Component
     // tampilan/cetak -- layar tidak perlu memanggil apa pun. Turunan boleh mengubah daftar (Button/Badge: kosong, istilah
     // tombol & status selalu English). Teks bebas milik data (nilai isian, isi baris) TIDAK diterjemahkan.
     // Prop teks yang memuat NILAI DATA (no. dokumen, nama customer di judul form / kartu): nilainya dibungkus Lang::raw()
-    // (helper raw() di tmerp) supaya tidak diterjemahkan dan tidak tercatat di kamus -- lihat Devlib\Lang::raw().
+    // (helper raw() di aplikasi pemakai) supaya tidak diterjemahkan dan tidak tercatat di kamus -- lihat Devlib\Lang::raw().
     protected const TEXT_PROPS = ['label', 'title', 'subtitle', 'description', 'hint', 'placeholder', 'tooltip', 'message', 'text', 'search', 'empty', 'caption', 'heading', 'addLabel'];
 
     // Array berisi label: [['label' => ..], ..] atau [kunci => label | [label, ikon]]; parties/criteria: kunci = label.

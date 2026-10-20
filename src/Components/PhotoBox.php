@@ -37,7 +37,7 @@ class PhotoBox extends DevlibComponent
 
     public function source(): string
     {
-        return 'Foto profil (mis. tm2mst.emp_employee.photo_path); disimpan oleh layar pemanggil saat form disimpan';
+        return 'Foto profil (mis. master.emp_employee.photo_path); disimpan oleh layar pemanggil saat form disimpan';
     }
 
     public function jsClass(): ?string

@@ -3,7 +3,7 @@
   'use strict';
   const {srcAttr, $, $$, esc, toast, fmt, at, val, emit, parseNum, DlDateTime, DlTime, T, Tf} = Devlib.h;
   /* ============================ GRID ============================ */
-  // Mesin grid sisi-browser (DevLib, tanpa DB). Di tmerp, versi server (Livewire) memakai
+  // Mesin grid sisi-browser (DevLib, tanpa DB). Di aplikasi pemakai, versi server (Livewire) memakai
   // markup & kelas yang sama; hanya sumber data & query-nya yang berpindah ke server.
   class Grid extends Devlib.Component {
     static selector = "[data-dl-grid]";

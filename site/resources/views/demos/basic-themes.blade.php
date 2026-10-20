@@ -1,6 +1,6 @@
 <div class="dl-doc">
     <h1>Themes</h1>
-    <p>12 tema (Pastel / Cerah / Dark / Hitam × Biru / Hijau / Merah) = data <code>sys_theme</code> tmerp. Tema hanya menimpa token warna; komponen tidak perlu tahu tema apa yang aktif.</p>
+    <p>12 tema (Pastel / Cerah / Dark / Hitam × Biru / Hijau / Merah) = data <code>sys_theme</code> aplikasi. Tema hanya menimpa token warna; komponen tidak perlu tahu tema apa yang aktif.</p>
     <div class="dl-sample">
         <x-dl::theme-picker />
         <div>

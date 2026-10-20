@@ -32,7 +32,7 @@ class ProfileBanner extends DevlibComponent
 
     public function source(): string
     {
-        return 'Diisi layar pemanggil (mis. tm2mst.emp_employee + hasil hitung kelengkapan dan KPI)';
+        return 'Diisi layar pemanggil (mis. master.emp_employee + hasil hitung kelengkapan dan KPI)';
     }
 
     public function groupLabel(string $label): string

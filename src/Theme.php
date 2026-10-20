@@ -2,8 +2,8 @@
 
 namespace Devlib;
 
-// Sumber data tema (salinan tm2sys.sys_theme: 4 keluarga x 3 corak = 12 tema).
-// Di tmerp nanti dibaca dari tabel; di situs DevLib (tanpa DB) dari konstanta ini.
+// Sumber data tema (salinan system.sys_theme: 4 keluarga x 3 corak = 12 tema).
+// Di aplikasi nanti dibaca dari tabel; di situs DevLib (tanpa DB) dari konstanta ini.
 // Tema hanya MENIMPA token warna di :root (devlib.css) -- komponen tidak tahu tema.
 final class Theme
 {

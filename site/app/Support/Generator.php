@@ -199,14 +199,14 @@ final class Generator
         if (! self::canAuto($row)) {
             return [false, 'Automatic build is only for a Master request that names an existing table and needs no engine.'];
         }
-        // Situs demo mandiri: generator hanya jalan bila folder aplikasi induk diisi (DEVLIB_GENERATE_PATH), mis. folder tmerp.
+        // Situs demo mandiri: generator hanya jalan bila folder aplikasi induk diisi (DEVLIB_GENERATE_PATH), mis. folder aplikasi.
         $host = config('devlib.generate_path');
         if (! $host || ! is_file($host.DIRECTORY_SEPARATOR.'artisan')) {
             return [false, 'The generator runs inside a host app: set DEVLIB_GENERATE_PATH to its folder.'];
         }
         $dir = dirname(PHP_BINARY);
         $php = is_file($dir.'/php.exe') ? $dir.'/php.exe' : (is_file($dir.'/php') ? $dir.'/php' : 'php');
-        // Proses anak TIDAK boleh mewarisi isi .env situs devlib (DB_DATABASE=devlib, APP_KEY, ...): tmerp harus membaca .env-nya sendiri.
+        // Proses anak TIDAK boleh mewarisi isi .env situs devlib (DB_DATABASE=devlib, APP_KEY, ...): aplikasi induk harus membaca .env-nya sendiri.
         $clean = array_fill_keys(array_keys(Dotenv::parse((string) @file_get_contents(base_path('.env')))), false);
         $run = Process::path($host)->env($clean)->timeout(120)->run([$php, 'artisan', 'devlib:generate', $row->source_table, '--title='.$row->name, '--env=mockup', '--json']);
         $out = null;

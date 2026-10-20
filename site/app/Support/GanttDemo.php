@@ -3,7 +3,7 @@
 namespace App\Support;
 
 // Demo of the production scheduling board (x-dl::gantt): fictitious rows / tasks plus a tiny "impact" judge.
-// Hours are offsets from the origin date (Thu 8 Oct 2026, 00:00): 30 = Fri 06:00. In the application (tmerp) the same two
+// Hours are offsets from the origin date (Thu 8 Oct 2026, 00:00): 30 = Fri 06:00. In the application the same two
 // endpoints are answered by the PPIC scheduling service; here the rules are hard-coded so the board can be tried alone.
 class GanttDemo
 {

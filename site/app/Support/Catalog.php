@@ -74,7 +74,7 @@ final class Catalog
         $page = fn ($label, $icon, $members, $mockup = null, $classes = null) => ['label' => $label, 'icon' => $icon, 'mockup' => $mockup, 'members' => $members,
             'classes' => $classes ?? array_values(array_unique(array_merge([], ...array_column($members, 1))))];
 
-        // DevLib = komponen dasar & layar standar saja (keputusan user 2026-09-24). Layar khusus -> mockup.test (packages/mockup-parts).
+        // DevLib = komponen dasar & layar standar saja (keputusan user 2026-09-24). Layar khusus milik proyek pemakai tidak ada di sini.
         $groups = [
             ['code' => 'DT', 'short' => 'DT', 'label' => 'Basics & Themes', 'icon' => 'fa-solid fa-palette',
                 'pages' => [
@@ -209,7 +209,7 @@ final class Catalog
                     ], 'main_menu_v2.html'),
                     'p7-layer' => $page('Layer Menu', 'fa-solid fa-layer-group', ['layer-menu' => ['Layer Menu: layered left panel (module › menu › sub › sub-sub) + gear: Chat (swap / dock right) & Profile sliding up. Also used in Shell: avatar menu › Layer Menu', $c('LayerMenu', 'Chat')]]),
                     'p7-chat' => $page('Chat (WhatsApp style)', 'fa-solid fa-comment-dots', ['chat' => ['Chat: online users in bright colour, + for offline users, profile photo, file attachment, sound on a new message', $c('Chat')]], 'main_menu_v2.html'),
-                    'login-1' => ['label' => 'Login 1 · same as tmerp', 'icon' => 'fa-solid fa-right-to-bracket', 'full' => true, 'classes' => self::LOGIN_CLASSES, 'mockup' => 'login.html'],
+                    'login-1' => ['label' => 'Login 1 · standard', 'icon' => 'fa-solid fa-right-to-bracket', 'full' => true, 'classes' => self::LOGIN_CLASSES, 'mockup' => 'login.html'],
                     'login-2' => ['label' => 'Login 2 · glass pop-up', 'icon' => 'fa-solid fa-right-to-bracket', 'full' => true, 'classes' => self::LOGIN_CLASSES, 'mockup' => 'login.html'],
                     'login-3' => ['label' => 'Login 3 · navy left panel', 'icon' => 'fa-solid fa-right-to-bracket', 'full' => true, 'classes' => self::LOGIN_CLASSES, 'mockup' => 'login.html'],
                     'register' => ['label' => 'Register Account', 'icon' => 'fa-solid fa-user-plus', 'full' => true, 'classes' => $c('RegisterBox', 'Frame'), 'mockup' => 'register.html'],
@@ -217,22 +217,6 @@ final class Catalog
                     'forgot-2' => ['label' => 'Forgot Password · 4 questions', 'icon' => 'fa-solid fa-key', 'full' => true, 'classes' => $c('ForgotBox', 'Frame'), 'mockup' => 'forgot-password.html'],
                     'p8-lock' => $page('Lock Screen', 'fa-solid fa-lock', ['lock-screen' => ['Lock screen (idle / manual / Ctrl+Shift+L)', $c('LockScreen')]]),
                     'p8-security' => $page('Setup & Security', 'fa-solid fa-user-shield', ['security' => ['Users, Groups, Objects, Group Permissions, Language, Theme (vertical tabs)', $c('Tabs', 'Grid', 'PermissionMatrix', 'ThemePicker')]], 'security.html', $c('PermissionMatrix', 'Tabs')),
-                ]],
-            // Form khusus (user 2026-10-05): form yang bentuknya tidak baku TETAP punya objek di sini (paket packages/mockup-parts,
-            // x-mp::*) dengan properti, method dan perilakunya; layar mockup.test / tmerp.test mewarisinya. Ubah objeknya = layar ikut.
-            // Data di halaman ini contoh; di aplikasi isinya disiapkan kelas data layar (mis. App\Support\V2\Data\Cpdel::promise()).
-            ['code' => 'SF', 'short' => 'SF', 'label' => 'Special Forms', 'icon' => 'fa-solid fa-puzzle-piece',
-                'pages' => [
-                    'sf-promise-book' => $page('Customer Plan Delivery (promise book)', 'fa-solid fa-truck-ramp-box', ['promise-book' => ['Promise book: customer slot against production ready, with the PPIC / Sales / Operational Manager cards and the negotiation log', ['MockupParts\\Components\\Sales\\PromiseBook']]]),
-                    'sf-self-service' => $page('Edit Profile (self-service)', 'fa-solid fa-user-gear', ['self-service' => ['Edit profile: eleven sections inside the side screen layout (my data, family, documents, leave, out permit, shift swap, schedule, ID card, security) and eight request pop-ups', ['MockupParts\\Components\\Hrm\\SelfService', 'Devlib\\Components\\SideScreen\\Layout']]]),
-                    'sf-product-master' => $page('Master Product (one product)', 'fa-solid fa-box', ['product-master' => ['Product page: identity, assembly tree with a panel per part, and the tabs Customer ACC / Order & Selling Price History / Revision Branches', ['MockupParts\\Components\\Sales\\ProductMaster', 'MockupParts\\Components\\Sales\\ProductTree']]]),
-                    'sf-customer-card' => $page('Customer 360 (one customer)', 'fa-solid fa-address-card', ['customer-card' => ['Customer page: key numbers, order charts, most ordered products and the tabs Activities / Quotations / Orders / Deliveries / Complaints / Contacts', ['MockupParts\\Components\\Sales\\CustomerCard']]]),
-                    'sf-petty-cash' => $page('Petty Cash', 'fa-solid fa-wallet', ['petty-cash' => ['Petty cash desk: balance head, then one mode — transaction, cash PO (advance / settlement / reimburse), top up, setting or list', ['MockupParts\\Components\\Acc\\PettyCash']]]),
-                    'sf-label-print' => $page('Label Printing (location and item)', 'fa-solid fa-qrcode', ['label-print' => ['Label print form: notice, building / area filter, what to print, label size, paper and copies; one object for location labels and item labels', ['MockupParts\\Components\\Inv\\LabelPrint']]]),
-                    'sf-pallet-label' => $page('Pallet Label', 'fa-solid fa-pallet', ['pallet-label' => ['Pallet label desk: receipt notice or building picker, colour guide, one stock position (new pallets, relabel after use, print again), label work list and the pallets of the building', ['MockupParts\\Components\\Inv\\PalletLabel']]]),
-                    'sf-scan-track' => $page('Track via QR / Barcode', 'fa-solid fa-magnifying-glass-location', ['scan-track' => ['Scan box, then one result: not found, stock transfer, pallet, bin or item', ['MockupParts\\Components\\Inv\\ScanTrack']]]),
-                    'sf-material-planning' => $page('Material Planning and Booking', 'fa-solid fa-boxes-packing', ['material-planning' => ['Material Planning (MRP) desk and Material Booking desk: shortcuts, state message, Create PR / Pick Item cards around the grid of the screen', ['MockupParts\\Components\\Planning\\MaterialPlan', 'MockupParts\\Components\\Planning\\MaterialBooking']]]),
-                    'sf-crew-form' => $page('Assign Crew (one machine, a box per shift)', 'fa-solid fa-people-group', ['crew-form' => ['Assign Crew form: period, then one crew box per Master Shift with a Shift dropdown (swap), crew name, people and roles', ['MockupParts\Components\Production\CrewForm']]]),
                 ]],
             // Daftar ENGINE (user 2026-10-02): kegunaan, input, output, cara kerja. Isinya dari EngineRegistry situs ini
             // (kontrak Devlib\Engine), objeknya x-dl::engine-catalog.

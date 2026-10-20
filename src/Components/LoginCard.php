@@ -34,7 +34,7 @@ class LoginCard extends DevlibComponent
 
     public function source(): string
     {
-        return 'tm2sys.sec_user (dibuat EmployeeLoginProvisionService); kartu hanya menampilkan hasilnya satu kali';
+        return 'system.sec_user (dibuat EmployeeLoginProvisionService); kartu hanya menampilkan hasilnya satu kali';
     }
 
     public function jsClass(): ?string

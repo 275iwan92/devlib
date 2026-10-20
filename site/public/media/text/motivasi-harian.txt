@@ -1,6 +1,6 @@
 # Kata motivasi HARIAN untuk dashboard (x-dl::quote order=day). Format: teks | penulis (penulis boleh kosong).
 # WAJIB 366 baris isi, urut kalender tahun kabisat: baris ke-1 = 1 Januari ... baris ke-60 = 29 Februari ... baris ke-366 = 31 Desember.
-# Baris diawali # diabaikan. Di tmerp nanti isinya dari tabel (bisa diedit lewat layar), file ini hanya contoh DevLib.
+# Baris diawali # diabaikan. Di aplikasi nanti isinya dari tabel (bisa diedit lewat layar), file ini hanya contoh DevLib.
 Tahun baru bukan soal kalender yang berganti, tapi kebiasaan yang kita perbaiki.
 Tulis satu target yang jelas hari ini; target yang kabur tidak pernah tercapai.
 Awal yang rapi menghemat seribu perbaikan di akhir.

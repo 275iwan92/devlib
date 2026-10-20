@@ -8,7 +8,7 @@ namespace Devlib\Components;
  * kosong = Brand::identity() (config devlib.brand.*, lalu DevLib).
  * Input: prop konstruktor di bawah.
  * Output: view devlib::components.shell (atau layer-shell untuk turunan).
- * Dipakai oleh: tmerp resources/views/v2/home.blade.php (mengirim brand sendiri) dan devlib.test home / demo shell.
+ * Dipakai oleh: layar home aplikasi pemakai (mengirim brand sendiri) dan devlib.test home / demo shell.
  * Status: aktif.
  */
 // Kerangka aplikasi setelah login (acuan mockup main_menu_v2.html): sidebar

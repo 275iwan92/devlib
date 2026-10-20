@@ -5,7 +5,7 @@ namespace Devlib\Components;
 use Devlib\Theme;
 
 // Pemilih tampilan: 12 tema (keluarga x corak) + density + skala huruf.
-// Pilihan disimpan per pengguna (di DevLib: browser; di tmerp nanti: sec_user).
+// Pilihan disimpan per pengguna (di DevLib: browser; di aplikasi nanti: sec_user).
 class ThemePicker extends DevlibComponent
 {
     public function tag(): string
@@ -15,7 +15,7 @@ class ThemePicker extends DevlibComponent
 
     public function source(): string
     {
-        return 'Devlib\\Theme::ALL (= tm2sys.sys_theme)';
+        return 'Devlib\\Theme::ALL (= system.sys_theme)';
     }
 
     public function grid(): array

@@ -33,7 +33,7 @@ class KanbanProduksi extends Kanban
 
     public function source(): string
     {
-        return 'tm2prd.prd_wo_operation (contoh)';
+        return 'production.prd_wo_operation (contoh)';
     }
 
     public function jsClass(): ?string

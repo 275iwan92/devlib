@@ -9,7 +9,7 @@ use DateTimeInterface;
 // Format lokal baku: zona waktu WIB, tanggal, angka, uang. Semua layar memakai ini -- jangan number_format/date() sendiri-sendiri.
 // LOCKED user 2026-10-01: database & formula = English + angka mentah; bahasa lain HANYA tampilan layar/cetak.
 // Aturan per bahasa (pemisah angka, locale Intl, singkatan bulan) = data: aplikasi mengisi lewat languagesUsing()
-// (tmerp: sys_languages + kamus sys_dictionary); tanpa itu dipakai bawaan id/en di bawah.
+// (aplikasi: sys_languages + kamus sys_dictionary); tanpa itu dipakai bawaan id/en di bawah.
 final class Locale
 {
     public const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -50,7 +50,7 @@ final class Locale
         return $s + ['months' => self::MONTHS_EN, 'dec' => '.', 'grp' => ',', 'intl' => 'en-US'];
     }
 
-    // $fn(): ?string -- bahasa milik user yang sedang login (tmerp: sec_user.lang_code). Pilihan bahasa ikut AKUN, bukan
+    // $fn(): ?string -- bahasa milik user yang sedang login (aplikasi: sec_user.lang_code). Pilihan bahasa ikut AKUN, bukan
     // perangkat: tanpa ini user yang pindah komputer (atau dua user di satu komputer) mendapat bahasa cookie orang lain.
     public static function langUsing(?Closure $fn): void
     {

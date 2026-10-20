@@ -5,7 +5,7 @@ namespace App\Support;
 // Isi Job Description & SOP per KODE JABATAN untuk opening screen DevLib (tanpa database).
 // Format mengikuti dokumen resmi perusahaan: "JD & KPI - STAFF FINANCE" (Daily/Weekly/Monthly/Seasonal + KPI berbobot)
 // dan "SOP PERIZINAN KARYAWAN" (Nomor/Perihal/Revisi/Tanggal Efektif + bagian A, B, ...) di docs/attachments.
-// Di tmerp: JD = org_position.job_description (HTML, diisi HR Officer), SOP = sop_document.content (HTML).
+// Di aplikasi pemakai: JD = org_position.job_description (HTML, diisi HR Officer), SOP = sop_document.content (HTML).
 final class DashboardDocs
 {
     public static function jobdesc(?string $position): ?array

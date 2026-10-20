@@ -10,7 +10,7 @@ use Devlib\Locale;
 
 // Data contoh opening screen (x-dl::dashboard) untuk situs DevLib (tanpa database). Deterministik: angka sama tiap muat.
 // Profil dipilih dari kode jabatan user (config devlib.dashboards); jabatan tanpa profil khusus = 'general'.
-// Di tmerp: KPI & target dari tabel target per user per periode, realisasi dari transaksi, JD dari
+// Di aplikasi pemakai: KPI & target dari tabel target per user per periode, realisasi dari transaksi, JD dari
 // org_position.job_description, SOP dari sop_document (terhubung ke jabatan), kata harian dari tabel 366 baris.
 final class DashboardData
 {

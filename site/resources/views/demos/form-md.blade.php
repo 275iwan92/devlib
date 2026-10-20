@@ -14,7 +14,7 @@
     $isNew = $status === 'new';
     $dup = $act === 'duplicate';
     $blank = $isNew && ! $dup;
-    // Log riwayat (History): contoh isi -- di tmerp dari tm2sys.doc_state_log + audit perubahan. Terbaru di atas.
+    // Log riwayat (History): contoh isi -- di aplikasi pemakai dari system.doc_state_log + audit perubahan. Terbaru di atas.
     $log = $isNew ? [] : array_values(array_filter([
         in_array($status, ['confirmed', 'cancelled', 'closed'], true) ? ['at' => now()->format('Y-m-d H:i:s'), 'by' => 'johiwan', 'action' => ucfirst($status), 'note' => $status === 'cancelled' ? 'Salah customer, dibuat ulang.' : null] : null,
         $status === 'draft' && $act === 'draft' ? ['at' => now()->format('Y-m-d H:i:s'), 'by' => 'johiwan', 'action' => 'Back to Draft', 'note' => 'Revisi qty sesuai PO customer.'] : null,

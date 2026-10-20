@@ -9,9 +9,9 @@ use Devlib\Theme;
 // Print ▾ : PDF (unduh), JPEG (unduh), HTML online (link + QR, dibuka tanpa login), Printer (dialog cetak browser).
 // Email   : To/CC/BCC/Subjek/Pesan + pilihan isi: link online, dokumen (gambar) di isi e-mail, lampiran PDF.
 //           Alamat bisa dipilih dari kontak: kotak "Find contact" mencari di daftar :contacts (statis, [['name','email','group']])
-//           dan/atau contacts-url (GET ?q= -> {rows: [...]}; tmerp: kontak customer, kontak supplier, user). Klik kontak =
+//           dan/atau contacts-url (GET ?q= -> {rows: [...]}; aplikasi: kontak customer, kontak supplier, user). Klik kontak =
 //           masuk ke kotak To / CC / BCC yang terakhir diklik; klik lagi = dicabut.
-// Setiap hasil membawa QR ke salinan online (snapshot saat dicetak, disimpan lewat endpoint -> sys_doc_share di tmerp).
+// Setiap hasil membawa QR ke salinan online (snapshot saat dicetak, disimpan lewat endpoint -> sys_doc_share di aplikasi pemakai).
 // Tanpa endpoint (situs DevLib) PDF/JPEG/Printer tetap jalan, tanpa QR/online/email.
 // Bahasa cetak (Indonesia | English | ...): beda dari bahasa layar -> halaman yang sama dirender ulang dengan ?print_lang=xx
 // (iframe tersembunyi; Locale::lang() menghormatinya hanya untuk permintaan itu) -> label, angka & tanggal ikut bahasa cetak.
@@ -52,7 +52,7 @@ class DocShare extends DevlibComponent
         return $this->endpoint ? 'sys_doc_share / sys_doc_email' : 'tanpa penyimpanan (PDF/JPEG saja)';
     }
 
-    // Bahasa cetak (user 2026-10-01): bebas dari bahasa layar; daftar = bahasa aktif (tmerp: sys_languages).
+    // Bahasa cetak (user 2026-10-01): bebas dari bahasa layar; daftar = bahasa aktif (aplikasi: sys_languages).
     public function langs(): array
     {
         return array_map(fn ($l) => $l['name'] ?? '', \Devlib\Locale::languages());

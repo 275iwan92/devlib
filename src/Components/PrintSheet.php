@@ -8,7 +8,7 @@
  *                blocks: ['type' => 'table', 'heading', 'columns' => [['key','label','align' => left|center|right,'width' (mm),'mono']], 'rows' => [[key => teks | ['text','sub','rowspan','bold','class'] | false (sel tertutup rowspan)]], 'note', 'empty']
  *                        ['type' => 'parties', 'items' => [['label','lines' => [teks]]]]   ['type' => 'text', 'text']
  * Output       : <div.dl-psheet> satu lembar A4 (portrait atau landscape) yang tumbuh ke bawah dan terpotong per halaman saat dicetak; header tabel diulang.
- * Dipakai oleh : cetak Roster Shift v2 (tmerp), cetak Work Order v2 (tmerp); demo devlib.test > Cetak.
+ * Dipakai oleh : cetak dokumen aplikasi pemakai (mis. Roster Shift, Work Order); demo devlib.test > Cetak.
  * Status       : Aktif.
  */
 
