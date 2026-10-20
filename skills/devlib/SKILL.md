@@ -102,6 +102,8 @@ Berlaku untuk SEMUA data transaksional, baik master-detail (dokumen dengan baris
 **Data MASTER**
 - TIDAK ada DRAFT/CONFIRMED. Hanya `ACTIVATED` / `DEACTIVATED` (nama lain: `ENABLE` / `DISABLE`). Di grid master ini adalah Aktif/Nonaktif.
 
+Di DevLib: `<x-dl::form kind="document" :pipeline="true" :status="'draft|confirmed|cancelled'">` menyediakan tombol dan cetakan bermode ini; authority bertingkat = `:approval-levels` (1-3), `:approval-at`, `:can-approve`. Grid-nya: kolom Status `badge` (lihat Tipe grid).
+
 Catatan: proyek yang perilakunya berbeda dari aturan ini mencatat selisihnya di skill proyek (lihat `stoku`, bagian "Selisih dengan aturan transaksional pemilik").
 
 ## Help: selalu dua bagian, UG dan TG
