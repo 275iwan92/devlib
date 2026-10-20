@@ -1,4 +1,4 @@
-<x-dl::wizard title="Registrasi Customer Baru" finish-label="Daftarkan">
+<x-dl::wizard title="Registrasi Customer Baru" finish-label="Daftarkan" done="Customer registered. The wizard has no grid, so there is no Back (demo: nothing is stored).">
     <x-dl::wizard.step title="Identitas" icon="fa-building" hint="Data badan usaha sesuai NPWP.">
         <x-dl::form.row>
             <x-dl::field.text name="company" label="Nama Perusahaan" required />

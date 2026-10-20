@@ -301,6 +301,45 @@ final class DemoData
         return $rows;
     }
 
+    // Cash Voucher contoh (Single Form transaksional: satu record tanpa baris); pihak fiktif, nilai Rupiah.
+    public static function cashVouchers(int $n = 30): array
+    {
+        $payee = ['Toko Alat Tulis Maju', 'CV Servis Mesin Jaya', 'UD Konsumsi Sehat', 'Bu Wati (kebersihan)', 'PT Ekspedisi Cepat'];
+        $cat = ['Office supplies', 'Maintenance', 'Meals', 'Cleaning', 'Freight'];
+        $rows = [];
+        for ($i = 1; $i <= $n; $i++) {
+            $amount = 50000 * (1 + ($i * 7) % 40);
+            $rows[] = [
+                'id' => $i,
+                'cv_no' => sprintf('CV-2610-%04d', $i),
+                'cv_date' => date('Y-m-d', mktime(0, 0, 0, 10, 1 + $i % 20, 2026)),
+                'payee' => $payee[($i * 3) % 5],
+                'category' => $cat[($i * 3) % 5],
+                'paid_from' => $i % 4 === 0 ? 'Petty Cash' : 'Main Cash',
+                'amount' => $amount,
+                'description' => 'Payment for '.strtolower($cat[($i * 3) % 5]).' (sample)',
+                'status' => ['Draft', 'Confirmed', 'Confirmed', 'Cancelled', 'Confirmed', 'Draft'][$i % 6],
+            ];
+        }
+
+        return $rows;
+    }
+
+    // Customer Order yang SUDAH Confirmed + field approval terpisah (waiting|hold|approved|rejected): isi grid Approval.
+    public static function approvalOrders(): array
+    {
+        $rows = [];
+        foreach (self::customerOrders() as $r) {
+            if ($r['status'] !== 'Confirmed') {
+                continue;
+            }
+            $r['approval'] = ['waiting', 'waiting', 'hold', 'approved', 'rejected'][count($rows) % 5];
+            $rows[] = $r;
+        }
+
+        return $rows;
+    }
+
     // Foto profil ilustrasi (siluet, bukan foto orang sungguhan).
     public static function avatarPhoto(string $bg, string $fg): string
     {

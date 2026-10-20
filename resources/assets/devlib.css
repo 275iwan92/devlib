@@ -3950,3 +3950,25 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-switcher__bar label{display:flex;flex-direction:column;gap:3px;max-width:340px;font-size:calc(11px * var(--dl-font-scale));font-weight:600;color:var(--dl-ink)}
 .dl-switcher__bar select{font:inherit;padding:6px 8px;border:1px solid var(--dl-border-hover);border-radius:var(--dl-radius);background:var(--dl-surface);color:var(--dl-ink-strong)}
 .dl-switcher__case[hidden]{display:none}
+
+/* Form siklus ketat (:strict, 2026-10-21): cap status pojok kanan atas, Edit/Undo/Save bergantian, isian terkunci berwarna dan bergaya (angka tebal, tanggal miring, terbilang bergaris bawah). */
+.dl-form__stamps{display:inline-flex;gap:6px;margin-left:10px;flex-wrap:wrap}
+.dl-form__stamp{display:inline-block;padding:3px 12px;border:1.5px solid;border-radius:6px;font-size:calc(14px * var(--dl-font-scale));font-weight:700;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+.dl-form__stamp--success{color:var(--dl-success);border-color:var(--dl-success);background:color-mix(in srgb,var(--dl-success) 10%,transparent)}
+.dl-form__stamp--warn{color:var(--dl-amber);border-color:var(--dl-amber-2);background:color-mix(in srgb,var(--dl-amber-2) 14%,transparent)}
+.dl-form__stamp--danger{color:var(--dl-danger);border-color:var(--dl-danger);background:var(--dl-danger-soft)}
+.dl-form__stamp--muted,.dl-form__stamp--neutral{color:var(--dl-muted);border-color:var(--dl-disabled);background:var(--dl-surface-muted)}
+.dl-form__stamp--wait{color:var(--dl-muted);border-style:dashed;border-color:var(--dl-disabled);background:transparent}
+.dl-form--strict:not(.is-editing):not(.is-dirty) .is-edit-only{display:none}
+.dl-form--strict.is-editing .is-view-only{display:none}
+.dl-form--strict.is-view .dl-field--money .dl-input,.dl-form--strict.is-view .dl-field--number .dl-input,.dl-form--strict.is-view .dl-field--decimal .dl-input,.dl-form--strict.is-view .dl-field--number-words .dl-input{font-weight:700;font-size:calc(15px * var(--dl-font-scale))}
+.dl-form--strict.is-view .dl-field--date .dl-input,.dl-form--strict.is-view .dl-field--date-time .dl-input,.dl-form--strict.is-view .dl-field--time .dl-input{font-style:italic}
+.dl-form--strict.is-view .dl-words__text{text-decoration:underline;text-underline-offset:3px}
+.dl-form--tone-success.is-view .dl-input,.dl-form--tone-success.is-view .dl-dd__btn,.dl-form--tone-success.is-view .dl-words__text{color:var(--dl-success)!important;-webkit-text-fill-color:var(--dl-success)}
+.dl-form--tone-danger.is-view .dl-input,.dl-form--tone-danger.is-view .dl-dd__btn,.dl-form--tone-danger.is-view .dl-words__text{color:var(--dl-danger)!important;-webkit-text-fill-color:var(--dl-danger)}
+.dl-form--tone-muted.is-view .dl-input,.dl-form--tone-muted.is-view .dl-dd__btn,.dl-form--tone-muted.is-view .dl-words__text{color:var(--dl-disabled)!important;-webkit-text-fill-color:var(--dl-disabled)}
+.dl-wizard__done{display:flex;flex-direction:column;align-items:center;gap:6px;padding:40px 16px;text-align:center}
+.dl-wizard__done > i{font-size:calc(40px * var(--dl-font-scale));color:var(--dl-success)}
+.dl-wizard__donetitle{font-size:calc(20px * var(--dl-font-scale));font-weight:700;color:var(--dl-ink-strong)}
+.dl-wizard__done p{margin:0 0 10px;color:var(--dl-muted)}
+.dl-wizard__done[hidden],.dl-wizard [hidden]{display:none}

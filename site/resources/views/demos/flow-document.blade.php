@@ -7,12 +7,12 @@
     $tones = ['Draft' => 'neutral', 'Confirmed' => 'success', 'Cancelled' => 'danger', 'Closed' => 'info'];
 @endphp
 <div class="dl-row" style="margin-bottom:8px">
-    <span class="dl-note" style="margin:0">Dokumen:</span>
+    <span class="dl-note" style="margin:0">Document:</span>
     @foreach (['co' => 'Customer Order', 'po' => 'Purchase Order'] as $dk => $dn)
         <x-dl::button size="sm" :variant="$dk === $doc ? 'primary' : 'secondary'" :label="$dn" :href="\App\Support\FlowDemo::gridUrl($slug, $dk)" />
     @endforeach
 </div>
-<p class="dl-note">Klik 2x baris (atau ikon Buka) membuka <b>form dokumen</b> di halaman sendiri, dengan tombol sesuai status barisnya (Draft, Confirmed, Cancelled, Closed). <b>Back</b> kembali ke daftar ini, tetap pada dokumen {{ $co ? 'Customer Order' : 'Purchase Order' }}, pencarian dan halaman yang sama. Confirm / Cancel / Approve tidak ada di grid, hanya di form.</p>
+<p class="dl-note">Contoh #1 <b>Customer Order</b> (Rupiah, pajak, biaya lain), contoh #2 <b>Purchase Order</b>. Klik 2x baris (atau ikon Buka) membuka <b>form dokumen</b> di halaman sendiri; <b>Save</b> dan <b>Confirm</b> tetap di form, hanya <b>Back</b> kembali ke daftar ini pada dokumen yang sama. Confirm / Cancel tidak ada di grid, hanya di form.</p>
 @if ($co)
     <x-dl::grid id="flow-co" kind="transactional" restore :rows="\App\Support\DemoData::customerOrders()" search="Cari no. CO, customer..."
         :open-url="\App\Support\FlowDemo::formUrl($slug, '{id}', $doc, $from)" :new-url="\App\Support\FlowDemo::formUrl($slug, 'new', $doc, $from)"

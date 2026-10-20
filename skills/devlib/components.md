@@ -396,7 +396,7 @@ Isi kotak Lupa Password. mode="email" (mockup forgot-password.html): isi email -
 ## `<x-dl::form>`
 Induk form (mockup UIUX_components_part1.html): judul + isi (kolom/baris field) + kaki berisi tombol tambahan opsional dan tombol split aksi.
 - Berkas: `src/Components/Form.php`
-- Prop: title:string='', action:?string=NULL, method:string='POST', actions:array=[…], extraAction:?string=NULL, extraIcon:string='📱', footer:bool=true, guard:bool=true, mode:string='edit', panel:?string=NULL, back:?string=NULL, newUrl:?string=NULL, kind:string='master', status:string='active', tabs:array=[], createdBy:?string=NULL, createdAt:?string=NULL, updatedBy:?string=NULL, updatedAt:?string=NULL, canReopen:bool=false, canInput:bool=true, subtitle:?string=NULL, pipeline:?bool=NULL, log:array=[], approvalLevels:int=0, approvalAt:int=0, canApprove:bool=false, actionField:string='_action', hide:array=[], hidden:array=[], stage:?string=NULL, printUrl:?string=NULL
+- Prop: title:string='', action:?string=NULL, method:string='POST', actions:array=[…], extraAction:?string=NULL, extraIcon:string='📱', footer:bool=true, guard:bool=true, mode:string='edit', panel:?string=NULL, back:?string=NULL, newUrl:?string=NULL, kind:string='master', status:string='active', tabs:array=[], createdBy:?string=NULL, createdAt:?string=NULL, updatedBy:?string=NULL, updatedAt:?string=NULL, canReopen:bool=false, canInput:bool=true, subtitle:?string=NULL, pipeline:?bool=NULL, log:array=[], approvalLevels:int=0, approvalAt:int=0, canApprove:bool=false, actionField:string='_action', hide:array=[], hidden:array=[], stage:?string=NULL, printUrl:?string=NULL, strict:bool=false, approval:?string=NULL, deletable:bool=false, otpUrl:?string=NULL
 
 ## `<x-dl::form.col>`
 Satu kolom form: field disusun ke bawah.
@@ -851,7 +851,7 @@ Papan widget (opening screen yang bisa diatur pemiliknya): kisi 12 kolom berisi 
 ## `<x-dl::wizard>`
 Form bertahap. Isi = beberapa x-dl::wizard.step. Next mengecek isian wajib langkah itu;.
 - Berkas: `src/Components/Wizard.php`
-- Prop: title:string='', action:?string=NULL, review:bool=true, finishLabel:string='Finish'
+- Prop: title:string='', action:?string=NULL, review:bool=true, finishLabel:string='Finish', done:?string=NULL
 
 ## `<x-dl::wizard-option>`
 Satu baris pilihan di wizard dalam modal (emoji + judul + penjelasan + tombol aksi), mis. langkah jenis / sumber data.

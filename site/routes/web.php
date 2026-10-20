@@ -110,7 +110,7 @@ Route::middleware('devlib.auth')->group(function () {
         }
         $page = Catalog::page($slug);
         $demo = FlowDemo::demo($slug, $doc);
-        $name = $row ? ($row['name'] ?? $row['co_no'] ?? $row['po_no']) : 'New';
+        $name = $row ? ($row['name'] ?? $row['co_no'] ?? $row['po_no'] ?? $row['cv_no']) : 'New';
         $label = ['co' => 'Customer Order', 'po' => 'Purchase Order'][$doc] ?? FlowDemo::title($slug);
         $page = [
             'label' => $label.' · '.$name,
@@ -122,7 +122,8 @@ Route::middleware('devlib.auth')->group(function () {
             'page' => $page,
             'code' => file_get_contents(resource_path("views/demos/{$demo}.blade.php")),
             // row = isi yang ditampilkan: baris yang dibuka, atau sumber salinan (?copy=) pada form baru hasil Duplicate.
-            'data' => $libData() + ['flow' => ['slug' => $slug, 'id' => $id, 'doc' => $doc, 'back' => $back, 'status' => FlowDemo::status($doc, $row),
+            'data' => $libData() + ['flow' => ['slug' => $slug, 'id' => $id, 'doc' => $doc, 'back' => $back, 'status' => FlowDemo::status($slug, $doc, $row),
+                'approval' => $r->query('approval', $row['approval'] ?? null), 'as' => $r->query('as'),
                 'row' => $row ?? ($r->filled('copy') ? FlowDemo::row($slug, $doc, (string) $r->query('copy')) : null)]],
         ]);
     })->where('id', '[A-Za-z0-9_-]+')->name('lib.flow.form');

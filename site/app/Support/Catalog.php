@@ -88,29 +88,12 @@ final class Catalog
                     'basic-locale' => $basic('Locale & Formats', 'fa-solid fa-earth-asia'),
                 ] + self::feedbackCategories() + self::behaviorCategories()],
             ['code' => 'IN', 'short' => 'IN', 'label' => 'Inputs & Buttons', 'icon' => 'fa-solid fa-i-cursor', 'pages' => self::smallCategories()],
-            // Grid, Form, Dokumen = 3 menu terpisah (user 2026-09-26) supaya breadcrumb menunjukkan keluarganya.
-            ['code' => 'GR', 'short' => 'GR', 'label' => 'Grid', 'icon' => 'fa-solid fa-table',
+            // Grid and Form (user 2026-10-21, rancangan: skills/devlib/grid-form-flow.md): SATU grup, pohon dua tingkat lewat 'folder' + 'subfolder'.
+            //   Grid Report (tanpa form) | Grid Pre-Entry > Transactional (Master-Detail, Single, Approval) | Master | Lookup | Form Wizard (tanpa grid).
+            //   Ujung pohon = halaman alur hidup (grid -> klik baris -> form -> Back). 'menu' => false = halaman tetap hidup lewat alamat/tautan tetapi tidak
+            //   di menu (halaman APPROVED lama tidak diubah, user 2026-10-21 butir 11).
+            ['code' => 'GR', 'short' => 'GR', 'label' => 'Grid and Form', 'icon' => 'fa-solid fa-table',
                 'pages' => [
-                    // Pohon menu Grid (user 2026-09-30): Grid Pre-Entry (Transactional | Master | Lookup), Grid Report,
-                    // Grid Variant. 'folder' = submenu Layer Menu tempat halaman ini berada.
-                    // Transactional = pintu ke dokumen: rapat, Aksi tanpa judul di kiri, ikon tanpa kotak, centang hanya bila ada bulk.
-                    // Grid Master = sama persis dengan Transactional, beda satu: kotak di tiap baris (image, tanpa image -> 2 huruf),
-                    // sehingga kerapatan normal (bukan rapat).
-                    'p5-grid-tx' => $page('Grid Transactional', 'fa-solid fa-file-invoice', [
-                        'grid-worklist' => ['Grid Transactional (worklist dokumen)', $c('Grid')],
-                    ], 'grid_kerapatan_baris.html') + ['folder' => 'Grid Pre-Entry'],
-                    'p5-grid-master' => $page('Grid Master', 'fa-solid fa-address-book', [
-                        'grid-master' => ['Grid Master (box per row: image or 2-letter initials)', $c('Grid')],
-                    ], 'grid_kerapatan_baris.html') + ['folder' => 'Grid Pre-Entry'],
-                    // Grid Lookup (user 2026-09-30, dulu Grid Special): daftar bantu kecil yang jarang berubah, diisi langsung di sel.
-                    'p5-grid-lookup' => $page('Grid Lookup', 'fa-solid fa-list-check', [
-                        'grid-lookup' => ['Grid Lookup (edit in cell: Religion)', $c('LookupGrid')],
-                        'grid-lookup-decimal' => ['Grid Lookup (decimal columns: 1.250.000,50)', $c('LookupGrid')],
-                        'grid-lookup-date' => ['Grid Lookup (date column: Holidays, 17-Aug-2026)', $c('LookupGrid')],
-                        'grid-lookup-time' => ['Grid Lookup (time column: Work Shifts, 07:00)', $c('LookupGrid')],
-                        'grid-lookup-locked' => ['Grid Lookup (code locked once saved: Supplier Category)', $c('LookupGrid')],
-                    ]) + ['folder' => 'Grid Pre-Entry'],
-                    // Grid Report = submenu, 1 halaman per varian (user 2026-09-30).
                     'p5-grid-report' => $page('Grid Report List', 'fa-solid fa-table-list', [
                         'grid-report' => ['Grid Report List (compact, thousands of rows, Filter pop-up)', $c('Grid')],
                     ]) + ['folder' => 'Grid Report'],
@@ -123,7 +106,7 @@ final class Catalog
                     'p5-grid-pivot' => $page('Grid Pivot', 'fa-solid fa-table-cells-large', [
                         'grid-pivot' => ['Grid Pivot (rows × columns × values)', $c('Pivot')],
                     ]) + ['folder' => 'Grid Report'],
-                    // Grid Variant (user 2026-09-30): grid lain yang sudah dibuat tapi belum masuk salah satu keluarga di atas.
+                    // Variant: isi belum ditinjau ulang (user 2026-10-21: "skip dulu"), hanya pindah ke Grid Report.
                     'p5-grid-variant' => $page('Grid Variant', 'fa-solid fa-shapes', [
                         'grid-master-detail' => ['Grid Master-Detail (expand row = items)', $c('Grid')],
                         'grid-status' => ['Grid with Status Bar (stages + progress)', $c('Grid')],
@@ -131,35 +114,49 @@ final class Catalog
                         'grid-mix' => ['Grid with Mix Component', $c('Grid')],
                         'grid-sheet' => ['Grid Spreadsheet (bulk edit, Excel copy/paste, drag-fill)', $c('Sheet')],
                         'grid-coverage' => ['Grid Coverage (matrix: rows x document types, status chips, expand = details)', $c('Coverage')],
-                    ]),
-                ]],
-            // Grid + Form (user 2026-10-20): grid dan form dalam satu menu. Dua halaman alur teratas (grid -> form di halaman sendiri -> Back/Save
-            // kembali ke grid; skills/devlib/grid-form-flow.md) belum ditinjau user, jadi BUKAN di APPROVED; halaman form di bawahnya tetap slug lama.
-            ['code' => 'FM', 'short' => 'FM', 'label' => 'Grid + Form', 'icon' => 'fa-solid fa-pen-to-square',
-                'pages' => [
-                    'p5-flow-master' => $page('Master Data · Grid → Form', 'fa-solid fa-address-book', [
-                        'flow-master' => ['Master Data flow: Employee grid → Single Form → Save / Back to the grid', $c('Grid', 'Form', 'Tabs')],
+                    ]) + ['folder' => 'Grid Report'],
+                    // Transactional: grid kerapatan rapat, tanpa kotak per baris; form = siklus ketat (Draft/Confirmed/Cancelled), Rupiah.
+                    'p5-flow-document' => $page('Master-Detail', 'fa-solid fa-file-signature', [
+                        'flow-document' => ['Master-Detail flow: Customer Order (#1) / Purchase Order (#2) grid → Form Master-Detail → Edit / Confirm / Cancel / Print → Back to the grid', $c('Grid', 'Form', 'Lines')],
+                    ], 'UIUX_components_part1.html') + ['folder' => 'Grid Pre-Entry', 'subfolder' => 'Transactional'],
+                    'p5-flow-single' => $page('Single', 'fa-solid fa-money-bill-wave', [
+                        'flow-single' => ['Single flow: Cash Voucher grid → Single Form (one record, no lines) → Edit / Confirm / Cancel / Print → Back to the grid', $c('Grid', 'Form')],
+                    ], 'UIUX_components_part1.html') + ['folder' => 'Grid Pre-Entry', 'subfolder' => 'Transactional'],
+                    'p5-flow-approval' => $page('Approval', 'fa-solid fa-stamp', [
+                        'flow-approval' => ['Approval flow: grid of confirmed orders awaiting a decision → Form with Approve / Hold / Reject (OTP to reverse a rejection) → Back to the grid', $c('Grid', 'Form', 'Lines')],
+                    ], 'mockup_po_approval_center.html') + ['folder' => 'Grid Pre-Entry', 'subfolder' => 'Transactional'],
+                    'p5-flow-master' => $page('Master', 'fa-solid fa-address-book', [
+                        'flow-master' => ['Master flow: Employee grid → Master Form (Active / Inactive, no Confirm) → Edit / Deactivate → Back to the grid', $c('Grid', 'Form', 'Tabs')],
+                    ], 'UIUX_components_part1.html') + ['folder' => 'Grid Pre-Entry'],
+                    // Grid Lookup (user 2026-09-30, dulu Grid Special): daftar bantu kecil yang jarang berubah, diisi langsung di sel (tanpa form).
+                    'p5-grid-lookup' => $page('Grid Lookup', 'fa-solid fa-list-check', [
+                        'grid-lookup' => ['Grid Lookup (edit in cell: Religion)', $c('LookupGrid')],
+                        'grid-lookup-decimal' => ['Grid Lookup (decimal columns: 1.250.000,50)', $c('LookupGrid')],
+                        'grid-lookup-date' => ['Grid Lookup (date column: Holidays, 17-Aug-2026)', $c('LookupGrid')],
+                        'grid-lookup-time' => ['Grid Lookup (time column: Work Shifts, 07:00)', $c('LookupGrid')],
+                        'grid-lookup-locked' => ['Grid Lookup (code locked once saved: Supplier Category)', $c('LookupGrid')],
+                    ]) + ['folder' => 'Grid Pre-Entry'],
+                    // Form Wizard: berdiri sendiri, tanpa grid (user 2026-10-21).
+                    'p5-form-wizard' => $page('Form Wizard', 'fa-solid fa-shoe-prints', [
+                        'wizard-customer' => ['Form Wizard (step by step; Finish = Done screen, no Back)', $c('Wizard', 'Wizard\\Step')],
                     ], 'UIUX_components_part1.html'),
-                    'p5-flow-document' => $page('Document · Grid → Form', 'fa-solid fa-file-signature', [
-                        'flow-document' => ['Document flow: Customer Order / Purchase Order grid → Form Master-Detail → Confirm / Cancel / Print → Back to the grid', $c('Grid', 'Form', 'Lines')],
-                    ], 'UIUX_components_part1.html'),
-                    // Single Form (user 2026-09-30): SATU contoh -- Edit Pegawai, tab + bagian read-only + panel aksi di atas + tab Riwayat.
+                    // Halaman lama (APPROVED / terkunci): tidak diubah, hanya keluar dari menu.
+                    'p5-grid-tx' => $page('Grid Transactional', 'fa-solid fa-file-invoice', [
+                        'grid-worklist' => ['Grid Transactional (worklist dokumen)', $c('Grid')],
+                    ], 'grid_kerapatan_baris.html') + ['menu' => false],
+                    'p5-grid-master' => $page('Grid Master', 'fa-solid fa-address-book', [
+                        'grid-master' => ['Grid Master (box per row: image or 2-letter initials)', $c('Grid')],
+                    ], 'grid_kerapatan_baris.html') + ['menu' => false],
                     'p5-form-single' => $page('Single Form', 'fa-solid fa-pen-to-square', [
                         'form-single' => ['Single Form · Edit Employee (tabs, read-only, action panel on top)', $c('Form', 'Tabs')],
-                    ], 'UIUX_components_part1.html'),
+                    ], 'UIUX_components_part1.html') + ['menu' => false],
                     'p5-form-md' => $page('Form Master-Detail', 'fa-solid fa-file-invoice', [
                         'form-md' => ['1 · Customer Order (key summary, header tabs, details in the middle, footer totals)', $c('Form', 'Lines')],
                         'form-md-po' => ['2 · Purchase Order (same frame, supplier side)', $c('Form', 'Lines')],
-                    ], 'UIUX_components_part1.html'),
-                    // Form Approval (user 2026-09-30) = Approval Center (dulu Documents > Approval): hanya-baca, detail dokumen
-                    // + alur berjenjang + riwayat; aksi cuma Approve / Reject / Hold (alasan diminta di dialog).
+                    ], 'UIUX_components_part1.html') + ['menu' => false],
                     'p5-form-approval' => $page('Form Approval', 'fa-solid fa-stamp', [
                         'approval-po' => ['Approval Center PO (read-only details, Approve / Reject / Hold)', $c('Approval')],
-                    ], 'mockup_po_approval_center.html'),
-                    // Form Wizard = submenu sendiri, sejajar Single & Master-Detail (user 2026-09-30).
-                    'p5-form-wizard' => $page('Form Wizard', 'fa-solid fa-shoe-prints', [
-                        'wizard-customer' => ['Form Wizard (step by step)', $c('Wizard', 'Wizard\\Step')],
-                    ], 'UIUX_components_part1.html'),
+                    ], 'mockup_po_approval_center.html') + ['menu' => false],
                 ]],
             ['code' => 'DK', 'short' => 'DK', 'label' => 'Documents', 'icon' => 'fa-solid fa-file-lines',
                 'pages' => [
@@ -244,7 +241,7 @@ final class Catalog
         foreach ($groups as &$g) {
             foreach ($g['pages'] as &$p) {
                 $p['part'] = $g['label'];
-                $p['trail'] = array_values(array_filter([$g['label'], $p['folder'] ?? null]));
+                $p['trail'] = array_values(array_filter([$g['label'], $p['folder'] ?? null, $p['subfolder'] ?? null]));
             }
         }
 
@@ -403,6 +400,9 @@ final class Catalog
         foreach (self::groups() as $g) {
             $items = [];
             foreach ($g['pages'] as $slug => $p) {
+                if (($p['menu'] ?? true) === false) {
+                    continue;
+                }
                 $item = ['code' => 'P-'.$slug, 'label' => $p['label'], 'icon' => $p['icon'], 'url' => route('lib', ['slug' => $slug]),
                     'type' => 'form'] + $mark($slug);
                 if (! isset($p['folder'])) {
@@ -410,13 +410,23 @@ final class Catalog
 
                     continue;
                 }
-                // Halaman ber-folder dikumpulkan jadi satu submenu (posisi = halaman pertamanya).
+                // Halaman ber-folder dikumpulkan jadi submenu (posisi = halaman pertamanya); 'subfolder' = submenu di dalam folder.
                 $at = array_search($p['folder'], array_column($items, 'label'), true);
                 if ($at === false) {
-                    $items[] = ['label' => $p['folder'], 'icon' => $p['folderIcon'] ?? 'fa-solid fa-folder', 'items' => [$item]];
-                } else {
-                    $items[$at]['items'][] = $item;
+                    $items[] = ['label' => $p['folder'], 'icon' => $p['folderIcon'] ?? 'fa-solid fa-folder', 'items' => []];
+                    $at = array_key_last($items);
                 }
+                if (! isset($p['subfolder'])) {
+                    $items[$at]['items'][] = $item;
+
+                    continue;
+                }
+                $sub = array_search($p['subfolder'], array_column($items[$at]['items'], 'label'), true);
+                if ($sub === false) {
+                    $items[$at]['items'][] = ['label' => $p['subfolder'], 'icon' => 'fa-solid fa-folder', 'items' => []];
+                    $sub = array_key_last($items[$at]['items']);
+                }
+                $items[$at]['items'][$sub]['items'][] = $item;
             }
             $modules[] = ['code' => $g['code'], 'short' => $g['short'], 'label' => $g['label'], 'icon' => $g['icon'], 'children' => $items]; // langsung isi modul, tanpa lapis "Components" (user 2026-09-30: membingungkan)
         }

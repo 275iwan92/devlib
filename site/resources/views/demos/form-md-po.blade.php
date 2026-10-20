@@ -4,6 +4,12 @@
     $me = 'po';
     // Alur Grid -> Form (rute /lib/p5-flow-document/form/{id}): $flow ada, aksi dikirim POST ke rute alur; tanpa $flow = halaman katalog biasa (GET ke diri sendiri).
     $flow ??= null;
+    // Siklus ketat (user 2026-10-21): hanya saat dibuka dari alur; halaman katalog lama (p5-form-md) tetap seperti semula.
+    $fs = $flow['slug'] ?? 'p5-flow-document';
+    $fdoc = $flow['doc'] ?? $me;
+    $roles = ['entry' => 'Creator', 'manager' => 'Approver', 'admin-app' => 'Administrator'];
+    $as = array_key_exists(request('as'), $roles) ? request('as') : ($fs === 'p5-flow-approval' ? 'manager' : 'entry');
+    $canApprove = $flow && $as === \App\Support\FlowDemo::APPROVER;
     $act = $flow ? null : (request('doc') === $me ? request('_action') : null);
     $status = match ($act) {
         'confirm' => 'confirmed', 'draft', 'save' => 'draft', 'cancel' => 'cancelled', 'delete', 'duplicate' => 'new',
@@ -11,6 +17,7 @@
     };
     $here = url()->current();
     $isNew = $status === 'new';
+    $apv = $flow && $status === 'confirmed' ? request('approval', $flow['approval'] ?? null) : null;
     $dup = $flow ? request()->filled('copy') : $act === 'duplicate';
     $blank = $isNew && ! $dup;
     // Log riwayat (History): contoh isi -- di aplikasi pemakai dari system.doc_state_log + audit perubahan. Terbaru di atas.
@@ -40,17 +47,30 @@
     $v = fn ($k) => $blank ? null : ($po[$k] ?? null);
     $suppliers = ['PT Contoh Kertas Jaya' => 'PT Contoh Kertas Jaya', 'CV Tinta Nusantara' => 'CV Tinta Nusantara', 'PT Karton Abadi' => 'PT Karton Abadi', 'UD Lem Sejahtera' => 'UD Lem Sejahtera', 'PT Plat Offset Prima' => 'PT Plat Offset Prima'];
     $warehouses = ['GD-BB' => 'GD-BB · Bahan Baku', 'GD-TNT' => 'GD-TNT · Tinta & Kimia', 'GD-SP' => 'GD-SP · Sparepart'];
+    $defaults = ['currency' => 'IDR', 'rate' => 1, 'term' => 'NET30', 'warehouse' => 'GD-BB', 'supplier' => array_key_first($suppliers)];
+    $v = fn ($k) => $blank ? ($flow ? ($defaults[$k] ?? null) : null) : ($po[$k] ?? null);
 @endphp
+@if ($flow && $fs === 'p5-flow-approval')
+    <div class="dl-row" style="margin-bottom:8px">
+        <span class="dl-note" style="margin:0">Simulate login as:</span>
+        @foreach ($roles as $rk => $rl)
+            <x-dl::button size="sm" :variant="$rk === $as ? 'primary' : 'secondary'" :label="$rl" :href="\App\Support\FlowDemo::formUrl($fs, $flow['id'], $fdoc, $flow['back'], ['status' => $status, 'approval' => $apv, 'as' => $rk])" />
+        @endforeach
+        <span class="dl-note" style="margin:0">Only the Approver decides. To reverse a REJECTED order the Approver needs an OTP code issued by an Administrator. @if ($as === 'admin-app' && $apv === 'rejected')Demo code for this order: <b>{{ \App\Support\FlowDemo::OTP_DEMO }}</b>@endif</span>
+    </div>
+@endif
+@unless ($flow && $fs === 'p5-flow-approval')
 <div class="dl-row" style="margin-bottom:8px">
     <span class="dl-note" style="margin:0">Lihat status:</span>
     @foreach (['draft' => 'Draft', 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled', 'closed' => 'Closed'] as $sk => $sl)
-        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="$flow ? \App\Support\FlowDemo::formUrl('p5-flow-document', $flow['id'], $me, $flow['back'], ['status' => $sk]) : $here.'?'.$me.'_status='.$sk.'#form-md-po'" />
+        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="$flow ? \App\Support\FlowDemo::formUrl($fs, $flow['id'], $fdoc, $flow['back'], ['status' => $sk, 'as' => $as]) : $here.'?'.$me.'_status='.$sk.'#form-md-po'" />
     @endforeach
 </div>
+@endunless
 <x-dl::form :title="$isNew ? 'Purchase Order · New'.($dup ? ' (copy of '.$po['po_no'].')' : '') : 'Purchase Order · '.$po['po_no']" :subtitle="$blank ? null : $po['supplier']"
-    panel="top" kind="document" :status="$status" :pipeline="true" :can-reopen="true" :log="$log"
+    panel="top" kind="document" :status="$status" :pipeline="true" :can-reopen="true" :strict="(bool) $flow" :approval="$apv" :can-approve="$canApprove" :otp-url="$flow ? url()->current() : null" :print-url="$flow ? route('lib', ['slug' => 'p5-print-doc']) : null" :log="$log"
     :action="$flow ? $here : $here.'#form-md-po'" :method="$flow ? 'POST' : 'GET'" :back="$flow['back'] ?? \App\Support\FlowDemo::gridUrl('p5-flow-document', $me)"
-    :new-url="$flow ? \App\Support\FlowDemo::formUrl('p5-flow-document', 'new', $me, $flow['back']) : $here.'?'.$me.'_new=1#form-md-po'" :hidden="['doc' => $me] + ($flow ? ['status' => $status, 'from' => $flow['back']] : [])"
+    :new-url="$flow ? \App\Support\FlowDemo::formUrl($fs, 'new', $fdoc, $flow['back']) : $here.'?'.$me.'_new=1#form-md-po'" :hidden="['doc' => $fdoc] + ($flow ? ['status' => $status, 'from' => $flow['back'], 'as' => $as] + ($apv ? ['approval' => $apv] : []) : [])"
     :tabs="['general' => 'General', 'party' => 'Supplier', 'finance' => 'Finance', 'delivery' => 'Delivery', 'files' => 'Attachments & Notes']"
     :created-by="$isNew ? null : 'siti'" :created-at="$isNew ? null : '2026-09-02 08:12:00'"
     :updated-by="$isNew ? null : ($act ? 'budi' : 'siti')" :updated-at="$isNew ? null : ($act ? now()->format('Y-m-d H:i:s') : '2026-09-02 09:40:00')">
@@ -99,14 +119,14 @@
     <x-slot:files>
         <x-dl::form.row>
             <x-dl::field.upload name="quote_file" label="Penawaran Supplier (PDF)" accept="application/pdf" />
-            <x-dl::field.text name="po_internal" label="Note Internal" multiline />
+            <x-dl::field.text name="po_internal" label="Note Internal" multiline :value="$v('po_internal')" />
         </x-dl::form.row>
         <x-dl::form.row>
             <x-dl::field.text name="note" label="Catatan untuk Supplier (tercetak di PO)" multiline :value="$v('note')" />
         </x-dl::form.row>
     </x-slot:files>
     <x-slot:detail>
-        <x-dl::lines name="po_lines" title="Details" add-label="+ Add Line" :rows="$blank ? [] : $po['lines']" :min-rows="$blank ? 1 : 0" :readonly="in_array($status, ['confirmed', 'cancelled', 'closed'], true)"
+        <x-dl::lines name="po_lines" :row-state="(bool) $flow" title="Details" add-label="+ Add Line" :rows="$blank ? [] : $po['lines']" :min-rows="$blank ? 1 : 0" :readonly="in_array($status, ['confirmed', 'cancelled', 'closed'], true)"
             :totals="['of' => 'subtotal', 'discount' => true, 'ppn' => 11, 'costs' => ['trucking' => 'Trucking / Freight', 'insurance' => 'Insurance / Asuransi', 'handling' => 'Handling / Bongkar Muat', 'brokerage' => 'Customs Clearance (PPJK)', 'port' => 'Port & Storage Charges', 'admin' => 'Administrasi / Materai', 'other' => 'Biaya Lain'], 'landed' => true]"
             :columns="[
                 ['key' => 'item', 'label' => 'Item', 'type' => 'lookup', 'lookup' => 'item', 'required' => true, 'width' => '240px'],

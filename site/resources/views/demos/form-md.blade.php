@@ -7,6 +7,12 @@
     $me = 'co';
     // Alur Grid -> Form (rute /lib/p5-flow-document/form/{id}): $flow ada, aksi dikirim POST ke rute alur; tanpa $flow = halaman katalog biasa (GET ke diri sendiri).
     $flow ??= null;
+    // Siklus ketat (user 2026-10-21): hanya saat dibuka dari alur; halaman katalog lama (p5-form-md) tetap seperti semula.
+    $fs = $flow['slug'] ?? 'p5-flow-document';
+    $fdoc = $flow['doc'] ?? $me;
+    $roles = ['entry' => 'Creator', 'manager' => 'Approver', 'admin-app' => 'Administrator'];
+    $as = array_key_exists(request('as'), $roles) ? request('as') : ($fs === 'p5-flow-approval' ? 'manager' : 'entry');
+    $canApprove = $flow && $as === \App\Support\FlowDemo::APPROVER;
     $act = $flow ? null : (request('doc') === $me ? request('_action') : null);
     $status = match ($act) {
         'confirm' => 'confirmed', 'draft', 'save' => 'draft', 'cancel' => 'cancelled', 'delete', 'duplicate' => 'new',
@@ -14,6 +20,7 @@
     };
     $here = url()->current();
     $isNew = $status === 'new';
+    $apv = $flow && $status === 'confirmed' ? request('approval', $flow['approval'] ?? null) : null;
     $dup = $flow ? request()->filled('copy') : $act === 'duplicate';
     $blank = $isNew && ! $dup;
     // Log riwayat (History): contoh isi -- di aplikasi pemakai dari system.doc_state_log + audit perubahan. Terbaru di atas.
@@ -44,17 +51,31 @@
     if ($flow && $flow['row']) {
         $customers[$flow['row']['customer']] = $flow['row']['customer'];
     }
+    // Record baru: isian TIDAK kosong, nilai bawaan yang masuk akal (hanya yang harus dipilih pengguna dibiarkan kosong).
+    $defaults = ['currency' => 'IDR', 'rate' => 1, 'pay' => 'NET30', 'ship' => 'DELIVER', 'courier' => 'Armada sendiri', 'customer' => array_key_first($customers), 'consignee' => array_key_first($customers)];
+    $v = fn ($k) => $blank ? ($flow ? ($defaults[$k] ?? null) : null) : ($co[$k] ?? null);
 @endphp
+@if ($flow && $fs === 'p5-flow-approval')
+    <div class="dl-row" style="margin-bottom:8px">
+        <span class="dl-note" style="margin:0">Simulate login as:</span>
+        @foreach ($roles as $rk => $rl)
+            <x-dl::button size="sm" :variant="$rk === $as ? 'primary' : 'secondary'" :label="$rl" :href="\App\Support\FlowDemo::formUrl($fs, $flow['id'], $fdoc, $flow['back'], ['status' => $status, 'approval' => $apv, 'as' => $rk])" />
+        @endforeach
+        <span class="dl-note" style="margin:0">Only the Approver decides. To reverse a REJECTED order the Approver needs an OTP code issued by an Administrator. @if ($as === 'admin-app' && $apv === 'rejected')Demo code for this order: <b>{{ \App\Support\FlowDemo::OTP_DEMO }}</b>@endif</span>
+    </div>
+@endif
+@unless ($flow && $fs === 'p5-flow-approval')
 <div class="dl-row" style="margin-bottom:8px">
     <span class="dl-note" style="margin:0">Lihat status:</span>
     @foreach (['draft' => 'Draft', 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled', 'closed' => 'Closed'] as $sk => $sl)
-        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="$flow ? \App\Support\FlowDemo::formUrl('p5-flow-document', $flow['id'], $me, $flow['back'], ['status' => $sk]) : $here.'?'.$me.'_status='.$sk.'#form-md'" />
+        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="$flow ? \App\Support\FlowDemo::formUrl($fs, $flow['id'], $fdoc, $flow['back'], ['status' => $sk, 'as' => $as]) : $here.'?'.$me.'_status='.$sk.'#form-md'" />
     @endforeach
 </div>
+@endunless
 <x-dl::form :title="$isNew ? 'Customer Order · New'.($dup ? ' (copy of '.$co['co_no'].')' : '') : 'Customer Order · '.$co['co_no']" :subtitle="$blank ? null : $co['customer']"
-    panel="top" kind="document" :status="$status" :pipeline="true" :can-reopen="true" :log="$log"
+    panel="top" kind="document" :status="$status" :pipeline="true" :can-reopen="true" :strict="(bool) $flow" :approval="$apv" :can-approve="$canApprove" :otp-url="$flow ? url()->current() : null" :print-url="$flow ? route('lib', ['slug' => 'p5-print-doc']) : null" :log="$log"
     :action="$flow ? $here : $here.'#form-md'" :method="$flow ? 'POST' : 'GET'" :back="$flow['back'] ?? \App\Support\FlowDemo::gridUrl('p5-flow-document', $me)"
-    :new-url="$flow ? \App\Support\FlowDemo::formUrl('p5-flow-document', 'new', $me, $flow['back']) : $here.'?'.$me.'_new=1#form-md'" :hidden="['doc' => $me] + ($flow ? ['status' => $status, 'from' => $flow['back']] : [])"
+    :new-url="$flow ? \App\Support\FlowDemo::formUrl($fs, 'new', $fdoc, $flow['back']) : $here.'?'.$me.'_new=1#form-md'" :hidden="['doc' => $fdoc] + ($flow ? ['status' => $status, 'from' => $flow['back'], 'as' => $as] + ($apv ? ['approval' => $apv] : []) : [])"
     :tabs="['general' => 'General', 'party' => 'Customer', 'finance' => 'Finance', 'delivery' => 'Delivery', 'files' => 'Attachments & Notes']"
     :created-by="$isNew ? null : 'carrij'" :created-at="$isNew ? null : '2026-09-30 08:12:00'"
     :updated-by="$isNew ? null : ($act ? 'budi' : 'carrij')" :updated-at="$isNew ? null : ($act ? now()->format('Y-m-d H:i:s') : '2026-09-30 09:40:00')">
@@ -113,7 +134,7 @@
         </x-dl::form.row>
     </x-slot:files>
     <x-slot:detail>
-        <x-dl::lines name="lines" title="Details" add-label="+ Add Line" :rows="$blank ? [] : $co['lines']" :min-rows="$blank ? 1 : 0" :readonly="in_array($status, ['confirmed', 'cancelled', 'closed'], true)"
+        <x-dl::lines name="lines" :row-state="(bool) $flow" title="Details" add-label="+ Add Line" :rows="$blank ? [] : $co['lines']" :min-rows="$blank ? 1 : 0" :readonly="in_array($status, ['confirmed', 'cancelled', 'closed'], true)"
             :totals="['of' => 'subtotal', 'discount' => true, 'ppn' => 11, 'costs' => ['trucking' => 'Trucking / Ongkos Angkut', 'packing' => 'Packing / Palet', 'plate' => 'Plate & Pisau (Tooling)', 'insurance' => 'Asuransi Pengiriman', 'admin' => 'Administrasi / Materai', 'other' => 'Biaya Lain']]"
             :columns="[
                 ['key' => 'product', 'label' => 'Product', 'type' => 'lookup', 'lookup' => 'product', 'required' => true, 'width' => '260px'],

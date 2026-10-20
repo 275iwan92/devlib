@@ -13,11 +13,24 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   header REMARK, CSS token, manifest, tes kontrak, halaman katalog), aturan baku, cara mewariskan, uji layak jadi object, dan versi. Butir yang belum
   punya aturan tertulis ditandai **BELUM ADA ATURAN**. Ditautkan dari `SKILL.md`.
 
+- **Menu "Grid and Form" dan siklus form ketat** (opt-in, aturan pemilik 2026-10-21; rinci `skills/devlib/grid-form-flow.md`).
+  `x-dl::form` menerima `:strict`: record baru = Undo + Save (Draft, atau Active untuk master, isian bawaan terisi); tersimpan = terkunci, **Edit** membuka
+  isian (Save + Undo); Save dan Confirm tetap di form; Delete (Yes/No) dan Back kembali ke grid; tanpa New / Email / Back to Draft; cap status dokumen
+  dan approval di pojok kanan atas; isian terkunci berwarna dan bergaya (angka dan total tebal + lebih besar, terbilang bergaris bawah, tanggal miring).
+  `:approval` = field TERPISAH dari status (`waiting|approved|hold|rejected`, hanya saat Confirmed): Cancel pembuat hanya sebelum diputuskan, APPROVED hanya
+  bisa menjadi REJECTED, REJECTED hanya tampil di tab Rejected, Duplicate oleh pembuat, REJECTED → APPROVED oleh pemeriksa dengan OTP (`:otp-url`; dialog OTP
+  lewat `Devlib.confirm({otp:true})`; penerbitan OTP urusan proyek). Master: `:deletable` (Delete hanya administrator untuk data yang belum dipakai). Aturan lint F110.
+  `x-dl::wizard` menerima `:done` (layar Done + Start again, tanpa Back). Tanpa `:strict` / `:approval` / `:done` perilaku lama tidak berubah.
+  Situs acuan: grup menu "Grid and Form" (pohon dua tingkat: Grid Report | Grid Pre-Entry > Transactional (Master-Detail, Single, Approval), Master, Lookup | Form
+  Wizard), halaman baru `p5-flow-single` (Cash Voucher) dan `p5-flow-approval`, contoh Master-Detail Customer Order lalu Purchase Order. Halaman APPROVED lama
+  (`p5-grid-tx`, `p5-grid-master`, `p5-form-single`, `p5-form-md`, `p5-form-approval`) tidak diubah dan hanya keluar dari menu.
+  Belum ada: Export XLSX di toolbar grid (Export grid masih CSV saja).
+
 - **Alur Grid → Form → kembali** (opt-in). `x-dl::grid` menerima `restore`: cari, halaman, dan kotak statistik disimpan saat form dibuka lewat
   `openUrl` / `newUrl` dan dipulihkan sekali saat kembali; `?hl=<id>` menyorot baris yang baru disimpan (halaman diloncati). `boot.js` menampilkan
   `<div hidden data-dl-flash="success|danger|warn|info">` sebagai toast sekali muncul. Tanpa `restore` dan tanpa elemen itu perilaku lama tidak berubah.
   Aturan baku urutan layar, tombol, tujuan, dirty guard dan galat: `skills/devlib/grid-form-flow.md`.
-  Situs acuan: grup menu "Grid + Form" dengan alur `p5-flow-master` (grid pegawai → Single Form) dan `p5-flow-document` (grid CO / PO → Form
+  Situs acuan: alur `p5-flow-master` (grid pegawai → Master Form) dan `p5-flow-document` (grid CO / PO → Form
   Master-Detail), rute nyata `/lib/{slug}/form/{id}` (belum ditinjau, bukan `APPROVED`).
 
 - **Asisten: pengindeks latar belakang, tahap 1** (opt-in). `Devlib\Assistant\Index`: `IndexSource`, `IndexEntry`, `IndexStore`

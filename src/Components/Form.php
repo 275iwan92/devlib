@@ -30,6 +30,13 @@ use Devlib\Locale;
 // :action-field = nama field aksi yang dikirim (default _action; layar lama mis. 'action'); :hide = aksi panel yang disembunyikan.
 // :subtitle = baris kecil di bawah judul (mis. supplier); :pipeline = bar tahapan Draft > Confirmed > Closed -- bawaan menyala
 // untuk kind=document, mati untuk kind=master.
+// :strict (user 2026-10-21, opt-in; bawaan mati = perilaku lama): siklus ketat. Dokumen: new (belum tersimpan) = Undo + Save; draft tersimpan = isian terkunci,
+//   Delete + Edit + Print + Confirm (Edit membuka isian -> Save + Undo, Undo = terkunci lagi); confirmed = Cancel + Print; cancelled = Print.
+//   TANPA New / Email / Back to Draft. Master: new = Undo + Save; active = Edit + Deactivate (+ Delete bila :deletable = administrator & belum dipakai);
+//   inactive = Activate. Tidak ada Confirm/Cancel/Print pada master. Status tampil sebagai cap di pojok kanan atas (bukan bar tahapan).
+//   :approval = field TERPISAH dari status dokumen, hanya berarti bila status confirmed: waiting | approved | hold | rejected (null = tanpa approval).
+//   Pembuat: Cancel hanya saat waiting/null; rejected = Duplicate + Print; selain itu Print. Pemeriksa (:can-approve): waiting = Approve/Hold/Reject,
+//   hold = Approve/Reject, approved = Reject, rejected = Approve DENGAN OTP (:otp-url; kode dari administrator, urusan proyek). Cancelled tidak punya approval.
 // :print-url = alamat cetakan dokumen (x-dl::print-doc): tombol Print membukanya di tab baru, Email membuka dialog e-mail di halaman
 // itu (?ds_do=email). Form yang punya action tetapi tanpa :print-url tidak menampilkan Print / Email (tidak ada yang dicetak).
 // Print tersedia di SEMUA status dokumen termasuk Draft (cetakan membawa status; Draft diberi tanda air) (user 2026-10-05).
@@ -72,6 +79,10 @@ class Form extends DevlibComponent
         public array $hidden = [],
         public ?string $stage = null,
         public ?string $printUrl = null,
+        public bool $strict = false,
+        public ?string $approval = null,
+        public bool $deletable = false,
+        public ?string $otpUrl = null,
     ) {}
 
     public function lint(): array
@@ -102,14 +113,17 @@ class Form extends DevlibComponent
             $all = array_values(array_filter($all, fn ($a) => ! in_array($a[4], ['print', 'email'], true)));
         }
 
-        return $this->canInput ? $all : array_values(array_filter($all, fn ($a) => ! in_array($a[4], ['save', 'undo', 'delete', 'confirm', 'new', 'duplicate', 'cancel'], true)));
+        return $this->canInput ? $all : array_values(array_filter($all, fn ($a) => ! in_array($a[4], ['save', 'undo', 'delete', 'confirm', 'new', 'duplicate', 'cancel', 'edit'], true)));
     }
 
     // Istilah tombol & status SELALU English (user 2026-09-30, supaya sama bagi user & developer):
     // tombol New, Save, Undo, Delete, Confirm, Cancel, Duplicate, Back to Draft, Back; status Draft, Confirmed, Cancelled, Closed.
     private function baseActions(): array
     {
-        $b = fn (string $act, ?string $preset, string $label, ?string $variant = null, ?string $icon = null) => [$preset, $label, $variant, $icon, $act];
+        $b = fn (string $act, ?string $preset, string $label, ?string $variant = null, ?string $icon = null, string $cls = '') => [$preset, $label, $variant, $icon, $act, $cls];
+        if ($this->strict) {
+            return $this->strictActions($b);
+        }
         $new = $b('new', 'new', 'New', 'secondary', 'fa-plus');
         $save = $b('save', 'save', 'Save');
         $undo = $b('undo', null, 'Undo', 'secondary', 'undo');
@@ -141,6 +155,72 @@ class Form extends DevlibComponent
         };
     }
 
+    // Siklus ketat (lihat :strict di kepala berkas). is-view-only = hanya saat terkunci; is-edit-only = hanya saat Edit / ada perubahan.
+    private function strictActions(\Closure $b): array
+    {
+        $save = $b('save', 'save', 'Save');
+        $undo = $b('undo', null, 'Undo', 'secondary', 'undo');
+        $print = $b('print', null, 'Print', 'primary', 'print');
+        $edit = $b('edit', null, 'Edit', 'secondary', 'edit', 'is-view-only');
+        $editing = [$b('undo', null, 'Undo', 'secondary', 'undo', 'is-edit-only'), $b('save', 'save', 'Save', null, null, 'is-edit-only')];
+        $view = fn (array $a) => array_replace($a, [5 => 'is-view-only']);
+
+        return match ($this->kind.'.'.$this->status) {
+            'master.new', 'document.new' => [$undo, $save],
+            'master.active' => array_values(array_filter([$view($b('deactivate', null, 'Deactivate', 'secondary', 'fa-toggle-off')), $this->deletable ? $view($b('delete', 'delete', 'Delete')) : null, $edit, ...$editing])),
+            'master.inactive' => [$b('activate', null, 'Activate', 'secondary', 'fa-toggle-on')],
+            'document.draft' => [$view($b('delete', 'delete', 'Delete')), $edit, $view($print), $view($b('confirm', 'confirm', 'Confirm')), ...$editing],
+            'document.confirmed' => $this->strictConfirmed($b, $print),
+            default => [$print],
+        };
+    }
+
+    // Dokumen confirmed + field approval terpisah.
+    private function strictConfirmed(\Closure $b, array $print): array
+    {
+        $ap = $this->approval;
+        if ($this->canApprove && $ap !== null) {
+            $approve = $b('approve', 'approve', 'Approve');
+            $reject = $b('reject', 'reject', 'Reject', 'danger');
+
+            return match ($ap) {
+                'waiting' => [$print, $reject, $b('hold', 'hold', 'Hold', 'secondary'), $approve],
+                'hold' => [$print, $reject, $approve],
+                'approved' => [$print, $reject],
+                default => [$print, $approve],  // rejected: Approve lewat OTP
+            };
+        }
+
+        return match ($ap) {
+            null, 'waiting' => [$b('cancel', 'cancel', 'Cancel', 'danger'), $print],
+            'rejected' => [$b('duplicate', null, 'Duplicate', 'secondary', 'fa-copy'), $print],
+            default => [$print],
+        };
+    }
+
+    // Cap status pojok kanan atas (siklus ketat): status dokumen + (confirmed) status approval. [label, nada].
+    public function stamps(): array
+    {
+        $doc = match ($this->status) {
+            'new' => ['Draft · Unsaved', 'warn'], 'draft' => ['Draft', 'warn'], 'confirmed' => ['Confirmed', 'success'], 'cancelled' => ['Cancelled', 'danger'],
+            'active' => ['Active', 'success'], 'inactive' => ['Inactive', 'muted'], default => [ucfirst($this->status), 'neutral'],
+        };
+        $out = [$doc];
+        if ($this->kind === 'document' && $this->status === 'confirmed' && $this->approval !== null) {
+            $out[] = ['waiting' => ['Awaiting', 'wait'], 'approved' => ['Approved', 'success'], 'hold' => ['Hold', 'warn'], 'rejected' => ['Rejected', 'danger']][$this->approval] ?? [ucfirst($this->approval), 'neutral'];
+        }
+
+        return $out;
+    }
+
+    // Warna isian terkunci (siklus ketat): hanya status akhir yang berwarna (Confirmed hijau, Cancelled merah, Inactive abu); Draft netral.
+    public function tone(): ?string
+    {
+        $t = $this->stamps()[0][1];
+
+        return in_array($t, ['success', 'danger', 'muted'], true) ? $t : null;
+    }
+
     // Alamat tombol panel yang berupa tautan: New = form kosong, Print = cetakan, Email = cetakan dengan dialog e-mail terbuka.
     public function actionHref(string $act): ?string
     {
@@ -155,13 +235,13 @@ class Form extends DevlibComponent
     // Sesudah Confirm / Cancel / Close isi terkunci (tampil sebagai teks); ubah lagi hanya lewat Back to Draft.
     public function locked(): bool
     {
-        return $this->panel && (! $this->canInput || in_array($this->status, ['confirmed', 'approval', 'hold', 'approved', 'rejected', 'cancelled', 'closed'], true));
+        return $this->panel && (! $this->canInput || in_array($this->status, ['confirmed', 'approval', 'hold', 'approved', 'rejected', 'cancelled', 'closed'], true) || ($this->strict && $this->status !== 'new'));
     }
 
     // Bar tahapan tampil di SEMUA form dokumen (user 2026-10-05); form master tetap badge status. Layar boleh memaksa lewat :pipeline.
     public function showSteps(): bool
     {
-        return $this->pipeline ?? ($this->kind === 'document');
+        return $this->pipeline ?? ($this->kind === 'document' && ! $this->strict);
     }
 
     // Bar tahapan (pola form PO Master-Detail yang disetujui user): Draft > Confirmed > Closed; Cancelled = tahap merah.
@@ -224,7 +304,7 @@ class Form extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <form {{ $attributes->class(['dl-form', 'dl-form--panel' => $panel, 'is-view' => $panel && $locked()]) }} {!! $dl() !!} method="{{ $method === 'GET' ? 'GET' : 'POST' }}" @if ($action) action="{{ $action }}" @endif data-dl-form data-mode="{{ $mode }}" data-action-field="{{ $actionField }}" @if ($guard) data-dl-guard @endif novalidate>
+            <form {{ $attributes->class(['dl-form', 'dl-form--panel' => $panel, 'is-view' => $panel && $locked(), 'dl-form--strict' => $strict, 'dl-form--tone-'.$tone() => $strict && $tone() && $panel && $locked()]) }} {!! $dl() !!} method="{{ $method === 'GET' ? 'GET' : 'POST' }}" @if ($action) action="{{ $action }}" @endif data-dl-form data-mode="{{ $mode }}" data-action-field="{{ $actionField }}" @if ($guard) data-dl-guard @endif @if ($strict) data-f-strict @endif @if ($strict && $approval === 'rejected' && $canApprove && $otpUrl) data-f-otp data-f-otp-url="{{ $otpUrl }}" @endif novalidate>
                 @if ($method !== 'GET')
                     @csrf
                 @endif
@@ -232,7 +312,9 @@ class Form extends DevlibComponent
                     <div class="dl-form__panel">
                         <div class="dl-form__heading"><div class="dl-form__title">{{ $title }}</div>@if ($subtitle)<small>{{ $subtitle }}</small>@endif</div>
                         {{-- :pipeline = tahapan ringkas di panel (menggantikan badge), bukan baris penuh (user 2026-09-30: compact). --}}
-                        @if ($showSteps())
+                        @if ($strict)
+                            {{-- cap status dipasang di ujung kanan, setelah Back --}}
+                        @elseif ($showSteps())
                             <div class="dl-form__steps" aria-label="Status">@foreach ($steps() as [$sl, $sc])<span class="dl-form__step {{ $sc }}">{{ $sl }}</span>@endforeach</div>
                         @else
                             <x-dl::badge :label="$statusBadge()[0]" :tone="$statusBadge()[1]" />
@@ -243,7 +325,7 @@ class Form extends DevlibComponent
                             @php [$pre, $lbl, $var, $ico, $act] = $a; $cls = $a[5] ?? ''; @endphp
                             @if ($loop->last && isset($special)){{ $special }}@endif
                             @if ($act === 'save')
-                                <x-dl::button size="sm" :preset="$pre" :label="$lbl" :variant="$var ?? 'primary'" type="submit" :name="$actionField" value="save" data-f-act="save" />
+                                <x-dl::button size="sm" :preset="$pre" :label="$lbl" :variant="$var ?? 'primary'" type="submit" :name="$actionField" value="save" :class="$cls" data-f-act="save" />
                             @else
                                 <x-dl::button size="sm" :preset="$pre" :label="$lbl ?? ''" :variant="$var ?? 'primary'" :icon="$ico" :href="$actionHref($act)" :target="in_array($act, ['print', 'email'], true) && $printUrl ? '_blank' : null" :class="$cls" data-f-act="{{ $act }}" />
                             @endif
@@ -251,6 +333,7 @@ class Form extends DevlibComponent
                         @if (! $panelActions() && isset($special)){{ $special }}@endif
                         <span class="dl-form__sep"></span>
                         <x-dl::button variant="secondary" size="sm" icon="back" label="Back" :href="$back" data-f-act="back" data-dl-back />
+                        @if ($strict)<span class="dl-form__stamps">@foreach ($stamps() as [$sl, $st])<span class="dl-form__stamp dl-form__stamp--{{ $st }}">{{ \Devlib\Lang::text($sl) }}</span>@endforeach</span>@endif
                     </div>
                 @elseif ($title !== '')
                     <div class="dl-form__head"><div class="dl-form__title">{{ $title }}</div>@if ($mode === 'view')<x-dl::button variant="secondary" size="sm" icon="edit" label="Edit" data-f-edit />@endif</div>

@@ -1,7 +1,7 @@
 /* DevLib · Wizard */
 (function (Devlib) {
   'use strict';
-  const {$, $$, esc, toast, hasValue, fieldText, at, T, Tf} = Devlib.h;
+  const {$, $$, esc, toast, hasValue, fieldText, at, T, Tf, dirtyForms} = Devlib.h;
 
   class Wizard extends Devlib.Component {
     static selector = "[data-dl-wizard]";
@@ -15,6 +15,7 @@
       this.el.addEventListener('click', e => {
         if (e.target.closest('[data-w-next]')) { if (this.check(this.at)) this.go(this.at + 1); return; }
         if (e.target.closest('[data-w-prev]')) return this.go(this.at - 1);
+        if (e.target.closest('[data-w-restart]')) return this.restart();
         const g = e.target.closest('[data-w-go]');
         if (g) { const i = +g.dataset.wGo; if (i <= this.reached || (i === this.at + 1 && this.check(this.at))) this.go(i); }
       });
@@ -23,11 +24,23 @@
         if (!this.el.getAttribute('action')) {
           e.preventDefault();
           const data = {}; new FormData(this.el).forEach((v, k) => { if (k !== '_token') data[k] = v; });
-          toast(T('w_finish_preview'), 'success');
           this.el.dispatchEvent(new CustomEvent('dl:wizard-finish', {bubbles: true, detail: data}));
+          if (this.el.hasAttribute('data-done')) return this.showDone(true);
+          toast(T('w_finish_preview'), 'success');
         }
       });
       this.go(0);
+    }
+
+    // Layar selesai (opt-in :done): menggantikan stepper, isian, dan tombol; Start again mengosongkan isian dan kembali ke langkah 1.
+    showDone(on) {
+      ['.dl-wizard__steps', '.dl-wizard__body', '.dl-wizard__foot'].forEach(q => { const n = $(this.el, q); if (n) n.hidden = on; });
+      $(this.el, '[data-w-done]').hidden = !on;
+      if (on) { dirtyForms.delete(this.el); this.el.classList.remove('is-dirty'); }
+    }
+
+    restart() {
+      this.el.reset(); this.reached = 0; this.showDone(false); this.go(0);
     }
 
     invalid(s) {

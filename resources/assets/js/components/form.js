@@ -15,6 +15,7 @@
     init() {
       this.fs = $$(this.el, '[data-f-fs]');  // Form panel: satu fieldset per bagian (tombol tab di luar fieldset)
       this.viewMode = this.el.dataset.mode === 'view';
+      this.strict = this.el.hasAttribute('data-f-strict');  // siklus ketat: tersimpan = terkunci, Edit membuka isian (Save + Undo)
       this.snapshot = null;
       this.saved = this.values();  // titik kembali Undo = isi saat form dibuka
       if (this.viewMode) this.setView(true);
@@ -37,12 +38,13 @@
         const act = e.target.closest('[data-f-act]')?.dataset.fAct;
         if (act === 'back' && !e.target.closest('a[href]')) return history.back();
         if (['new', 'print', 'email'].includes(act) && e.target.closest('a[href]')) return;
+        if (act === 'edit') return this.startEdit();
         if (act === 'undo') return this.undo();
         if (act && act !== 'save') return this.act(act);
         if (e.target.closest('[data-f-cancel]') && this.snapshot) { fillForm(this.el, this.snapshot, false); this.snapshot = null; this.setView(true); toast(T('f_changes_discarded')); }
       });
       // Undo hanya berarti bila ada perubahan: tombol mati selama form belum diubah (tanda is-dirty; hanya bila form dijaga dirty-guard).
-      const undoBtn = this.el.hasAttribute('data-dl-guard') ? this.el.querySelector('[data-f-act="undo"]') : null;
+      const undoBtn = this.el.hasAttribute('data-dl-guard') && !this.strict ? this.el.querySelector('[data-f-act="undo"]') : null;
       if (undoBtn) {
         const sync = () => { undoBtn.disabled = !this.el.classList.contains('is-dirty'); };
         new MutationObserver(sync).observe(this.el, {attributes: true, attributeFilter: ['class']});
@@ -69,13 +71,27 @@
 
     // Undo = buang perubahan yang belum disimpan, kembali ke isi saat form dibuka (tanpa kirim ke server).
     undo() {
-      if (!this.el.classList.contains('is-dirty')) return toast(T('f_nothing_undo'));
+      const editing = this.el.classList.contains('is-editing');
+      if (!this.el.classList.contains('is-dirty')) { if (editing) return this.endEdit(); return toast(T('f_nothing_undo')); }
       confirmBox({message: T('f_discard_all'), tone: 'warn'}).then(ok => {
         if (!ok) return;
         fillForm(this.el, this.saved, false);
         $$(this.el, '.dl-field.is-invalid').forEach(f => f.classList.remove('is-invalid')); $$(this.el, '.dl-tabs__err').forEach(x => x.remove());
         dirtyForms.delete(this.el); this.el.classList.remove('is-dirty'); toast(T('f_changes_discarded'));
+        if (editing) this.endEdit();
       });
+    }
+
+    // Edit (siklus ketat): isian terbuka, tombol jadi Save + Undo; Undo = kembali ke isi tersimpan dan terkunci lagi.
+    startEdit() {
+      this.saved = this.values();
+      this.fs.forEach(f => { f.disabled = false; });
+      this.el.classList.remove('is-view'); this.el.classList.add('is-editing');
+    }
+
+    endEdit() {
+      this.fs.forEach(f => { f.disabled = true; });
+      this.el.classList.remove('is-editing'); this.el.classList.add('is-view');
     }
 
     // Tombol panel (selain Save = submit biasa). Ada action -> kirim ulang form dgn _action=<act>; tanpa action = pratinjau DevLib.
@@ -83,7 +99,7 @@
       // [pesan, nada, alasan wajib?] -- Cancel, Reject, Back to Draft wajib alasan (tercatat di History).
       const ask = {delete: [T('f_ask_delete'), 'danger'], confirm: [T('f_ask_confirm'), 'warn'], cancel: [T('f_ask_cancel'), 'danger', true], draft: [T('f_ask_draft'), 'warn', true],
         approve: [T('f_ask_approve'), 'success'], reject: [T('f_ask_reject'), 'danger', true], hold: [T('f_ask_hold'), 'warn', true], deactivate: [T('f_ask_deactivate'), 'warn'], activate: [T('f_ask_activate'), 'warn']}[a];
-      const go = why => {
+      const go = (why, otp) => {
         this.el.dispatchEvent(new CustomEvent('dl:form-action', {bubbles: true, detail: {action: a}}));
         // Print/Email tidak mengubah dokumen -> tidak kirim form (layar menangkap dl:form-action, mis. buka x-dl::doc-share).
         if (!this.el.getAttribute('action') || a === 'print' || a === 'email') return toast(Tf('f_action_preview2', {a}), 'success');
@@ -92,9 +108,11 @@
         h.value = a;
         let r = $(this.el, 'input[name=_reason]'); if (!r) { r = document.createElement('input'); r.type = 'hidden'; r.name = '_reason'; this.el.appendChild(r); }
         r.value = typeof why === 'string' ? why : '';
+        if (otp) { let o = $(this.el, 'input[name=_otp]'); if (!o) { o = document.createElement('input'); o.type = 'hidden'; o.name = '_otp'; this.el.appendChild(o); } o.value = otp; }
         if (a === 'confirm') this.el.requestSubmit(); else HTMLFormElement.prototype.submit.call(this.el);  // hanya Confirm yang divalidasi
       };
       if (!ask) return go();
+      if (a === 'approve' && this.el.hasAttribute('data-f-otp')) return confirmBox({message: T('f_ask_approve_otp'), tone: 'warn', reason: true, otp: true}).then(r => { if (r) go(r.why, r.otp); });
       confirmBox({message: ask[0], tone: ask[1], reason: !!ask[2]}).then(ok => { if (ok) go(ok); });
     }
 
