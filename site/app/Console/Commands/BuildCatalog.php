@@ -20,6 +20,7 @@ class BuildCatalog extends Command
         $modules = [];
         $items = [];
         foreach (Catalog::groups() as $g) {
+            $g['pages'] = array_filter($g['pages'], fn ($p) => ! isset($p['doc'])); // halaman dokumen Aturan (skills/devlib/*.md) bukan objek yang ditinjau
             $slugs = array_keys($g['pages']);
             $done = count(array_intersect($slugs, array_keys($approved)));
             $with = fn (string $word) => count(array_filter($slugs, fn ($s) => str_contains($s, $word)));
