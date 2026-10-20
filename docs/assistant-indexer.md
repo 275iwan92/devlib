@@ -1,6 +1,6 @@
 # Rencana: pengindeks latar belakang untuk Asisten
 
-Status: **rancangan, belum diimplementasikan.** Kebijakan data yang berlaku: `skills/devlib/assistant.md` ("Cakupan data dan sensitivitas"). Kode dasar: `src/Assistant`.
+Status: **tahap 1 selesai (2026-10-20)**; tahap 2 dan 3 belum (tahap 3 tidak akan dikerjakan, lihat 7). Pilot di program inang belum. Kebijakan data yang berlaku: `skills/devlib/assistant.md` ("Cakupan data dan sensitivitas"). Kode dasar: `src/Assistant`.
 
 ## 1. Tujuan
 
@@ -14,14 +14,14 @@ Diindeks (metadata saja): nama menu dan letaknya, label layar, nama kolom/field,
 
 - baris data bisnis (isi dokumen, nama pelanggan, angka transaksi);
 - gaji, payroll, dan formula HPP dalam bentuk apa pun (lihat tingkat d; hasil HPP berupa rupiah adalah tingkat c); sumber yang cocok `DataPolicy::forbids()` dilewati dan dicatat sebagai "dilewati", bukan sebagai galat;
-- data pribadi (identitas dan kontak pribadi: KTP / NIK, alamat rumah, tanggal lahir, data keluarga, rekening / NPWP pribadi, kesehatan, kata sandi; definisi di `skills/devlib/assistant.md`) dan entri apa pun yang menyebut orang terlindung program (`DataPolicy::protects()`): `DataPolicy::excludes()` melewatinya, dicatat "dilewati"; tanpa pengecualian untuk pemilik datanya. Layar tempat orang mengelola datanya sendiri (nama menu, bukan isi) tetap boleh diindeks;
+- data pribadi (identitas dan kontak pribadi: KTP / NIK, alamat rumah, tanggal lahir, data keluarga, rekening / NPWP pribadi, kesehatan, kata sandi; definisi di `skills/devlib/assistant.md`) dan entri apa pun yang menyebut orang terlindung program (`DataPolicy::protects()`): `DataPolicy::excludes()` melewatinya, dicatat "dilewati"; tanpa pengecualian untuk pemilik datanya. Akibatnya layar yang namanya atau uraiannya menyebut data pribadi (mis. "Data Pribadi Saya") juga tidak diindeks (pilihan hati-hati tahap 1); layar itu tetap ditemukan lewat `Navigator`, yang tidak berubah;
 - nilai rupiah (tingkat c): yang diindeks hanya NAMA kolom/laporan bernilai, bukan isinya; entri itu diberi syarat `value` (lihat 5).
 
 Hasil angka tetap datang langsung dari `Tool` saat ditanya (membaca langsung, menegakkan hak penanya), tidak dari indeks.
 
 ## 3. Kontrak generik DevLib dan bagian program inang
 
-DevLib menyediakan antarmuka dan pelari; program menyediakan sumber dan penyimpanan.
+DevLib menyediakan antarmuka dan pelari; program menyediakan sumber dan penyimpanan. **Sketsa di bawah adalah rancangan awal; yang jadi (tahap 1) ada di `src/Assistant/Index` dan `src/Console/Index.php`**, bedanya: `IndexEntry` memuat `kind` (screen / help), `title`, `words`, `text`, `steps`, `path`, `url`, `module`, `minLevel`, `sensitivity`, `hash` (dihitung otomatis); `IndexStore::put($sumber, $entri)`; `Indexer` menerima `DataPolicy` di konstruktor; pemicu terbatas lewat `IndexThrottle` dan `IndexRunner`; `UsageLog` baru di tahap 2.
 
 ```php
 interface IndexSource {                 // diikat program: satu per jenis (menu, layar, Help, Tool)
@@ -77,21 +77,25 @@ Mencegah "belajar yang salah": tidak ada perubahan otomatis; satu jempol tidak c
 
 ## 7. Tahapan
 
-| Tahap | Isi | Selesai bila | Kerja |
-|---|---|---|---|
-| 1 | `IndexSource`, `IndexEntry`, `IndexStore`, `Indexer`, `Budget`, pemicu terbatas; sumber menu + Help; pencarian tersaring hak dipakai `Assistant` sebelum pencocokan sekarang | tes kontrak (hash tak berubah = tak diproses; anggaran dihormati; terlarang tak masuk; entri data pribadi dan entri orang terlindung tak pernah masuk indeks; hak tersaring); halaman katalog; ditempel di satu program contoh | sedang |
-| 2 | `UsageLog`, penyusun saran, antrean persetujuan (kontrak + layar admin contoh) | saran muncul dari log, tidak ada yang berlaku tanpa persetujuan, bisa dicabut; tes | sedang |
-| 3 | pencocokan makna (embedding) opsional lewat adaptor, memakai indeks yang sama | model/embedding mati = jatuh ke pencocokan kata; tak ada data di luar metadata; tes dengan adaptor palsu | besar (dan opsional) |
+| Tahap | Isi | Status |
+|---|---|---|
+| 1 | `IndexSource`, `IndexEntry`, `IndexStore` (+ `MemoryIndexStore`), `Indexer`, `Budget`, `Progress`, `IndexRunner`, `IndexThrottle` (+ `CacheThrottle`, `MemoryThrottle`), `IndexAccess`, `IndexAudit`, perintah `devlib:index`; `Assistant` memakai indeks sebagai calon tambahan layar / topik; tes `AssistantIndexTest` | **selesai di DevLib**; belum dipasang di program mana pun (pilot menunggu program) |
+| 2 | `UsageLog`, penyusun saran, antrean persetujuan (kontrak + layar admin contoh), ambang minimal 3 pengguna berbeda | belum |
+| 3 | pencocokan makna (embedding) | **tidak dikerjakan** (keputusan Jo) |
+
+Sisa tahap 1 yang sengaja ditunda: sumber menu / Help / Tool nyata dan `IndexStore` berbasis database ada di program inang (DevLib netral); metrik waktu kerja per hari (kini hanya `Progress::$ms` per potongan, dicetak `devlib:index`); sumber sangat besar membaca ulang dari awal tiap potongan (kursor menyusul bila perlu).
 
 ## 8. Risiko dan keputusan untuk Jo
 
 Risiko: label program salah (modul gaji atau formula HPP berlabel biasa) lolos karena DevLib hanya mencocokkan teks; beban di database besar bila program memberi sumber yang boros; saran yang salah bila persetujuan dilewati; "10%" disalahartikan sebagai jaminan CPU.
 
-Perlu keputusan Jo:
+Keputusan Jo (2026-10-20, ikut saran) dan penerapannya di tahap 1:
 
-1. Setuju bahwa "10%" = anggaran waktu + jeda (bukan jaminan CPU)?
-2. Tempat antrean standar: queue Laravel milik program, atau cukup perintah artisan terjadwal?
-3. Siapa yang menyetujui saran (admin program, kepala bagian, atau Jo)? Perlu ambang jumlah pengguna?
-4. Apakah entri bersensitivitas `value` boleh diindeks sebagai NAMA (tanpa isi), atau dikeluarkan sama sekali?
-5. Tahap 3 (embedding): perlu atau cukup tahap 1-2? Bila perlu, penyedia model mana?
-6. Perlu tes wajib di tiap program yang memastikan tidak ada sumber HR/gaji/formula HPP berlabel biasa?
+1. "10%" = anggaran waktu + jeda, bukan jaminan CPU. `Budget`: `ms` (200) dan `size` (200) per potongan, jeda = `pause` (9) x lama kerja potongan, `chunks` (20) potongan per jalan.
+2. Pelari = perintah artisan terjadwal (tiap jam), bukan keharusan queue. `devlib:index`, dibatasi sekali per jam lewat `IndexThrottle` (bawaan `Cache::add`).
+3. Saran dari catatan pemakaian disetujui admin program, ambang minimal 3 pengguna berbeda: tahap 2.
+4. Kolom / laporan bernilai rupiah diindeks hanya NAMA-nya dan bersyarat `value` (`IndexEntry::nameOnly()`, `IndexAccess::may`); yang terlarang tidak diindeks sama sekali.
+5. Tahap 3 (embedding) tidak dikerjakan.
+6. Tiap program wajib punya tes yang memastikan tidak ada sumber terlarang berlabel biasa: `IndexAudit::leaks($sumber, $kebijakanProduksi, $kata, $orang)` harus `[]`.
+
+Keputusan rancangan tahap 1 yang perlu konfirmasi Jo: layar yang menyebut data pribadi tidak diindeks sama sekali (lihat 2); pertanyaan berfrasa data pribadi tidak menyentuh indeks.

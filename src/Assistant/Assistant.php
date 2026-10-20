@@ -2,6 +2,9 @@
 
 namespace Devlib\Assistant;
 
+use Devlib\Assistant\Index\IndexAccess;
+use Devlib\Assistant\Index\IndexEntry;
+use Devlib\Assistant\Index\IndexStore;
 use Devlib\Engine\EngineException;
 use Devlib\Lang;
 
@@ -10,6 +13,8 @@ use Devlib\Lang;
 //   0. (opt-in DataPolicy) pertanyaan menyebut gaji / payroll / formula HPP, atau orang terlindung -> DENIED tetap; Tool Value hanya
 //      untuk ValueAsker. Pertanyaan berfrasa data pribadi: tidak ada Tool dan tidak ada model; hanya layar / bantuan yang cocok,
 //      selain itu DENIED. Tak satu pun dari ini menyentuh Tool / Navigator / Knowledge / model sebelum diperiksa.
+//      (opt-in IndexStore) layar / topik dari indeks pengindeks (docs/assistant-indexer.md) ikut sebagai calon tambahan pada langkah 2-6,
+//      sudah tersaring hak penanya dan DataPolicy; tanpa indeks urutan di bawah ini persis seperti sebelumnya.
 //   1. frasa Tool cocok -> gerbang hak (modul + level) -> Tool menjawab        (angka hanya dari Tool, tidak dari model)
 //   2. kata "cara / how" + topik bantuan cocok -> langkah dari Knowledge
 //   3. nama layar cocok -> layar (Open + How to use)
@@ -38,6 +43,7 @@ final class Assistant
         private ?HistoryStore $history = null,
         private ?string $outOfScope = null,
         private ?DataPolicy $policy = null,
+        private ?IndexStore $index = null,
     ) {
         foreach ($tools as $tool) {
             if ($tool instanceof Classified && $tool->sensitivity() === Sensitivity::Forbidden) {
@@ -99,8 +105,7 @@ final class Assistant
             return $personal ? $this->personal() : $this->unknown();
         }
         $how = (bool) preg_match('/\b(how|cara|bagaimana)\b/i', $question);
-        $screens = $this->screens($asker);
-        $topics = $this->topics($asker);
+        [$screens, $topics] = $this->withIndex($asker, $query, $this->screens($asker), $this->topics($asker), $personal);
         $screen = $this->best($query, $screens, fn ($s) => $s['label'].' '.($s['path'] ?? '').' '.($s['words'] ?? ''));
         $topic = $this->best($query, $topics, fn ($t) => $t['title'].' '.($t['words'] ?? ''));
 
@@ -161,11 +166,7 @@ final class Assistant
     // Hak nilai rupiah: ScopedValueAsker menentukan per Tool; ValueAsker biasa global; Asker biasa = tidak boleh (bawaan paling aman).
     private function maySeeValue(Asker $asker, Tool $tool): bool
     {
-        return match (true) {
-            $asker instanceof ScopedValueAsker => $asker->canSeeValueOf($tool->key()),
-            $asker instanceof ValueAsker => $asker->canSeeValue(),
-            default => false,
-        };
+        return IndexAccess::seesValue($asker, $tool->key());
     }
 
     private function run(Asker $asker, Tool $tool, string $question): Reply
@@ -202,6 +203,29 @@ final class Assistant
     private function allowed(array $items, callable $texts): array
     {
         return $this->policy ? array_values(array_filter($items, fn ($i) => ! $this->policy->forbids(...$texts($i)) && ! $this->policy->protects(...$texts($i)))) : $items;
+    }
+
+    // Calon dari indeks ditambahkan SETELAH calon program (seri skor dimenangkan calon program); disaring lagi di sini
+    // walau IndexStore sudah menyaring, dan tidak pernah menimpa kunci yang sudah ada.
+    private function withIndex(Asker $asker, array $query, array $screens, array $topics, bool $personal): array
+    {
+        if (! $this->index || $personal) {  // pertanyaan data pribadi tidak menyentuh indeks (layar sendiri tetap dari Navigator)
+            return [$screens, $topics];
+        }
+        $seen = [...array_column($screens, 'key'), ...array_column($topics, 'key')];
+        foreach ($this->index->search($query, $asker) as $e) {
+            if (in_array($e->id, $seen, true) || ! IndexAccess::may($asker, $e, $this->policy)) {
+                continue;
+            }
+            $seen[] = $e->id;
+            if ($e->kind === IndexEntry::SCREEN && $e->url !== null) {
+                $screens[] = ['key' => $e->id, 'label' => $e->title, 'url' => $e->url, 'path' => $e->path, 'words' => $e->words, 'about' => $e->text !== '' ? $e->text : null];
+            } elseif ($e->kind === IndexEntry::HELP) {
+                $topics[] = ['key' => $e->id, 'title' => $e->title, 'purpose' => $e->text !== '' ? $e->text : null, 'words' => $e->words, 'steps' => $e->steps];
+            }
+        }
+
+        return [$screens, $topics];
     }
 
     /** @return list<string> */

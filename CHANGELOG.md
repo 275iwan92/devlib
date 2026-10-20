@@ -9,6 +9,12 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Asisten: pengindeks latar belakang, tahap 1** (opt-in). `Devlib\Assistant\Index`: `IndexSource`, `IndexEntry`, `IndexStore`
+  (+ `MemoryIndexStore`), `Indexer` (hanya yang berubah; yang hilang dibuang; entri terlarang `DataPolicy` dilewati; entri nilai
+  hanya namanya), `Budget` (anggaran waktu + jeda, bukan jaminan CPU), `IndexRunner` + `IndexThrottle` (sekali per jam),
+  `IndexAudit` (alat tes wajib tiap program) dan perintah `devlib:index` (terdaftar hanya bila program mengikat `IndexStore`).
+  `Assistant` menerima `index:` sebagai calon tambahan layar / topik, tersaring hak; tanpa indeks perilaku lama tidak berubah.
+  Rancangan: `docs/assistant-indexer.md`.
 - **Asisten: data pribadi terlarang total dan orang terlindung** (opt-in, lewat `DataPolicy`). Frasa data pribadi
   (KTP / NIK, alamat rumah, tanggal lahir, kata sandi, dsb.; kata umum "alamat" tidak termasuk) tidak dibacakan siapa pun
   (tanpa Tool dan tanpa model bahasa; layar pengelolaan data sendiri tetap boleh ditunjukkan), dan `protected:` berisi
