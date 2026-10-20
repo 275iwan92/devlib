@@ -14,13 +14,13 @@ return [
     // Profil pegawai contoh untuk opening screen per jabatan (halaman katalog dashboard / kartu sapaan); BUKAN akun login.
     'profiles' => [
         ['login' => 'yuna', 'name' => 'Yuna Puji Astuti', 'email' => 'yuna@devlib.test', 'role' => 'Sales & Marketing',
-            'employee_code' => 'MCD-00121', 'position_code' => 'SRSTAFFSALESMKT', 'position' => 'Senior Staff Sales & Marketing',
+            'employee_code' => 'TM-00121', 'position_code' => 'SRSTAFFSALESMKT', 'position' => 'Senior Staff Sales & Marketing',
             'department' => 'Sales & Marketing Dept.', 'superior' => 'Sales & Marketing Manager', 'developer' => false],
         ['login' => 'sania', 'name' => 'Sania Maura Fitriani', 'email' => 'sania@devlib.test', 'role' => 'Human Capital',
-            'employee_code' => 'MCD-00150', 'position_code' => 'HROFFICER', 'position' => 'Human Resource Officer',
+            'employee_code' => 'TM-00150', 'position_code' => 'HROFFICER', 'position' => 'Human Resource Officer',
             'department' => 'Human Capital Dept.', 'superior' => 'Human Capital Manager', 'developer' => false],
         ['login' => 'carrij', 'name' => 'Carrij Soehendra', 'email' => 'carrij@devlib.test', 'role' => 'Direksi',
-            'employee_code' => 'MCD-00491', 'position_code' => 'PRESDIR', 'position' => 'Presiden Direktur',
+            'employee_code' => 'TM-00491', 'position_code' => 'PRESDIR', 'position' => 'Presiden Direktur',
             'department' => 'Direksi', 'superior' => null, 'developer' => false],
     ],
 

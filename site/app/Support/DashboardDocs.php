@@ -11,7 +11,7 @@ final class DashboardDocs
     public static function jobdesc(?string $position): ?array
     {
         return match ($position) {
-            'SRSTAFFSALESMKT' => ['title' => 'Senior Staff Sales & Marketing', 'updated' => '28 Sep 2026 oleh HR Officer', 'html' => self::head('011/IX/MCD-HRD/2026 (contoh)', 'Sales & Marketing', 'Operasional', 'Senior Staff Sales & Marketing').<<<'HTML'
+            'SRSTAFFSALESMKT' => ['title' => 'Senior Staff Sales & Marketing', 'updated' => '28 Sep 2026 oleh HR Officer', 'html' => self::head('011/IX/TM-HRD/2026 (contoh)', 'Sales & Marketing', 'Operasional', 'Senior Staff Sales & Marketing').<<<'HTML'
                 <h4>Job Description</h4>
                 <ol type="I">
                   <li><b>Harian</b><ol>
@@ -45,7 +45,7 @@ final class DashboardDocs
                   <tr><td>Customer Baru</td><td>Jumlah customer baru (order pertama) dibandingkan target.</td><td>10%</td></tr>
                 </tbody></table>
                 HTML],
-            'HROFFICER' => ['title' => 'Human Resource Officer', 'updated' => '28 Sep 2026 oleh HR Manager', 'html' => self::head('012/IX/MCD-HRD/2026 (contoh)', 'Human Capital', 'Human Capital', 'Human Resource Officer').<<<'HTML'
+            'HROFFICER' => ['title' => 'Human Resource Officer', 'updated' => '28 Sep 2026 oleh HR Manager', 'html' => self::head('012/IX/TM-HRD/2026 (contoh)', 'Human Capital', 'Human Capital', 'Human Resource Officer').<<<'HTML'
                 <h4>Job Description</h4>
                 <ol type="I">
                   <li><b>Harian</b><ol>

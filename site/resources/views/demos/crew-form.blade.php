@@ -5,7 +5,7 @@
         'title' => 'DIE-01 · Ruian Die Cutter', 'status' => 'active', 'action' => '#', 'back' => '#', 'hidden' => ['machine' => 1],
         'from' => '2026-10-14', 'to' => null, 'nick' => 'Plong1',
         'shifts' => [10 => 'Reguler 07:30-16:30', 1 => 'TM Production Shift 1', 2 => 'TM Production Shift 2'],
-        'employees' => [27 => 'MCD-00027 · ACHMAD SYARIF', 43 => 'MCD-00043 · AGI PURNOMO', 104 => 'MCD-00104 · ADE MAHENDRA', 9 => 'MCD-00009 · AGUS BUDI SUSANTO', 16 => 'MCD-00016 · AHMAD ALWI NASTAIN', 115 => 'MCD-00115 · AGUS MUJIONO', 38 => 'MCD-00038 · AJI SETIAWAN', 41 => 'MCD-00041 · ALDI ARDIANSYAH'],
+        'employees' => [27 => 'TM-00027 · ACHMAD SYARIF', 43 => 'TM-00043 · AGI PURNOMO', 104 => 'TM-00104 · ADE MAHENDRA', 9 => 'TM-00009 · AGUS BUDI SUSANTO', 16 => 'TM-00016 · AHMAD ALWI NASTAIN', 115 => 'TM-00115 · AGUS MUJIONO', 38 => 'TM-00038 · AJI SETIAWAN', 41 => 'TM-00041 · ALDI ARDIANSYAH'],
         'roles' => ['Main operator', 'Co-operator', 'Helper', 'Kabag'], 'max' => 10,
         'boxes' => [
             ['shift' => 10, 'rows' => [['id' => '27', 'role' => 'Main operator'], ['id' => '43', 'role' => 'Helper'], ['id' => '104', 'role' => 'Co-operator']], 'exists' => true],
