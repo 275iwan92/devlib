@@ -1,0 +1,105 @@
+# Catatan perubahan
+
+Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/);
+versi mengikuti [kebijakan versi](docs/versioning.md) (SemVer, tahap `0.y.z`).
+Selama `0.x`, kenaikan minor boleh merusak antarmuka; perubahan seperti itu
+ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
+
+## [Belum dirilis]
+
+Kosong. Perubahan sesudah commit dokumen versi dicatat di sini.
+
+## [0.1.0] - 2026-10-20
+
+Rilis pertama: DevLib sebagai repositori mandiri (`jo/devlib`) beserta situs
+acuan `site/`. Riwayat sebelum 2026-10-19 berasal dari pengembangan bersama
+proyek induk lama; ringkasannya dimasukkan di sini.
+
+### Ditambahkan
+
+- **Komponen `x-dl::*`** (PHP + JS berpasangan, tema, bahasa), dibangun bertahap
+  mulai 2026-09-23: komponen dasar, field, login (`375811d`, `befff0f`, `0806c50`),
+  grid, master, master-detail, approval, wizard, kanban, gantt, calendar,
+  print-out, report, import, org-chart (`173b06b`..`a53dc75`), dieline,
+  imposition, chart/dashboard, QR/barcode, id-card, roster, formation
+  (`833c60c`..`f5e8bff`), pivot, sheet, drilldown (`422dd33`, `b93449f`, `acc9154`),
+  chat gaya WhatsApp (`0e15535`), menu Ribbon/Mega/Side Panel (`f247465`).
+- Form dengan siklus dokumen Draft/Confirmed/Cancelled/Closed, Approval Center
+  dan log keputusan (`d8e60f4`, `5b05737`, `4bc9c91`), `x-dl::doc-footer` (`a81649c`),
+  `x-dl::doc-share` (cetak PDF/JPEG/HTML/e-mail, `46dba36`).
+- Objek lanjutan: `x-dl::side-screen` (`4729326`), `x-dl::blueprint` (`940101b`),
+  `x-dl::code-generator` (`6df223f`), `x-dl::statement` (`be78acf`), `x-dl::coverage`
+  (`0e55e65`), `x-dl::warehouse-desk` (`5075487`), `x-dl::delivery-track`
+  (`909ded7`), `x-dl::feed` (`7156262`), `x-dl::timer` (`ea74c05`),
+  `x-dl::member-list` (`b515eba`), `x-dl::login-card`, `x-dl::photo-box`,
+  `x-dl::profile-banner` (`eda1dad`, `37deb64`), `x-dl::strip-kv`, `x-dl::kpi-row`,
+  `x-dl::box`, `x-dl::media` (`43a070e`, `986b289`, `fedf8c1`).
+- Papan widget pembuka dan dashboard per posisi (`723b683`, `5529309`).
+- Terbilang PHP+JS dan field `number-words` (`8cc7325`); angka, tanggal
+  `dd-Mmm-yyyy`, dan kode mata uang mengikuti bahasa tampilan (`b50028e`, `3de372b`).
+- Multi-bahasa dengan kamus; teks JS dipindah ke kunci terjemahan (`4b0f378`,
+  `df52a93`..`2377bea`).
+- **Engine**: kontrak `Devlib\Engine\*` (mode Suggest/Auto/Calc/Flow, `Result`,
+  `EngineRegistry`, `EngineException`, alur Cancel + Adjustment) dan skill
+  `engine.md` (`26930e5`); katalog engine (`e16a2e2`); tes kontrak engine.
+- **Assistant AI dan Chat** sebagai kontrak opt-in `Devlib\Assistant` dan
+  `Devlib\Chat` dengan adaptor diikat aplikasi (`55e975f`), halaman katalog
+  berdata fiktif dan aturan `assistant.md`/`chat.md` (`5a6314f`). Halaman
+  katalog belum disetujui (`286ae1e`).
+- **PrintDoc**: objek `print-doc` (`9f0a695`), watermark DRAFT (`7efca34`),
+  `x-dl::print-sheet` A4 berbagian (`42b56f0`), lembar lampiran A4
+  `Document::appendices` (`952381c`).
+- **Lint**: `php artisan devlib:lint` (GridRules, FormRules, ViewLinter),
+  tampil di Mode Developer (`fbced97`).
+- **Manifest**: `php artisan devlib:manifest` menulis
+  `skills/devlib/components.md`, tes kontrak, header REMARK baku di 147 komponen
+  (`5004222`).
+- `php artisan qc:reviews` dan bilah QC (QC > UAT petugas > UAT supervisor)
+  (`beaf2ce`, `2c3d8b0`).
+- **Skill** `devlib` modular: `SKILL.md` inti + `install`, `grid`, `form`,
+  `transaction-lifecycle`, `help`, `inheritance`, `engine` (`465e1d4`..`53208e9`);
+  skill `inventory` (`bdaf6ca`).
+- **Situs acuan** `site/` mandiri: katalog komponen, contoh engine, login contoh
+  `admin`/`admin`, data milik sendiri (`3719286`, `09735ab`, `ca8a116`, `1204477`).
+- Opsi opt-in: identitas grid `hue`/`box` (`513a8b7`), kamus istilah tombol/status
+  (`6ca238c`), `without` dan `pin` pada Layer Shell (`753d5c9`, `aa7c0ca`),
+  `config devlib.back_history` (`d76f429`), prop `row-state` pada Lines
+  (`573fd41`), sel tautan pada Table (`af5e508`).
+
+### Diubah
+
+- Grid dipisah dua jenis: `kind="master"` (kotak warna) dan
+  `kind="transactional"` (kolom pertama polos tebal) (`9c7202f`, `3307beb`).
+  **Merusak:** `type doc` tidak lagi berkotak warna.
+- Label aksi form dan grid selalu English; tanggal baku `dd-Mmm-yyyy`;
+  jumlah memakai kode mata uang (`43edb84`, `b50028e`, `b50cff0`).
+- JS komponen jadi berbasis kelas dengan induk `DlComponent` dan registry
+  (`d180e70`, `3d7ad0d`).
+- Markup tulisan tangan di layar diganti objek DevLib (`c1ea102`, `fedf8c1`);
+  penghitung markup mentah diturunkan ke lantai terdokumentasi.
+- Repo dibuat mandiri: README pasang, paket `jo/devlib`, tanpa rujukan ke
+  `packages/devlib` (`b095b3a`, `26930e5`).
+- Pengenal berawalan nama proyek induk di situs diganti `devlib`
+  (`DevlibDieline`, `devlibDirty`, kunci `postMessage`) (`fa44629`, `1d33d99`).
+- Wallpaper login semua halaman satu folder `bg/devlib` (`8a54fdc`).
+
+### Dihapus
+
+- Form Variant (Form Filter dan Quick-add) beserta `x-dl::filter-form`
+  (`f5ec3fc`); `x-dl::approval-bar` (`8ec0629`).
+- Menu Setup Language/Localization lama (`652c79d`).
+- Ketergantungan situs acuan pada paket dan data proyek induk lama; sebutan
+  nama proyek itu dibersihkan (`2d1cde5`, `1204477`). Paket `mockup-parts`
+  dan grup Special Forms dipulihkan karena 10 layar masih memakainya (`013ae98`).
+- `tmdieline.js` lama (`1d33d99`).
+
+### Diperbaiki
+
+- Empat bug angka: Lines desimal, persen footer Lines, field Money, presisi
+  kalkulator Sheet (`28fe5ff`).
+- Dropdown terpotong card ber-overflow dan tinggi daftar (`e9f9d8d`, `c6e60de`).
+- Halaman awal terkunci di balik popup kekurangan bahan (`3e11d54`).
+- Lembar cetak meluber ke footer halaman (`4bc1e8a`).
+- Tombol hapus baris terakhir pada Lines, validasi isian di modal bersarang
+  (`f023b46`).
+- Tes bawaan situs diperbaiki dan login contoh dibuat bypass (`09735ab`).
