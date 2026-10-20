@@ -11,7 +11,7 @@ use Devlib\Lang;
 // Jembatan Engine -> Tool: asisten memakai engine DevLib yang sudah ada, tidak menulis hitungan sendiri.
 // Aturan: hanya engine Calc (hitungan murni) dan Suggest (draf) yang boleh dipanggil asisten; Auto / Flow menulis data
 // dan hanya jalan lewat layar + officer. Draf tampil sebagai draf (tidak pernah berlaku sendiri), alasan engine = langkah jawaban.
-final class EngineTool implements Tool
+final class EngineTool implements Classified, Tool
 {
     /**
      * @param  list<string>  $phrases  frasa pemicu huruf kecil
@@ -24,6 +24,7 @@ final class EngineTool implements Tool
         private Closure $input,
         private ?string $module = null,
         private int $minLevel = 0,
+        private Sensitivity $sensitivity = Sensitivity::Quantity,
     ) {
         $mode = $registry->find($engineKey)->mode();
         if (! in_array($mode, [Mode::Calc, Mode::Suggest], true)) {
@@ -49,6 +50,11 @@ final class EngineTool implements Tool
     public function module(): ?string
     {
         return $this->module;
+    }
+
+    public function sensitivity(): Sensitivity
+    {
+        return $this->sensitivity;
     }
 
     public function minLevel(): int

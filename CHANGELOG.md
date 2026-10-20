@@ -9,6 +9,11 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Asisten: cakupan data dan sensitivitas** (opt-in). `Sensitivity` + `Classified` (Tool menyatakan
+  qty / nilai / terlarang), `ValueAsker` (hanya orang keuangan melihat nilai rupiah; `Asker` biasa
+  ditolak), dan `DataPolicy` (kata terlarang gaji / payroll: Tool ditolak saat dibuat, layar dan
+  topik tidak ditawarkan, pertanyaannya `DENIED`). Absensi tetap boleh. Tanpa itu perilaku lama
+  tidak berubah. Aturan: `skills/devlib/assistant.md`.
 - **Asisten: jawaban "di luar program"** (opt-in). `Assistant` menerima `outOfScope`
   (kalimat tetap milik aplikasi); bila diisi dan tidak ada kata pertanyaan yang cocok
   dengan layar, bantuan, atau Tool aplikasi, jawabannya `Reply::OUT_OF_SCOPE`. Pertanyaan

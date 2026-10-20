@@ -7,6 +7,7 @@ use Devlib\Lang;
 
 // Mesin jawab asisten aplikasi (kontrak baku: skills/devlib/assistant.md). Opt-in: tidak terdaftar otomatis.
 // Urutan keputusan:
+//   0. (opt-in DataPolicy) pertanyaan menyebut gaji / payroll -> DENIED tetap; Tool Value hanya untuk ValueAsker
 //   1. frasa Tool cocok -> gerbang hak (modul + level) -> Tool menjawab        (angka hanya dari Tool, tidak dari model)
 //   2. kata "cara / how" + topik bantuan cocok -> langkah dari Knowledge
 //   3. nama layar cocok -> layar (Open + How to use)
@@ -34,7 +35,15 @@ final class Assistant
         private LanguageModel $model = new NullModel,
         private ?HistoryStore $history = null,
         private ?string $outOfScope = null,
-    ) {}
+        private ?DataPolicy $policy = null,
+    ) {
+        foreach ($tools as $tool) {
+            if ($tool instanceof Classified && $tool->sensitivity() === Sensitivity::Forbidden) {
+                throw new AssistantException("Tool [{$tool->key()}] is declared Forbidden: salary / payroll never become tools.");
+            }
+            $this->policy?->assertTool($tool);
+        }
+    }
 
     public function ask(Asker $asker, string $question): Reply
     {
@@ -48,7 +57,7 @@ final class Assistant
     /** Bantuan satu topik (tombol "How to use" di jawaban layar). */
     public function topic(Asker $asker, string $key): Reply
     {
-        foreach ($this->knowledge->topics($asker) as $t) {
+        foreach ($this->topics($asker) as $t) {
             if ($t['key'] === $key) {
                 return $this->howTo($t);
             }
@@ -76,6 +85,9 @@ final class Assistant
 
     private function answer(Asker $asker, string $question): Reply
     {
+        if ($this->policy?->forbids($question)) {
+            return $this->forbidden();
+        }
         if ($tool = $this->tool($question)) {
             return $this->run($asker, $tool, $question);
         }
@@ -84,8 +96,8 @@ final class Assistant
             return $this->unknown();
         }
         $how = (bool) preg_match('/\b(how|cara|bagaimana)\b/i', $question);
-        $screens = $this->navigator->screens($asker);
-        $topics = $this->knowledge->topics($asker);
+        $screens = $this->screens($asker);
+        $topics = $this->topics($asker);
         $screen = $this->best($query, $screens, fn ($s) => $s['label'].' '.($s['path'] ?? '').' '.($s['words'] ?? ''));
         $topic = $this->best($query, $topics, fn ($t) => $t['title'].' '.($t['words'] ?? ''));
 
@@ -145,6 +157,10 @@ final class Assistant
             return new Reply(Reply::DENIED, Lang::text('Not available for your account'),
                 Lang::text('This answer follows the access rights of your account: it needs access to its module and a high enough security level.'), key: $tool->key());
         }
+        if ($tool instanceof Classified && $tool->sensitivity() === Sensitivity::Value && ! ($asker instanceof ValueAsker && $asker->canSeeValue())) {
+            return new Reply(Reply::DENIED, Lang::text('Not available for your account'),
+                Lang::text('This answer contains monetary values, which only finance users can see.'), key: $tool->key());
+        }
         try {
             $reply = $tool->answer($asker, $question);
         } catch (EngineException $e) {
@@ -153,6 +169,22 @@ final class Assistant
         $reply->key ??= $tool->key();
 
         return $reply;
+    }
+
+    // Layar / topik yang menyebut sumber terlarang (menurut DataPolicy) tidak pernah ditawarkan.
+    private function screens(Asker $asker): array
+    {
+        return $this->allowed($this->navigator->screens($asker), fn ($s) => [$s['key'], $s['label'], $s['path'] ?? null]);
+    }
+
+    private function topics(Asker $asker): array
+    {
+        return $this->allowed($this->knowledge->topics($asker), fn ($t) => [$t['key'], $t['title']]);
+    }
+
+    private function allowed(array $items, callable $texts): array
+    {
+        return $this->policy ? array_values(array_filter($items, fn ($i) => ! $this->policy->forbids(...$texts($i)))) : $items;
     }
 
     /** @return list<string> */
@@ -233,6 +265,12 @@ final class Assistant
     private function unknown(): Reply
     {
         return new Reply(Reply::UNKNOWN, Lang::text("I don't know that yet"), Lang::text('I only answer from the screens, the Help and the calculations of this application. Try another wording.'));
+    }
+
+    private function forbidden(): Reply
+    {
+        return new Reply(Reply::DENIED, Lang::text('Not available for your account'),
+            Lang::text('The assistant does not handle salary or payroll, for any user.'));
     }
 
     private function declined(): Reply

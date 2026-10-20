@@ -4,10 +4,13 @@ namespace App\Support;
 
 use Devlib\Assistant\Asker;
 use Devlib\Assistant\Assistant;
+use Devlib\Assistant\DataPolicy;
 use Devlib\Assistant\EngineTool;
 use Devlib\Assistant\Knowledge;
 use Devlib\Assistant\MemoryHistory;
 use Devlib\Assistant\Navigator;
+use Devlib\Assistant\Sensitivity;
+use Devlib\Assistant\ValueAsker;
 use Devlib\Chat\ChatService;
 use Devlib\Chat\Directory;
 use Devlib\Chat\MemoryChat;
@@ -21,9 +24,9 @@ use Devlib\Engine\Result;
 // Semua adaptor di sini dalam memori; aplikasi nyata mengikat adaptor berbasis database (lihat skills/devlib/assistant.md dan chat.md).
 class ModelDemo
 {
-    public static function asker(): Asker
+    public static function asker(): ValueAsker
     {
-        return new class implements Asker
+        return new class implements ValueAsker
         {
             public function id(): string { return 'demo-admin'; }
 
@@ -32,6 +35,8 @@ class ModelDemo
             public function level(): int { return 5; }
 
             public function can(string $module): bool { return true; }
+
+            public function canSeeValue(): bool { return true; }
         };
     }
 
@@ -85,15 +90,15 @@ class ModelDemo
                 return Result::applied(['Orders' => count($day), 'Total value' => 'Rp '.number_format($total, 0, ',', '.')], ['Counted from the orders dated '.($input['date'] ?? '').'.']);
             }
         });
-        $today = new EngineTool($engines, 'orders-today', ['order masuk hari ini', 'order yang masuk hari ini', 'orders today'], fn () => ['date' => date('Y-m-d')]);
+        $today = new EngineTool($engines, 'orders-today', ['order masuk hari ini', 'order yang masuk hari ini', 'orders today'], fn () => ['date' => date('Y-m-d')], sensitivity: Sensitivity::Value);
 
-        return new Assistant($navigator, $knowledge, [$today], history: new MemoryHistory, outOfScope: 'Saya hanya memahami perihal program ini, lainnya saya belum paham');
+        return new Assistant($navigator, $knowledge, [$today], history: new MemoryHistory, outOfScope: 'Saya hanya memahami perihal program ini, lainnya saya belum paham', policy: new DataPolicy);
     }
 
     /** @return list<string> */
     public static function questions(): array
     {
-        return ['order yang masuk hari ini', 'di mana menu untuk buat PO', 'how to use grid', 'bagaimana cetak PO dengan logo perusahaan', 'cuaca di Surabaya besok'];
+        return ['order yang masuk hari ini', 'di mana menu untuk buat PO', 'how to use grid', 'bagaimana cetak PO dengan logo perusahaan', 'cuaca di Surabaya besok', 'berapa gaji bulan ini'];
     }
 
     /** ChatService di atas data memori dengan lima orang fiktif; kembalian = data siap untuk <x-dl::chat>. */

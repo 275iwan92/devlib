@@ -27,6 +27,7 @@ Assistant adalah MODEL di DevLib yang dipasang di program mana pun; ia tidak dil
 | `Knowledge` (interface) | topik bantuan: `key,title,purpose?,words?,steps?` | ya |
 | `LanguageModel` (interface) + `NullModel` | adaptor model bahasa: `available()`, `choose($pertanyaan, $pilihan, $riwayat)` | ya, opsional |
 | `HistoryStore` (interface) + `MemoryHistory` | riwayat percakapan per user + jempol (`store`, `recent`, `feedback`) | ya |
+| `Sensitivity` + `Classified` + `ValueAsker` + `DataPolicy` | kebijakan data: tingkat Tool, penanya keuangan, daftar terlarang (lihat "Cakupan data dan sensitivitas") | opsional |
 | `Reply` | jawaban sebagai data (`SCREEN`, `HELP`, `NUMBER`, `DENIED`, `UNKNOWN`, `OUT_OF_SCOPE`); `toArray()` = bentuk yang dibaca laci AI Assistant `x-dl::shell` | - |
 | `Assistant` | mesin jawab: `ask()`, `topic()`, `history()`, `feedback()`, `suggestions()` | dibuat aplikasi |
 
@@ -39,6 +40,28 @@ Assistant adalah MODEL di DevLib yang dipasang di program mana pun; ia tidak dil
 5. belum yakin dan model aktif -> model memilih satu dari calon;
 6. tidak tahu -> bila `outOfScope` diisi DAN tidak satu kata pun dari pertanyaan ada di kosakata aplikasi (nama/letak/kata cari/kegunaan layar, judul/kata cari/kegunaan topik, judul/frasa Tool) -> `OUT_OF_SCOPE` (kalimat tetap, penilaian murni pencocokan kata, bukan model); selain itu `UNKNOWN`. Satu kata yang cocok saja sudah dianggap dalam lingkup (condong ke `UNKNOWN`, supaya pertanyaan yang sah tidak ditolak). Model bahasa tidak ikut menilai lingkup.
 Setiap `ask()` tersimpan di `HistoryStore` (bila diikat); `Reply::$id` dipakai untuk jempol naik/turun.
+
+## Cakupan data dan sensitivitas
+
+Empat tingkat. DevLib netral: **program** yang menetapkan modul/sumber mana masuk tingkat (c) dan (d); DevLib menyediakan penegakannya.
+
+| Tingkat | Isi | Siapa | Penegakan |
+|---|---|---|---|
+| (a) Pengetahuan | menu, layar, Help, prosedur, struktur | sesuai hak layar (`Navigator` sudah menyaring per penanya) | bawaan |
+| (b) Kuantitas | jumlah, stok, order, jumlah baris, kehadiran / absensi | hak modul penanya (`Asker::can`) | `Sensitivity::Quantity` (bawaan Tool) |
+| (c) Nilai rupiah | harga, total, piutang, biaya, nilai persediaan, dsb. | hanya penanya yang dinyatakan program sebagai orang keuangan | `Sensitivity::Value` + `ValueAsker::canSeeValue()`; selain itu `Reply::DENIED` |
+| (d) Gaji dan payroll | semua data gaji / payroll | **tidak seorang pun**, termasuk keuangan dan admin | terlarang total: tidak dibaca, tidak diindeks, tidak dijawab, tidak boleh jadi Tool / Navigator / Knowledge sumber |
+
+Absensi / kehadiran **bukan** payroll dan tetap boleh (tingkat b).
+
+Penegakan di kode (semuanya opt-in; yang tidak memakainya berperilaku seperti sebelumnya):
+
+- `Classified` (interface opsional pada `Tool`): `sensitivity(): Sensitivity` (`Quantity`, `Value`, `Forbidden`). Tool tanpa `Classified` dianggap `Quantity`. `EngineTool` menerima argumen `sensitivity:`.
+- `ValueAsker extends Asker` (opsional): `canSeeValue()`. `Asker` biasa dianggap **tidak** boleh melihat nilai, jadi bawaan untuk Tool `Value` adalah menolak (paling aman). Gerbang nilai berlaku setelah gerbang modul + level.
+- `Sensitivity::Forbidden`: `new Assistant(...)` melempar `AssistantException`, dengan atau tanpa `DataPolicy`.
+- `DataPolicy` (argumen `policy:` pada `Assistant`): daftar kata terlarang bawaan `payroll`, `payslip`, `salary`, `gaji` (mencakup "slip gaji" dan "penggajian") + kata tambahan program (`new DataPolicy(['bonus'])`). Dengan `policy` terpasang: (1) Tool yang kunci / modul / judul / frasanya memuat kata itu ditolak saat `Assistant` dibuat (`AssistantException`); (2) layar (kunci, label, path) dan topik bantuan (kunci, judul) yang memuatnya tidak pernah ditawarkan; (3) pertanyaan yang menyebut kata itu dijawab `DENIED` tetap, tanpa memanggil Tool. Pengindeks nanti memakai `DataPolicy::forbids()` yang sama (`docs/assistant-indexer.md`).
+
+Batas yang jujur: DevLib **hanya mencocokkan teks yang dinyatakan program** (kunci, modul, judul, frasa, path). Ia tidak memahami arti data dan tidak bisa menangkap Tool yang diberi label salah (mis. Tool total gaji berkunci `report-17` dan bersensitivitas `Quantity`), atau Tool `Quantity` yang isi jawabannya memuat rupiah. **Program bertanggung jawab memberi label yang benar** dan memasang `DataPolicy`; tes proyek sebaiknya memastikan tidak ada Tool bermodul keuangan/HR yang berlabel `Quantity`.
 
 ## Memasang di proyek
 
@@ -63,5 +86,6 @@ $this->app->singleton(\Devlib\Assistant\Assistant::class, fn ($app) => new \Devl
 
 - Menaruh nama proyek / data client di `src/Assistant` atau contoh `site/`. Adaptor yang menyebut tabel proyek hidup di proyek, bukan di DevLib.
 - Membiarkan model menghasilkan angka, SQL, atau teks bantuan.
+- Membuat Tool / layar / topik untuk gaji atau payroll, atau memberi label `Quantity` pada Tool yang menampilkan rupiah.
 - Menjadikan Auto/Flow engine sebagai tool; perubahan data selalu lewat layar + officer.
 - Menambah perilaku asisten ke proyek bila bisa jadi perubahan opt-in di DevLib (prop/kontrak baru, default lama).

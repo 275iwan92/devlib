@@ -5,12 +5,17 @@ namespace Tests\Feature;
 use Devlib\Assistant\Asker;
 use Devlib\Assistant\Assistant;
 use Devlib\Assistant\AssistantException;
+use Devlib\Assistant\Classified;
+use Devlib\Assistant\DataPolicy;
 use Devlib\Assistant\EngineTool;
 use Devlib\Assistant\Knowledge;
 use Devlib\Assistant\LanguageModel;
 use Devlib\Assistant\MemoryHistory;
 use Devlib\Assistant\Navigator;
 use Devlib\Assistant\Reply;
+use Devlib\Assistant\Sensitivity;
+use Devlib\Assistant\Tool;
+use Devlib\Assistant\ValueAsker;
 use Devlib\Chat\ChatException;
 use Devlib\Chat\ChatService;
 use Devlib\Chat\Directory;
@@ -149,6 +154,167 @@ class AssistantChatContractTest extends TestCase
     {
         $this->expectException(AssistantException::class);
         new EngineTool(app(EngineRegistry::class), 'status-flow', ['x'], fn () => []);
+    }
+
+    // --- cakupan data dan sensitivitas (skills/devlib/assistant.md) ---
+
+    private function finance(bool $value = true, array $modules = ['inventory', 'hrm', 'payroll', 'accounting']): Asker
+    {
+        return new class($value, $modules) implements ValueAsker
+        {
+            public function __construct(private bool $v, private array $m) {}
+
+            public function id(): string { return 'f1'; }
+
+            public function name(): string { return 'Finance'; }
+
+            public function level(): int { return 9; }
+
+            public function can(string $module): bool { return in_array($module, $this->m, true); }
+
+            public function canSeeValue(): bool { return $this->v; }
+        };
+    }
+
+    /** Tool kecil; $calls->n menghitung berapa kali answer() jalan. $sensitivity null = Tool lama tanpa Classified. */
+    private function tool(string $key, ?string $module, array $phrases, ?Sensitivity $sensitivity, ?object $calls = null): Tool
+    {
+        $calls ??= new \stdClass;
+        $calls->n = 0;
+        $base = new class($key, $module, $phrases, $calls) implements Tool
+        {
+            public function __construct(private string $k, private ?string $m, private array $p, private object $calls) {}
+
+            public function key(): string { return $this->k; }
+
+            public function title(): string { return ucfirst($this->k); }
+
+            public function phrases(): array { return $this->p; }
+
+            public function module(): ?string { return $this->m; }
+
+            public function minLevel(): int { return 0; }
+
+            public function answer(Asker $asker, string $question): Reply
+            {
+                $this->calls->n++;
+
+                return new Reply(Reply::NUMBER, $this->title(), big: '42');
+            }
+        };
+        if ($sensitivity === null) {
+            return $base;
+        }
+
+        return new class($base, $sensitivity) implements Classified, Tool
+        {
+            public function __construct(private Tool $t, private Sensitivity $s) {}
+
+            public function sensitivity(): Sensitivity { return $this->s; }
+
+            public function key(): string { return $this->t->key(); }
+
+            public function title(): string { return $this->t->title(); }
+
+            public function phrases(): array { return $this->t->phrases(); }
+
+            public function module(): ?string { return $this->t->module(); }
+
+            public function minLevel(): int { return $this->t->minLevel(); }
+
+            public function answer(Asker $asker, string $question): Reply { return $this->t->answer($asker, $question); }
+        };
+    }
+
+    private function withTools(array $tools, ?DataPolicy $policy = null, ?Navigator $nav = null): Assistant
+    {
+        $nav ??= new class implements Navigator
+        {
+            public function screens(Asker $asker): array { return []; }
+        };
+        $kb = new class implements Knowledge
+        {
+            public function topics(Asker $asker): array { return []; }
+        };
+
+        return new Assistant($nav, $kb, $tools, policy: $policy);
+    }
+
+    public function test_quantity_is_answered_by_module_access_and_value_only_for_finance(): void
+    {
+        $a = $this->withTools([
+            $this->tool('stock-count', 'inventory', ['stock count'], Sensitivity::Quantity),
+            $this->tool('stock-worth', 'inventory', ['stock worth'], Sensitivity::Value),
+        ]);
+        $plain = $this->asker(modules: ['inventory']);
+
+        $this->assertSame(Reply::NUMBER, $a->ask($plain, 'stock count')->kind);
+        $this->assertSame(Reply::DENIED, $a->ask($this->asker(modules: []), 'stock count')->kind, 'quantity still needs module access');
+
+        $this->assertSame(Reply::DENIED, $a->ask($plain, 'stock worth')->kind, 'Asker without ValueAsker: safest default = no value');
+        $this->assertSame(Reply::DENIED, $a->ask($this->finance(value: false), 'stock worth')->kind);
+        $this->assertSame(Reply::NUMBER, $a->ask($this->finance(), 'stock worth')->kind);
+        $this->assertSame(Reply::DENIED, $a->ask($this->finance(modules: []), 'stock worth')->kind, 'finance still needs module access');
+    }
+
+    public function test_tools_without_a_declared_sensitivity_behave_as_before(): void
+    {
+        $legacy = $this->tool('stock-worth', 'inventory', ['stock worth'], null);
+        $this->assertSame(Reply::NUMBER, $this->withTools([$legacy])->ask($this->asker(modules: ['inventory']), 'stock worth')->kind);
+        // tanpa DataPolicy tidak ada daftar kata terlarang: perilaku lama (proyek yang belum memakainya)
+        $odd = $this->tool('payroll-report', 'payroll', ['payroll report'], null);
+        $this->assertSame(Reply::NUMBER, $this->withTools([$odd])->ask($this->asker(modules: ['payroll']), 'payroll report')->kind);
+    }
+
+    public function test_payroll_cannot_be_registered(): void
+    {
+        $policy = new DataPolicy;
+        foreach ([['payroll-total', 'hrm'], ['total', 'hrm.payroll'], ['slip-gaji', null], ['x', 'Salary']] as [$key, $module]) {
+            try {
+                $this->withTools([$this->tool($key, $module, ['total'], Sensitivity::Quantity)], $policy);
+                $this->fail("Expected AssistantException for [{$key}] / [{$module}]");
+            } catch (AssistantException $e) {
+                $this->assertStringContainsString('salary / payroll', $e->getMessage());
+            }
+        }
+        // frasa pemicu yang menyebut gaji ditolak; kata tambahan milik program ikut berlaku
+        foreach ([[['berapa gaji bulan ini'], $policy], [['bonus'], new DataPolicy(['bonus'])]] as [$phrases, $p]) {
+            try {
+                $this->withTools([$this->tool('total', 'hrm', $phrases, Sensitivity::Quantity)], $p);
+                $this->fail('Expected AssistantException');
+            } catch (AssistantException) {
+                $this->addToAssertionCount(1);
+            }
+        }
+        // sensitivitas Forbidden ditolak tanpa DataPolicy sekalipun
+        $this->expectException(AssistantException::class);
+        $this->withTools([$this->tool('anything', 'hrm', ['anything'], Sensitivity::Forbidden)]);
+    }
+
+    public function test_payroll_questions_screens_are_never_served_even_to_an_asker_with_all_rights(): void
+    {
+        $calls = new \stdClass;
+        $nav = new class implements Navigator
+        {
+            public function screens(Asker $asker): array
+            {
+                return [['key' => 'payroll-run', 'label' => 'Pay Run', 'url' => '/pay', 'words' => 'pay run'],
+                    ['key' => 'attendance', 'label' => 'Attendance Board', 'url' => '/att', 'words' => 'absensi kehadiran']];
+            }
+        };
+        $a = $this->withTools([$this->tool('attendance-today', 'hrm', ['absensi hari ini'], Sensitivity::Quantity, $calls)], new DataPolicy, $nav);
+        $all = $this->finance();
+
+        foreach (['berapa gaji bulan ini', 'where is the payroll menu', 'slip gaji Budi', 'show salary report'] as $q) {
+            $this->assertSame(Reply::DENIED, $a->ask($all, $q)->kind, $q);
+        }
+        $this->assertNotSame(Reply::SCREEN, $a->ask($all, 'open pay run')->kind, 'screen declared as payroll is not offered');
+        $this->assertSame(Reply::SCREEN, $this->withTools([], null, $nav)->ask($all, 'open pay run')->kind, 'without DataPolicy the old behaviour stays');
+
+        // absensi / kehadiran BUKAN payroll: tetap dijawab
+        $this->assertSame(Reply::NUMBER, $a->ask($all, 'absensi hari ini')->kind);
+        $this->assertSame(1, $calls->n);
+        $this->assertSame(Reply::SCREEN, $a->ask($all, 'open attendance board')->kind);
     }
 
     private function chat(?MemoryChat $mem = null): array
