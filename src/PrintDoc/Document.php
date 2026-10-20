@@ -281,7 +281,7 @@ abstract class Document
 
     /**
      * Lembar lampiran A4 setelah lembar dokumen (mis. syarat, alternatif, gambar). Tiap lampiran: ['title' => ..., 'blocks' => [...]] dengan blok
-     * kind facts (rows [label, nilai]) / table (head, rows, num, note) / list (items) / text (text), dan/atau 'view' + 'data' milik aplikasi.
+     * kind facts (rows [label, nilai]) / table (head, rows, num, note) / list (items) / text (text) / sign (intro, checks, slots [peran, ket, nama]), dan/atau 'view' + 'data' milik aplikasi.
      * Dokumen yang punya lampiran wajib memakai kertas A4 (override paper()).
      *
      * @return list<array{title: string, blocks?: list<array>, view?: string, data?: array}>

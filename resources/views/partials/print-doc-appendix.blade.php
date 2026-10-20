@@ -22,6 +22,13 @@
                     @case('text')
                         <p class="dl-pdoc__txt">{{ $b['text'] }}</p>
                         @break
+                    @case('sign')
+                        @if (! empty($b['intro']))<p class="dl-pdoc__txt">{{ $t($b['intro']) }}</p>@endif
+                        @foreach ($b['checks'] ?? [] as $c)<p class="dl-pdoc__chk">&#9744; {{ $t($c) }}</p>@endforeach
+                        <div class="dl-pdoc__sign" style="grid-template-columns:repeat({{ count($b['slots']) }},1fr)">
+                            @foreach ($b['slots'] as $sl)<div><span>{{ $t($sl[0]) }}</span><small>{{ $t($sl[1] ?? '') }}</small><i></i><b>(@if (! empty($sl[2]))<u class="is-name">{{ $sl[2] }}</u>@else<u></u>@endif)</b></div>@endforeach
+                        </div>
+                        @break
                 @endswitch
                 @if (! empty($b['note']))<p class="dl-pdoc__cap">{{ $t($b['note']) }}</p>@endif
             </div>

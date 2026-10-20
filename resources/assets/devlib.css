@@ -2970,6 +2970,8 @@ a.dl-ycal__d:hover{background:var(--dl-hover);outline:1px solid var(--dl-accent)
 .dl-pdoc__txt{font-size:9pt;line-height:1.45;white-space:pre-line}
 .dl-pdoc__cap{font-size:8pt;line-height:1.4;margin-top:1.2mm}
 .dl-pdoc__appx-body .dl-card,.dl-pdoc__appx-body .dl-box{break-inside:avoid}
+.dl-pdoc__chk{font-size:9pt;line-height:1.5;margin:1mm 0}
+.dl-pdoc__blk .dl-pdoc__sign{margin-top:4mm}
 /* Cetak langsung dari browser (Ctrl+P) dan halaman dokumen online: lembar saja, tanpa latar abu-abu */
 @media print{.dl-pdoc{background:none;padding:0;gap:0;border-radius:0;display:block}.dl-pdoc__sheet{box-shadow:none;break-after:page}}
 .dl-share-page__doc .dl-pdoc{background:none;padding:0}
