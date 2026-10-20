@@ -148,12 +148,12 @@ final class Generator
 
     // ---- Generator otomatis TANPA AI: hanya tipe Master yang menunjuk tabel yang sudah ada ----
 
-    public const AUTO_DATABASES = ['tm2mst', 'tm2acc', 'tm2sdi', 'tm2pur', 'tm2inv', 'tm2prd'];
+    public const AUTO_DATABASES = ['sample_master', 'sample_trx'];
 
-    /** @return array<string, string> tabel dari kamus skema tmerp (resources/data/v2/schema.json) */
+    /** @return array<string, string> tabel dari skema contoh situs ini (resources/data/schema.json) */
     public static function tables(): array
     {
-        $file = base_path('resources/data/v2/schema.json');
+        $file = base_path('resources/data/schema.json');
         $schema = is_file($file) ? (json_decode(file_get_contents($file), true) ?: []) : [];
         $out = [];
         foreach (self::AUTO_DATABASES as $db) {
@@ -171,7 +171,7 @@ final class Generator
     // database, atau keterangan tabelnya. Didaftarkan hanya saat layar Generator dibuka.
     public static function defineTableLookup(): void
     {
-        $file = base_path('resources/data/v2/schema.json');
+        $file = base_path('resources/data/schema.json');
         $schema = is_file($file) ? (json_decode(file_get_contents($file), true) ?: []) : [];
         $rows = [];
         foreach (self::AUTO_DATABASES as $db) {
@@ -181,7 +181,7 @@ final class Generator
                 }
             }
         }
-        Lookup::define('gen_table', ['key' => 'id', 'label' => 'id', 'source' => 'resources/data/v2/schema.json', 'rows' => $rows,
+        Lookup::define('gen_table', ['key' => 'id', 'label' => 'id', 'source' => 'resources/data/schema.json', 'rows' => $rows,
             'columns' => ['name' => 'Table', 'db' => 'Database', 'columns' => 'Columns', 'note' => 'Note']]);
     }
 

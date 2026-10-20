@@ -6,8 +6,8 @@
                  Akun lain tetap melihat dashboard contoh per jabatan. --}}
             @php($build = ($user['developer'] ?? false) ? \App\Support\Catalog::build() : [])
             @if ($build)
-                <x-dl::dashboard :board="\App\Support\DashboardData::developer($user, $build)" source="resources/data/v2/build.json">
-                    <x-dl::build-board :build="$build" :library="\App\Support\Catalog::stats()" :engines-url="route('lib', ['slug' => 'p9-engines'])" source="resources/data/v2/build.json" />
+                <x-dl::dashboard :board="\App\Support\DashboardData::developer($user, $build)" source="resources/data/build.json">
+                    <x-dl::build-board :build="$build" :library="\App\Support\Catalog::stats()" :engines-url="route('lib', ['slug' => 'p9-engines'])" source="resources/data/build.json" />
                 </x-dl::dashboard>
             @else
                 <x-dl::dashboard :board="\App\Support\DashboardData::for($user)" source="App\Support\DashboardData (contoh, tanpa database)" />

@@ -6,6 +6,7 @@ Acuan baku untuk SEMUA proyek. Opt-in: tidak ada engine terdaftar otomatis; proy
 
 | Kelas | Fungsi |
 |---|---|
+| `Described` (interface, opsional) | `details()`: penjelasan engine untuk katalog (input, output, langkah) |
 | `Engine` (interface) | `key()`, `name()`, `group()`, `mode()`, `purpose()`, `run(array $input): Result` |
 | `Mode` (enum) | `Suggest` (hasil DRAF, officer memutuskan), `Auto` (jalan sendiri, langsung berlaku), `Calc` (hitungan murni, tanpa tulis database), `Flow` (alur dokumen) |
 | `Result` | `Result::draft()`, `applied()`, `rejected($reason)`; membawa `data`, `reasons` (alasan tiap keputusan), `warnings` (temuan yang tidak memblokir) |
@@ -36,7 +37,7 @@ $result = app(\Devlib\Engine\EngineRegistry::class)->run('imposition', ['inquiry
 <x-dl::engine-catalog :engines="app(\Devlib\Engine\EngineRegistry::class)->catalog(base_path())" />
 ```
 
-`catalog()` mengisi `key`, `name`, `group`, `mode`, `purpose`, `class`, `file`, `lines`, `entries`; bagian lain (`inputs`, `outputs`, `steps`, `reads`, `writes`, ...) boleh ditambahkan aplikasi pada baris itu.
+`catalog()` mengisi `key`, `name`, `group`, `mode`, `purpose`, `class`, `file`, `lines`, `entries`. Engine yang mengimplementasikan `Described` (`details()`) menambahkan `inputs`, `outputs`, `steps`, `reads`, `writes`, ... dari kodenya sendiri, jadi penjelasan tidak pernah terpisah dari engine.
 
 ## CANCEL dan ADJUSTMENT otomatis
 

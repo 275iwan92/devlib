@@ -19,6 +19,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Engine contoh situs ini (kontrak Devlib\Engine): sumber halaman Engine Catalog dan item QC.
+        app(\Devlib\Engine\EngineRegistry::class)->register(
+            new \App\Engines\VolumeDiscountEngine, new \App\Engines\ReorderSuggestionEngine,
+            new \App\Engines\StatusFlowEngine, new \App\Engines\DocumentNumberEngine,
+        );
+
         // Contoh Lookup remote (data besar dicari ke server): 300 lokasi fiktif, baris tidak ditanam di halaman.
         $places = fn () => collect(range(1, 300))->map(fn ($i) => ['id' => $i, 'name' => 'Kelurahan Contoh '.$i,
             'city' => ['Surabaya', 'Sidoarjo', 'Gresik', 'Malang', 'Jakarta'][$i % 5], 'postal' => (string) (60000 + $i)]);

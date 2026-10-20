@@ -234,13 +234,13 @@ final class Catalog
                     'sf-material-planning' => $page('Material Planning and Booking', 'fa-solid fa-boxes-packing', ['material-planning' => ['Material Planning (MRP) desk and Material Booking desk: shortcuts, state message, Create PR / Pick Item cards around the grid of the screen', ['MockupParts\\Components\\Planning\\MaterialPlan', 'MockupParts\\Components\\Planning\\MaterialBooking']]]),
                     'sf-crew-form' => $page('Assign Crew (one machine, a box per shift)', 'fa-solid fa-people-group', ['crew-form' => ['Assign Crew form: period, then one crew box per Master Shift with a Shift dropdown (swap), crew name, people and roles', ['MockupParts\Components\Production\CrewForm']]]),
                 ]],
-            // Daftar ENGINE aplikasi (user 2026-10-02): kegunaan, input, output, cara kerja. Isinya dibuat tmerp
-            // (`php artisan engine:catalog` -> resources/data/v2/engines.json), objeknya x-dl::engine-catalog.
+            // Daftar ENGINE (user 2026-10-02): kegunaan, input, output, cara kerja. Isinya dari EngineRegistry situs ini
+            // (kontrak Devlib\Engine), objeknya x-dl::engine-catalog.
             ['code' => 'EG', 'short' => 'EG', 'label' => 'Engines', 'icon' => 'fa-solid fa-gears',
                 'pages' => [
                     'p9-engines' => $page('Engine Catalog', 'fa-solid fa-gears', ['engines' => ['Engine Catalog: every engine with its input, output and how it works', $c('EngineCatalog')]]),
-                    // Papan Build Progress (user 2026-10-05): isinya dibuat tmerp (`php artisan build:catalog --env=mockup`
-                    // -> resources/data/v2/build.json), objeknya x-dl::build-board; tampil juga di halaman depan.
+                    // Papan Build Progress (user 2026-10-05): isinya disusun dari katalog DevLib sendiri (`php artisan build:catalog`
+                    // -> resources/data/build.json), objeknya x-dl::build-board; tampil juga di halaman depan.
                     'p9-build' => $page('Build Progress', 'fa-solid fa-chart-simple', ['build' => ['Build Progress: objects, modules, screens, forms, grids, engines and features built so far', $c('BuildBoard')]]),
                 ]],
             // Aturan untuk developer, bukan komponen yang dipakai user (user 2026-09-26).
@@ -378,10 +378,10 @@ final class Catalog
         ];
     }
 
-    // Isi papan Build Progress: berkas yang dibuat tmerp (situs DevLib tidak memuat kode / database tmerp).
+    // Isi papan Build Progress: resources/data/build.json, disusun `php artisan build:catalog` dari katalog DevLib sendiri.
     public static function build(): array
     {
-        $file = base_path('resources/data/v2/build.json');
+        $file = base_path('resources/data/build.json');
 
         return is_file($file) ? (json_decode(file_get_contents($file), true) ?: []) : [];
     }

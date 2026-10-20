@@ -56,6 +56,6 @@ final class EngineRegistry
     {
         return array_values(array_map(fn (Engine $e) => [
             'key' => $e->key(), 'name' => $e->name(), 'group' => $e->group(), 'mode' => $e->mode()->value, 'purpose' => $e->purpose(),
-        ] + EngineInspector::describe($e::class, ['run'], $basePath), $this->engines));
+        ] + EngineInspector::describe($e::class, ['run'], $basePath) + ($e instanceof Described ? $e->details() : []), $this->engines));
     }
 }

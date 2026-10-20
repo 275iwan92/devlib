@@ -7,7 +7,7 @@ use Devlib\Locale;
 
 // Papan Build Progress: berapa objek, modul, layar, form, grid, laporan dan engine yang sudah dibangun, modul mana yang
 // sudah penuh / sebagian / belum, dan berapa yang sudah dikunci user setelah QC. Disusun dari StatBox, Card, Progress, Badge.
-// build   = isi berkas yang dibuat aplikasi (tmerp: `php artisan build:catalog` -> resources/data/v2/build.json):
+// build   = isi berkas yang dibuat aplikasi (situs devlib: `php artisan build:catalog` -> resources/data/build.json):
 //           ['generated','database','totals' => [..], 'modules' => [[label,total,v2,v1,not_built,waiting_qc,locked,form,grid,report]],
 //            'engines' => [['group','items' => [['name','purpose','mode']]]], 'features' => [[ikon, teks]], 'notes' => [teks]]
 // library = angka katalog library itu sendiri: ['groups' => [label], 'pages' => n, 'approved' => n, 'demos' => n, 'packages' => [nama]]

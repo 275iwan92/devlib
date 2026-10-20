@@ -1,0 +1,1225 @@
+{
+    "generated": "2026-10-20 13:56",
+    "database": "devlib",
+    "totals": {
+        "objects": 87,
+        "modules": 10,
+        "modules_done": 3,
+        "screens": 167,
+        "v2": 167,
+        "v1": 0,
+        "not_built": 0,
+        "waiting_qc": 39,
+        "locked": 48,
+        "forms": 5,
+        "grids": 8,
+        "reports": 2,
+        "engines": 4,
+        "engine_groups": 3,
+        "migrations": 9,
+        "tests": 4,
+        "commits": 305,
+        "since": "2026-09-23"
+    },
+    "modules": [
+        {
+            "label": "Basics & Themes",
+            "total": 18,
+            "v2": 18,
+            "v1": 0,
+            "not_built": 0,
+            "waiting_qc": 0,
+            "locked": 18,
+            "form": 0,
+            "grid": 0,
+            "report": 0
+        },
+        {
+            "label": "Inputs & Buttons",
+            "total": 9,
+            "v2": 9,
+            "v1": 0,
+            "not_built": 0,
+            "waiting_qc": 9,
+            "locked": 0,
+            "form": 0,
+            "grid": 0,
+            "report": 0
+        },
+        {
+            "label": "Grid",
+            "total": 8,
+            "v2": 8,
+            "v1": 0,
+            "not_built": 0,
+            "waiting_qc": 1,
+            "locked": 7,
+            "form": 0,
+            "grid": 8,
+            "report": 1
+        },
+        {
+            "label": "Form",
+            "total": 4,
+            "v2": 4,
+            "v1": 0,
+            "not_built": 0,
+            "waiting_qc": 0,
+            "locked": 4,
+            "form": 4,
+            "grid": 0,
+            "report": 0
+        },
+        {
+            "label": "Documents",
+            "total": 6,
+            "v2": 6,
+            "v1": 0,
+            "not_built": 0,
+            "waiting_qc": 0,
+            "locked": 6,
+            "form": 0,
+            "grid": 0,
+            "report": 1
+        },
+        {
+            "label": "Boards, Schedules & Charts",
+            "total": 16,
+            "v2": 16,
+            "v1": 0,
+            "not_built": 0,
+            "waiting_qc": 15,
+            "locked": 1,
+            "form": 0,
+            "grid": 0,
+            "report": 0
+        },
+        {
+            "label": "Menus, Accounts & Layout",
+            "total": 13,
+            "v2": 13,
+            "v1": 0,
+            "not_built": 0,
+            "waiting_qc": 1,
+            "locked": 12,
+            "form": 0,
+            "grid": 0,
+            "report": 0
+        },
+        {
+            "label": "Special Forms",
+            "total": 10,
+            "v2": 10,
+            "v1": 0,
+            "not_built": 0,
+            "waiting_qc": 10,
+            "locked": 0,
+            "form": 1,
+            "grid": 0,
+            "report": 0
+        },
+        {
+            "label": "Engines",
+            "total": 2,
+            "v2": 2,
+            "v1": 0,
+            "not_built": 0,
+            "waiting_qc": 2,
+            "locked": 0,
+            "form": 0,
+            "grid": 0,
+            "report": 0
+        },
+        {
+            "label": "DEV Rules",
+            "total": 1,
+            "v2": 1,
+            "v1": 0,
+            "not_built": 0,
+            "waiting_qc": 1,
+            "locked": 0,
+            "form": 0,
+            "grid": 0,
+            "report": 0
+        }
+    ],
+    "engines": [
+        {
+            "group": "Pricing",
+            "items": [
+                {
+                    "key": "volume-discount",
+                    "name": "Volume Discount",
+                    "purpose": "Gives the quantity discount of an order line and the line total from the unit price.",
+                    "mode": "calc",
+                    "used": 0,
+                    "tests": 0
+                }
+            ]
+        },
+        {
+            "group": "Inventory",
+            "items": [
+                {
+                    "key": "reorder-suggestion",
+                    "name": "Reorder Suggestion",
+                    "purpose": "Suggests how much to order when stock falls to the reorder point; the officer decides.",
+                    "mode": "suggest",
+                    "used": 0,
+                    "tests": 0
+                }
+            ]
+        },
+        {
+            "group": "Documents",
+            "items": [
+                {
+                    "key": "status-flow",
+                    "name": "Document Status Flow",
+                    "purpose": "Tells which actions a record may take in its current mode (Draft, Confirmed, Cancelled or Activated, Deactivated).",
+                    "mode": "flow",
+                    "used": 0,
+                    "tests": 0
+                },
+                {
+                    "key": "document-number",
+                    "name": "Document Number",
+                    "purpose": "Gives the next document number (PREFIX-YYMM-0001), restarting at 0001 every month.",
+                    "mode": "auto",
+                    "used": 0,
+                    "tests": 0
+                }
+            ]
+        }
+    ],
+    "features": [
+        [
+            "fa-language",
+            "Multi-language + dictionary"
+        ],
+        [
+            "fa-palette",
+            "12 themes (Pastel, Bright, Dark, Black x Blue, Green, Red)"
+        ],
+        [
+            "fa-table",
+            "Grid: master, transactional and report (zebra rows)"
+        ],
+        [
+            "fa-gears",
+            "Engine contract (Devlib\\Engine): modes, results, registry, cancel + adjustment"
+        ],
+        [
+            "fa-print",
+            "Print documents that carry the record mode"
+        ],
+        [
+            "fa-user-shield",
+            "Login and security model for other projects"
+        ]
+    ],
+    "notes": [],
+    "items": [
+        {
+            "type": "OBJECT",
+            "key": "page:basic-colors",
+            "name": "Colors",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:basic-typography",
+            "name": "Typography",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:basic-shape",
+            "name": "Spacing · Radius · Shadow",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:basic-themes",
+            "name": "Themes",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:basic-density",
+            "name": "Density",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:basic-icons",
+            "name": "Icons",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:basic-breakpoints",
+            "name": "Breakpoints",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:basic-locale",
+            "name": "Locale & Formats",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p3-feedback",
+            "name": "Toast · Confirm · Modal · Drawer",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p3-loading",
+            "name": "Loading · Empty",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p3-notifications",
+            "name": "Notifications",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p3-errors",
+            "name": "Error Pages",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p4-developer",
+            "name": "Developer Mode",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p4-guard",
+            "name": "Dirty Guard",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p4-shortcuts",
+            "name": "Keyboard Shortcuts",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p4-permissions",
+            "name": "Permissions",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p4-i18n",
+            "name": "Multi-language",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p4-metadata",
+            "name": "Metadata",
+            "module": "Basics & Themes",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p2-inputs",
+            "name": "Text / String",
+            "module": "Inputs & Buttons",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p2-numbers",
+            "name": "Numeric",
+            "module": "Inputs & Buttons",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p2-datetime",
+            "name": "Date & Time",
+            "module": "Inputs & Buttons",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p2-choices",
+            "name": "Choice & Lookup",
+            "module": "Inputs & Buttons",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p2-files",
+            "name": "Files",
+            "module": "Inputs & Buttons",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p2-buttons",
+            "name": "Button",
+            "module": "Inputs & Buttons",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p2-display",
+            "name": "Status",
+            "module": "Inputs & Buttons",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p2-containers",
+            "name": "Container",
+            "module": "Inputs & Buttons",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p2-navigation",
+            "name": "Navigation",
+            "module": "Inputs & Buttons",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-grid-tx",
+            "name": "Grid Transactional",
+            "module": "Grid",
+            "qc": "LOCKED",
+            "built_at": "2026-09-30",
+            "built_by": null,
+            "changed_at": "2026-09-30",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-grid-master",
+            "name": "Grid Master",
+            "module": "Grid",
+            "qc": "LOCKED",
+            "built_at": "2026-09-30",
+            "built_by": null,
+            "changed_at": "2026-09-30",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-grid-lookup",
+            "name": "Grid Lookup",
+            "module": "Grid",
+            "qc": "LOCKED",
+            "built_at": "2026-09-30",
+            "built_by": null,
+            "changed_at": "2026-09-30",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-grid-report",
+            "name": "Grid Report List",
+            "module": "Grid",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-grid-group",
+            "name": "Grid Group By",
+            "module": "Grid",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-grid-drilldown",
+            "name": "Grid Summary → Details",
+            "module": "Grid",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-grid-pivot",
+            "name": "Grid Pivot",
+            "module": "Grid",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-grid-variant",
+            "name": "Grid Variant",
+            "module": "Grid",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-form-single",
+            "name": "Single Form",
+            "module": "Form",
+            "qc": "LOCKED",
+            "built_at": "2026-09-30",
+            "built_by": null,
+            "changed_at": "2026-09-30",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-form-md",
+            "name": "Form Master-Detail",
+            "module": "Form",
+            "qc": "LOCKED",
+            "built_at": "2026-09-30",
+            "built_by": null,
+            "changed_at": "2026-09-30",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-form-approval",
+            "name": "Form Approval",
+            "module": "Form",
+            "qc": "LOCKED",
+            "built_at": "2026-09-30",
+            "built_by": null,
+            "changed_at": "2026-09-30",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-form-wizard",
+            "name": "Form Wizard",
+            "module": "Form",
+            "qc": "LOCKED",
+            "built_at": "2026-09-30",
+            "built_by": null,
+            "changed_at": "2026-09-30",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-master",
+            "name": "Master",
+            "module": "Documents",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-master-detail",
+            "name": "Master-Detail",
+            "module": "Documents",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-print",
+            "name": "Print Out",
+            "module": "Documents",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-print-doc",
+            "name": "Print Document (A5 / A4)",
+            "module": "Documents",
+            "qc": "LOCKED",
+            "built_at": "2026-10-07",
+            "built_by": null,
+            "changed_at": "2026-10-07",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-report",
+            "name": "Report",
+            "module": "Documents",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-import",
+            "name": "Import / Export",
+            "module": "Documents",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-kanban",
+            "name": "Kanban",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-gantt",
+            "name": "Gantt",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-calendar",
+            "name": "Calendar",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-org",
+            "name": "Org Chart",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-charts",
+            "name": "Charts",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-greeting-card",
+            "name": "Greeting Card (widget)",
+            "module": "Boards, Schedules & Charts",
+            "qc": "LOCKED",
+            "built_at": "2026-10-07",
+            "built_by": null,
+            "changed_at": "2026-10-07",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-dashboard",
+            "name": "Opening Dashboard (per position)",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-indicators",
+            "name": "Dashboard Indicators",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-statement",
+            "name": "Financial Statement",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-timer",
+            "name": "Timer (stopwatch)",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-geo-clock",
+            "name": "Geo Clock (GPS attendance)",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-delivery",
+            "name": "Delivery Track",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-codes",
+            "name": "QR & Barcode",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-wh-map",
+            "name": "Location & Mapping",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-wh-labels",
+            "name": "Labels",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p6-wh-scan",
+            "name": "Scan & Track",
+            "module": "Boards, Schedules & Charts",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:shell",
+            "name": "Shell (main menu)",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-24",
+            "built_by": null,
+            "changed_at": "2026-09-24",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:screen-nav",
+            "name": "Screen Navigation (Grid ↔ Form)",
+            "module": "Menus, Accounts & Layout",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p7-menus",
+            "name": "Menu (Ribbon · Mega · Side Panel)",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p7-layer",
+            "name": "Layer Menu",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-24",
+            "built_by": null,
+            "changed_at": "2026-09-24",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p7-chat",
+            "name": "Chat (WhatsApp style)",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-10-02",
+            "built_by": null,
+            "changed_at": "2026-10-02",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:login-1",
+            "name": "Login 1 · same as tmerp",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:login-2",
+            "name": "Login 2 · glass pop-up",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:login-3",
+            "name": "Login 3 · navy left panel",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:register",
+            "name": "Register Account",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:forgot-1",
+            "name": "Forgot Password · email",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:forgot-2",
+            "name": "Forgot Password · 4 questions",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p8-lock",
+            "name": "Lock Screen",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p8-security",
+            "name": "Setup & Security",
+            "module": "Menus, Accounts & Layout",
+            "qc": "LOCKED",
+            "built_at": "2026-09-26",
+            "built_by": null,
+            "changed_at": "2026-09-26",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:sf-promise-book",
+            "name": "Customer Plan Delivery (promise book)",
+            "module": "Special Forms",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:sf-self-service",
+            "name": "Edit Profile (self-service)",
+            "module": "Special Forms",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:sf-product-master",
+            "name": "Master Product (one product)",
+            "module": "Special Forms",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:sf-customer-card",
+            "name": "Customer 360 (one customer)",
+            "module": "Special Forms",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:sf-petty-cash",
+            "name": "Petty Cash",
+            "module": "Special Forms",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:sf-label-print",
+            "name": "Label Printing (location and item)",
+            "module": "Special Forms",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:sf-pallet-label",
+            "name": "Pallet Label",
+            "module": "Special Forms",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:sf-scan-track",
+            "name": "Track via QR / Barcode",
+            "module": "Special Forms",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:sf-material-planning",
+            "name": "Material Planning and Booking",
+            "module": "Special Forms",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:sf-crew-form",
+            "name": "Assign Crew (one machine, a box per shift)",
+            "module": "Special Forms",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p9-engines",
+            "name": "Engine Catalog",
+            "module": "Engines",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p9-build",
+            "name": "Build Progress",
+            "module": "Engines",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p5-override",
+            "name": "OO Methods and Properties",
+            "module": "DEV Rules",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "ENGINE",
+            "key": "engine:volume-discount",
+            "name": "Volume Discount",
+            "module": "Engines",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "ENGINE",
+            "key": "engine:reorder-suggestion",
+            "name": "Reorder Suggestion",
+            "module": "Engines",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "ENGINE",
+            "key": "engine:status-flow",
+            "name": "Document Status Flow",
+            "module": "Engines",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "ENGINE",
+            "key": "engine:document-number",
+            "name": "Document Number",
+            "module": "Engines",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        }
+    ]
+}

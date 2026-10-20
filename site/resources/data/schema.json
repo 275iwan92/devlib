@@ -1,0 +1,64 @@
+{
+    "_generated": "contoh",
+    "_source": "Skema contoh fiktif milik situs DevLib (bukan database proyek mana pun); dibaca pilihan \"Existing table\" di layar Generator.",
+    "sample_master": {
+        "customer": {
+            "type": "table",
+            "comment": "Customers who buy from us",
+            "columns": {
+                "id_customer": ["bigint unsigned", false, "PRI", ""],
+                "customer_code": ["varchar(20)", false, "UNI", "Short code, e.g. CUST-001"],
+                "customer_name": ["varchar(120)", false, "", ""],
+                "city": ["varchar(60)", true, "", ""],
+                "activate": ["tinyint(1)", false, "", "1 = Activated, 0 = Deactivated"]
+            }
+        },
+        "product": {
+            "type": "table",
+            "comment": "Items we sell",
+            "columns": {
+                "id_product": ["bigint unsigned", false, "PRI", ""],
+                "product_code": ["varchar(20)", false, "UNI", ""],
+                "product_name": ["varchar(120)", false, "", ""],
+                "unit_price": ["decimal(15,2)", false, "", "Price of one unit"],
+                "category_id": ["bigint unsigned", true, "MUL", ""],
+                "activate": ["tinyint(1)", false, "", "1 = Activated, 0 = Deactivated"]
+            }
+        },
+        "category": {
+            "type": "table",
+            "comment": "Product categories",
+            "columns": {
+                "id_category": ["bigint unsigned", false, "PRI", ""],
+                "category_code": ["varchar(20)", false, "UNI", ""],
+                "category_name": ["varchar(80)", false, "", ""],
+                "activate": ["tinyint(1)", false, "", "1 = Activated, 0 = Deactivated"]
+            }
+        }
+    },
+    "sample_trx": {
+        "sales_order": {
+            "type": "table",
+            "comment": "Sales order header (Draft, Confirmed, Cancelled)",
+            "columns": {
+                "id_order": ["bigint unsigned", false, "PRI", ""],
+                "order_no": ["varchar(20)", false, "UNI", "PREFIX-YYMM-0001"],
+                "order_date": ["date", false, "", ""],
+                "customer_id": ["bigint unsigned", false, "MUL", ""],
+                "status": ["varchar(12)", false, "MUL", "DRAFT, CONFIRMED, CANCELLED"],
+                "total": ["decimal(15,2)", false, "", ""]
+            }
+        },
+        "sales_order_line": {
+            "type": "table",
+            "comment": "Sales order lines",
+            "columns": {
+                "id_line": ["bigint unsigned", false, "PRI", ""],
+                "order_id": ["bigint unsigned", false, "MUL", ""],
+                "product_id": ["bigint unsigned", false, "MUL", ""],
+                "qty": ["int", false, "", ""],
+                "unit_price": ["decimal(15,2)", false, "", ""]
+            }
+        }
+    }
+}

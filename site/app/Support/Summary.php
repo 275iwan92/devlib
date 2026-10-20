@@ -8,8 +8,8 @@ use Devlib\Locale;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-// Executive Summary devlib.test (user 2026-10-05). Angka pembangunan = berkas yang dibuat tmerp
-// (`php artisan build:catalog --env=mockup` -> resources/data/v2/build.json); daftar hasil kerja + rating = database devlib
+// Executive Summary devlib.test (user 2026-10-05). Angka pembangunan = build.json yang disusun dari katalog DevLib sendiri
+// (`php artisan build:catalog` -> resources/data/build.json); daftar hasil kerja + rating = database devlib
 // (dev_item, dev_rating). sync() menyalin daftar dari berkas ke dev_item tiap berkasnya berubah.
 final class Summary
 {
@@ -56,7 +56,7 @@ final class Summary
 
     public static function sync(): void
     {
-        $file = base_path('resources/data/v2/build.json');
+        $file = base_path('resources/data/build.json');
         $stamp = is_file($file) ? filemtime($file) : 0;
         if (! $stamp || Cache::get('summary.synced') === $stamp) {
             return;

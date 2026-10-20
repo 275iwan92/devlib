@@ -1,11 +1,10 @@
-{{-- Daftar engine aplikasi tmerp. Situs DevLib tidak memuat kode tmerp, jadi isinya dibaca dari berkas yang dibuat tmerp:
-     `php artisan engine:catalog` (App\Support\Engines\EngineRegistry + tanda tangan method dari kode). --}}
+{{-- Daftar engine situs ini: diambil langsung dari EngineRegistry (kontrak Devlib\Engine), jadi tidak pernah basi.
+     Tanda tangan method diambil dari kode; penjelasan (input, output, langkah) dari Described::details() tiap engine. --}}
 @php
-    $file = base_path('resources/data/v2/engines.json');
-    $engines = is_file($file) ? (json_decode(file_get_contents($file), true) ?: []) : [];
+    $engines = app(\Devlib\Engine\EngineRegistry::class)->catalog(base_path());
 @endphp
 @if ($engines)
-    <x-dl::engine-catalog :engines="$engines" source="resources/data/v2/engines.json" />
+    <x-dl::engine-catalog :engines="$engines" source="Devlib\Engine\EngineRegistry::catalog()" />
 @else
-    <x-dl::empty-state icon="fa-gears" title="No engine catalog yet" message="Run php artisan engine:catalog in tmerp to create resources/data/v2/engines.json." />
+    <x-dl::empty-state icon="fa-gears" title="No engines registered" message="Register engines with Devlib\Engine\EngineRegistry::register() (see skills/devlib/engine.md)." />
 @endif

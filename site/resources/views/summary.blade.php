@@ -1,4 +1,4 @@
-{{-- Executive Summary devlib.test (user 2026-10-05): sembilan halaman, satu berkas. Angka = build.json (tmerp), daftar hasil
+{{-- Executive Summary devlib.test (user 2026-10-05): sembilan halaman, satu berkas. Angka = build.json (katalog DevLib sendiri), daftar hasil
      kerja + rating = database devlib (App\Support\Summary). Disusun dari objek x-dl::*. --}}
 @extends('layout', ['title' => $label, 'dev' => true, 'bodyClass' => 'dl-page-body'])
 @php
@@ -26,7 +26,7 @@
                 @if ($t['waiting_qc'] > $t['locked'] * 5) The project is now limited by review, not by building speed: at 10 screens reviewed per working day the waiting list needs about {{ $n(ceil($t['waiting_qc'] / 10)) }} working days. @endif
                 @if ($ratings['low']) {{ count($ratings['low']) }} item(s) are rated 3 stars or less and should be fixed first. @endif
             </div>
-            <x-dl::build-board :build="$build" :library="\App\Support\Catalog::stats()" :engines-url="route('lib', ['slug' => 'p9-engines'])" source="resources/data/v2/build.json" />
+            <x-dl::build-board :build="$build" :library="\App\Support\Catalog::stats()" :engines-url="route('lib', ['slug' => 'p9-engines'])" source="resources/data/build.json" />
             @break
 
         @case('module')
