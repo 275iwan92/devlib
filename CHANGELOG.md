@@ -9,6 +9,10 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Aturan membangun object** (`skills/devlib/object.md`, dokumen; tanpa perubahan kode): daftar periksa membuat komponen (kelas PHP + JS berpasangan,
+  header REMARK, CSS token, manifest, tes kontrak, halaman katalog), aturan baku, cara mewariskan, uji layak jadi object, dan versi. Butir yang belum
+  punya aturan tertulis ditandai **BELUM ADA ATURAN**. Ditautkan dari `SKILL.md`.
+
 - **Alur Grid → Form → kembali** (opt-in). `x-dl::grid` menerima `restore`: cari, halaman, dan kotak statistik disimpan saat form dibuka lewat
   `openUrl` / `newUrl` dan dipulihkan sekali saat kembali; `?hl=<id>` menyorot baris yang baru disimpan (halaman diloncati). `boot.js` menampilkan
   `<div hidden data-dl-flash="success|danger|warn|info">` sebagai toast sekali muncul. Tanpa `restore` dan tanpa elemen itu perilaku lama tidak berubah.
