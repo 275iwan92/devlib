@@ -6,16 +6,20 @@ return [
     // Isi DEVLIB_LOGIN_BYPASS=false untuk mencoba alur login contohnya (/login).
     'login_bypass' => (bool) env('DEVLIB_LOGIN_BYPASS', true),
 
+    // Satu-satunya akun: model login/security untuk proyek lain (bukan pengamanan). Cadangan login pemilik = baris johiwan di tabel sec_user (hash, bukan di sini).
     'users' => [
         ['login' => 'admin', 'password' => 'admin', 'name' => 'Administrator DevLib', 'email' => 'admin@devlib.test', 'role' => 'Administrator', 'developer' => true],
-        // Contoh opening screen per jabatan (data pegawai & jabatan = tm2mst emp_employee / org_position di tmerp).
-        ['login' => 'yuna', 'password' => 'yuna', 'name' => 'Yuna Puji Astuti', 'email' => 'yuna@devlib.test', 'role' => 'Sales & Marketing',
+    ],
+
+    // Profil pegawai contoh untuk opening screen per jabatan (halaman katalog dashboard / kartu sapaan); BUKAN akun login.
+    'profiles' => [
+        ['login' => 'yuna', 'name' => 'Yuna Puji Astuti', 'email' => 'yuna@devlib.test', 'role' => 'Sales & Marketing',
             'employee_code' => 'TM-00121', 'position_code' => 'SRSTAFFSALESMKT', 'position' => 'Senior Staff Sales & Marketing',
             'department' => 'Sales & Marketing Dept.', 'superior' => 'Sales & Marketing Manager', 'developer' => false],
-        ['login' => 'sania', 'password' => 'sania', 'name' => 'Sania Maura Fitriani', 'email' => 'sania@devlib.test', 'role' => 'Human Capital',
+        ['login' => 'sania', 'name' => 'Sania Maura Fitriani', 'email' => 'sania@devlib.test', 'role' => 'Human Capital',
             'employee_code' => 'TM-00150', 'position_code' => 'HROFFICER', 'position' => 'Human Resource Officer',
             'department' => 'Human Capital Dept.', 'superior' => 'Human Capital Manager', 'developer' => false],
-        ['login' => 'carrij', 'password' => 'carrij', 'name' => 'Carrij Soehendra', 'email' => 'carrij@devlib.test', 'role' => 'Direksi',
+        ['login' => 'carrij', 'name' => 'Carrij Soehendra', 'email' => 'carrij@devlib.test', 'role' => 'Direksi',
             'employee_code' => 'TM-00491', 'position_code' => 'PRESDIR', 'position' => 'Presiden Direktur',
             'department' => 'Direksi', 'superior' => null, 'developer' => false],
     ],

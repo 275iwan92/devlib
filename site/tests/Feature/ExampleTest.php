@@ -18,4 +18,12 @@ class ExampleTest extends TestCase
 
         $this->get('/')->assertRedirect(route('login'));
     }
+    public function test_sample_login_accepts_only_the_admin_account(): void
+    {
+        config(['devlib.login_bypass' => false]);
+
+        $this->assertCount(1, config('devlib.users'));
+        $this->post('/login', ['login' => 'yuna', 'password' => 'yuna'])->assertSessionMissing('devlib_user');
+        $this->post('/login', ['login' => 'admin', 'password' => 'admin'])->assertSessionHas('devlib_user');
+    }
 }

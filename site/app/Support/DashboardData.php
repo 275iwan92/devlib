@@ -29,7 +29,7 @@ final class DashboardData
     // Data contoh untuk akun DevLib tertentu (halaman katalog komponen).
     public static function forLogin(string $login): array
     {
-        return self::for(collect(config('devlib.users'))->firstWhere('login', $login) ?? []);
+        return self::for(collect(config('devlib.profiles'))->merge(config('devlib.users'))->firstWhere('login', $login) ?? []);
     }
 
     // Opening screen developer (user 2026-10-05): sambutan sama dengan profil lain; bagian widget = papan Build Progress
