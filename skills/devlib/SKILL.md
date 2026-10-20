@@ -23,7 +23,7 @@ Cek dulu `composer.json` proyek: bila `jo/devlib` sudah ada, lewati langkah ini.
    @source '../../../devlib/src';
    @source '../../../devlib/resources';
    ```
-3. `config/devlib.php` — salin dari `../sstock/config/devlib.php` lalu ubah `brand`, `company`, `lang`, `timezone`. Kunci: `brand`, `company`, `lang`, `translate_fixed` (aplikasi satu bahasa), `back_history`, `timezone`, `timezone_label`, `media_path/url`, `lookup_middleware`, `abilities`.
+3. `config/devlib.php` — salin dari `../sstock/config/devlib.php` lalu ubah `brand`, `company`, `lang`, `timezone`. Kunci: `brand`, `company`, `lang`, `translate_fixed` (aplikasi satu bahasa), `back_history` (**set `false`**, lihat bagian Form), `timezone`, `timezone_label`, `media_path/url`, `lookup_middleware`, `abilities`.
 4. Layout — salin `../sstock/resources/views/layout.blade.php`. Intinya di `<head>`:
    ```blade
    <link rel="stylesheet" href="{{ \Devlib\DevlibServiceProvider::asset('devlib.css') }}">
@@ -45,6 +45,37 @@ Cek dulu `composer.json` proyek: bila `jo/devlib` sudah ada, lewati langkah ini.
    - Isian: `x-dl::field.*` (text, select, date, money, lookup, toggle, ...). Tombol: `x-dl::button preset="save|cancel|delete|print|..."`.
 3. **Teks layar ditulis English**; kamus menerjemahkan ke bahasa tampilan. **Nilai data** di prop teks dibungkus `raw()`: `:title="'Order · '.raw($o->no)"`. Aplikasi satu bahasa → `translate_fixed => true` dan kamus aplikasi.
 4. Perilaku yang dibutuhkan >1 layar = tambah di **induk** (prop/method baru), bukan salin-tempel. Anak = `extends` induk, hanya menyatakan yang beda.
+
+## Tipe grid (`x-dl::grid`) — pilih sebelum menulis kolom
+
+Semua dari satu komponen; bedanya `mode`, `actions`, dan kolom depan. Daftar prop & tipe kolom lengkap: komentar kepala `src/Components/Grid.php`.
+
+| Tipe | Pengaturan | Kolom depan | Aksi baris |
+|---|---|---|---|
+| **Master** (barang, kategori, supplier, ...) | `mode="entry"` (bawaan), `actions="master"`, `:toggle-url="url('x/{id}/toggle')"` | `type => identity`, `code`, **`box => true`** (kotak warna + inisial; `hue` bila warna bermakna) | Edit + Aktif/Nonaktif |
+| **Transaksional** (dokumen: PO, penerimaan, ...) | `mode="entry"`, `actions="worklist"` | **nomor dokumen** (`type => doc` + `party` = nama pihak bila ingin persegi dokumen, atau `identity` + `avatar => false` bila ingin polos) | **Buka saja** |
+| **Report** (laporan, data ribuan) | `mode="report"` (otomatis: tanpa centang/Aksi/New Record, rapat, filter terbuka) | bebas | tidak ada |
+
+Kriteria:
+- **Master**: grid master baru wajib berkotak (`box => true`), jangan `avatar => false`. Aktif/Nonaktif hanya untuk master dan **wajib** `toggle-url`, kalau tidak hanya pratinjau.
+- **Transaksional**: kolom pertama = nomor dokumen; **5–8 kolom tampil** (sisanya tersembunyi), **tanpa kolom jumlah item/baris**; Expand (`detail`) = tabel anak **maks 7 kolom, selalu memuat nama item/product**, tanpa harga, judul tanpa jumlah baris. Wajib kolom **Status** `type => badge` + `tones` (satu-satunya warna di baris; hijau terkonfirmasi/disetujui, abu draf, kuning menunggu, merah batal/ditolak). Warna baris: `rowTone` + kolom teks yang menyebut artinya (jangan hanya warna). **Confirm / Approve / Cancel / Delete TIDAK ada di grid**, hanya di form dokumen. Transaksi tidak pernah dinonaktifkan.
+- **Report**: periode (`Period + Show`) bila laporan berbasis tanggal; cetakan lewat `x-dl::report`.
+- Semua grid entry: `+ New Record` via `:new-url`; sembunyikan (`:new-record="null"`) bagi yang tak berhak; `:open-url="url('x/{id}')"` (klik 2x/Buka/Edit); `search` menyebut kolom yang dicari; `stats` = kotak hitung yang berfungsi sebagai filter. Toolbar (cari, filter, kolom, export CSV) datang otomatis — jangan dibuat manual. Bulk hanya bila diminta.
+
+## Form: hal yang sering terlewat
+
+- **Tombol Back harus ke grid modulnya.** Isi `:back="route('x.index')"` di `x-dl::form` **dan** set `'back_history' => false` di `config/devlib.php`. Tanpa itu Back memakai `history.back()` → setelah Save, "layar sebelumnya" adalah form isian (risiko input ganda). Jangan pakai `history.back()` / `url()->previous()` di form.
+- Form dokumen: `kind="document"` (+ `:pipeline`, `:status`); tombol Save/Confirm/Delete/Cancel/Print/Back to Draft **datang dari status DevLib** — jangan dibuat manual. Controller membaca `_action` (save, confirm, delete, cancel, approve, reject). Pakai kata **Confirm**, bukan Submit. Form master: `kind="master"`.
+- Isian wajib: `required`; error server: `:error="$errors->first('x')"`; nilai ulang: `old()`. Isian di dalam modal bersarang tidak ikut validasi form induk.
+- Cegah kirim ganda: layout memuat penjaga `submit` (ada di `sstock/resources/views/layout.blade.php`) — jangan dibuang.
+- Riwayat: tab History otomatis; isi `:created-at`, `:updated-at`, `:log`.
+
+## Kebiasaan lintas proyek
+
+- Label layar boleh English; aplikasi satu bahasa menambah terjemahan ke kamus aplikasi (`Lang::text`), pesan validasi di `lang/<kode>/validation.php`. Mata uang tampil kode (`IDR`), bukan simbol.
+- Seeder data contoh idempoten (`updateOrCreate` berkunci kode alami), bukan di migrasi; ubah skema = ubah seeder pada perubahan yang sama.
+- Perubahan DevLib harus **opt-in** (default lama tetap jalan): proyek lain (tmerp) memakai perilaku lama. Satu opsi config/prop baru + default lama, bukan mengubah perilaku.
+- Selesai satu perubahan: commit (repo proyek dan, bila DevLib berubah, repo devlib). Verifikasi tampilan nyata di `http://<proyek>.test`, bukan hanya tes.
 
 ## 3. Kalau komponen belum ada / kurang
 
