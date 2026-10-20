@@ -23,9 +23,12 @@ class CatalogPagesTest extends TestCase
         $this->assertSame([], $failed, 'Catalog pages that do not render (slug => status)');
     }
 
-    public function test_site_has_no_leftover_project_packages(): void
+    public function test_site_ships_only_the_packages_it_demonstrates(): void
     {
-        $this->assertDirectoryDoesNotExist(base_path('packages'));
-        $this->assertStringNotContainsString('MockupParts', (string) file_get_contents(base_path('bootstrap/providers.php')));
+        // assistant dan chat dibuat ulang sebagai model DevLib; mockup-parts = layar khusus (grup Special Forms) yang masih dipakai.
+        $this->assertDirectoryDoesNotExist(base_path('packages/assistant'));
+        $this->assertDirectoryDoesNotExist(base_path('packages/chat'));
+        $this->assertDirectoryExists(base_path('packages/mockup-parts'));
+        $this->assertContains('Special Forms', array_column(Catalog::groups(), 'label'));
     }
 }

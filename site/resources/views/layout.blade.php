@@ -1,6 +1,6 @@
 {{-- REMARK
-Tujuan: kerangka HTML semua halaman situs devlib.test (judul tab, CSS/JS DevLib).
-Sumber hulu: config devlib.brand.name untuk akhiran judul tab (DevLib); paket ../ (library DevLib).
+Tujuan: kerangka HTML semua halaman situs devlib.test (judul tab, CSS/JS DevLib dan mockup-parts).
+Sumber hulu: config devlib.brand.name untuk akhiran judul tab (DevLib); paket ../devlib dan packages/mockup-parts.
 Input: variabel $title dan section body dari tiap view.
 Output: dokumen HTML lengkap.
 Dipakai oleh: view login, home, lib, generator, summary, history, agent-log di devlib/resources/views.
@@ -15,6 +15,9 @@ Status: aktif.
     <link rel="stylesheet" href="{{ \Devlib\DevlibServiceProvider::asset('devlib.css') }}">
     <x-dl::theme-boot />
     <script src="{{ \Devlib\DevlibServiceProvider::asset('devlib.js') }}" defer></script>
+    {{-- Objek form khusus (x-mp::*, packages/mockup-parts) ikut diperagakan di menu Special Forms. --}}
+    <link rel="stylesheet" href="{{ \MockupParts\MockupPartsServiceProvider::asset('mockup-parts.css') }}">
+    <script src="{{ \MockupParts\MockupPartsServiceProvider::asset('mockup-parts.js') }}" defer></script>
 </head>
 <body class="dl-body {{ $bodyClass ?? '' }}" @if ($dev ?? false) data-dl-dev="1" @endif>
     @yield('body')
