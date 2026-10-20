@@ -149,6 +149,14 @@ abstract class Document
         return (float) ($this->data['ppn'] ?? 0) > 0;
     }
 
+    /** Kop perusahaan tanpa objek dokumen (lembar cetak berbagian x-dl::print-sheet): sumber sama dengan company(). */
+    public static function companyOf(bool $ppn = false): array
+    {
+        $c = self::$companyResolver ? (self::$companyResolver)($ppn) : [];
+
+        return $c + ['name' => '', 'initials' => '', 'lines' => [], 'npwp' => null, 'logo' => null];
+    }
+
     public function company(): array
     {
         $c = self::$companyResolver ? (self::$companyResolver)($this->isPpn()) : [];
