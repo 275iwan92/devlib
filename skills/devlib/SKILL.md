@@ -74,6 +74,36 @@ Kriteria:
 - Cegah kirim ganda: layout memuat penjaga `submit` (ada di `sstock/resources/views/layout.blade.php`) — jangan dibuang.
 - Riwayat: tab History otomatis; isi `:created-at`, `:updated-at`, `:log`.
 
+## Data transaksional: mode dan tombol (aturan pemilik, 2026-10-20)
+
+Berlaku untuk SEMUA data transaksional, baik master-detail (dokumen dengan baris) maupun single (satu record). Mode memakai nama persis ini.
+
+**DRAFT**
+- Record yang baru dibuat SELALU `DRAFT`.
+- Tombol yang harus ada di DRAFT: **SAVE, DELETE, NEW, PRINT**.
+- Untuk memudahkan pengguna, semua isian diberi **DEFAULT DATA, tidak kosong** (tanggal hari ini, pihak/lokasi/satuan bawaan, nilai awal yang masuk akal); kosong hanya untuk isian tertentu yang memang harus dipilih pengguna.
+- **DELETE** = record benar-benar hilang dari sistem (hanya di DRAFT).
+
+**CONFIRMED**
+- Menuju CONFIRMED lewat tombol **CONFIRM** (atau **SUBMIT**; pilih satu kata konsisten per proyek, bawaan: Confirm).
+- Setelah CONFIRMED record **readonly** (tidak bisa diubah).
+
+**CANCELLED**
+- Pada record readonly (CONFIRMED) harus ada tombol **CANCEL** = record dibatalkan; mode menjadi `CANCELLED`.
+- Record CANCELLED **selalu tetap tersimpan** (beda dengan DELETE, yang menghapus total).
+- Bila pembatalan membuat data tidak cocok (mis. stok, saldo), sistem membuat record **ADJUSTMENT pembalik secara OTOMATIS**.
+
+**PRINT**
+- Print out selalu memuat tulisan **MODE** record: `DRAFT` / `CONFIRMED` / `CANCELLED`.
+
+**AUTHORITY (persetujuan atasan)**
+- Data transaksional dapat memakai mode authority: permohonan ke atasan. Authority **bisa bertingkat** (lebih dari satu level, berurutan).
+
+**Data MASTER**
+- TIDAK ada DRAFT/CONFIRMED. Hanya `ACTIVATED` / `DEACTIVATED` (nama lain: `ENABLE` / `DISABLE`). Di grid master ini adalah Aktif/Nonaktif.
+
+Catatan: proyek yang perilakunya berbeda dari aturan ini mencatat selisihnya di skill proyek (lihat `stoku`, bagian "Selisih dengan aturan transaksional pemilik").
+
 ## Help: selalu dua bagian, UG dan TG
 
 Setiap proyek punya Help dengan dua bagian terpisah, dibuat bersama modulnya. Keduanya dibuka dari satu menu Help & support sebagai dua tab (User's Guide, Technical Guide). UG terlihat semua pengguna; TG hanya Administrator (seperti sstock).
