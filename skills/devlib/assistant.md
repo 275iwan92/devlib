@@ -2,6 +2,10 @@
 
 Acuan baku untuk SEMUA proyek yang punya asisten ("AI Assistant" di menu profil `x-dl::shell`). Arah warisan: **DevLib membuat, proyek mewarisi** (`inheritance.md`). Opt-in: tidak ada yang terdaftar otomatis; proyek yang tidak memakainya tidak berubah. Kode: `src/Assistant/`. Tes: `site/tests/Feature/AssistantChatContractTest.php`. Contoh hidup: halaman katalog "AI Assistant model" (`site/app/Support/ModelDemo.php`, data fiktif).
 
+## Model yang "belajar" dari program inang
+
+Assistant adalah MODEL di DevLib yang dipasang di program mana pun; ia tidak dilatih dan DevLib tidak menyimpan pengetahuan. Yang ia "pelajari" adalah isi program tempat ia dipasang, lewat kontrak yang diikat program: layar dari `Navigator`, bantuan dari `Knowledge` (Help/UG), angka dari `Tool` (engine Calc buatan program), hak akses dari `Asker`. Pertanyaan yang belum terjawab (`UNKNOWN`) tercatat di `HistoryStore` program sebagai bahan menambah Help program itu. Contoh di halaman katalog memakai program inang fiktif.
+
 ## Prinsip
 
 1. **Angka dan hasil tidak pernah dihitung model bahasa.** Satu kemampuan = satu `Tool`; tool yang menghitung memakai **Engine DevLib** (`EngineTool`), jadi bisa diuji dan terlihat di katalog Engine.
