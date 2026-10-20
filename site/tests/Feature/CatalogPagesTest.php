@@ -25,10 +25,11 @@ class CatalogPagesTest extends TestCase
 
     public function test_site_ships_only_the_packages_it_demonstrates(): void
     {
-        // assistant dan chat dibuat ulang sebagai model DevLib; mockup-parts = layar khusus (grup Special Forms) yang masih dipakai.
+        // assistant dan chat dibuat ulang sebagai model DevLib; Special Forms dipindah ke aplikasi pemakai (2026-10-20), paket
+        // mockup-parts tetap ada tetapi tidak ada halaman katalog yang memakai x-mp::* (bundelnya tidak dimuat di layout).
         $this->assertDirectoryDoesNotExist(base_path('packages/assistant'));
         $this->assertDirectoryDoesNotExist(base_path('packages/chat'));
         $this->assertDirectoryExists(base_path('packages/mockup-parts'));
-        $this->assertContains('Special Forms', array_column(Catalog::groups(), 'label'));
+        $this->assertNotContains('Special Forms', array_column(Catalog::groups(), 'label'));
     }
 }

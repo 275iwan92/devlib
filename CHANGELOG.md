@@ -29,6 +29,16 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   lama tidak berubah. Halaman katalog `p7-assistant` memakai contoh pengguna aplikasi
   (order hari ini, letak menu PO, di luar program) dan judul kolom satu bahasa.
 
+### Dihapus
+
+- **Grup Special Forms (10 layar `sf-*`) dari situs acuan**: layar Customer Plan Delivery, Edit Profile, Master Product,
+  Customer 360, Petty Cash, Label Printing, Pallet Label, Track via QR / Barcode, Material Planning and Booking dan Assign Crew
+  dipindah ke aplikasi pemakai (tmerp) sebagai layar pembanding. Ikut dihapus 10 demo, 12 komponen `x-mp::*` yang hanya
+  dipakai layar itu di `packages/mockup-parts` (PettyCash, SelfService, LabelPrint, PalletLabel, ScanTrack, MaterialPlan,
+  MaterialBooking, CrewForm, CustomerCard, ProductMaster, ProductTree, PromiseBook) dan CSS-nya. Bundel `mockup-parts.js/css`
+  tidak lagi dimuat di tata letak situs (tidak ada halaman katalog yang memakai `x-mp::*`); folder paketnya tetap ada.
+  Library `jo/devlib` (`src/`, `resources/`) tidak berubah.
+
 ## [0.1.0] - 2026-10-20
 
 Rilis pertama: DevLib sebagai repositori mandiri (`jo/devlib`) beserta situs

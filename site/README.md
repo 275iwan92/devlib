@@ -119,7 +119,7 @@ Jalankan dari folder `site`:
 |---|---|
 | `app/Support/` | data dan aturan situs (katalog, Generator, QC, demo) |
 | `resources/views/demos/` | satu berkas Blade per demo komponen |
-| `packages/mockup-parts/` | paket lokal berisi komponen peraga domain (Sales, Inventory, Production, dan lain-lain) yang hanya dipakai situs ini |
+| `packages/mockup-parts/` | paket lokal berisi komponen peraga domain (Sales, Inventory, Production, dan lain-lain); tidak ada halaman katalog yang memakainya dan bundelnya tidak dimuat di tata letak situs |
 | `tests/` | tes fitur (kontrak komponen, engine, asisten/chat, lint, halaman katalog) |
 | `docs/`, `tools/` | berkas pendukung dan skrip bantu |
 

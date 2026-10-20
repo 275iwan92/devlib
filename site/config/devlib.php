@@ -41,7 +41,6 @@ return [
         'resources/views/demos/oo-override.blade.php' => ['L002'],
         // L003: hex adalah DATA contoh yang dioper ke komponen (nilai field.color, warna legenda label, warna avatar), bukan gaya sendiri.
         'resources/views/demos/field-color.blade.php' => ['L003'],
-        'resources/views/demos/label-print.blade.php' => ['L003'],
         'resources/views/demos/lock-screen.blade.php' => ['L003'],
     ],
 
