@@ -3,7 +3,7 @@
   'use strict';
   const {$, $$, esc, toast, T} = Devlib.h;
   /* ============================ DIELINE ============================ */
-  // Hanya "lem" UI; semua geometri dihitung TMDieline (salinan utuh dari tmerp).
+  // Hanya "lem" UI; semua geometri dihitung DevlibDieline (salinan utuh dari tmerp).
   class Dieline extends Devlib.Component {
     static selector = "[data-dl-dieline]";
     init() {
@@ -32,12 +32,12 @@
         if (s) { Object.assign(this.dims, this.T[this.code].sizes[+s.dataset.dSize].dims); $$(this.el, '[data-d-dim]').forEach(i => { i.value = this.dims[i.dataset.dDim] ?? ''; }); return this.redraw(); }
         const z = e.target.closest('[data-d-zoom]'); if (z) { this.zoom = Math.min(3, Math.max(0.4, Math.round((this.zoom + +z.dataset.dZoom * 0.2) * 10) / 10)); return this.redraw(); }
         if (e.target.closest('[data-d-svg]')) {
-          const svg = window.TMDieline.svg(this.T[this.code].spec, this.dims); if (!svg) return toast(Devlib.h.t('Fill in the dimensions first.'), 'warn');
+          const svg = window.DevlibDieline.svg(this.T[this.code].spec, this.dims); if (!svg) return toast(Devlib.h.t('Fill in the dimensions first.'), 'warn');
           const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([svg.replace('<svg ', '<svg style="background:#1b1f2a" ')], {type: 'image/svg+xml'})); a.download = `dieline-${this.code.toLowerCase()}.svg`; a.click();
         }
       });
       this.el.dlDieline = {get dims() { return {...self.dims}; }, setType: c => { this.code = c; this.dims = {}; this.fields(); this.redraw(); }, redraw: this.redraw};
-      if (!window.TMDieline) { this.q('[data-d-preview]').textContent = Devlib.h.t('TMDieline is not loaded.'); return; }
+      if (!window.DevlibDieline) { this.q('[data-d-preview]').textContent = Devlib.h.t('DevlibDieline is not loaded.'); return; }
       this.fields();this.redraw();
     }
 
@@ -57,10 +57,10 @@
 
     redraw() {
       const t = this.T[this.code], spec = t ? t.spec : null;
-      if (!this.manual) { const f = window.TMDieline.flat(spec, this.dims); this.fw.value = f.w || ''; this.fh.value = f.h || ''; }
+      if (!this.manual) { const f = window.DevlibDieline.flat(spec, this.dims); this.fw.value = f.w || ''; this.fh.value = f.h || ''; }
       const a = (parseFloat(String(this.fw.value).replace(',', '.')) || 0) * (parseFloat(String(this.fh.value).replace(',', '.')) || 0);
       this.fa.value = a ? a.toFixed(2) : '';
-      window.TMDieline.render(this.q('[data-d-preview]'), spec, this.dims);
+      window.DevlibDieline.render(this.q('[data-d-preview]'), spec, this.dims);
       this.q('[data-d-preview]').style.transform = `scale(${this.zoom})`; this.q('[data-d-zoomval]').textContent = Math.round(this.zoom * 100) + '%';
       this.q('[data-d-info]').innerHTML = t ? `<b>${esc(t.label)}</b>${t.category ? ` · ${esc(t.category)}` : ''} · ${Devlib.h.t('Flat blank')} <b>${this.numStr(this.fw.value)} × ${this.numStr(this.fh.value)} mm</b> · ${Devlib.h.t('Area')} <b>${this.numStr(a / 100)} cm²</b>${this.manual ? ' <span class="dl-badge dl-badge--warn">manual</span>' : ''}` : '';
       this.markSize();

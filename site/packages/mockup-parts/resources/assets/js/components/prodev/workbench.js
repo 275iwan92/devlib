@@ -210,11 +210,11 @@
       const stateKey = () => JSON.stringify(gatherState());
 
       function registerDirtyGuard() {
-          if (!window.tmerpDirty) return;
+          if (!window.devlibDirty) return;
           ['pointerdown', 'keydown'].forEach(t => document.addEventListener(t, (e) => {
               if (e.isTrusted && S.p.partId && savedState[S.p.partId] === undefined) savedState[S.p.partId] = stateKey();
           }, true));
-          window.tmerpDirty.register({
+          window.devlibDirty.register({
               isDirty: () => !!S.p.partId && savedState[S.p.partId] !== undefined && savedState[S.p.partId] !== stateKey(),
               save: async () => { persistOk = false; await persist(false); return persistOk; },
           });
@@ -313,7 +313,7 @@
 
       // ===================== AUTO NESTING (interlock sadar-bentuk) =====================
       // Cara kerja (opsi B yang dipilih user 2026-09-16): dieline ASLI
-      // (DSL dieline_spec, renderer TMDieline yang sama dgn canvas) di-
+      // (DSL dieline_spec, renderer DevlibDieline yang sama dgn canvas) di-
       // rasterisasi jadi peta piksel 1 px = 1 mm, lalu dua salinan didorong
       // saling mendekat sampai PERSIS bersentuhan -- meniru cara officer
       // pre-press mendorong dua blank sampai mentok. Jarak mentok dihitung
@@ -398,7 +398,7 @@
           const h = Math.max(8, Math.round(job.w * 10 * MASK_RES * scale));
           let mask = null;
 
-          if (job.dieline && window.TMDieline) {
+          if (job.dieline && window.DevlibDieline) {
               try {
                   // Elemen BLEED itu kotak penuh mengelilingi blank, BUKAN garis
                   // potong -- kalau ikut dirender, flood-fill langsung menganggap
@@ -408,10 +408,10 @@
                   const spec = Object.assign({}, job.dieline, {
                       elements: (job.dieline.elements || []).filter(e => e.t !== 'bleed' && e.k !== 'BLEED'),
                   });
-                  let svg = window.TMDieline.svg(spec, job.dielineDims || {});
+                  let svg = window.DevlibDieline.svg(spec, job.dielineDims || {});
 
                   if (svg) {
-                      // Buang margin bawaan viewBox TMDieline supaya bitmap 1:1
+                      // Buang margin bawaan viewBox DevlibDieline supaya bitmap 1:1
                       // dengan badan blank.
                       const vb = (svg.match(/viewBox="([^"]+)"/) || [])[1];
                       let dslW = w;
@@ -996,7 +996,7 @@
       // ditinggalkan, jadi preferensi user tidak ikut hilang.
       function askSidebarMini(mini) {
           if (window.parent === window) return;   // dibuka langsung, bukan di shell
-          try { window.parent.postMessage({ tmerp: 'sidebar', mini: !!mini }, window.location.origin); } catch (e) { /* abaikan */ }
+          try { window.parent.postMessage({ devlib: 'sidebar', mini: !!mini }, window.location.origin); } catch (e) { /* abaikan */ }
       }
 
       window.addEventListener('pagehide', () => askSidebarMini(false));
@@ -2625,7 +2625,7 @@
       }
 
       // Artwork job NYATA: pakai diecut asli dari DSL dieline_spec
-      // (resources/js/tmdieline.js, renderer yang sama dengan layar
+      // (resources/js/devlib-dieline.js, renderer yang sama dengan layar
       // Inquiry Product) -- bukan kotak polos, kecuali tipe produknya
       // memang belum punya elements DSL.
       function realShape(p, w, h) {
@@ -2636,8 +2636,8 @@
               out += '<image href="' + p.artworkUrl + '" x="0" y="0" width="' + w + '" height="' + h + '" preserveAspectRatio="none"/>';
           }
           let inner = null;
-          if (p.dieline && window.TMDieline) {
-              try { inner = window.TMDieline.svg(p.dieline, p.dielineDims || {}); } catch (e) { inner = null; }
+          if (p.dieline && window.DevlibDieline) {
+              try { inner = window.DevlibDieline.svg(p.dieline, p.dielineDims || {}); } catch (e) { inner = null; }
           }
           if (inner) {
               return out + inner

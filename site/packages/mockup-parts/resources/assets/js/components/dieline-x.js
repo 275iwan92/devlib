@@ -5,7 +5,7 @@
   /* ===================== DIELINE v2 / v3 (salinan v1 + ukuran) ===================== */
   // v1 (initDieline) SENGAJA tidak diubah. level 2 = garis ukuran + istilah internasional + mm/cm;
   // level 3 = v2 + judul spesifikasi + panjang cutting/creasing/perforasi + jendela 3D (kotak bisa diputar).
-  // Hanya "lem" UI; semua geometri dihitung TMDieline (salinan utuh dari tmerp).
+  // Hanya "lem" UI; semua geometri dihitung DevlibDieline (salinan utuh dari tmerp).
   // Ukuran produk (baris 1 panel Dimensions); param lain (flap, bleed, dst) masuk baris "Flaps & Allowances".
   const MAIN_DIMS = ['product_length', 'product_width', 'product_height', 'diameter', 'lid_height', 'top_length', 'top_width'];
   const ROT0 = {x: -22, y: -38, z: 0, k: 1};
@@ -70,7 +70,7 @@
         setArtwork: url => { this.outArt = url || this.saved; if (this.side === 'out') this.showSide('out'); },
         // File sisi dalam baru langsung ditampilkan; dihapus & tak ada yang tersimpan -> kembali ke sisi luar.
         setArtworkInner: url => { this.inArt = url || this.savedIn; this.showSide(url ? 'in' : this.inArt ? this.side : 'out'); }};
-      if (!window.TMDieline) { this.q('[data-d-preview]').textContent = Devlib.h.t('TMDieline is not loaded.'); return; }
+      if (!window.DevlibDieline) { this.q('[data-d-preview]').textContent = Devlib.h.t('DevlibDieline is not loaded.'); return; }
       this.bind3d();
       this.holeUi(true);
       this.sideUi();
@@ -113,10 +113,10 @@
 
     redraw() {
       const t = this.T[this.code], spec = t ? t.spec : null;
-      if (!this.manual) { const f = window.TMDieline.flat(spec, this.dims); this.fw.value = f.w || ''; this.fh.value = f.h || ''; }
+      if (!this.manual) { const f = window.DevlibDieline.flat(spec, this.dims); this.fw.value = f.w || ''; this.fh.value = f.h || ''; }
       const a = (parseFloat(String(this.fw.value).replace(',', '.')) || 0) * (parseFloat(String(this.fh.value).replace(',', '.')) || 0);
       this.fa.value = a ? a.toFixed(2) : '';
-      window.TMDieline.render(this.q('[data-d-preview]'), spec, this.dims);
+      window.DevlibDieline.render(this.q('[data-d-preview]'), spec, this.dims);
       this.decorate();
       this.annotate();
       this.q('[data-d-preview]').style.transform = `scale(${this.zoom})`; this.q('[data-d-zoomval]').textContent = Math.round(this.zoom * 100) + '%';
@@ -126,7 +126,7 @@
     }
 
     lengths(svg) {
-      const S = window.TMDieline.STROKE, sum = {cut: 0, crease: 0, hole: 0};
+      const S = window.DevlibDieline.STROKE, sum = {cut: 0, crease: 0, hole: 0};
       $$(svg, 'line,rect,path,circle,polyline,polygon').forEach(n => {
         if (n.closest('.dl-dim, .dl-deco') || !n.getTotalLength) return;
         const st = (n.getAttribute('stroke') || '').toLowerCase(), L = n.getTotalLength();
@@ -195,9 +195,9 @@
 
     opt(k) { const c = this.q(`[data-d-opt="${k}"]`); return c ? c.checked : false; }
 
-    // Tepi potong, garis lipat, kotak bleed, dan area panel utama (tanpa glue flap) dari hasil render TMDieline.
+    // Tepi potong, garis lipat, kotak bleed, dan area panel utama (tanpa glue flap) dari hasil render DevlibDieline.
     geo(svg) {
-      const S = window.TMDieline.STROKE, crease = S.CREASE.toLowerCase(), bleed = S.BLEED.toLowerCase(), cut = S.CUT.toLowerCase();
+      const S = window.DevlibDieline.STROKE, crease = S.CREASE.toLowerCase(), bleed = S.BLEED.toLowerCase(), cut = S.CUT.toLowerCase();
       let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, b0 = Infinity, c0 = Infinity, b1 = -Infinity, c1 = -Infinity;
       const xs = [], hs = [], cuts = [];
       $$(svg, 'line,rect,path,circle,polyline,polygon').forEach(n => {
@@ -227,10 +227,10 @@
       return {x0, y0, x1, y1, px0, px1, py0, py1, glue, inX, ys, hs, bb, cuts};
     }
 
-    // Lapisan tampilan di atas hasil TMDieline: artwork transparan, glue margin, arah serat, tanda register, lock tab, bleed on/off.
+    // Lapisan tampilan di atas hasil DevlibDieline: artwork transparan, glue margin, arah serat, tanda register, lock tab, bleed on/off.
     decorate() {
       const svg = this.q('[data-d-preview] svg'); if (!svg) return;
-      const S = window.TMDieline.STROKE, bleed = S.BLEED.toLowerCase();
+      const S = window.DevlibDieline.STROKE, bleed = S.BLEED.toLowerCase();
       // Ukur dulu (getBBox elemen tersembunyi = 0), baru sembunyikan bleed bila Overflow mati.
       const g = this.geo(svg); if (!g) return;
       $$(svg, 'line,rect,path,circle,polyline,polygon').forEach(n => { if ((n.getAttribute('stroke') || '').toLowerCase() === bleed) n.style.display = this.opt('overflow') ? '' : 'none'; });
@@ -291,7 +291,7 @@
 
     // Digambar sebagai garis HOLE di luar lapisan dl-deco supaya ikut terhitung di "Perforation / hole" dan ikut ke unduhan SVG.
     drawHole(svg, g) {
-      const o = this.holeShape(g), at = `fill="none" stroke="${window.TMDieline.STROKE.HOLE}" stroke-width="1"`;
+      const o = this.holeShape(g), at = `fill="none" stroke="${window.DevlibDieline.STROKE.HOLE}" stroke-width="1"`;
       this.holeOver = !!o && (o.w > o.pw || o.h > o.ph);
       if (!o) return;
       svg.insertAdjacentHTML('beforeend', o.round ? `<circle cx="${o.cx}" cy="${o.cy}" r="${o.w / 2}" ${at}/>`
@@ -417,7 +417,7 @@
       const svg = this.q('[data-d-preview] svg'), termsBox = this.q('[data-d-terms]');
       if (svg && this.v3) this.lengths(svg);
       if (!svg || !this.q('[data-d-dims-on]').checked) { if (termsBox) termsBox.innerHTML = ''; return; }
-      const S = window.TMDieline.STROKE, crease = S.CREASE.toLowerCase(), bleed = S.BLEED.toLowerCase();
+      const S = window.DevlibDieline.STROKE, crease = S.CREASE.toLowerCase(), bleed = S.BLEED.toLowerCase();
       let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
       const xs = [], ys = [];
       $$(svg, 'line,rect,path,circle,polyline,polygon').forEach(n => {

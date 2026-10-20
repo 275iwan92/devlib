@@ -6,7 +6,7 @@ use Devlib\Components\DevlibComponent;
 
 // Dieline v2 = v1 (x-dl::dieline, TIDAK diubah) + garis ukuran seperti gambar teknik (rantai panel di atas/kiri,
 // total di bawah/kanan), kode istilah internasional (L, W, H, GF, TF, DF, BF), satuan mm/cm, saklar tampil ukuran.
-// Geometri tetap dari TMDieline; ukuran dibaca dari hasil render (garis lipat + tepi potong).
+// Geometri tetap dari DevlibDieline; ukuran dibaca dari hasil render (garis lipat + tepi potong).
 class DielineV2 extends Dieline
 {
     // [label internasional, kode di garis ukuran] per param_key; label DB dipakai bila key tidak ada.
@@ -49,7 +49,7 @@ class DielineV2 extends Dieline
     public function render()
     {
         return <<<'BLADE'
-            @once<script src="{{ \MockupParts\MockupPartsServiceProvider::asset('tmdieline.js') }}"></script>@endonce
+            @once<script src="{{ \MockupParts\MockupPartsServiceProvider::asset('devlib-dieline.js') }}"></script>@endonce
             <div {{ $attributes->class(['dl-dieline', 'dl-dieline--v'.$level()]) }} {!! $dl() !!} data-dl-dieline-x data-level="{{ $level() }}" data-types="{{ json_encode($types) }}" data-type="{{ $type ?? array_key_first($types) }}" data-dims="{{ json_encode((object) $dims) }}" data-name="{{ $name }}" data-terms="{{ json_encode($terms()) }}" data-unit="{{ $unit }}" style="--dl-dl-h:{{ $height }}">
                 @if ($picker)
                     <x-dl::field.select :name="$name.'[type]'" label="Product Type" :options="collect($types)->map(fn ($t) => $t['label'])->all()" :value="$type ?? array_key_first($types)" />
@@ -67,7 +67,7 @@ class DielineV2 extends Dieline
                         <x-dl::icon-button icon="fa-magnifying-glass-minus" title="Zoom out" data-d-zoom="-1" /><b data-d-zoomval>100%</b><x-dl::icon-button icon="fa-magnifying-glass-plus" title="Zoom in" data-d-zoom="1" />
                         <x-dl::button variant="secondary" size="sm" icon="download" label="SVG" data-d-svg />
                     </div>
-                    {{-- Opsi tampilan (hanya gambar; tidak mengubah geometri TMDieline maupun panjang pisau). --}}
+                    {{-- Opsi tampilan (hanya gambar; tidak mengubah geometri DevlibDieline maupun panjang pisau). --}}
                     <div class="dl-dieline__opts">
                         <label class="dl-choice"><input type="checkbox" data-d-opt="artwork" checked> {{ \Devlib\Lang::text('Artwork') }}</label>
                         <label class="dl-choice"><input type="checkbox" data-d-opt="overflow" checked> {{ \Devlib\Lang::text('Overflow') }}</label>

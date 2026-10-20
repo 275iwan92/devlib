@@ -15,7 +15,7 @@ namespace MockupParts\Components\Sales;
 use Devlib\Components\DevlibComponent;
 use MockupParts\Src;
 
-// Tampilan satu part product (lihat saja): dieline TMDieline + artwork bila part punya tipe ber-dieline,
+// Tampilan satu part product (lihat saja): dieline DevlibDieline + artwork bila part punya tipe ber-dieline,
 // selain itu artwork/dieline gambar (mis. hasil Proof Digital) dengan tab Sisi Luar / Sisi Dalam.
 // $part = baris App\Support\V2\Data\ProductMaster::part().
 class PartVisual extends DevlibComponent

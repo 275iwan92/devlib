@@ -8,7 +8,7 @@ use Devlib\Components\DevlibComponent;
 // (zona beku: angka UP & posisi sel TIDAK dihitung ulang di sini; layar memanggil mesin lalu mengoper hasilnya).
 // jobs: [['code','label','type','spec' (DSL),'dims','flat' => ['w','h'],
 //         'results' => [kode plano => ['up','method','efficiency','waste','cells' => [['x','y','w','h','rot','n']]]]]]
-// planos: [['code','w','h']] mm. Tiap UP digambar dengan dieline asli (TMDieline). Kalkulator PCS <-> PLANO ikut UP.
+// planos: [['code','w','h']] mm. Tiap UP digambar dengan dieline asli (DevlibDieline). Kalkulator PCS <-> PLANO ikut UP.
 class Imposition extends DevlibComponent
 {
     public function __construct(
@@ -35,7 +35,7 @@ class Imposition extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            @once<script src="{{ \MockupParts\MockupPartsServiceProvider::asset('tmdieline.js') }}"></script>@endonce
+            @once<script src="{{ \MockupParts\MockupPartsServiceProvider::asset('devlib-dieline.js') }}"></script>@endonce
             <div {{ $attributes->class('dl-impo') }} {!! $dl() !!} data-dl-impo data-jobs="{{ json_encode($jobs) }}" data-planos="{{ json_encode($planos) }}" data-gripper="{{ $gripper }}" data-margin="{{ $margin }}" data-gap="{{ $gap }}">
                 <aside class="dl-impo__side">
                     <p class="dl-impo__cap">{{ \Devlib\Lang::text('Job') }}</p>

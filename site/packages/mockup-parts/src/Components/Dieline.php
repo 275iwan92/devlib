@@ -5,7 +5,7 @@ namespace MockupParts\Components;
 use Devlib\Components\DevlibComponent;
 
 // Dieline kemasan hidup (InqProd Engine): pilih tipe -> ukuran pasaran / isi dimensi -> SVG langsung berubah.
-// Render = TMDieline (resources/assets/tmdieline.js), salinan UTUH dari tmerp (zona beku: esensi tidak diubah).
+// Render = DevlibDieline (resources/assets/devlib-dieline.js), salinan UTUH dari tmerp (zona beku: esensi tidak diubah).
 // types: [kode => ['label', 'category', 'spec' => DSL dieline_spec, 'params' => [key => ['label','unit','default','min','max']],
 //          'sizes' => [['label', 'dims' => [key => nilai]]]]]  (di aplikasi pemakai: prod_type + prod_type_param + prod_type_size(_val))
 // Terkirim: name[type], name[dims][key], name[flat_w], name[flat_h], name[flat_area], name[flat_manual]. Event dl:dieline.
@@ -34,7 +34,7 @@ class Dieline extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            @once<script src="{{ \MockupParts\MockupPartsServiceProvider::asset('tmdieline.js') }}"></script>@endonce
+            @once<script src="{{ \MockupParts\MockupPartsServiceProvider::asset('devlib-dieline.js') }}"></script>@endonce
             <div {{ $attributes->class('dl-dieline') }} {!! $dl() !!} data-dl-dieline data-types="{{ json_encode($types) }}" data-type="{{ $type ?? array_key_first($types) }}" data-dims="{{ json_encode((object) $dims) }}" data-name="{{ $name }}" style="--dl-dl-h:{{ $height }}">
                 <div class="dl-dieline__side">
                     @if ($picker)

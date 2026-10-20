@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="{{ \MockupParts\MockupPartsServiceProvider::asset('prodev.css') }}">
     {{-- Kulit terang (user 2026-10-01): hanya menimpa warna prodev.css lewat token DevLib. --}}
     <link rel="stylesheet" href="{{ \MockupParts\MockupPartsServiceProvider::asset('prodev-light.css') }}">
-    <script src="{{ \MockupParts\MockupPartsServiceProvider::asset('tmdieline.js') }}"></script>
+    <script src="{{ \MockupParts\MockupPartsServiceProvider::asset('devlib-dieline.js') }}"></script>
 @endonce
 <div {{ $attributes->class('io-app') }} {!! $dl() !!} data-mp-prodev data-config="{{ json_encode($config()) }}">
     <input type="file" id="io-artFileReal" accept="image/jpeg,image/png,application/pdf,.ai,.eps" hidden>

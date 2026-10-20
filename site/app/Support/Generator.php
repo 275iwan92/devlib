@@ -85,7 +85,7 @@ final class Generator
         $v = Validator::make($r->all(), [
             'name' => ['required', 'string', 'max:150'], 'description' => ['required', 'string', 'max:5000'],
             'request_type' => ['required', 'in:'.implode(',', array_keys(self::TYPES))],
-            'source_table' => ['nullable', 'string', 'max:120', 'regex:/^tm2[a-z]+\.[a-z0-9_]+$/'],
+            'source_table' => ['nullable', 'string', 'max:120', 'regex:/^[a-z][a-z0-9_]*\.[a-z0-9_]+$/'],
             'engine_description' => ['nullable', 'string', 'max:5000', 'required_if:need_engine,1'], 'flow_description' => ['nullable', 'string', 'max:5000'],
         ], ['engine_description.required_if' => 'Describe the engine when Needs an engine is ticked.']);
         if ($v->fails()) {

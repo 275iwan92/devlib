@@ -3,7 +3,7 @@
   'use strict';
   const {$, $$, esc, toast} = Devlib.h;
   /* ============================ IMPOSITION ============================ */
-  // Penampil hasil ImpositionEngine: TIDAK menghitung UP sendiri. Sel digambar dengan dieline asli (TMDieline).
+  // Penampil hasil ImpositionEngine: TIDAK menghitung UP sendiri. Sel digambar dengan dieline asli (DevlibDieline).
   class Imposition extends Devlib.Component {
     static selector = "[data-dl-impo]";
     init() {
@@ -44,7 +44,7 @@
     }
 
     unitSvg(j) {
-      const s = window.TMDieline && window.TMDieline.svg(j.spec, j.dims); if (!s) return '';
+      const s = window.DevlibDieline && window.DevlibDieline.svg(j.spec, j.dims); if (!s) return '';
       const P = +j.dims.overflow_margin || 0;
       return s.replace(/viewBox="[^"]*"/, `viewBox="${-P} ${-P} ${j.flat.w} ${j.flat.h}" preserveAspectRatio="none"`).replace(/width="100%" height="100%"/, `width="${j.flat.w}" height="${j.flat.h}"`);
     }
