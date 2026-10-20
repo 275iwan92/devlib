@@ -77,7 +77,9 @@ class Grid extends DevlibComponent
         public ?string $toggleUrl = null,
         public string $mode = 'entry',
         public ?string $rowTone = null,
+        public ?string $kind = null,
     ) {
+        $this->applyKind();
         if ($this->isReport()) {
             $this->actions = 'none';
             $this->newRecord = null;
@@ -103,6 +105,24 @@ class Grid extends DevlibComponent
         }
         if (is_array($this->detail['columns'] ?? null)) {
             $this->detail['columns'] = array_map(fn ($c) => is_array($c) && is_string($c['label'] ?? null) ? array_replace($c, ['label' => Lang::text($c['label'])]) : $c, $this->detail['columns']);
+        }
+    }
+
+    // Dua grid entry (user 2026-10-20): kind="master" (data sedikit: kolom pertama = kotak warna-warni, Edit + Aktif/Nonaktif) dan
+    // kind="transactional" (data ribuan: kolom pertama = nomor dokumen tebal polos, Buka saja). Tanpa kind = perilaku lama (actions + kolom apa adanya).
+    private function applyKind(): void
+    {
+        if (! in_array($this->kind, ['master', 'transactional'], true)) {
+            return;
+        }
+        $master = $this->kind === 'master';
+        $this->actions = $master ? 'master' : 'worklist';
+        if (isset($this->columns[0]) && in_array($this->columns[0]['type'] ?? 'text', ['identity', 'doc'], true)) {
+            $first = $this->columns[0];
+            if (($first['type'] ?? null) === 'doc') {
+                $first = ['type' => 'identity', 'code' => $first['party'] ?? $first['code'] ?? null] + array_diff_key($first, ['party' => 1]);
+            }
+            $this->columns[0] = $master ? ['box' => true] + $first : ['avatar' => false] + array_diff_key($first, ['box' => 1, 'hue' => 1]);
         }
     }
 

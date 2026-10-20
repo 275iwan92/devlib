@@ -48,6 +48,8 @@ Cek dulu `composer.json` proyek: bila `jo/devlib` sudah ada, lewati langkah ini.
 
 ## Tipe grid (`x-dl::grid`) — pilih sebelum menulis kolom
 
+Dua grid entry: **`kind="master"`** dan **`kind="transactional"`** — `kind` mengatur `actions` dan gaya kolom pertama otomatis (kolom pertama master = `box`, transaksional = polos; `type => doc` lama ikut jadi polos). Tulis `kind`, tidak perlu `actions`/`box`/`avatar` manual. Tanpa `kind` = perilaku lama. Report tetap `mode="report"`.
+
 Semua dari satu komponen; bedanya `mode`, `actions`, dan kolom depan. Daftar prop & tipe kolom lengkap: komentar kepala `src/Components/Grid.php`.
 
 | Tipe | Pengaturan | Kolom depan | Aksi baris |

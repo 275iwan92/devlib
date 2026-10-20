@@ -240,12 +240,12 @@
           if (c.box) return `<td><span class="dl-avatar-id dl-avatar-id--box" style="--h:${h}"><span class="dl-avatar-id__txt"><b>${esc(name)}</b>${c.code ? `<small>${esc(this.val(r, c.code))}</small>` : ''}</span></span></td>`;
           return `<td><span class="dl-avatar-id${c.lead ? ' dl-avatar-id--lead' : ''}">${c.avatar === false ? '' : `<span class="dl-avatar-id__pic" style="--h:${h}">${esc(ini)}</span>`}<span class="dl-avatar-id__txt"><b>${esc(name)}</b>${c.code ? `<small>${esc(this.val(r, c.code))}</small>` : ''}</span></span></td>`;
         }
-        // Persegi dokumen (Grid Transactional, user 2026-10-02): nomor dokumen di atas, nama pihak ('party') di bawah.
-        // Warna = satu dari 8 gradasi pilihan, dihitung dari nama pihak supaya pihak yang sama selalu berwarna sama.
+        // Grid Transactional (user 2026-10-20): nomor dokumen tebal + nama pihak ('party') kecil di bawah, TANPA kotak warna --
+        // data transaksi bisa ribuan baris, polos lebih cepat. Persegi dokumen berwarna (2026-10-02) dihentikan; type 'doc' tetap
+        // diterima supaya layar lama ikut tampil polos tanpa diubah.
         case 'doc': {
           const party = c.party ? String(this.val(r, c.party)) : '';
-          let h = 0; for (const ch of (party || String(v))) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-          return `<td><span class="dl-doctag dl-doctag--${(Math.imul(h ^ (h >>> 15), 0x9E3779B1) >>> 29) + 1}"><b>${esc(v)}</b>${party ? `<small>${esc(party)}</small>` : ''}</span></td>`;
+          return `<td><span class="dl-avatar-id"><span class="dl-avatar-id__txt"><b>${esc(v)}</b>${party ? `<small>${esc(party)}</small>` : ''}</span></span></td>`;
         }
         case 'badge': return `<td><span class="dl-badge dl-badge--pill dl-badge--${esc((c.toneKey ? r[c.toneKey] : (c.tones || {})[v]) || 'neutral')}">${esc(v)}</span></td>`;
         case 'money': case 'number': case 'integer': return `<td class="num">${esc(this.fmtCell(c, v))}</td>`;
