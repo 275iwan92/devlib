@@ -45,4 +45,4 @@ New-Item -ItemType Junction -Path "$HOME\.claude\skills\inventory" -Target "C:\U
 
 - Perubahan DevLib di-commit di repo ini, bukan di git aplikasi yang memakainya.
 - Situs acuan + katalog DevLib ada di `site/` (situs Laravel mandiri, devlib.test, link Herd -> folder `site`); tidak bergantung pada tmerp. Proyek lain (sstock, tmerp, ...) cukup memakai paket ini lewat path repo `../devlib`.
-- Aturan: DevLib membuat, proyek mewarisi (satu arah, berlaku untuk semua proyek): `skills/devlib/SKILL.md` (cara pakai + aturan baku), `skills/devlib/inheritance.md` (arah warisan, OO), `skills/devlib/examples/` (contoh baku), `skills/devlib/engine.md` (kontrak engine `src/Engine`).
+- Aturan: DevLib membuat, proyek mewarisi (satu arah, berlaku untuk semua proyek): `skills/devlib/SKILL.md` (cara pakai + aturan baku), `skills/devlib/inheritance.md` (arah warisan, OO), `skills/devlib/examples/` (contoh baku), `skills/devlib/engine.md` (kontrak engine `src/Engine`), `skills/devlib/assistant.md` (model Assistant AI `src/Assistant`), `skills/devlib/chat.md` (model Chat antar-user `src/Chat`).

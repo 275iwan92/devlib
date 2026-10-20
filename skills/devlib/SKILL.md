@@ -126,6 +126,10 @@ Setiap proyek punya Help dengan dua bagian terpisah, dibuat bersama modulnya. Ke
 
 Mesin hitung / aturan bisnis memakai kontrak DevLib `Devlib\Engine\*` (opt-in): mode Suggest/Auto/Calc/Flow, hasil `Result`, `EngineRegistry`, kegagalan `EngineException`, serta alur CANCEL + ADJUSTMENT otomatis. Aturan baku dan contoh: `engine.md`.
 
+## Assistant AI dan Chat (model untuk proyek)
+
+Asisten ("AI Assistant" di `x-dl::shell`) dan chat antar-user adalah **model** DevLib, opt-in, adaptor penyimpanan/model diikat proyek. Asisten: tool = Engine, bantuan dikutip dari Help, model bahasa hanya pemilih, riwayat per user (`src/Assistant`, aturan di `assistant.md`). Chat: kanal, pesan, kehadiran, lampiran berpotong, layar `x-dl::chat` (`src/Chat`, aturan di `chat.md`).
+
 ## Kebiasaan lintas proyek
 
 - Label layar boleh English; aplikasi satu bahasa menambah terjemahan ke kamus aplikasi (`Lang::text`), pesan validasi di `lang/<kode>/validation.php`. Mata uang tampil kode (`IDR`), bukan simbol.
