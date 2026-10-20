@@ -9,6 +9,11 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Asisten: data pribadi terlarang total dan orang terlindung** (opt-in, lewat `DataPolicy`). Frasa data pribadi
+  (KTP / NIK, alamat rumah, tanggal lahir, kata sandi, dsb.; kata umum "alamat" tidak termasuk) tidak dibacakan siapa pun
+  (tanpa Tool dan tanpa model bahasa; layar pengelolaan data sendiri tetap boleh ditunjukkan), dan `protected:` berisi
+  orang yang ditunjuk program: pertanyaan yang menyebutnya `DENIED` tanpa menyentuh Tool / model, tidak pernah diindeks.
+  `DataPolicy::personal()`, `protects()`, `excludes()`. Tanpa `DataPolicy` perilaku lama tidak berubah.
 - **Asisten: hak nilai rupiah per Tool** (opt-in). `ScopedValueAsker::canSeeValueOf($kunciTool)`:
   program dapat memberi sales hanya hasil HPP sementara keuangan melihat semua nilai rupiah. Penanya
   `ValueAsker` biasa tetap memakai `canSeeValue()` global (perilaku sebelumnya tidak berubah).

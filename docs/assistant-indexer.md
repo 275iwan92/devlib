@@ -14,6 +14,7 @@ Diindeks (metadata saja): nama menu dan letaknya, label layar, nama kolom/field,
 
 - baris data bisnis (isi dokumen, nama pelanggan, angka transaksi);
 - gaji, payroll, dan formula HPP dalam bentuk apa pun (lihat tingkat d; hasil HPP berupa rupiah adalah tingkat c); sumber yang cocok `DataPolicy::forbids()` dilewati dan dicatat sebagai "dilewati", bukan sebagai galat;
+- data pribadi (identitas dan kontak pribadi: KTP / NIK, alamat rumah, tanggal lahir, data keluarga, rekening / NPWP pribadi, kesehatan, kata sandi; definisi di `skills/devlib/assistant.md`) dan entri apa pun yang menyebut orang terlindung program (`DataPolicy::protects()`): `DataPolicy::excludes()` melewatinya, dicatat "dilewati"; tanpa pengecualian untuk pemilik datanya. Layar tempat orang mengelola datanya sendiri (nama menu, bukan isi) tetap boleh diindeks;
 - nilai rupiah (tingkat c): yang diindeks hanya NAMA kolom/laporan bernilai, bukan isinya; entri itu diberi syarat `value` (lihat 5).
 
 Hasil angka tetap datang langsung dari `Tool` saat ditanya (membaca langsung, menegakkan hak penanya), tidak dari indeks.
@@ -59,9 +60,10 @@ Yang dipasang untuk jujur: metrik waktu kerja per hari dan jumlah potongan, supa
 ## 5. Keamanan
 
 - Tiap entri menyimpan syarat hak (`module`, `minLevel`) dan `sensitivity`; **penyaringan terjadi saat bertanya**, di `IndexStore::search($tokens, $asker)` lewat `Asker::can`/`level`/`ValueAsker`, bukan saat membangun indeks. Entri yang tidak boleh dilihat penanya tidak ikut ke hasil, tidak ikut ke calon bagi model bahasa, dan tidak ikut ke pesan "tidak ada".
-- Sumber terlarang tidak pernah masuk: `Indexer` menolak entri yang `DataPolicy::forbids()` (kunci/modul/judul/path). Hanya mencocokkan teks yang dinyatakan program; labeli dengan benar adalah kewajiban program (jujur, sama seperti Bagian "Cakupan data").
+- Sumber terlarang tidak pernah masuk: `Indexer` menolak entri yang `DataPolicy::excludes()` (terlarang, data pribadi, atau orang terlindung; kunci/modul/judul/path/teks). Hanya mencocokkan teks yang dinyatakan program; labeli dengan benar adalah kewajiban program (jujur, sama seperti Bagian "Cakupan data").
 - Tidak ada kebocoran lintas hak: indeks bersama (satu per program), tetapi hasil per penanya. Tes: penanya tanpa modul X tidak pernah mendapat entri X; penanya non-keuangan tidak mendapat entri `value`.
-- Program tanpa modul gaji / payroll / formula HPP tidak terhalang apa pun oleh daftar terlarang; hanya program yang memilikinya yang memasang `DataPolicy`.
+- Program tanpa modul gaji / payroll / formula HPP dan tanpa orang terlindung tidak terhalang apa pun oleh daftar terlarang; hanya program yang memerlukannya yang memasang `DataPolicy`.
+- Hasil pencarian indeks tidak pernah mengembalikan entri `excludes()`, meski indeks lama (dibangun sebelum `DataPolicy` dipasang atau sebelum daftar terlindung bertambah) masih memuatnya: `search()` menyaringnya lagi saat bertanya, dan `Indexer` membuangnya (`forget`) pada putaran berikutnya.
 - Indeks tidak berisi data bisnis, jadi bocornya indeks tidak membocorkan transaksi; tetap perlakukan sebagai internal.
 
 ## 6. Alur "makin pandai"
@@ -77,7 +79,7 @@ Mencegah "belajar yang salah": tidak ada perubahan otomatis; satu jempol tidak c
 
 | Tahap | Isi | Selesai bila | Kerja |
 |---|---|---|---|
-| 1 | `IndexSource`, `IndexEntry`, `IndexStore`, `Indexer`, `Budget`, pemicu terbatas; sumber menu + Help; pencarian tersaring hak dipakai `Assistant` sebelum pencocokan sekarang | tes kontrak (hash tak berubah = tak diproses; anggaran dihormati; terlarang tak masuk; hak tersaring); halaman katalog; ditempel di satu program contoh | sedang |
+| 1 | `IndexSource`, `IndexEntry`, `IndexStore`, `Indexer`, `Budget`, pemicu terbatas; sumber menu + Help; pencarian tersaring hak dipakai `Assistant` sebelum pencocokan sekarang | tes kontrak (hash tak berubah = tak diproses; anggaran dihormati; terlarang tak masuk; entri data pribadi dan entri orang terlindung tak pernah masuk indeks; hak tersaring); halaman katalog; ditempel di satu program contoh | sedang |
 | 2 | `UsageLog`, penyusun saran, antrean persetujuan (kontrak + layar admin contoh) | saran muncul dari log, tidak ada yang berlaku tanpa persetujuan, bisa dicabut; tes | sedang |
 | 3 | pencocokan makna (embedding) opsional lewat adaptor, memakai indeks yang sama | model/embedding mati = jatuh ke pencocokan kata; tak ada data di luar metadata; tes dengan adaptor palsu | besar (dan opsional) |
 

@@ -7,7 +7,9 @@ use Devlib\Lang;
 
 // Mesin jawab asisten aplikasi (kontrak baku: skills/devlib/assistant.md). Opt-in: tidak terdaftar otomatis.
 // Urutan keputusan:
-//   0. (opt-in DataPolicy) pertanyaan menyebut gaji / payroll / formula HPP -> DENIED tetap; Tool Value hanya untuk ValueAsker
+//   0. (opt-in DataPolicy) pertanyaan menyebut gaji / payroll / formula HPP, atau orang terlindung -> DENIED tetap; Tool Value hanya
+//      untuk ValueAsker. Pertanyaan berfrasa data pribadi: tidak ada Tool dan tidak ada model; hanya layar / bantuan yang cocok,
+//      selain itu DENIED. Tak satu pun dari ini menyentuh Tool / Navigator / Knowledge / model sebelum diperiksa.
 //   1. frasa Tool cocok -> gerbang hak (modul + level) -> Tool menjawab        (angka hanya dari Tool, tidak dari model)
 //   2. kata "cara / how" + topik bantuan cocok -> langkah dari Knowledge
 //   3. nama layar cocok -> layar (Open + How to use)
@@ -85,15 +87,16 @@ final class Assistant
 
     private function answer(Asker $asker, string $question): Reply
     {
-        if ($this->policy?->forbids($question)) {
+        if ($this->policy?->forbids($question) || $this->policy?->protects($question)) {
             return $this->forbidden();
         }
-        if ($tool = $this->tool($question)) {
+        $personal = (bool) $this->policy?->personal($question);
+        if (! $personal && $tool = $this->tool($question)) {
             return $this->run($asker, $tool, $question);
         }
         $query = $this->tokens($question);
         if (! $query) {
-            return $this->unknown();
+            return $personal ? $this->personal() : $this->unknown();
         }
         $how = (bool) preg_match('/\b(how|cara|bagaimana)\b/i', $question);
         $screens = $this->screens($asker);
@@ -112,11 +115,15 @@ final class Assistant
         }
 
         $near = $this->near($query, $screens, $topics);
-        if ($near && $this->model->available()) {
+        if ($near && ! $personal && $this->model->available()) {
             $pick = $this->model->choose($question, array_map(fn ($c) => $c['say'], $near), $this->history ? $this->recentPairs($asker) : []);
             if ($pick !== null && isset($near[$pick])) {
                 return $near[$pick]['kind'] === 'screen' ? $this->screen($near[$pick]['item']) : $this->howTo($near[$pick]['item']);
             }
+        }
+
+        if ($personal) {
+            return $this->personal();
         }
 
         return $this->outOfScope !== null && ! $this->related($query, $screens, $topics) ? $this->declined() : $this->unknown();
@@ -194,7 +201,7 @@ final class Assistant
 
     private function allowed(array $items, callable $texts): array
     {
-        return $this->policy ? array_values(array_filter($items, fn ($i) => ! $this->policy->forbids(...$texts($i)))) : $items;
+        return $this->policy ? array_values(array_filter($items, fn ($i) => ! $this->policy->forbids(...$texts($i)) && ! $this->policy->protects(...$texts($i)))) : $items;
     }
 
     /** @return list<string> */
@@ -246,9 +253,12 @@ final class Assistant
         return array_slice($out, 0, 5, true);
     }
 
+    // Riwayat yang ikut ke model bahasa tidak memuat pertanyaan yang kena kebijakan data (teks ditolak tidak pernah keluar).
     private function recentPairs(Asker $asker): array
     {
-        return array_map(fn ($h) => ['q' => $h['q'], 'a' => (string) ($h['reply']['title'] ?? '')], $this->history->recent($asker, 4));
+        $pairs = array_map(fn ($h) => ['q' => $h['q'], 'a' => (string) ($h['reply']['title'] ?? '')], $this->history->recent($asker, 4));
+
+        return $this->policy ? array_values(array_filter($pairs, fn ($p) => ! $this->policy->excludes($p['q']))) : $pairs;
     }
 
     private function screen(array $s): Reply
@@ -280,7 +290,14 @@ final class Assistant
     private function forbidden(): Reply
     {
         return new Reply(Reply::DENIED, Lang::text('Not available for your account'),
-            Lang::text('The assistant does not handle salary, payroll or costing formulas, for any user.'));
+            Lang::text('The assistant does not handle salary, payroll, costing formulas or personal data, for any user.'));
+    }
+
+    // Data pribadi tidak dibacakan siapa pun, termasuk pemiliknya; layar tempat mengelola data sendiri dijawab lewat screen().
+    private function personal(): Reply
+    {
+        return new Reply(Reply::DENIED, Lang::text('Not available for your account'),
+            Lang::text('The assistant never reads personal data, for any user, including your own. To manage your own data, open the relevant screen.'));
     }
 
     private function declined(): Reply

@@ -389,6 +389,140 @@ class AssistantChatContractTest extends TestCase
         $this->assertSame(3, $calls->n, 'answered once per policy variant');
     }
 
+    // --- data pribadi dan orang terlindung (skills/devlib/assistant.md) ---
+
+    /** @return array{0: Assistant, 1: object, 2: object} asisten, hitungan Tool, model pengintai */
+    private function personalSetup(?DataPolicy $policy, ?MemoryHistory $history = null): array
+    {
+        $calls = new \stdClass;
+        $model = new class implements LanguageModel
+        {
+            public array $seen = [];
+
+            public function available(): bool { return true; }
+
+            public function choose(string $question, array $options, array $history = []): ?string
+            {
+                $this->seen[] = [$question, $history];
+
+                return null;
+            }
+        };
+        $nav = new class implements Navigator
+        {
+            public function screens(Asker $asker): array
+            {
+                return [['key' => 'my-profile', 'label' => 'My Profile', 'url' => '/me', 'words' => 'kata sandi password data pribadi saya'],
+                    ['key' => 'attendance', 'label' => 'Attendance Board', 'url' => '/att', 'words' => 'absensi kehadiran']];
+            }
+        };
+        $kb = new class implements Knowledge
+        {
+            public function topics(Asker $asker): array { return []; }
+        };
+        $tools = [$this->tool('customer-address', 'sales', ['alamat pelanggan'], Sensitivity::Quantity, $calls),
+            $this->tool('attendance-today', 'hrm', ['absensi hari ini'], Sensitivity::Quantity, $calls),
+            $this->tool('orders-by-person', 'sales', ['order dari'], Sensitivity::Quantity, $calls)];
+
+        return [new Assistant($nav, $kb, $tools, $model, $history, policy: $policy), $calls, $model];
+    }
+
+    public function test_personal_data_questions_are_denied_for_everyone_and_reach_no_tool_or_model(): void
+    {
+        [$a, $calls, $model] = $this->personalSetup(new DataPolicy);
+        $all = $this->finance(modules: ['sales', 'hrm']);
+
+        foreach (['berapa nomor KTP Budi Santoso', 'NIK karyawan', 'alamat rumah pak Budi', 'tanggal lahir saya', 'show the date of birth of staff',
+            'rekening pribadi karyawan', 'personal data karyawan', 'email pribadi budi', 'riwayat penyakit staf', 'ktp pelanggan'] as $q) {
+            $reply = $a->ask($all, $q);
+            $this->assertSame(Reply::DENIED, $reply->kind, $q);
+            $this->assertNull($reply->big, $q);
+        }
+        $this->assertSame(0, $calls->n, 'no Tool ran for a personal-data question');
+        $this->assertSame([], $model->seen, 'the language model never received a refused question');
+
+        // data diri sendiri: tidak dibacakan, tetapi LAYAR tempat mengelolanya boleh ditunjukkan (pengetahuan menu)
+        $this->assertSame('my-profile', $a->ask($all, 'data pribadi saya')->key);
+        $screen = $a->ask($all, 'open my profile kata sandi');
+        $this->assertSame(Reply::SCREEN, $screen->kind);
+        $this->assertSame('my-profile', $screen->key);
+    }
+
+    public function test_business_questions_with_address_words_and_attendance_still_work(): void
+    {
+        [$a, $calls] = $this->personalSetup(new DataPolicy);
+        $all = $this->finance(modules: ['sales', 'hrm']);
+
+        $this->assertSame(Reply::NUMBER, $a->ask($all, 'alamat pelanggan PT Maju')->kind);
+        $this->assertSame(Reply::NUMBER, $a->ask($all, 'absensi hari ini')->kind);
+        $this->assertSame(Reply::NUMBER, $a->ask($all, 'unik teknik nikmat absensi hari ini')->kind, '"nik" only matches as a whole word');
+        $this->assertSame(Reply::SCREEN, $a->ask($all, 'open attendance board')->kind);
+        $this->assertSame(3, $calls->n);
+    }
+
+    public function test_protected_people_are_denied_in_any_spelling_and_run_no_tool(): void
+    {
+        $policy = new DataPolicy(protected: ['Budi Santoso', 'budi.s', 'Pak Budi']);
+        [$a, $calls, $model] = $this->personalSetup($policy);
+        $all = $this->finance(modules: ['sales', 'hrm']);
+
+        foreach (['order dari Budi Santoso', 'ORDER DARI BUDI  SANTOSO', 'order dari santoso, budi', 'order dari budi-santoso', 'order dari budi_santoso',
+            'absensi hari ini budi.s', 'absensi hari ini BUDI S', 'where is pak budi', 'open attendance board of Budi Santoso'] as $q) {
+            $this->assertSame(Reply::DENIED, $a->ask($all, $q)->kind, $q);
+        }
+        $this->assertSame(0, $calls->n);
+        $this->assertSame([], $model->seen);
+
+        // pemilik data itu sendiri pun tidak dilayani (tidak ada pengecualian)
+        $this->assertSame(Reply::DENIED, $a->ask($this->asker(modules: ['sales']), 'order dari Budi Santoso')->kind);
+
+        // sebagian nama saja tidak otomatis cocok (akan memblokir orang lain yang senama); alias didaftarkan sebagai entri sendiri
+        $this->assertSame(Reply::NUMBER, $a->ask($all, 'order dari Santoso Jaya')->kind);
+        $this->assertSame(Reply::NUMBER, $a->ask($all, 'order dari budiman')->kind, 'whole words only');
+    }
+
+    public function test_protected_and_personal_entries_cannot_be_registered_as_tools(): void
+    {
+        try {
+            $this->withTools([$this->tool('orders-budi', 'sales', ['order budi'], Sensitivity::Quantity)], new DataPolicy(protected: ['budi']));
+            $this->fail('Expected AssistantException');
+        } catch (AssistantException $e) {
+            $this->assertStringContainsString('personal data', $e->getMessage());
+        }
+        $this->expectException(AssistantException::class);
+        $this->withTools([$this->tool('dossier', 'hrm', ['data pribadi'], Sensitivity::Quantity)], new DataPolicy);
+    }
+
+    public function test_without_a_data_policy_personal_and_protected_wording_behaves_as_before(): void
+    {
+        [$a, , $model] = $this->personalSetup(null);
+        $all = $this->finance(modules: ['sales', 'hrm']);
+
+        $this->assertSame(Reply::NUMBER, $a->ask($all, 'alamat pelanggan nik tanggal lahir')->kind);
+        $a->ask($all, 'kata sandi di mana');   // tanpa DataPolicy model tetap dipakai seperti sebelumnya
+        $this->assertNotSame([], $model->seen);
+
+        // DataPolicy tanpa daftar terlindung: nama tidak apa-apa
+        [$b] = $this->personalSetup(new DataPolicy);
+        $this->assertSame(Reply::NUMBER, $b->ask($all, 'order dari Budi Santoso')->kind);
+    }
+
+    public function test_refused_questions_in_history_never_reach_the_language_model_as_context(): void
+    {
+        $history = new MemoryHistory;
+        [$a, , $model] = $this->personalSetup(new DataPolicy(protected: ['Budi Santoso']), $history);
+        $all = $this->finance(modules: ['sales', 'hrm']);
+
+        $a->ask($all, 'nomor KTP Budi Santoso');
+        $a->ask($all, 'order dari Budi Santoso');
+        $a->ask($all, 'attendance boards');   // sampai ke model
+        $this->assertNotSame([], $model->seen);
+        foreach ($model->seen as [$question, $context]) {
+            $this->assertStringNotContainsStringIgnoringCase('budi', $question.json_encode($context));
+            $this->assertStringNotContainsStringIgnoringCase('ktp', json_encode($context));
+        }
+    }
+
     private function chat(?MemoryChat $mem = null): array
     {
         $mem ??= new MemoryChat(onlineSeconds: 60, clock: fn () => 1000);
