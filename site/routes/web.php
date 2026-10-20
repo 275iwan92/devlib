@@ -3,6 +3,7 @@
 use App\Support\AgentHistory;
 use App\Support\BoardDemo;
 use App\Support\Catalog;
+use App\Support\FlowDemo;
 use App\Support\GanttDemo;
 use App\Support\Generator;
 use App\Support\Qc;
@@ -67,18 +68,21 @@ Route::middleware('devlib.auth')->group(function () {
 
     Route::get('/', fn () => view('home', ['modules' => Catalog::modules(), 'user' => session('devlib_user')]))->name('home');
 
+    // Data bersama semua demo halaman katalog.
+    $libData = fn () => [
+        'action' => 'javascript:void(0)',
+        'error' => null,
+        'username' => '',
+        'modules' => Catalog::modules(),
+        'user' => session('devlib_user'),
+        'locations' => config('devlib.demo.locations'),
+        'languages' => config('devlib.demo.languages'),
+    ];
+
     // Halaman komponen: komponen hidup + ikon </> berisi kode pemakaiannya.
-    Route::get('/lib/{slug}', function (Request $r, string $slug) {
+    Route::get('/lib/{slug}', function (Request $r, string $slug) use ($libData) {
         $page = Catalog::page($slug) ?? abort(404);
-        $data = [
-            'action' => 'javascript:void(0)',
-            'error' => null,
-            'username' => '',
-            'modules' => Catalog::modules(),
-            'user' => session('devlib_user'),
-            'locations' => config('devlib.demo.locations'),
-            'languages' => config('devlib.demo.languages'),
-        ];
+        $data = $libData();
 
         // Halaman kategori (Part 2): beberapa komponen + breadcrumb; kode = gabungan demo.
         if (isset($page['members'])) {
@@ -94,6 +98,48 @@ Route::middleware('devlib.auth')->group(function () {
             'data' => $data,
         ]);
     })->name('lib');
+
+    // Alur Grid -> Form -> kembali (skills/devlib/grid-form-flow.md): form = halaman sendiri, dibuka dari grid alur, Back/Simpan kembali ke grid asal (?from=).
+    Route::get('/lib/{slug}/form/{id}', function (Request $r, string $slug, string $id) use ($libData) {
+        abort_unless(FlowDemo::has($slug), 404);
+        $doc = FlowDemo::doc($slug, $r->query('doc'));
+        $back = FlowDemo::back($slug, $doc, $r->query('from'));
+        $row = $id === 'new' ? null : FlowDemo::row($slug, $doc, $id);
+        if ($id !== 'new' && ! $row) {
+            return redirect($back)->with('flow_flash', FlowDemo::flash('danger', 'Data tidak ditemukan.'));
+        }
+        $page = Catalog::page($slug);
+        $demo = FlowDemo::demo($slug, $doc);
+        $name = $row ? ($row['name'] ?? $row['co_no'] ?? $row['po_no']) : 'New';
+        $label = ['co' => 'Customer Order', 'po' => 'Purchase Order'][$doc] ?? FlowDemo::title($slug);
+        $page = [
+            'label' => $label.' · '.$name,
+            'members' => [$demo => [$label.' form (opened from the grid, Back returns to it)', $page['classes']]],
+            'crumbs' => [$page['part'] => null, $page['label'] => $back, $label.' · '.$name => url()->current()],
+        ] + $page;
+
+        return view('lib-cat', [
+            'page' => $page,
+            'code' => file_get_contents(resource_path("views/demos/{$demo}.blade.php")),
+            // row = isi yang ditampilkan: baris yang dibuka, atau sumber salinan (?copy=) pada form baru hasil Duplicate.
+            'data' => $libData() + ['flow' => ['slug' => $slug, 'id' => $id, 'doc' => $doc, 'back' => $back, 'status' => FlowDemo::status($doc, $row),
+                'row' => $row ?? ($r->filled('copy') ? FlowDemo::row($slug, $doc, (string) $r->query('copy')) : null)]],
+        ]);
+    })->where('id', '[A-Za-z0-9_-]+')->name('lib.flow.form');
+
+    Route::post('/lib/{slug}/form/{id}', function (Request $r, string $slug, string $id) {
+        abort_unless(FlowDemo::has($slug), 404);
+
+        return FlowDemo::handle($r, $slug, $id);
+    })->where('id', '[A-Za-z0-9_-]+')->name('lib.flow.save');
+
+    // Aktif/Nonaktif grid master alur (stateless: membalik nilai baris, tanpa menyimpan).
+    Route::post('/lib/{slug}/toggle/{id}', function (string $slug, string $id) {
+        abort_unless(FlowDemo::has($slug), 404);
+        $row = FlowDemo::row($slug, FlowDemo::doc($slug, null), $id) ?? abort(404);
+
+        return ['active' => ! $row['active']];
+    })->where('id', '[A-Za-z0-9_-]+')->name('lib.flow.toggle');
 
     // QC cepat (user 2026-10-07): Approved / Need improvement + catatan; hanya akun developer. Tiga lapis: QC, UAT officer, UAT supervisor.
     Route::post('/qc/review', function (Request $r) {

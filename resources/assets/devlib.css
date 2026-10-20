@@ -1134,6 +1134,7 @@ form.is-dirty .dl-form__title::after{content:" • belum disimpan";color:var(--d
 .dl-grid__row{cursor:default}
 .dl-grid__row:hover td{background:var(--dl-hover)}
 .dl-grid__row.is-selected td{background:var(--dl-accent-soft)}
+.dl-grid .dl-grid__row.is-hl td{background:var(--dl-accent-soft)!important;transition:background .6s}
 .dl-grid__row.is-inactive td:not(.dl-grid__act){opacity:.55}
 /* Baris bertanda (row-tone, user 2026-10-02): warna lembut + garis tegas di bawah baris; muted = huruf abu-abu saja. */
 .dl-grid__row--danger{--rt:var(--dl-danger);--rt-bg:var(--dl-pink)}.dl-grid__row--tangerine{--rt:var(--dl-tangerine)}.dl-grid__row--yellow{--rt:var(--dl-yellow)}

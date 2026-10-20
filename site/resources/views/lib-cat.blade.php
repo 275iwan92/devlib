@@ -1,10 +1,12 @@
 @extends('layout', ['title' => $page['label'], 'dev' => true, 'bodyClass' => 'dl-page-body'])
 @section('body')
+    {{-- Pesan sekali dari alur Grid -> Form (Simpan, Hapus, Confirm ...): dijadikan toast oleh boot.js. --}}
+    @if (session('flow_flash'))<div hidden data-dl-flash="{{ session('flow_flash')[0] }}">{{ session('flow_flash')[1] }}</div>@endif
     <div class="dl-cat">
         <div class="dl-cat__nav">
             {{-- menu: Modul / folder di breadcrumb bisa diklik = buka Layer Menu di cabang itu (user 2026-09-30). --}}
             {{-- Nama halaman juga bisa diklik (kembali ke keadaan awal halaman, mis. keluar dari + New Record). --}}
-            <x-dl::breadcrumb menu :items="array_fill_keys($page['trail'] ?? [$page['part']], null) + [$page['label'] => url()->current()]" :current="request()->boolean('new') ? 'New Record' : null" />
+            <x-dl::breadcrumb menu :items="$page['crumbs'] ?? array_fill_keys($page['trail'] ?? [$page['part']], null) + [$page['label'] => url()->current()]" :current="request()->boolean('new') ? 'New Record' : null" />
             {{-- Tombol lompat hanya berguna bila halaman berisi >1 contoh. --}}
             @if (count($page['members']) > 1)
                 <div class="dl-cat__chips">

@@ -44,6 +44,8 @@ use Devlib\Lang;
 // cards: ['image','title','sub','badge','tones','meta' => [kolom..]] -> tombol Tabel/Kartu (CardView).
 // openUrl: alamat buka baris, {id} diganti nilai rowKey (klik 2x / tombol Buka / Edit langsung pindah layar);
 //   {kolom} lain diganti nilai kolom baris itu, mis. '{open_url}' bila tiap baris membawa alamatnya sendiri.
+// restore (opt-in, alur grid -> form: skills/devlib/grid-form-flow.md): grid mengingat cari, halaman, dan statistik saat membuka form lewat openUrl / newUrl dan memulihkannya
+//   sekali saat kembali; ?hl=<id> pada alamat grid menyorot baris itu (halaman diloncati, saringan sisa dilepas bila menyembunyikannya). Tanpa restore = perilaku lama.
 // newUrl: alamat tombol + New Record (pindah ke form baru / pemilih sumber). newModal: id x-dl::modal yang dibuka (wizard).
 // toggleUrl: POST ke alamat ini ({id}) saat Aktif/Nonaktif (Grid Master) -> status dari jawaban server {active}; tanpa toggleUrl = pratinjau saja.
 // quickAdd: [kolom..] -> baris isian cepat di atas tabel (Enter = tambah, event dl:grid-add). groupBy = grup awal.
@@ -89,6 +91,7 @@ class Grid extends DevlibComponent
         public string $mode = 'entry',
         public ?string $rowTone = null,
         public ?string $kind = null,
+        public bool $restore = false,
     ) {
         $this->applyKind();
         if ($this->isReport()) {
@@ -171,7 +174,7 @@ class Grid extends DevlibComponent
             'bulk' => $this->bulk, 'expand' => $this->expand, 'actions' => $this->actions, 'activeKey' => $this->activeKey, 'perPage' => $this->perPage,
             'openUrl' => $this->openUrl, 'newUrl' => $this->newUrl, 'newModal' => $this->newModal,
             'toggleUrl' => $this->toggleUrl, 'csrf' => $this->toggleUrl ? csrf_token() : null, 'detail' => $this->detail ?: null, 'cards' => $this->cards ?: null, 'quickAdd' => $this->quickAdd, 'groupBy' => $this->groupBy,
-            'mode' => $this->mode, 'rowTone' => $this->rowTone, 'pageSizes' => $this->isReport() ? [50, 100, 250, 500] : [10, 25, 50, 100],
+            'mode' => $this->mode, 'rowTone' => $this->rowTone, 'restore' => $this->restore, 'pageSizes' => $this->isReport() ? [50, 100, 250, 500] : [10, 25, 50, 100],
         ];
     }
 

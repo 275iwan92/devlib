@@ -9,6 +9,13 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Alur Grid → Form → kembali** (opt-in). `x-dl::grid` menerima `restore`: cari, halaman, dan kotak statistik disimpan saat form dibuka lewat
+  `openUrl` / `newUrl` dan dipulihkan sekali saat kembali; `?hl=<id>` menyorot baris yang baru disimpan (halaman diloncati). `boot.js` menampilkan
+  `<div hidden data-dl-flash="success|danger|warn|info">` sebagai toast sekali muncul. Tanpa `restore` dan tanpa elemen itu perilaku lama tidak berubah.
+  Aturan baku urutan layar, tombol, tujuan, dirty guard dan galat: `skills/devlib/grid-form-flow.md`.
+  Situs acuan: grup menu "Grid + Form" dengan alur `p5-flow-master` (grid pegawai → Single Form) dan `p5-flow-document` (grid CO / PO → Form
+  Master-Detail), rute nyata `/lib/{slug}/form/{id}` (belum ditinjau, bukan `APPROVED`).
+
 - **Asisten: pengindeks latar belakang, tahap 1** (opt-in). `Devlib\Assistant\Index`: `IndexSource`, `IndexEntry`, `IndexStore`
   (+ `MemoryIndexStore`), `Indexer` (hanya yang berubah; yang hilang dibuang; entri terlarang `DataPolicy` dilewati; entri nilai
   hanya namanya), `Budget` (anggaran waktu + jeda, bukan jaminan CPU), `IndexRunner` + `IndexThrottle` (sekali per jam),
@@ -34,6 +41,11 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   dalam lingkup yang belum ada jawabannya tetap `UNKNOWN`; tanpa `outOfScope` perilaku
   lama tidak berubah. Halaman katalog `p7-assistant` memakai contoh pengguna aplikasi
   (order hari ini, letak menu PO, di luar program) dan judul kolom satu bahasa.
+
+### Diubah
+
+- Situs acuan: Back pada form contoh (`p5-form-single`, `p5-form-md`) kini ke grid alurnya lewat `:back`, `back_history = false` di config situs, dan
+  pengecualian lint F101 untuk tiga form itu dihapus (disetujui pemilik 2026-10-20). Tampilan dan fungsi lain form tidak berubah.
 
 ### Dihapus
 

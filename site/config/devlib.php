@@ -25,12 +25,8 @@ return [
     ],
 
     // Kecuali devlib:lint (opt-in, hanya situs ini): berkas => kode yang sengaja dilanggar. Aturan tetap berlaku untuk semua berkas lain.
-    // Demo katalog memang memperlihatkan HTML mentah/skrip/warna contoh; form dokumen contoh tidak punya grid modul untuk dituju :back.
+    // Demo katalog memang memperlihatkan HTML mentah/skrip/warna contoh. Form dokumen contoh sudah punya grid modul (alur Grid + Form), jadi tanpa pengecualian F101.
     'lint_except' => [
-        // F101: form dokumen contoh, Back memakai riwayat (:back akan mengubah perilaku demo yang sudah disetujui).
-        'resources/views/demos/form-md.blade.php' => ['F101'],
-        'resources/views/demos/form-md-po.blade.php' => ['F101'],
-        'resources/views/demos/form-single.blade.php' => ['F101'],
         // L001: formulir GET kecil/tabel contoh; field hidden belum punya komponen x-dl::* (ActionForm tidak menerima prop hidden).
         'resources/views/agent-log.blade.php' => ['L001'],
         'resources/views/generator.blade.php' => ['L001'],
@@ -59,6 +55,9 @@ return [
     'lookup_middleware' => ['web', 'devlib.auth'],
 
     'abilities' => ['po.*', 'devlib.*'],
+
+    // Back pada form selalu ke alamat :back (grid modul), bukan history.back() (skills/devlib/form.md, grid-form-flow.md; lint F102).
+    'back_history' => false,
 
     // Bahasa antarmuka bawaan (id | en); label tombol preset ikut ini.
     'lang' => env('DEVLIB_LANG', 'id'),

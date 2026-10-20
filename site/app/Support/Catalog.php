@@ -135,9 +135,16 @@ final class Catalog
                         'grid-coverage' => ['Grid Coverage (matrix: rows x document types, status chips, expand = details)', $c('Coverage')],
                     ]),
                 ]],
-            // Tiga keluarga form (user 2026-09-26): Single, Master-Detail, Special.
-            ['code' => 'FM', 'short' => 'FM', 'label' => 'Form', 'icon' => 'fa-solid fa-pen-to-square',
+            // Grid + Form (user 2026-10-20): grid dan form dalam satu menu. Dua halaman alur teratas (grid -> form di halaman sendiri -> Back/Save
+            // kembali ke grid; skills/devlib/grid-form-flow.md) belum ditinjau user, jadi BUKAN di APPROVED; halaman form di bawahnya tetap slug lama.
+            ['code' => 'FM', 'short' => 'FM', 'label' => 'Grid + Form', 'icon' => 'fa-solid fa-pen-to-square',
                 'pages' => [
+                    'p5-flow-master' => $page('Master Data · Grid → Form', 'fa-solid fa-address-book', [
+                        'flow-master' => ['Master Data flow: Employee grid → Single Form → Save / Back to the grid', $c('Grid', 'Form', 'Tabs')],
+                    ], 'UIUX_components_part1.html'),
+                    'p5-flow-document' => $page('Document · Grid → Form', 'fa-solid fa-file-signature', [
+                        'flow-document' => ['Document flow: Customer Order / Purchase Order grid → Form Master-Detail → Confirm / Cancel / Print → Back to the grid', $c('Grid', 'Form', 'Lines')],
+                    ], 'UIUX_components_part1.html'),
                     // Single Form (user 2026-09-30): SATU contoh -- Edit Pegawai, tab + bagian read-only + panel aksi di atas + tab Riwayat.
                     'p5-form-single' => $page('Single Form', 'fa-solid fa-pen-to-square', [
                         'form-single' => ['Single Form · Edit Employee (tabs, read-only, action panel on top)', $c('Form', 'Tabs')],

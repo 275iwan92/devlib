@@ -2,14 +2,16 @@
     // Contoh acuan ke-2 Form Master-Detail: Purchase Order. Kerangka sama persis dgn Customer Order (panel aksi -> tahapan ->
     // ringkasan disorot -> tab header -> Details di tengah -> footer); hanya pihak (Supplier), field header & kolom baris beda.
     $me = 'po';
-    $act = request('doc') === $me ? request('_action') : null;
+    // Alur Grid -> Form (rute /lib/p5-flow-document/form/{id}): $flow ada, aksi dikirim POST ke rute alur; tanpa $flow = halaman katalog biasa (GET ke diri sendiri).
+    $flow ??= null;
+    $act = $flow ? null : (request('doc') === $me ? request('_action') : null);
     $status = match ($act) {
         'confirm' => 'confirmed', 'draft', 'save' => 'draft', 'cancel' => 'cancelled', 'delete', 'duplicate' => 'new',
-        default => request()->boolean($me.'_new') ? 'new' : request($me.'_status', 'draft'),
+        default => $flow ? ($flow['id'] === 'new' ? 'new' : request('status', $flow['status'])) : (request()->boolean($me.'_new') ? 'new' : request($me.'_status', 'draft')),
     };
     $here = url()->current();
     $isNew = $status === 'new';
-    $dup = $act === 'duplicate';
+    $dup = $flow ? request()->filled('copy') : $act === 'duplicate';
     $blank = $isNew && ! $dup;
     // Log riwayat (History): contoh isi -- di aplikasi pemakai dari system.doc_state_log + audit perubahan. Terbaru di atas.
     $log = $isNew ? [] : array_values(array_filter([
@@ -31,6 +33,10 @@
             ['item' => 'RM-TNT-0045', 'item_label' => 'Tinta Offset Magenta', 'spec' => '5 kg/kaleng', 'qty' => 175, 'uom' => 'KG', 'price' => 192000, 'eta' => '2026-09-09', 'disc' => '', 'wh' => 'GD-TNT', 'rem' => 'Sertakan COA'],
         ],
     ];
+    if ($flow && $flow['row']) {
+        $r = $flow['row'];
+        $po = ['po_no' => $r['po_no'], 'po_date' => $r['po_date'], 'supplier' => $r['supplier'], 'buyer' => $r['requester'], 'lines' => $r['lines']] + $po;
+    }
     $v = fn ($k) => $blank ? null : ($po[$k] ?? null);
     $suppliers = ['PT Contoh Kertas Jaya' => 'PT Contoh Kertas Jaya', 'CV Tinta Nusantara' => 'CV Tinta Nusantara', 'PT Karton Abadi' => 'PT Karton Abadi', 'UD Lem Sejahtera' => 'UD Lem Sejahtera', 'PT Plat Offset Prima' => 'PT Plat Offset Prima'];
     $warehouses = ['GD-BB' => 'GD-BB · Bahan Baku', 'GD-TNT' => 'GD-TNT · Tinta & Kimia', 'GD-SP' => 'GD-SP · Sparepart'];
@@ -38,12 +44,13 @@
 <div class="dl-row" style="margin-bottom:8px">
     <span class="dl-note" style="margin:0">Lihat status:</span>
     @foreach (['draft' => 'Draft', 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled', 'closed' => 'Closed'] as $sk => $sl)
-        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="$here.'?'.$me.'_status='.$sk.'#form-md-po'" />
+        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="$flow ? \App\Support\FlowDemo::formUrl('p5-flow-document', $flow['id'], $me, $flow['back'], ['status' => $sk]) : $here.'?'.$me.'_status='.$sk.'#form-md-po'" />
     @endforeach
 </div>
 <x-dl::form :title="$isNew ? 'Purchase Order · New'.($dup ? ' (copy of '.$po['po_no'].')' : '') : 'Purchase Order · '.$po['po_no']" :subtitle="$blank ? null : $po['supplier']"
     panel="top" kind="document" :status="$status" :pipeline="true" :can-reopen="true" :log="$log"
-    :action="$here.'#form-md-po'" method="GET" :new-url="$here.'?'.$me.'_new=1#form-md-po'" :hidden="['doc' => $me]"
+    :action="$flow ? $here : $here.'#form-md-po'" :method="$flow ? 'POST' : 'GET'" :back="$flow['back'] ?? \App\Support\FlowDemo::gridUrl('p5-flow-document', $me)"
+    :new-url="$flow ? \App\Support\FlowDemo::formUrl('p5-flow-document', 'new', $me, $flow['back']) : $here.'?'.$me.'_new=1#form-md-po'" :hidden="['doc' => $me] + ($flow ? ['status' => $status, 'from' => $flow['back']] : [])"
     :tabs="['general' => 'General', 'party' => 'Supplier', 'finance' => 'Finance', 'delivery' => 'Delivery', 'files' => 'Attachments & Notes']"
     :created-by="$isNew ? null : 'siti'" :created-at="$isNew ? null : '2026-09-02 08:12:00'"
     :updated-by="$isNew ? null : ($act ? 'budi' : 'siti')" :updated-at="$isNew ? null : ($act ? now()->format('Y-m-d H:i:s') : '2026-09-02 09:40:00')">

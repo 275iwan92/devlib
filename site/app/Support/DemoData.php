@@ -241,6 +241,35 @@ final class DemoData
         return $out;
     }
 
+    // Customer Order contoh (daftar + baris) untuk alur Grid -> Form dokumen; nama pihak fiktif.
+    public static function customerOrders(int $n = 36): array
+    {
+        $cust = ['PT Contoh Snackindo', 'CV Farma Jaya', 'PT Kosmetik Indah', 'UD Teh Wangi', 'PT Label Prima'];
+        $prod = config('devlib.lookups.product.rows');
+        $rows = [];
+        for ($i = 1; $i <= $n; $i++) {
+            $lines = [];
+            for ($k = 0, $cnt = 1 + ($i * 5) % 3; $k < $cnt; $k++) {
+                $p = $prod[($i + $k * 2) % count($prod)];
+                $qty = 500 * (1 + ($i * 7 + $k * 3) % 16);
+                $lines[] = ['product' => $p['code'], 'product_label' => $p['name'], 'qty' => $qty, 'uom' => $p['uom'], 'price' => $p['price'], 'due' => date('Y-m-d', mktime(0, 0, 0, 10, 5 + $i % 20, 2026)),
+                    'color' => $p['color'], 'min_order' => false, 'order_type' => ['NEW', 'REPEAT', 'REVISE'][$i % 3], 'ppic' => '', 'subtotal' => $qty * $p['price']];
+            }
+            $rows[] = [
+                'id' => $i,
+                'co_no' => sprintf('CO-2610-%04d', $i),
+                'co_date' => date('Y-m-d', mktime(0, 0, 0, 10, 1 + $i % 18, 2026)),
+                'customer' => $cust[($i * 3) % 5],
+                'ship_date' => date('Y-m-d', mktime(0, 0, 0, 10, 8 + $i % 20, 2026)),
+                'lines' => $lines,
+                'total' => round(array_sum(array_column($lines, 'subtotal')) * 1.11, 2),
+                'status' => ['Draft', 'Confirmed', 'Confirmed', 'Closed', 'Cancelled', 'Confirmed'][$i % 6],
+            ];
+        }
+
+        return $rows;
+    }
+
     public static function purchaseOrders(int $n = 48): array
     {
         $sup = ['PT Contoh Kertas Jaya', 'CV Tinta Nusantara', 'PT Karton Abadi', 'UD Lem Sejahtera', 'PT Plat Offset Prima'];

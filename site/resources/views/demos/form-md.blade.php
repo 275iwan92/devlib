@@ -5,14 +5,16 @@
     // tab header -> DETAIL selalu di tengah -> footer (catatan kiri, total kanan). Status baru ditentukan "server" (blok ini).
     // Dua contoh di satu halaman (CO & PO): parameter diberi awalan dokumen supaya aksi satu form tidak mengubah form lain.
     $me = 'co';
-    $act = request('doc') === $me ? request('_action') : null;
+    // Alur Grid -> Form (rute /lib/p5-flow-document/form/{id}): $flow ada, aksi dikirim POST ke rute alur; tanpa $flow = halaman katalog biasa (GET ke diri sendiri).
+    $flow ??= null;
+    $act = $flow ? null : (request('doc') === $me ? request('_action') : null);
     $status = match ($act) {
         'confirm' => 'confirmed', 'draft', 'save' => 'draft', 'cancel' => 'cancelled', 'delete', 'duplicate' => 'new',
-        default => request()->boolean($me.'_new') ? 'new' : request($me.'_status', 'draft'),
+        default => $flow ? ($flow['id'] === 'new' ? 'new' : request('status', $flow['status'])) : (request()->boolean($me.'_new') ? 'new' : request($me.'_status', 'draft')),
     };
     $here = url()->current();
     $isNew = $status === 'new';
-    $dup = $act === 'duplicate';
+    $dup = $flow ? request()->filled('copy') : $act === 'duplicate';
     $blank = $isNew && ! $dup;
     // Log riwayat (History): contoh isi -- di aplikasi pemakai dari system.doc_state_log + audit perubahan. Terbaru di atas.
     $log = $isNew ? [] : array_values(array_filter([
@@ -33,18 +35,26 @@
             ['product' => 'DS001480', 'product_label' => 'OB Coco Tokyo HEXA 1kg', 'qty' => 400, 'uom' => 'PCS', 'price' => 6200, 'due' => '2026-10-16', 'color' => '4/0', 'min_order' => false, 'order_type' => 'REPEAT', 'ppic' => 'Kirim bersama IB'],
         ],
     ];
+    if ($flow && $flow['row']) {
+        $r = $flow['row'];
+        $co = ['co_no' => $r['co_no'], 'co_date' => $r['co_date'], 'customer' => $r['customer'], 'consignee' => $r['customer'], 'ship_date' => $r['ship_date'], 'lines' => $r['lines']] + $co;
+    }
     $v = fn ($k) => $blank ? null : ($co[$k] ?? null);
     $customers = ['CV Samudra Kiat Jaya' => 'CV Samudra Kiat Jaya', 'Bu Yuna' => 'Bu Yuna', 'PT Sinar Pangan' => 'PT Sinar Pangan'];
+    if ($flow && $flow['row']) {
+        $customers[$flow['row']['customer']] = $flow['row']['customer'];
+    }
 @endphp
 <div class="dl-row" style="margin-bottom:8px">
     <span class="dl-note" style="margin:0">Lihat status:</span>
     @foreach (['draft' => 'Draft', 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled', 'closed' => 'Closed'] as $sk => $sl)
-        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="$here.'?'.$me.'_status='.$sk.'#form-md'" />
+        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="$flow ? \App\Support\FlowDemo::formUrl('p5-flow-document', $flow['id'], $me, $flow['back'], ['status' => $sk]) : $here.'?'.$me.'_status='.$sk.'#form-md'" />
     @endforeach
 </div>
 <x-dl::form :title="$isNew ? 'Customer Order · New'.($dup ? ' (copy of '.$co['co_no'].')' : '') : 'Customer Order · '.$co['co_no']" :subtitle="$blank ? null : $co['customer']"
     panel="top" kind="document" :status="$status" :pipeline="true" :can-reopen="true" :log="$log"
-    :action="$here.'#form-md'" method="GET" :new-url="$here.'?'.$me.'_new=1#form-md'" :hidden="['doc' => $me]"
+    :action="$flow ? $here : $here.'#form-md'" :method="$flow ? 'POST' : 'GET'" :back="$flow['back'] ?? \App\Support\FlowDemo::gridUrl('p5-flow-document', $me)"
+    :new-url="$flow ? \App\Support\FlowDemo::formUrl('p5-flow-document', 'new', $me, $flow['back']) : $here.'?'.$me.'_new=1#form-md'" :hidden="['doc' => $me] + ($flow ? ['status' => $status, 'from' => $flow['back']] : [])"
     :tabs="['general' => 'General', 'party' => 'Customer', 'finance' => 'Finance', 'delivery' => 'Delivery', 'files' => 'Attachments & Notes']"
     :created-by="$isNew ? null : 'carrij'" :created-at="$isNew ? null : '2026-09-30 08:12:00'"
     :updated-by="$isNew ? null : ($act ? 'budi' : 'carrij')" :updated-at="$isNew ? null : ($act ? now()->format('Y-m-d H:i:s') : '2026-09-30 09:40:00')">

@@ -33,6 +33,13 @@
       this.lastIdx = null;
       this.current = [];
       this.search = this.q('[data-g-search]');
+      // restore (opt-in, grid-form-flow.md): kembali dari form -> cari/halaman/statistik seperti saat grid ditinggalkan; ?hl=<id> = baris yang baru disimpan disorot.
+      this.retKey = 'dl-grid-ret-' + this.cfg.id; this.hl = null;
+      if (this.cfg.restore) {
+        try { const r = JSON.parse(sessionStorage.getItem(this.retKey) || 'null'); sessionStorage.removeItem(this.retKey); if (r) { Object.assign(this.st, {search: r.search || '', page: r.page || 1, stat: r.stat ?? this.st.stat}); this.search.value = this.st.search; } } catch (e) {}
+        this.hl = new URLSearchParams(location.search).get('hl');
+        if (this.hl) this.jumpHl();
+      }
       this.t = undefined;
       this.search.addEventListener('input', () => { clearTimeout(this.t); this.t = setTimeout(() => { this.st.search = this.search.value; this.st.page = 1; this.redraw(); }, 250); });
       window.addEventListener('resize', () => { this.slide('stats'); this.slide('tabs'); });
@@ -91,6 +98,17 @@
       this.el.dlGrid = {rows: this.rows, cfg: this.cfg, redraw: this.redraw, setRows: list => { this.rows.splice(0, this.rows.length, ...list); this.st.page = 1; this.sel.clear(); this.redraw(); }};
       this.redraw();
     }
+    // Simpan keadaan grid sebelum pindah ke form (hanya grid restore), dibaca sekali oleh grid yang sama saat kembali.
+    keep() { if (this.cfg.restore) try { sessionStorage.setItem(this.retKey, JSON.stringify({search: this.st.search, page: this.st.page, stat: this.st.stat})); } catch (e) {} }
+
+    // Halaman yang memuat baris ?hl; bila baris tersaring keluar oleh cari / statistik sisa, saringan itu dilepas supaya baris tampak.
+    jumpHl() {
+      const at = () => this.sorted(this.filtered()).findIndex(r => String(r[this.cfg.rowKey]) === this.hl);
+      let i = at();
+      if (i < 0 && (this.st.search || this.st.stat !== null)) { this.st.search = ''; this.st.stat = null; this.search.value = ''; i = at(); }
+      if (i >= 0) this.st.page = Math.floor(i / this.st.perPage) + 1; else this.hl = null;
+    }
+
     persist() { try { localStorage.setItem(this.saveKey, JSON.stringify({sort: this.st.sort, dir: this.st.dir, hidden: this.st.hidden, group: this.st.group, perPage: this.st.perPage, density: this.st.density, lines: this.st.lines, linesN: this.st.linesN, filters: this.st.filters, tab: this.st.tab})); } catch (e) {} }
 
     q(s) {
@@ -116,9 +134,10 @@
     _emit(name, detail) {
       const go = this.el.dispatchEvent(new CustomEvent(name, {bubbles: true, cancelable: true, detail}));
       if (go && name === 'dl:grid-new' && this.cfg.newModal) { document.querySelector(`[data-dl-modal-id="${this.cfg.newModal}"]`)?.classList.add('is-on'); return false; }
-      if (go && name === 'dl:grid-new' && this.cfg.newUrl) { location.href = this.cfg.newUrl; return false; }
+      if (go && name === 'dl:grid-new' && this.cfg.newUrl) { this.keep(); location.href = this.cfg.newUrl; return false; }
       if (go && name === 'dl:grid-open' && this.cfg.openUrl && ['open', 'edit'].includes(detail.action)) {
         const r = this.rows.find(v => String(v[this.cfg.rowKey]) === String(detail.id)) || {};
+        this.keep();
         location.href = this.cfg.openUrl.replace(/\{(\w+)\}/g, (m, k) => k === 'id' ? encodeURIComponent(detail.id) : (r[k] ?? ''));
         return false;
       }
@@ -309,6 +328,7 @@
         });
       } else page.forEach((r, i) => { html += this.rowHtml(r, i); });
       this.q('[data-g-body]').innerHTML = html;
+      if (this.hl) { const hr = this.q(`.dl-grid__row[data-id="${CSS.escape(this.hl)}"]`); this.hl = null; if (hr) { hr.classList.add('is-hl'); hr.scrollIntoView({block: 'center'}); setTimeout(() => hr.classList.remove('is-hl'), 4000); } }
       if (this.cfg.quickAdd.length) {
         const qa = this.cfg.quickAdd.map(k => this.cols.find(c => c.key === k) || {key: k, label: k});
         this.q('[data-g-body]').insertAdjacentHTML('afterbegin', `<tr class="dl-grid__quick"><td class="dl-grid__chk"><i class="fa-solid fa-plus"></i></td><td colspan="${span - 1}"><div class="dl-grid__qa">${qa.map(c => `<input type="text" data-g-qa="${esc(c.key)}" placeholder="${esc(c.label)}${['number', 'money', 'integer'].includes(c.type) ? ' (' + esc(T('g_number')) + ')' : ''}" aria-label="${esc(c.label)}">`).join('')}<button type="button" class="dl-btn dl-btn--primary dl-btn--sm" data-g-qa-add>${esc(T('g_add'))}</button><small>${esc(T('g_enter_add'))}</small></div></td></tr>`);

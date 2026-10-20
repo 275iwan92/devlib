@@ -1,10 +1,13 @@
 @php
     // Siklus dokumen di DevLib: form dikirim (GET) ke halaman ini dgn _action; status baru ditentukan "server" (blok ini).
     // Awal selalu Draft -> Confirm = Confirmed (isi terkunci) -> Cancel = Cancelled; Back to Draft (Mode Developer) = Draft lagi.
-    $act = request('_action');
+    // Alur Grid -> Form (rute /lib/p5-flow-master/form/{id}): $flow ada, aksi dikirim POST ke rute alur; tanpa $flow = halaman katalog biasa (GET ke diri sendiri).
+    $flow ??= null;
+    $keep = $flow ? ['from' => $flow['back']] : [];
+    $act = $flow ? null : request('_action');
     $status = match ($act) {
         'confirm' => 'confirmed', 'draft', 'save' => 'draft', 'cancel' => 'cancelled', 'delete', 'duplicate' => 'new',
-        default => request()->boolean('new') ? 'new' : request('status', 'draft'),
+        default => $flow ? ($flow['id'] === 'new' ? 'new' : request('status', $flow['status'])) : (request()->boolean('new') ? 'new' : request('status', 'draft')),
     };
     $isNew = $status === 'new';
     $sample = [
@@ -16,8 +19,12 @@
         'phone' => '+6281234567890', 'email_personal' => 'budi.santoso@gmail.com', 'village_id_ktp' => '1', 'address_detail_ktp' => 'Jl. Mawar 12 RT 03/04', 'domisili_same' => true,
         'emergency_contact_name' => 'Siti Aminah', 'emergency_contact_relation' => 'Istri', 'emergency_contact_phone' => '+6281322221111',
     ];
+    if ($flow && $flow['row']) {
+        $r = $flow['row'];
+        $sample = ['employee_code' => $r['code'], 'full_name' => $r['name'], 'nickname' => explode(' ', $r['name'])[0], 'join_date' => $r['join_date'], 'work_status_since' => $r['join_date'], 'phone' => $r['phone']] + $sample;
+    }
     // Duplicate: salinan isi dokumen yang dibatalkan, tanpa nomor (nomor baru dibuat saat Save).
-    $dup = $act === 'duplicate';
+    $dup = $flow ? request()->filled('copy') : $act === 'duplicate';
     $e = $dup ? ['employee_code' => null] + $sample : ($isNew ? ['company_id' => '1', 'work_status' => 'WORKING'] : $sample);
     // Isian yang baru dikirim menang atas data contoh (field terkunci tidak ikut terkirim -> pakai data contoh).
     $v = fn ($k) => ! $isNew && request()->has($k) ? request($k) : ($e[$k] ?? null);
@@ -32,18 +39,19 @@
 <div class="dl-row" style="margin-bottom:8px">
     <span class="dl-note" style="margin:0">Simulasi login sebagai:</span>
     @foreach ($roles as $rk => $rl)
-        <x-dl::button size="sm" :variant="$rk === $as ? 'primary' : 'secondary'" :label="$rl" :href="url()->current().'?'.http_build_query(['as' => $rk, 'status' => $isNew ? 'draft' : $status])" />
+        <x-dl::button size="sm" :variant="$rk === $as ? 'primary' : 'secondary'" :label="$rl" :href="url()->current().'?'.http_build_query(['as' => $rk, 'status' => $isNew ? 'draft' : $status] + $keep)" />
     @endforeach
 </div>
 {{-- Closed biasanya diset proses lanjutan (mis. order selesai dikirim), bukan tombol -- pintasan ini hanya untuk melihat tampilannya. --}}
 <div class="dl-row" style="margin-bottom:8px">
     <span class="dl-note" style="margin:0">Lihat status:</span>
     @foreach (['draft' => 'Draft', 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled', 'closed' => 'Closed'] as $sk => $sl)
-        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="url()->current().'?'.http_build_query(['as' => $as, 'status' => $sk])" />
+        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="url()->current().'?'.http_build_query(['as' => $as, 'status' => $sk] + $keep)" />
     @endforeach
 </div>
-<x-dl::form :title="$dup ? 'Pegawai · Baru (salinan TM-00012)' : ($isNew ? 'Pegawai · Baru' : 'Pegawai · TM-00012 '.$name)" panel="top" kind="document" :status="$status"
-    :action="url()->current()" method="GET" :new-url="url()->current().'?new=1&as='.$as" :can-reopen="$canReopen" :can-input="$canInput" :hidden="['as' => $as]"
+<x-dl::form :title="$dup ? 'Pegawai · Baru (salinan '.$sample['employee_code'].')' : ($isNew ? 'Pegawai · Baru' : 'Pegawai · '.$sample['employee_code'].' '.$name)" panel="top" kind="document" :status="$status"
+    :action="url()->current()" :method="$flow ? 'POST' : 'GET'" :back="$flow['back'] ?? \App\Support\FlowDemo::gridUrl('p5-flow-master')" :can-reopen="$canReopen" :can-input="$canInput"
+    :new-url="$flow ? \App\Support\FlowDemo::formUrl('p5-flow-master', 'new', '', $flow['back'], ['as' => $as]) : url()->current().'?new=1&as='.$as" :hidden="['as' => $as] + ($flow ? ['status' => $status, 'from' => $flow['back']] : [])"
     :tabs="['utama' => 'Utama', 'pribadi' => 'Data Pribadi', 'alamat' => 'Alamat & Kontak', 'darurat' => 'Kontak Darurat']"
     :created-by="$isNew ? null : 'budi'" :created-at="$isNew ? null : '2018-01-02 08:10:00'"
     :updated-by="$isNew ? null : ($act ? 'budi' : 'annisa')" :updated-at="$isNew ? null : ($act ? now()->format('Y-m-d H:i:s') : '2026-09-28 14:22:00')">
