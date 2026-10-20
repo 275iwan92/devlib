@@ -91,15 +91,7 @@ Route::middleware('devlib.auth')->group(function () {
             'page' => $page,
             'demo' => $slug,
             'code' => file_get_contents(resource_path("views/demos/{$slug}.blade.php")),
-            'data' => [
-                'action' => 'javascript:void(0)',
-                'error' => null,
-                'username' => '',
-                'modules' => Catalog::modules(),
-                'user' => session('devlib_user'),
-                'locations' => config('devlib.demo.locations'),
-                'languages' => config('devlib.demo.languages'),
-            ],
+            'data' => $data,
         ]);
     })->name('lib');
 

@@ -13,9 +13,14 @@ class CatalogPagesTest extends TestCase
         $failed = [];
         foreach (Catalog::groups() as $group) {
             foreach (array_keys($group['pages']) as $slug) {
-                $status = $this->get('/lib/'.$slug)->getStatusCode();
-                if ($status !== 200) {
-                    $failed[$slug] = $status;
+                $res = $this->get('/lib/'.$slug);
+                if ($res->getStatusCode() !== 200) {
+                    $failed[$slug] = $res->getStatusCode();
+                }
+                // Tag yang gagal di-compile (mis. kutip ganda di dalam atribut) lolos sebagai HTML mentah dengan status 200.
+                // Kode contoh di panel Code memakai &lt;, jadi '<x-dl::' mentah hanya muncul bila tag tidak terkompilasi.
+                elseif (str_contains($res->getContent(), '<x-dl::')) {
+                    $failed[$slug] = 'tag <x-dl:: mentah';
                 }
             }
         }

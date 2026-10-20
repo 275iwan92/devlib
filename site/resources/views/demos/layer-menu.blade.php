@@ -86,12 +86,12 @@
     ];
 @endphp
 <div class="dl-lm-demo">
-    <x-dl::layer-menu id="demo-layer" :items="$tree" user="Johannes Iwan" role="Administrator" login="johiwan" dock="#demo-lm-dock" :actions="$actions">
+    <x-dl::layer-menu id="demo-layer" :items="$tree" user="Johannes Iwan" role="Administrator" login="budi" dock="#demo-lm-dock" :actions="$actions">
         <x-slot:chat><x-dl::chat compact :me="$chat['me']" :people="$chat['people']" :convos="$chat['convos']" /></x-slot:chat>
         <x-slot:profile>
             <section data-lm-page="me" data-label="My Profile" data-icon="fa-user">
                 <x-dl::field.display label="Full name" value="Johannes Iwan" />
-                <x-dl::field.display label="Login" value="johiwan" format="mono" />
+                <x-dl::field.display label="Login" value="budi" format="mono" />
                 <x-dl::field.display label="Group" value="Administrator" />
                 <x-dl::field.display label="Email" value="name@example.com" />
             </section>

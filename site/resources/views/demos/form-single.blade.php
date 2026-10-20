@@ -45,8 +45,8 @@
 <x-dl::form :title="$dup ? 'Pegawai · Baru (salinan TM-00012)' : ($isNew ? 'Pegawai · Baru' : 'Pegawai · TM-00012 '.$name)" panel="top" kind="document" :status="$status"
     :action="url()->current()" method="GET" :new-url="url()->current().'?new=1&as='.$as" :can-reopen="$canReopen" :can-input="$canInput" :hidden="['as' => $as]"
     :tabs="['utama' => 'Utama', 'pribadi' => 'Data Pribadi', 'alamat' => 'Alamat & Kontak', 'darurat' => 'Kontak Darurat']"
-    :created-by="$isNew ? null : 'johiwan'" :created-at="$isNew ? null : '2018-01-02 08:10:00'"
-    :updated-by="$isNew ? null : ($act ? 'johiwan' : 'annisa')" :updated-at="$isNew ? null : ($act ? now()->format('Y-m-d H:i:s') : '2026-09-28 14:22:00')">
+    :created-by="$isNew ? null : 'budi'" :created-at="$isNew ? null : '2018-01-02 08:10:00'"
+    :updated-by="$isNew ? null : ($act ? 'budi' : 'annisa')" :updated-at="$isNew ? null : ($act ? now()->format('Y-m-d H:i:s') : '2026-09-28 14:22:00')">
     <x-slot:utama>
         <x-dl::form.row :cols="3">
             <x-dl::field.text name="employee_code" label="Kode Pegawai" :value="$v('employee_code')" placeholder="(otomatis)" code readonly :case-toggle="false" hint="Otomatis saat disimpan pertama kali." />

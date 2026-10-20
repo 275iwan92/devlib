@@ -28,7 +28,7 @@ class DevlibServiceProvider extends ServiceProvider
 
         Route::get('/_devlib/{file}', function (string $file) {
             if ($file === 'devlib.js') {
-                return response(self::bundle(), 200, ['Content-Type' => 'application/javascript', 'Cache-Control' => 'no-cache']);
+                return response(self::bundle(), 200, ['Content-Type' => 'application/javascript', 'Cache-Control' => self::cacheControl()]);
             }
             $path = realpath(__DIR__.'/../resources/assets/'.$file);
             $root = realpath(__DIR__.'/../resources/assets');
@@ -36,7 +36,7 @@ class DevlibServiceProvider extends ServiceProvider
 
             $type = str_ends_with($file, '.css') ? 'text/css' : 'application/javascript';
 
-            return response()->file($path, ['Content-Type' => $type, 'Cache-Control' => 'no-cache']);
+            return response()->file($path, ['Content-Type' => $type, 'Cache-Control' => self::cacheControl()]);
         })->where('file', '[A-Za-z0-9._-]+')->name('devlib.asset');
 
         // Lookup remote: cari ke server (data besar). Middleware diatur aplikasi pemakai (config devlib.lookup_middleware).
@@ -46,11 +46,18 @@ class DevlibServiceProvider extends ServiceProvider
             ->where('name', '[A-Za-z0-9_-]+')->name('devlib.lookup');
     }
 
+    // URL asset() selalu berversi (?v=), jadi isinya tidak berubah selama versinya sama -> cache selamanya; tanpa ?v= tetap diperiksa ulang.
+    public static function cacheControl(): string
+    {
+        return request()->has('v') ? 'public, max-age=31536000, immutable' : 'no-cache';
+    }
+
     // URL aset + versi dari waktu ubah file, supaya perubahan library langsung terlihat.
+    // Versi bundel JS memuat jumlah file juga: menghapus satu file tidak mengubah waktu ubah terbesar.
     public static function asset(string $file): string
     {
         $v = $file === 'devlib.js'
-            ? max(array_map('filemtime', self::scripts()))
+            ? max(array_map('filemtime', self::scripts())).'-'.count(self::scripts())
             : (@filemtime(__DIR__.'/../resources/assets/'.$file) ?: 0);
 
         return route('devlib.asset', ['file' => $file]).'?v='.$v;

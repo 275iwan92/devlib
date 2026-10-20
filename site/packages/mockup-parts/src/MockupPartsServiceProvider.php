@@ -3,6 +3,7 @@
 namespace MockupParts;
 
 use Devlib\Components\DevlibComponent;
+use Devlib\DevlibServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -19,20 +20,20 @@ class MockupPartsServiceProvider extends ServiceProvider
 
         Route::get('/_mp/{file}', function (string $file) {
             if ($file === 'mockup-parts.js') {
-                return response(self::bundle(), 200, ['Content-Type' => 'application/javascript', 'Cache-Control' => 'no-cache']);
+                return response(self::bundle(), 200, ['Content-Type' => 'application/javascript', 'Cache-Control' => DevlibServiceProvider::cacheControl()]);
             }
             $root = realpath(__DIR__.'/../resources/assets');
             $path = realpath($root.'/'.$file) ?: realpath($root.'/css/'.$file);
             abort_unless($path && str_starts_with($path, $root.DIRECTORY_SEPARATOR), 404);
 
-            return response()->file($path, ['Content-Type' => str_ends_with($file, '.css') ? 'text/css' : 'application/javascript', 'Cache-Control' => 'no-cache']);
+            return response()->file($path, ['Content-Type' => str_ends_with($file, '.css') ? 'text/css' : 'application/javascript', 'Cache-Control' => DevlibServiceProvider::cacheControl()]);
         })->where('file', '[A-Za-z0-9._-]+')->name('mp.asset');
     }
 
     public static function asset(string $file): string
     {
         $root = __DIR__.'/../resources/assets/';
-        $v = $file === 'mockup-parts.js' ? max(array_map('filemtime', self::scripts())) : (is_file($root.$file) ? filemtime($root.$file) : (is_file($root.'css/'.$file) ? filemtime($root.'css/'.$file) : 0));
+        $v = $file === 'mockup-parts.js' ? max(array_map('filemtime', self::scripts())).'-'.count(self::scripts()) : (is_file($root.$file) ? filemtime($root.$file) : (is_file($root.'css/'.$file) ? filemtime($root.'css/'.$file) : 0));
 
         return route('mp.asset', ['file' => $file]).'?v='.$v;
     }

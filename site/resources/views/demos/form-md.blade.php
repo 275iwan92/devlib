@@ -16,8 +16,8 @@
     $blank = $isNew && ! $dup;
     // Log riwayat (History): contoh isi -- di aplikasi pemakai dari system.doc_state_log + audit perubahan. Terbaru di atas.
     $log = $isNew ? [] : array_values(array_filter([
-        in_array($status, ['confirmed', 'cancelled', 'closed'], true) ? ['at' => now()->format('Y-m-d H:i:s'), 'by' => 'johiwan', 'action' => ucfirst($status), 'note' => $status === 'cancelled' ? 'Salah customer, dibuat ulang.' : null] : null,
-        $status === 'draft' && $act === 'draft' ? ['at' => now()->format('Y-m-d H:i:s'), 'by' => 'johiwan', 'action' => 'Back to Draft', 'note' => 'Revisi qty sesuai PO customer.'] : null,
+        in_array($status, ['confirmed', 'cancelled', 'closed'], true) ? ['at' => now()->format('Y-m-d H:i:s'), 'by' => 'budi', 'action' => ucfirst($status), 'note' => $status === 'cancelled' ? 'Salah customer, dibuat ulang.' : null] : null,
+        $status === 'draft' && $act === 'draft' ? ['at' => now()->format('Y-m-d H:i:s'), 'by' => 'budi', 'action' => 'Back to Draft', 'note' => 'Revisi qty sesuai PO customer.'] : null,
         ['at' => '2026-09-30 09:40:00', 'by' => 'carrij', 'action' => 'Saved', 'note' => 'Ubah harga baris 2'],
         ['at' => '2026-09-30 08:40:00', 'by' => 'carrij', 'action' => 'Saved', 'note' => null],
         ['at' => '2026-09-30 08:12:00', 'by' => 'carrij', 'action' => 'Created', 'note' => null],
@@ -47,7 +47,7 @@
     :action="$here.'#form-md'" method="GET" :new-url="$here.'?'.$me.'_new=1#form-md'" :hidden="['doc' => $me]"
     :tabs="['general' => 'General', 'party' => 'Customer', 'finance' => 'Finance', 'delivery' => 'Delivery', 'files' => 'Attachments & Notes']"
     :created-by="$isNew ? null : 'carrij'" :created-at="$isNew ? null : '2026-09-30 08:12:00'"
-    :updated-by="$isNew ? null : ($act ? 'johiwan' : 'carrij')" :updated-at="$isNew ? null : ($act ? now()->format('Y-m-d H:i:s') : '2026-09-30 09:40:00')">
+    :updated-by="$isNew ? null : ($act ? 'budi' : 'carrij')" :updated-at="$isNew ? null : ($act ? now()->format('Y-m-d H:i:s') : '2026-09-30 09:40:00')">
     <x-slot:strip>
         {{-- Ringkasan: No. dokumen & nominal penting di atas, disorot; nominal ikut hidup dari baris Details. --}}
         <div class="dl-strip__kv dl-strip__doc"><span>No. Pesanan</span><b>{{ $blank || $dup ? '(otomatis)' : $co['co_no'] }}</b></div>
