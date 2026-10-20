@@ -82,6 +82,10 @@ Route::middleware('devlib.auth')->group(function () {
     // Halaman komponen: komponen hidup + ikon </> berisi kode pemakaiannya.
     Route::get('/lib/{slug}', function (Request $r, string $slug) use ($libData) {
         $page = Catalog::page($slug) ?? abort(404);
+        // Halaman Aturan = tampilan langsung skills/devlib/*.md (RulesDocs), bukan demo komponen.
+        if (isset($page['doc'])) {
+            return view('lib-doc', ['page' => $page]);
+        }
         $data = $libData();
 
         // Halaman kategori (Part 2): beberapa komponen + breadcrumb; kode = gabungan demo.

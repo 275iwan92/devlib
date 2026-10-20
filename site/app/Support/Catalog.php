@@ -231,18 +231,97 @@ final class Catalog
                     // -> resources/data/build.json), objeknya x-dl::build-board; tampil juga di halaman depan.
                     'p9-build' => $page('Build Progress', 'fa-solid fa-chart-simple', ['build' => ['Build Progress: objects, modules, screens, forms, grids, engines and features built so far', $c('BuildBoard')]]),
                 ]],
-            // Aturan untuk developer, bukan komponen yang dipakai user (user 2026-09-26).
+            // Aturan untuk developer, bukan komponen yang dipakai user (user 2026-09-26). Halaman dokumen = skills/devlib/*.md apa adanya (RulesDocs).
             ['code' => 'DR', 'short' => 'DR', 'label' => 'DEV Rules', 'icon' => 'fa-solid fa-code',
-                'pages' => [
+                'pages' => RulesDocs::pages() + [
                     'p5-override' => $page('OO Methods and Properties', 'fa-solid fa-code-branch', ['oo-override' => ['Kanban subclass: properties overridden in PHP, methods overridden in JS (super)', ['App\\View\\Components\\Demo\\KanbanProduksi', ...$c('Kanban')]]], null, $c('Kanban')),
                 ]],
+            // Bagian Flow (user 2026-10-21): diagram alur dengan x-dl::flow; contoh fiktif, belum ditinjau user (bukan APPROVED).
+            ['code' => 'FL', 'short' => 'FL', 'label' => 'Flow Diagrams', 'icon' => 'fa-solid fa-diagram-project',
+                'pages' => [
+                    'p10-system-flow' => $page('System Flow', 'fa-solid fa-diagram-project', ['system-flow' => ['System Flow: how modules hand a document to each other (blocks follow the document, status per block)', $c('Flow')]]),
+                    'p10-data-flow' => $page('Data Flow', 'fa-solid fa-database', ['data-flow' => ['Data Flow: where a value comes from, which engine handles it and where it is stored', $c('Flow')]]),
+                    'p10-work-flow' => $page('Work Flow', 'fa-solid fa-list-check', ['work-flow' => ['Work Flow: the document life cycle Draft > Confirmed > Closed, with the Cancelled branch and who acts', $c('Flow')]]),
+                ]],
         ];
+        $groups = self::arrange($groups);
         // Label breadcrumb halaman kategori = nama grupnya.
         foreach ($groups as &$g) {
             foreach ($g['pages'] as &$p) {
                 $p['part'] = $g['label'];
                 $p['trail'] = array_values(array_filter([$g['label'], $p['folder'] ?? null, $p['subfolder'] ?? null]));
             }
+        }
+
+        return $groups;
+    }
+
+    // Struktur menu (user 2026-10-21): bagian > grup > (folder) > halaman. Definisi halaman tetap di groups() (slug lama utuh);
+    // di sini hanya PENEMPATANNYA. 'from' = ambil semua halaman grup lama berkode itu; 'pages' = slug; 'folders' = slug => [folder, ikon].
+    // Bagian tampil sebagai judul kelompok di akar Layer Menu (LayerShell: 'section' pada modul).
+    private static function layout(): array
+    {
+        $in = fn (string $prefix, array $slugs) => array_map(fn ($s) => $prefix.$s, $slugs);
+
+        return [
+            'Foundations & Rules' => [
+                ['code' => 'DT', 'label' => 'Basics & Themes', 'icon' => 'fa-solid fa-palette', 'pages' => $in('basic-', ['colors', 'typography', 'shape', 'themes', 'density', 'icons', 'breakpoints', 'locale'])],
+                ['code' => 'BH', 'label' => 'Global Behaviors', 'icon' => 'fa-solid fa-sliders', 'pages' => $in('p4-', ['developer', 'guard', 'shortcuts', 'permissions', 'i18n', 'metadata'])],
+                ['code' => 'DR', 'label' => 'Rules', 'icon' => 'fa-solid fa-code', 'pages' => [...array_keys(RulesDocs::pages()), 'p5-override'],
+                    'folders' => ['p5-override' => ['Develop & Coding']]],
+            ],
+            'Components' => [
+                ['code' => 'IN', 'label' => 'Inputs & Buttons', 'icon' => 'fa-solid fa-i-cursor', 'pages' => $in('p2-', ['inputs', 'numbers', 'datetime', 'choices', 'files', 'buttons'])],
+                ['code' => 'DF', 'label' => 'Display & Feedback', 'icon' => 'fa-solid fa-comment-dots', 'pages' => [...$in('p2-', ['display', 'containers', 'navigation']), ...$in('p3-', ['feedback', 'loading', 'notifications', 'errors'])]],
+                ['code' => 'WU', 'label' => 'Widgets & Utilities', 'icon' => 'fa-solid fa-puzzle-piece', 'pages' => ['p6-greeting-card', 'p6-timer', 'p6-geo-clock', 'p6-codes']],
+            ],
+            'Screen' => [
+                ['code' => 'GR', 'from' => ['GR', 'FM']],
+                ['code' => 'CH', 'label' => 'Charts & Dashboards', 'icon' => 'fa-solid fa-chart-pie', 'pages' => ['p6-charts', 'p6-indicators', 'p6-dashboard', 'p5-org']],
+                ['code' => 'SC', 'label' => 'Schedule', 'icon' => 'fa-solid fa-calendar-days', 'pages' => ['p5-kanban', 'p5-gantt', 'p5-calendar']],
+                ['code' => 'DK', 'label' => 'Print & Report', 'icon' => 'fa-solid fa-print', 'from' => ['DK'], 'pages' => ['p6-statement']],
+                ['code' => 'SP', 'label' => 'Special Screen', 'icon' => 'fa-solid fa-star', 'pages' => ['p6-wh-map', 'p6-wh-labels', 'p6-wh-scan', 'p6-delivery', 'p7-chat', 'p7-chat-model', 'p7-assistant'],
+                    'folders' => ['p6-delivery' => ['Warehouse', 'fa-solid fa-warehouse'], 'p7-chat' => ['Chat', 'fa-solid fa-comments'], 'p7-chat-model' => ['Chat', 'fa-solid fa-comments'], 'p7-assistant' => ['Chat', 'fa-solid fa-comments']]],
+                ['code' => 'MA', 'label' => 'Shell, Account & Security', 'icon' => 'fa-solid fa-table-columns', 'pages' => ['shell', 'screen-nav', 'p7-menus', 'p7-layer', 'login-1', 'login-2', 'login-3', 'register', 'forgot-1', 'forgot-2', 'p8-lock', 'p8-security']],
+            ],
+            'Flow' => [['code' => 'FL', 'from' => ['FL']]],
+            'Engine' => [['code' => 'EG', 'from' => ['EG']]],
+        ];
+    }
+
+    // Menyusun ulang halaman definisi groups() menurut layout(). Halaman yang belum ditempatkan masuk grup "Unplaced" (kelihatan salah di menu; dijaga tes).
+    private static function arrange(array $old): array
+    {
+        $meta = array_column($old, null, 'code');
+        $pool = array_merge([], ...array_map(fn ($g) => $g['pages'], $old));
+        $groups = [];
+        foreach (self::layout() as $section => $defs) {
+            foreach ($defs as $d) {
+                $pages = [];
+                foreach ($d['from'] ?? [] as $code) {
+                    foreach ($meta[$code]['pages'] ?? [] as $slug => $p) {
+                        $pages[$slug] = $p;
+                        unset($pool[$slug]);
+                    }
+                }
+                foreach ($d['pages'] ?? [] as $slug) {
+                    if (isset($pool[$slug])) {
+                        $pages[$slug] = $pool[$slug];
+                        unset($pool[$slug]);
+                    }
+                }
+                foreach ($d['folders'] ?? [] as $slug => $f) {
+                    if (isset($pages[$slug])) {
+                        $pages[$slug]['folder'] = $f[0];
+                        isset($f[1]) && $pages[$slug]['folderIcon'] = $f[1];
+                    }
+                }
+                $first = $meta[$d['from'][0] ?? ''] ?? [];
+                $groups[] = ['code' => $d['code'], 'short' => $d['code'], 'label' => $d['label'] ?? $first['label'], 'icon' => $d['icon'] ?? $first['icon'], 'section' => $section, 'pages' => $pages];
+            }
+        }
+        if ($pool) {
+            $groups[] = ['code' => 'XX', 'short' => 'XX', 'label' => 'Unplaced', 'icon' => 'fa-solid fa-circle-question', 'section' => 'Unplaced', 'pages' => $pool];
         }
 
         return $groups;
@@ -355,7 +434,8 @@ final class Catalog
     public static function stats(): array
     {
         $groups = self::groups();
-        $slugs = array_merge([], ...array_map(fn ($g) => array_keys($g['pages']), $groups));
+        // Halaman dokumen Aturan (skills/devlib/*.md) bukan objek katalog: tidak dihitung.
+        $slugs = array_merge([], ...array_map(fn ($g) => array_keys(array_filter($g['pages'], fn ($p) => ! isset($p['doc']))), $groups));
 
         return [
             'groups' => array_column($groups, 'label'),
@@ -403,8 +483,9 @@ final class Catalog
                 if (($p['menu'] ?? true) === false) {
                     continue;
                 }
+                // Halaman dokumen Aturan bukan objek yang ditinjau: tanpa ikon status.
                 $item = ['code' => 'P-'.$slug, 'label' => $p['label'], 'icon' => $p['icon'], 'url' => route('lib', ['slug' => $slug]),
-                    'type' => 'form'] + $mark($slug);
+                    'type' => 'form'] + (isset($p['doc']) ? [] : $mark($slug));
                 if (! isset($p['folder'])) {
                     $items[] = $item;
 
@@ -428,10 +509,10 @@ final class Catalog
                 }
                 $items[$at]['items'][$sub]['items'][] = $item;
             }
-            $modules[] = ['code' => $g['code'], 'short' => $g['short'], 'label' => $g['label'], 'icon' => $g['icon'], 'children' => $items]; // langsung isi modul, tanpa lapis "Components" (user 2026-09-30: membingungkan)
+            $modules[] = ['code' => $g['code'], 'short' => $g['short'], 'section' => $g['section'] ?? null, 'label' => $g['label'], 'icon' => $g['icon'], 'children' => $items]; // langsung isi modul, tanpa lapis "Components" (user 2026-09-30: membingungkan)
         }
         // Generator (user 2026-10-05): form permintaan + daftar permintaan, isi dari database devlib.
-        $modules[] = Generator::menu();
+        $modules[] = Generator::menu() + ['section' => 'Tools'];
         // Menu kedua Layer Menu (ikon tukar Operational | Executive Summary): modul berkode MGMT.
         $modules[] = Summary::menu();
 

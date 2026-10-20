@@ -9,6 +9,14 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Menu katalog 5 bagian** (situs acuan; slug lama utuh, tanpa halaman lama baru di `APPROVED`). Bagian tampil sebagai judul kelompok di akar Layer Menu:
+  Foundations & Rules (Basics & Themes, Global Behaviors, Rules), Components (Inputs & Buttons, Display & Feedback, Widgets & Utilities),
+  Screen (Grid and Form, Charts & Dashboards, Schedule, Print & Report, Special Screen [Warehouse, Chat], Shell, Account & Security), Flow, Engine.
+  Penempatan halaman satu tempat: `Catalog::layout()`. Halaman Aturan = tampilan langsung `skills/devlib/*.md` (`App\Support\RulesDocs`, view `lib-doc`,
+  slug `rules-<berkas>`; tanpa salinan, judul dari dokumen, tidak dihitung sebagai objek QC). Bagian Flow: `p10-system-flow`, `p10-data-flow`,
+  `p10-work-flow` (contoh fiktif `x-dl::flow`, belum ditinjau). Library: modul Shell boleh memuat `section` (judul kelompok di Layer Menu; Shell biasa
+  mengabaikannya); tanpa `section` perilaku lama.
+
 - **Aturan membangun object** (`skills/devlib/object.md`, dokumen; tanpa perubahan kode): daftar periksa membuat komponen (kelas PHP + JS berpasangan,
   header REMARK, CSS token, manifest, tes kontrak, halaman katalog), aturan baku, cara mewariskan, uji layak jadi object, dan versi. Butir yang belum
   punya aturan tertulis ditandai **BELUM ADA ATURAN**. Ditautkan dari `SKILL.md`.
