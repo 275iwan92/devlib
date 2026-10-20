@@ -20,7 +20,9 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   keadaannya diingat per browser (mode mini selalu terbuka). `'1'` = tiap judul sendiri-sendiri, `'accordion'` = satu kelompok terbuka sekali waktu (awal:
   kelompok layar aktif) dengan jumlah halaman di tiap judul; `x-dl::layer-shell` memakai `accordion` otomatis hanya bila ada modul ber-`section`.
   Tema: token `side-2`, `side-hover`, `side-scroll` kini diturunkan dari warna sidebar tiap tema (sebelumnya biru bawaan, tampak biru di tema hijau/merah);
-  tema bawaan `navy` tidak berubah. Situs acuan memakai `config('devlib.theme') = 'pastel_green'` (hijau pastel); pilihan pengguna tetap menang.
+  tema bawaan `navy` tidak berubah. Keluarga tema baru **Soft** (`soft_blue`, `soft_green`, `soft_red`): sidebar terang berwarna pastel dengan teks gelap
+  (token baru `--dl-side-hot`, bawaan putih sehingga tema lama tidak berubah; tema Soft juga menyetel `tabbar`/`tab`); tema kini 15. Situs acuan memakai
+  `config('devlib.theme') = 'soft_green'` (hijau pastel); pilihan pengguna tetap menang. Menu klasik (`x-dl::shell`) belum diperiksa pada tema Soft.
 
 - **Aturan membangun object** (`skills/devlib/object.md`, dokumen; tanpa perubahan kode): daftar periksa membuat komponen (kelas PHP + JS berpasangan,
   header REMARK, CSS token, manifest, tes kontrak, halaman katalog), aturan baku, cara mewariskan, uji layak jadi object, dan versi. Butir yang belum

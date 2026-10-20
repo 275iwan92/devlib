@@ -23,9 +23,13 @@ final class Theme
         'hitam_blue' => ['Hitam Biru', 'hitam', 'blue', '#5b9dff', '#0a0a0c', '#060608'],
         'hitam_green' => ['Hitam Hijau', 'hitam', 'green', '#2ee6a6', '#0a0a0c', '#060608'],
         'hitam_red' => ['Hitam Merah', 'hitam', 'red', '#ff5c5c', '#0a0a0c', '#060608'],
+        // Soft = sidebar TERANG berwarna pastel (teks sidebar gelap lewat token side-ink / side-hot); keluarga baru, tema lama tidak berubah.
+        'soft_blue' => ['Soft Biru', 'soft', 'blue', '#4a78c2', '#dde8f6', '#f3f6fb'],
+        'soft_green' => ['Soft Hijau', 'soft', 'green', '#3f8a63', '#dcebe2', '#f4f8f5'],
+        'soft_red' => ['Soft Merah', 'soft', 'red', '#c0586d', '#f4e1e5', '#fbf4f5'],
     ];
 
-    public const FAMILIES = ['pastel' => 'Pastel', 'cerah' => 'Cerah', 'dark' => 'Dark', 'hitam' => 'Hitam'];
+    public const FAMILIES = ['pastel' => 'Pastel', 'cerah' => 'Cerah', 'dark' => 'Dark', 'hitam' => 'Hitam', 'soft' => 'Soft'];
 
     public const HUES = ['blue' => 'Biru', 'green' => 'Hijau', 'red' => 'Merah'];
 
@@ -60,6 +64,16 @@ final class Theme
         ];
         if ($bg) {
             $t['bg'] = $bg;
+        }
+        if ($family === 'soft') {
+            // Sidebar terang: teks sidebar gelap; kartu "navy" (hero, bilah atas) tetap gelap supaya teks putihnya terbaca.
+            $t = [
+                'side-ink' => "color-mix(in srgb, $primary 15%, #0f1d16)", 'side-leaf' => "color-mix(in srgb, $primary 15%, #0f1d16)", 'side-hot' => '#0b1a12',
+                'side-muted' => "color-mix(in srgb, $primary 40%, #2a3a31)",
+                'side-2' => "color-mix(in srgb, $sidebar 88%, $primary)", 'side-hover' => "color-mix(in srgb, $sidebar 75%, $primary)", 'side-scroll' => "color-mix(in srgb, $sidebar 70%, $primary)",
+                'tabbar' => "color-mix(in srgb, $sidebar 85%, #fff)", 'tab' => "color-mix(in srgb, $sidebar 90%, $primary)", 'tab-hover' => "color-mix(in srgb, $sidebar 80%, $primary)",
+                'navy' => "color-mix(in srgb, $primary 55%, #0b1a12)", 'navy-2' => "color-mix(in srgb, $primary 45%, #0b1a12)", 'topbar' => "color-mix(in srgb, $primary 60%, #0b1a12)",
+            ] + $t;
         }
         if (isset(self::DARK[$family])) {
             $d = self::DARK[$family];

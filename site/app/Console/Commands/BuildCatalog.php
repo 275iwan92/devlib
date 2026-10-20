@@ -58,7 +58,7 @@ class BuildCatalog extends Command
             'engines' => array_map(fn ($group, $list) => ['group' => $group, 'items' => $list], array_keys($engines), $engines),
             'features' => [
                 ['fa-language', 'Multi-language + dictionary'],
-                ['fa-palette', '12 themes (Pastel, Bright, Dark, Black x Blue, Green, Red)'],
+                ['fa-palette', '15 themes (Pastel, Bright, Dark, Black, Soft x Blue, Green, Red)'],
                 ['fa-table', 'Grid: master, transactional and report (zebra rows)'],
                 ['fa-gears', 'Engine contract (Devlib\\Engine): modes, results, registry, cancel + adjustment'],
                 ['fa-print', 'Print documents that carry the record mode'],
