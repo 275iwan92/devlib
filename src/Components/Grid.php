@@ -127,6 +127,11 @@ class Grid extends DevlibComponent
         }
     }
 
+    public function lint(): array
+    {
+        return \Devlib\Lint\GridRules::check($this);
+    }
+
     public function isReport(): bool
     {
         return $this->mode === 'report';

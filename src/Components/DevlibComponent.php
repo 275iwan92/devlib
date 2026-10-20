@@ -185,7 +185,21 @@ abstract class DevlibComponent extends Component
     // Dipakai di elemen akar view: <div {!! $dl() !!}>.
     public function dl(): string
     {
+        $lint = '';
+        if ((\Devlib\Lint\Lint::on() || config('app.debug')) && $found = $this->lint()) {
+            \Devlib\Lint\Lint::on() && \Devlib\Lint\Lint::record($found);
+            // Hanya untuk Mode Developer saat debug; produksi tidak berubah.
+            config('app.debug') && $lint = ' data-dl-lint="'.e(implode(' | ', array_map('strval', $found))).'"';
+        }
+
         return 'data-dl="'.e($this->tag()).'" data-dl-class="'.e($this->lineage()).'" data-dl-src="'.e($this->source()).'"'
-            .($this->jsClass() ? ' data-dl-js="'.e($this->jsClass()).'"' : '');
+            .($this->jsClass() ? ' data-dl-js="'.e($this->jsClass()).'"' : '').$lint;
+    }
+
+    // Temuan penegak aturan baku (Devlib\Lint) untuk konfigurasi komponen ini; kosong = tidak ada aturan / patuh.
+    /** @return list<\Devlib\Lint\Finding> */
+    public function lint(): array
+    {
+        return [];
     }
 }

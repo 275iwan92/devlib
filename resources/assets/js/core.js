@@ -363,7 +363,7 @@ window.Devlib = window.Devlib || {};
       const el = e.target.closest && e.target.closest('[data-dl]');
       const body = box.querySelector('[data-dev-body]');
       if (el) {
-        body.innerHTML = `<b>${esc(el.dataset.dl)}</b><br><span class="k">${esc(T('dev_class'))}:</span> ${esc(el.dataset.dlClass || '—')}<br><span class="k">${esc(T('dev_source'))}:</span> ${esc(el.dataset.dlSrc || '—')}`;
+        body.innerHTML = `<b>${esc(el.dataset.dl)}</b><br><span class="k">${esc(T('dev_class'))}:</span> ${esc(el.dataset.dlClass || '—')}<br><span class="k">${esc(T('dev_source'))}:</span> ${esc(el.dataset.dlSrc || '—')}` + (el.dataset.dlLint ? `<br><span class="k">Lint:</span> ${esc(el.dataset.dlLint)}` : '');
       } else if (e.target.classList && e.target.classList.contains('dl-nolib')) {
         body.innerHTML = '<b>' + esc(T('dev_not_lib')) + '</b><br><span class="k">' + esc(T('dev_element')) + ':</span> &lt;' + esc(e.target.tagName.toLowerCase()) + '&gt;';
       }

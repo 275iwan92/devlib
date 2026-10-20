@@ -23,7 +23,7 @@ class DevlibServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'devlib');
         Blade::componentNamespace('Devlib\\Components', 'dl');
-        $this->commands([Console\QcReviews::class]);  // php artisan qc:reviews -- untuk agen, sama di semua proyek
+        $this->commands([Console\QcReviews::class, Console\Lint::class]);  // php artisan qc:reviews -- untuk agen, sama di semua proyek
 
         Route::get('/_devlib/{file}', function (string $file) {
             if ($file === 'devlib.js') {

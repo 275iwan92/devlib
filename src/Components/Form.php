@@ -64,6 +64,11 @@ class Form extends DevlibComponent
         public ?string $printUrl = null,
     ) {}
 
+    public function lint(): array
+    {
+        return \Devlib\Lint\FormRules::check($this);
+    }
+
     public function panelTabs(): array
     {
         return ($this->tabs ?: ['main' => 'Data']) + ['audit' => [Lang::text('History'), 'fa-clock-rotate-left']];
