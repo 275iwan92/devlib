@@ -122,4 +122,23 @@ BLADE;
         unlink($dir.'/a.blade.php');
         rmdir($dir);
     }
+
+    public function test_command_honours_per_file_exceptions_from_config(): void
+    {
+        $dir = sys_get_temp_dir().'/dl-lint-'.uniqid();
+        mkdir($dir);
+        $file = $dir.'/a.blade.php';
+        file_put_contents($file, '<x-dl::grid id="a" kind="master" /><script>1</script>');
+        $rel = ltrim(str_replace('\\', '/', $file), '/');
+
+        config(['devlib.lint_except' => [$rel => ['G110']]]);
+        $this->artisan('devlib:lint', ['paths' => [$dir]])->expectsOutputToContain('L002')->assertFailed();  // hanya G110 yang dikecualikan
+        config(['devlib.lint_except' => [$rel => ['G110', 'L002']]]);
+        $this->artisan('devlib:lint', ['paths' => [$dir]])->expectsOutputToContain('2 dikecualikan')->assertSuccessful();
+        config(['devlib.lint_except' => ['jalur/lain.blade.php' => ['G110', 'L002']]]);
+        $this->artisan('devlib:lint', ['paths' => [$dir]])->assertFailed();  // kecuali berlaku per berkas
+
+        unlink($file);
+        rmdir($dir);
+    }
 }

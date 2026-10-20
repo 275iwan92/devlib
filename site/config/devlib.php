@@ -24,6 +24,27 @@ return [
             'department' => 'Direksi', 'superior' => null, 'developer' => false],
     ],
 
+    // Kecuali devlib:lint (opt-in, hanya situs ini): berkas => kode yang sengaja dilanggar. Aturan tetap berlaku untuk semua berkas lain.
+    // Demo katalog memang memperlihatkan HTML mentah/skrip/warna contoh; form dokumen contoh tidak punya grid modul untuk dituju :back.
+    'lint_except' => [
+        // F101: form dokumen contoh, Back memakai riwayat (:back akan mengubah perilaku demo yang sudah disetujui).
+        'resources/views/demos/form-md.blade.php' => ['F101'],
+        'resources/views/demos/form-md-po.blade.php' => ['F101'],
+        'resources/views/demos/form-single.blade.php' => ['F101'],
+        // L001: formulir GET kecil/tabel contoh; field hidden belum punya komponen x-dl::* (ActionForm tidak menerima prop hidden).
+        'resources/views/agent-log.blade.php' => ['L001'],
+        'resources/views/generator.blade.php' => ['L001'],
+        'resources/views/demos/screen-nav.blade.php' => ['L001'],
+        'resources/views/demos/basic-locale.blade.php' => ['L001'],  // tabel mentah dl-kv = bagian yang didemokan
+        // L002: skrip peragaan (simulasi balasan chat; subclass JS Kanban) -- contoh cara menurunkan JS, bukan perilaku komponen.
+        'resources/views/demos/layer-menu.blade.php' => ['L002'],
+        'resources/views/demos/oo-override.blade.php' => ['L002'],
+        // L003: hex adalah DATA contoh yang dioper ke komponen (nilai field.color, warna legenda label, warna avatar), bukan gaya sendiri.
+        'resources/views/demos/field-color.blade.php' => ['L003'],
+        'resources/views/demos/label-print.blade.php' => ['L003'],
+        'resources/views/demos/lock-screen.blade.php' => ['L003'],
+    ],
+
     // Opening screen (x-dl::dashboard): profil per KODE JABATAN. Jabatan yang tidak terdaftar = 'general'
     // (mekanisme sama, isi KPI/aktivitas umum). Profil baru cukup ditambah di sini + App\Support\DashboardData.
     'dashboards' => [

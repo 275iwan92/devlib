@@ -46,7 +46,7 @@
                                 @endif
                             </div>
                             {{-- form sendiri: radio bernama sama di dua sisi tidak saling merebut pilihan --}}
-                            <form class="dl-cat__side" onsubmit="return false">
+                            <x-dl::action-form method="get" class="dl-cat__side" onsubmit="return false">
                                 <div class="dl-cat__mode dl-cat__mode--ro"><b>ReadOnly</b> display</div>
                                 @if ($mode === 'rw')
                                     <div class="dl-cat__none">No ReadOnly mode</div>
@@ -57,7 +57,7 @@
                                     @include('demos.'.$slug, $data)
                                     @php(\Devlib\Components\Field\Field::$readonlyAll = false)
                                 @endif
-                            </form>
+                            </x-dl::action-form>
                         </div>
                     @endif
                 @endif
