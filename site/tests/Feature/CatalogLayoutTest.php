@@ -46,6 +46,13 @@ class CatalogLayoutTest extends TestCase
         $this->assertArrayNotHasKey('badge', $doc, 'halaman dokumen tanpa ikon status QC');
     }
 
+    public function test_layer_menu_folds_section_captions_only_when_modules_have_sections(): void
+    {
+        $this->get('/')->assertOk()->assertSee('data-fold-groups="1"', false);
+        $plain = \Illuminate\Support\Facades\Blade::render('<x-dl::layer-menu :items="$items" />', ['items' => [['label' => 'A', 'group' => 'G', 'url' => '#']]]);
+        $this->assertStringContainsString('data-fold-groups="0"', $plain);
+    }
+
     public function test_rules_page_shows_the_document_itself(): void
     {
         $res = $this->get('/lib/rules-object');

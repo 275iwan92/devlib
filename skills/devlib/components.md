@@ -521,7 +521,7 @@ Teks antarmuka dari kamus Devlib\Lang (ID/EN); ikut berganti saat bahasa diganti
 ## `<x-dl::layer-menu>`
 Menu panel kiri berlapis (layer 1 modul -> layer 2 menu -> layer 3 sub -> layer 4 ...), SEMUA di panel yang sama:.
 - Berkas: `src/Components/LayerMenu.php`
-- Prop: items:array=[], title:?string=NULL, logo:?string=NULL, tagline:?string=NULL, id:string='layer', active:?string=NULL, user:?string=NULL, role:?string=NULL, login:?string=NULL, counts:bool=true, rootCaption:string='Modules', dock:?string=NULL, actions:array=[], views:array=[], initialView:?string=NULL, search:bool=false, collapsible:bool=true, home:bool=false
+- Prop: items:array=[], title:?string=NULL, logo:?string=NULL, tagline:?string=NULL, id:string='layer', active:?string=NULL, user:?string=NULL, role:?string=NULL, login:?string=NULL, counts:bool=true, rootCaption:string='Modules', dock:?string=NULL, actions:array=[], views:array=[], initialView:?string=NULL, search:bool=false, collapsible:bool=true, home:bool=false, foldGroups:bool=false
 
 ## `<x-dl::layer-shell>`
 Kerangka aplikasi dengan navigasi x-dl::layer-menu di kiri dan TANPA top bar. Tab MDI, laci, modal.

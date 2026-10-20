@@ -15,6 +15,8 @@
       this.key = 'dl-lm-' + this.el.dataset.id;
       this.path = [];     // cabang yang sedang dibuka, path[d-1] = induk layer d
       this.sel = null;    // key layar akhir terpilih
+      // foldGroups: judul kelompok bisa dilipat; yang terlipat diingat per browser (daftar label).
+      this.fold = new Set(); try { this.fold = new Set(JSON.parse(localStorage.getItem('dl-lm-' + this.el.dataset.id + '-fold') || '[]')); } catch (e) {}
       this.st = {chat: false, dock: false, show: 'menu'};   // show = menu | chat | profile (yang tampil di panel kiri)
       this.initViews();
       this.track.addEventListener('click', e => { const t = e.target.closest('button, a'); if (t) this.click(e, t); });
@@ -143,9 +145,20 @@
         const p = this.path[d - 1];
         h += BACK + `<div class="dl-lm__title" title="${esc(p.label)}"><i class="${esc(p.icon)}"></i><b>${esc(p.label)}</b></div>`;
       } else h += `<div class="dl-lm__cap">${esc(this.views.length ? this.views[this.view].label : this.el.dataset.root)}</div>`;
-      let g = null;
+      let g = null, open = false;
+      const foldable = this.el.dataset.foldGroups === '1', shut = () => { if (open) { h += '</div></div>'; open = false; } };
       this.nodes(d).forEach((n, x) => {
-        if (n.group && n.group !== g) { g = n.group; h += `<div class="dl-lm__cap">${esc(g)}</div>`; }
+        if (n.group && n.group !== g) {
+          g = n.group; shut();
+          if (!foldable) h += `<div class="dl-lm__cap">${esc(g)}</div>`;
+          else {
+            // Judul = tombol lipat; anak menunya dalam satu pembungkus yang menggulung ke atas di belakang judul.
+            const folded = this.fold.has(g);
+            h += `<button type="button" class="dl-lm__cap dl-lm__cap--fold" data-lm-fold="${esc(g)}" aria-expanded="${folded ? 'false' : 'true'}"><span>${esc(g)}</span><i class="fa-solid fa-chevron-down"></i></button><div class="dl-lm__grp${folded ? ' is-folded' : ''}"${folded ? ' inert' : ''}><div>`;
+            open = true;
+          }
+        }
+        if (n.pin && !d) shut();
         // badge "icon:<kelas fa>" = ikon saja (tanpa teks), mis. status QC.
         const badge = n.badge ? (String(n.badge).startsWith('icon:')
           ? `<em class="dl-lm__badge dl-lm__badge--icon is-${esc(n.tone || 'accent')}" title="${esc(n.badgeTitle || '')}"><i class="${esc(String(n.badge).slice(5))}"></i></em>`
@@ -157,6 +170,7 @@
           : `<a href="${esc(n.url || '#')}" class="dl-lm__a${n.key === this.sel ? ' is-active' : ''}" data-lm-x="${x}" title="${esc(n.label)}">${lbl}</a>`;
         h += n.pin && !d ? `<div class="dl-lm__pin">${row}</div>` : row;
       });
+      shut();
       return h;
     }
 
@@ -177,7 +191,17 @@
 
     back() { this.path.pop(); this.draw(); this.track.children[this.path.length]?.querySelector('.dl-lm__a')?.focus({preventScroll: true}); }
 
+    // Lipat / buka satu kelompok tanpa menggambar ulang panel (supaya gulungannya beranimasi).
+    toggleFold(t) {
+      const g = t.dataset.lmFold, grp = t.nextElementSibling, shut = !this.fold.has(g);
+      shut ? this.fold.add(g) : this.fold.delete(g);
+      t.setAttribute('aria-expanded', String(!shut));
+      grp.classList.toggle('is-folded', shut); grp.inert = shut;
+      try { localStorage.setItem('dl-lm-' + this.el.dataset.id + '-fold', JSON.stringify([...this.fold])); } catch (e) {}
+    }
+
     click(e, t) {
+      if (t.hasAttribute('data-lm-fold')) { this.toggleFold(t); return; }
       if (t.hasAttribute('data-lm-back')) { this.setPeek(true); this.back(); return; }
       if (!t.hasAttribute('data-lm-x')) return;
       const d = [...this.track.children].indexOf(t.closest('.dl-lm__pane'));

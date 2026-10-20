@@ -16,6 +16,8 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   slug `rules-<berkas>`; tanpa salinan, judul dari dokumen, tidak dihitung sebagai objek QC). Bagian Flow: `p10-system-flow`, `p10-data-flow`,
   `p10-work-flow` (contoh fiktif `x-dl::flow`, belum ditinjau). Library: modul Shell boleh memuat `section` (judul kelompok di Layer Menu; Shell biasa
   mengabaikannya); tanpa `section` perilaku lama.
+  `x-dl::layer-menu` menerima `fold-groups` (opt-in): judul kelompok jadi tombol lipat, anak menunya menggulung ke atas di belakang judul dan
+  keadaannya diingat per browser (mode mini selalu terbuka); `x-dl::layer-shell` menyalakannya otomatis hanya bila ada modul ber-`section`.
 
 - **Aturan membangun object** (`skills/devlib/object.md`, dokumen; tanpa perubahan kode): daftar periksa membuat komponen (kelas PHP + JS berpasangan,
   header REMARK, CSS token, manifest, tes kontrak, halaman katalog), aturan baku, cara mewariskan, uji layak jadi object, dan versi. Butir yang belum

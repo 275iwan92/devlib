@@ -2666,7 +2666,7 @@ html.dl-locked body{overflow:hidden}
 .dl-lm__pane:has(> .dl-lm__pin){display:flex;flex-direction:column}
 .dl-lm__pin{margin-top:auto;padding-top:8px;border-top:1px solid var(--dl-side-2)}
 .dl-lm__pane::-webkit-scrollbar{width:8px}.dl-lm__pane::-webkit-scrollbar-thumb{background:var(--dl-side-scroll);border-radius:8px}
-.dl-lm__a + .dl-lm__cap{margin-top:18px}
+.dl-lm__a + .dl-lm__cap,.dl-lm__grp + .dl-lm__cap{margin-top:18px}
 .dl-lm__cap{padding:12px 10px 4px;font-size:calc(10.5px * var(--dl-font-scale));font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--dl-side-muted)}
 .dl-lm__a,.dl-lm__back{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border:none;background:none;border-radius:var(--dl-radius);color:var(--dl-side-ink);text-decoration:none;font-family:inherit;font-size:inherit;cursor:pointer;text-align:left;min-width:0;transition:background .12s,color .12s}
 .dl-lm__a:hover,.dl-lm__back:hover{background:var(--dl-side-hover);color:var(--dl-white)}
@@ -2740,6 +2740,17 @@ html.dl-locked body{overflow:hidden}
 .dl-lm.is-mini:not(.is-peek) .dl-lm__pane{padding:8px 6px}
 .dl-lm.is-mini:not(.is-peek) :is(.dl-lm__a,.dl-lm__back,.dl-lm__title){justify-content:center;padding:10px 0}
 .dl-lm.is-mini:not(.is-peek) .dl-lm__title{padding:6px 0 10px}
+/* foldGroups: judul = tombol lipat; anak menu menggulung ke atas di belakang judul (grid 1fr -> 0fr). Mini: selalu terbuka. */
+.dl-lm__cap--fold{display:flex;align-items:center;justify-content:space-between;width:100%;border:none;background:none;font-family:inherit;text-align:left;cursor:pointer}
+.dl-lm__cap--fold:hover{color:var(--dl-white)}
+.dl-lm__cap--fold i{font-size:.9em;transition:transform .2s}
+.dl-lm__cap--fold[aria-expanded=false] i{transform:rotate(-90deg)}
+.dl-lm__grp{display:grid;grid-template-rows:1fr;transition:grid-template-rows .24s ease}
+.dl-lm__grp > div{min-height:0;overflow:hidden}
+.dl-lm__grp.is-folded{grid-template-rows:0fr}
+.dl-lm.is-mini:not(.is-peek) .dl-lm__grp.is-folded{grid-template-rows:1fr}
+.dl-lm.is-mini:not(.is-peek) .dl-lm__cap--fold i{display:none}
+@media (prefers-reduced-motion:reduce){.dl-lm__grp,.dl-lm__cap--fold i{transition:none}}
 .dl-lm.is-mini:not(.is-peek) .dl-lm__cap{height:1px;padding:0;margin:6px 10px;font-size:0;background:var(--dl-side-hover)}
 .dl-lm.is-mini:not(.is-peek) .dl-lm__pane > .dl-lm__cap:first-child{display:none}
 .dl-lm.is-mini:not(.is-peek) .dl-lm__foot{justify-content:center;padding:10px 0;cursor:pointer}
