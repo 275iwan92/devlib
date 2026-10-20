@@ -1,15 +1,15 @@
 {
-    "generated": "2026-10-20 14:59",
+    "generated": "2026-10-20 15:32",
     "database": "devlib",
     "totals": {
-        "objects": 87,
+        "objects": 89,
         "modules": 10,
         "modules_done": 3,
-        "screens": 167,
-        "v2": 167,
+        "screens": 169,
+        "v2": 169,
         "v1": 0,
         "not_built": 0,
-        "waiting_qc": 39,
+        "waiting_qc": 41,
         "locked": 48,
         "forms": 5,
         "grids": 8,
@@ -17,8 +17,8 @@
         "engines": 4,
         "engine_groups": 3,
         "migrations": 9,
-        "tests": 6,
-        "commits": 308,
+        "tests": 8,
+        "commits": 312,
         "since": "2026-09-23"
     },
     "modules": [
@@ -96,11 +96,11 @@
         },
         {
             "label": "Menus, Accounts & Layout",
-            "total": 13,
-            "v2": 13,
+            "total": 15,
+            "v2": 15,
             "v1": 0,
             "not_built": 0,
-            "waiting_qc": 1,
+            "waiting_qc": 3,
             "locked": 12,
             "form": 0,
             "grid": 0,
@@ -944,6 +944,28 @@
             "built_at": "2026-10-02",
             "built_by": null,
             "changed_at": "2026-10-02",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p7-chat-model",
+            "name": "Chat model (contracts)",
+            "module": "Menus, Accounts & Layout",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p7-assistant",
+            "name": "AI Assistant model (contracts)",
+            "module": "Menus, Accounts & Layout",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
             "changed_by": null
         },
         {
