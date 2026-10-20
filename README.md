@@ -24,6 +24,10 @@ Tailwind 4: karena paket berada di luar akar proyek, daftarkan sumbernya di CSS 
 @source '../../../devlib/resources';
 ```
 
+## Perintah untuk agen
+
+`php artisan qc:reviews` (terdaftar otomatis oleh paket) = keputusan QC cepat aplikasi: Need improvement yang belum dikerjakan, siap rilis, Approved terbaru; `--resolve=<id> --by=<nama>` menutup satu catatan. Store bawaan = tabel `qc_review` di koneksi bawaan; aplikasi yang tabel/koneksinya lain mengikat ulang di `AppServiceProvider`: `$this->app->bind(\Devlib\Qc::class, fn () => new \Devlib\Qc('koneksi', 'tabel'))`.
+
 ## Skill Claude Code
 
 Skill acuan untuk semua proyek, sumbernya di repo ini:

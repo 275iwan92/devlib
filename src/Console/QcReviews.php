@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Devlib\Console;
 
-use App\Support\Qc;
+use Devlib\Qc;
 use Illuminate\Console\Command;
 
-// Untuk AGEN di awal sesi (user 2026-10-07): keputusan QC cepat dari devlib.test. Tanpa opsi = daftar Need improvement yang belum
-// dikerjakan (beserta catatan) dan yang baru Approved; --resolve=<id> menandai satu catatan sudah dikerjakan.
-// Jalankan dari folder devlib:  php artisan qc:reviews   |   php artisan qc:reviews --resolve=12 --by=iwan
+// Untuk AGEN di awal sesi: keputusan QC cepat aplikasi ini. Tanpa opsi = daftar Need improvement yang belum dikerjakan (beserta
+// catatan), item siap rilis, dan Approved terbaru; --resolve=<id> menandai satu catatan sudah dikerjakan. Store (koneksi + tabel)
+// diambil dari container: bawaan new Qc; aplikasi yang tabelnya lain mengikat Devlib\Qc di AppServiceProvider.
+// Jalankan:  php artisan qc:reviews   |   php artisan qc:reviews --resolve=12 --by=iwan
 class QcReviews extends Command
 {
     protected $signature = 'qc:reviews {--resolve= : id_review catatan yang sudah dikerjakan} {--by=agent : nama agen penutup}';
 
-    protected $description = 'Daftar keputusan QC (Need improvement terbuka + Approved terbaru) untuk agen';
+    protected $description = 'Daftar keputusan QC (Need improvement terbuka, siap rilis, Approved terbaru) untuk agen';
 
-    public function handle(): int
+    public function handle(Qc $qc): int
     {
-        $qc = Qc::store();
         if (! $qc->ready()) {
-            $this->warn('Tabel qc_review belum ada: php artisan migrate --path=database/migrations/2026_10_07_000001_create_qc_review_table.php');
+            $this->warn("Tabel {$qc->table} belum ada: jalankan migrasi aplikasi ini (php artisan migrate).");
 
             return self::SUCCESS;
         }

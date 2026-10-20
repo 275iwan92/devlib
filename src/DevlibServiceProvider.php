@@ -16,12 +16,14 @@ class DevlibServiceProvider extends ServiceProvider
     {
         require_once __DIR__.'/helpers.php';  // raw() -- nilai data di prop teks x-dl::*
         $this->app->singleton(\Devlib\Engine\EngineRegistry::class);  // opt-in: kosong sampai aplikasi mendaftarkan engine-nya
+        $this->app->bind(Qc::class, fn () => new Qc);  // store QC bawaan; aplikasi yang tabel/koneksinya lain mengikat ulang di AppServiceProvider
     }
 
     public function boot(): void
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'devlib');
         Blade::componentNamespace('Devlib\\Components', 'dl');
+        $this->commands([Console\QcReviews::class]);  // php artisan qc:reviews -- untuk agen, sama di semua proyek
 
         Route::get('/_devlib/{file}', function (string $file) {
             if ($file === 'devlib.js') {
