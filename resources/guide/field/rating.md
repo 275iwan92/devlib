@@ -28,14 +28,14 @@ All 14 come from `Devlib\Components\Field\Field`; the full reference is on `x-dl
 | Prop | Use in this control |
 |---|---|
 | `name` | `name` of the hidden input that carries the score. No name = nothing is posted. |
-| `label` | Label text. Empty string = no label row. Translated. The `for` of the label points to an id this view does not create (see Accessibility). |
+| `label` | Label text. Empty string = no label row. Translated. The label has no `for`; the root is tied to it with `aria-labelledby` (see Accessibility). |
 | `tooltip` | The (i) bubble next to the label (needs a label). Translated. |
 | `hint` | Help line under the control. Translated. |
 | `error` | Server error text; non-empty marks the field invalid. Not translated. |
 | `value` | Initial score, cast with `(float)` into the hidden input and `aria-valuenow`: `3`, `3.5`; `null`, text or `''` becomes `0`. Pass a number. Not limited to `0..max` at render. |
 | `placeholder` | Not used by this control. |
 | `required` | Red `*` only. The score is never empty (`0` is a value), so the form check never marks it. |
-| `disabled` | Same look and behavior as `readonly` (class `is-readonly`, no click handlers). The hidden input is not disabled, so the score is still posted (see the oddity). |
+| `disabled` | Same look and behavior as `readonly` (class `is-readonly`, no click handlers). `disabled` also disables the hidden input, so nothing is posted; `readonly` still posts the score. |
 | `readonly` | Display only: stars are painted but no interaction is attached; the score is posted. The root also gets `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | Not used by this control. |
 | `size` | `sm` (default) or `lg`: the CSS class `dl-field--<size>` and `dl-rating--<size>`; `lg` makes the stars bigger (30px, row 40px). |
@@ -50,7 +50,7 @@ All 14 come from `Devlib\Components\Field\Field`; the full reference is on `x-dl
 <div class="dl-field dl-field--rating dl-field--sm" data-dl-field="quality">
   <div class="dl-field__labelrow">…label…</div>
   <div class="dl-rating dl-rating--sm" data-dl-rating data-max="5" data-half="1"
-       role="slider" aria-valuemin="0" aria-valuemax="5" aria-valuenow="3.5">
+       role="slider" aria-labelledby="dlf-quality-xxxxx-lbl" aria-valuemin="0" aria-valuemax="5" aria-valuenow="3.5">
     <input type="hidden" name="quality" value="3.5" data-dl-value>
     <span class="dl-rating__star" data-value="1">★</span> … <span class="dl-rating__star" data-value="5">★</span>
     <span class="dl-rating__text" data-dl-rating-text></span>
@@ -104,7 +104,7 @@ No number formatting; the posted score is always `.`-decimal (`3.5`). The `3,5 /
 
 ### Accessibility as implemented
 
-The root has `role="slider"` with `aria-valuemin="0"`, `aria-valuemax` and `aria-valuenow` (kept in step with each click), but no accessible name, no `tabindex` and no key handling: the control cannot be focused or operated with the keyboard. The `<label for>` refers to the field id `dlf-<name>-xxxxx`, which this view never renders, so clicking the label does nothing and the label is not programmatically tied to the control. The stars are the character `★` in spans. A read-only rating is readable (`aria-valuenow`), but not announced with a name.
+The root has `role="slider"` with `aria-valuemin="0"`, `aria-valuemax` and `aria-valuenow` (kept in step with each click), and an accessible name through `aria-labelledby` (the field label, when `label` is not empty), but no `tabindex` and no key handling: the control cannot be focused or operated with the keyboard. The label has no `for`, so clicking it does nothing. The stars are the character `★` in spans. A read-only rating is readable (`aria-valuenow`), but not announced with a name.
 
 ## Rules and pitfalls
 
@@ -114,7 +114,7 @@ The root has `role="slider"` with `aria-valuemin="0"`, `aria-valuemax` and `aria
 - Use `half` only when the data can hold halves (a `DECIMAL(2,1)` column or similar); without it, store an integer.
 - For a stored rating shown in a list or on a read-only page, pass `readonly` (and `size="lg"` when it is the main content), not `disabled`.
 - Do not rely on the label click or the keyboard; if keyboard entry is a requirement, offer `x-dl::field.number` (0..max) or `x-dl::field.select` as the accessible alternative.
-- Code oddity (not fixed): (1) `rating.blade.php:1` never uses `$uid`, so the label `for` is dangling, and the root is `role="slider"` without `tabindex`/keys: a mouse-only control that declares itself a slider. (2) `rating.js:22` formats the text with a fixed comma (`3,5 / 5`) instead of `NUM.dec`. (3) `rating.blade.php:2`: `disabled` does not disable the hidden input, so a disabled rating is still posted, and in a disabled fieldset the stars stay clickable. (4) `Devlib.fill()` / Undo (`core.js:663-677`) set the hidden input only, so the stars and the text keep showing the old score while the restored value is posted.
+- Code oddity (not fixed): (1) The root is `role="slider"` without `tabindex`/keys: a mouse-only control that declares itself a slider. (2) `rating.js:22` formats the text with a fixed comma (`3,5 / 5`) instead of `NUM.dec`. (3) In a disabled fieldset the stars stay clickable (`rating.js` has no check on the fieldset). (4) `Devlib.fill()` / Undo (`core.js:663-677`) set the hidden input only, so the stars and the text keep showing the old score while the restored value is posted.
 
 ## Example
 

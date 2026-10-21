@@ -21,14 +21,14 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | Prop | Type, default | Effect here |
 |---|---|---|
 | `name` | `string`, `''` | `name` of the hidden input that carries the choice, `data-dl-field` on the root, slug of the generated id (the id itself is not placed on any element here). |
-| `label` | `string`, `''` | Caption above the bar. Empty = no caption row, and then no `*` and no tooltip. The `<label for>` points at an id that no element carries (see Behavior). |
+| `label` | `string`, `''` | Caption above the bar. Empty = no caption row, and then no `*` and no tooltip. The caption is tied to the bar with `aria-labelledby` (see Accessibility). |
 | `tooltip` | `?string`, `null` | (i) bubble next to the caption; only with a non-empty `label`. |
 | `hint` | `?string`, `null` | Help line under the bar; rendered whenever not `null`. |
 | `error` | `?string`, `null` | Server error text; non-empty adds `is-invalid` on the root (message only, no bordered box). |
 | `value` | `mixed`, `null` | The active option value, compared as strings with the option key. It is also written, unchanged, into the hidden input, whether or not it matches an option. `null` = hidden value empty and no button active. |
 | `placeholder` | `?string`, `null` | Not used by this control. |
 | `required` | `bool`, `false` | Red `*` and form validation (Save/Confirm): "Required" when the hidden value is empty. Needs a non-empty `label`. Not an HTML `required`, no server check. |
-| `disabled` | `bool`, `false` | Disables the BUTTONS only. The hidden input stays enabled, so the current value is still posted (see oddity). |
+| `disabled` | `bool`, `false` | `disabled` on every button and on the hidden input, so nothing is posted. |
 | `readonly` | `bool`, `false` | Same as `disabled` for the buttons (they carry `disabled`, so the choice cannot change); the hidden input keeps the value in the post. Root gets `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | `?string`, `null` | Not used by this control. |
 | `size` | `string`, `'sm'` | Only changes the root class `dl-field--sm` / `dl-field--lg`. |
@@ -43,8 +43,8 @@ Other HTML attributes (`id`, `class`, `data-*`) and `can="module.action"` go on 
 
 ```html
 <div class="dl-field dl-field--toggle-group dl-field--sm" data-dl-field="periode">
-  <div class="dl-field__labelrow"><label class="dl-field__label" for="dlf-periode-xxxxx">Period</label></div>
-  <div class="dl-segment" data-dl-segment>
+  <div class="dl-field__labelrow"><label class="dl-field__label" id="dlf-periode-xxxxx-lbl">Period</label></div>
+  <div class="dl-segment" data-dl-segment role="group" aria-labelledby="dlf-periode-xxxxx-lbl">
     <input type="hidden" name="periode" value="week" data-dl-value>
     <button type="button" class="dl-segment__opt" data-value="day">Daily</button>
     <button type="button" class="dl-segment__opt is-active" data-value="week">Weekly</button>
@@ -67,11 +67,11 @@ The hidden input is always posted (`periode=week`), with an empty string when no
 
 ### Disabled and read-only
 
-`disabled` and `readonly` both put `disabled` on every button: no mouse or keyboard change is possible. The hidden input is not disabled by either flag, so the value is posted in both cases (only a disabled fieldset of a locked `x-dl::form` stops it). The bar gets no disabled styling (see oddity).
+`disabled` and `readonly` both put `disabled` on every button: no mouse or keyboard change is possible. `disabled` also disables the hidden input, so nothing is posted; `readonly` keeps the hidden input enabled, so the value is still posted (a disabled fieldset of a locked `x-dl::form` stops it as well). The bar gets no disabled styling (see oddity).
 
 ### Accessibility as implemented
 
-Plain `<button>` elements: Tab goes through each one, Enter and Space activate it, and the browser focus ring shows. There is no `role="radiogroup"`/`radio`, no `aria-pressed` or `aria-checked`, no arrow-key handling, and no group name (the caption `<label for>` points at an id no element has). The active state is only visible, not announced.
+Plain `<button>` elements: Tab goes through each one, Enter and Space activate it, and the browser focus ring shows. The bar has `role="group"` with `aria-labelledby` pointing at the caption (with a non-empty `label`); there is no `role="radiogroup"`/`radio`, no `aria-pressed` or `aria-checked` and no arrow-key handling. The active state is only visible, not announced.
 
 ## Data and events
 
@@ -87,16 +87,15 @@ Plain `<button>` elements: Tab goes through each one, Enter and Space activate i
 ## Rules and pitfalls
 
 - Option keys that form the list `0, 1, 2...` are treated as a list: `[0 => 'Off', 1 => 'On']` posts `Off` / `On`, not `0` / `1`. Use keys that are not `0..n-1` (start from 1, or use string keys such as `'off'` / `'on'`); PHP turns numeric-string keys like `'0'` into integers.
-- The hidden input takes `value` as given even when it matches no option, and a disabled bar still posts. Validate the submitted value against the allowed keys on the server (`Rule::in`).
-- `disabled` does not remove the value from the request; to leave it out for real, do not render the field.
+- The hidden input takes `value` as given even when it matches no option. Validate the submitted value against the allowed keys on the server (`Rule::in`).
+- `disabled` removes the value from the request; `readonly` keeps it.
 - Keep the labels short: the bar is `inline-flex` with `overflow:hidden` and does not wrap onto a second line.
 - Option labels are not translated and are not in the dictionary; translate them before passing them in.
 - Restoring after a failed validation: `old('periode', $m->periode)` works as usual, because the hidden input always posts.
 - `required` only works with a non-empty `label`: the `*` marker the form looks for lives in the label row.
-- Code oddity (not fixed): `resources/views/components/field/toggle-group.blade.php:3` leaves the hidden input enabled when the field is `disabled`, so a disabled toggle-group is still posted, unlike every other disabled field.
 - Code oddity (not fixed): `resources/assets/js/components/segment.js:7-14` only listens to button clicks, so `Devlib.fill`, `setField` and form Undo change the hidden value but not the `is-active` button.
 - Code oddity (not fixed): `resources/assets/js/components/form.js:23` clears `is-invalid` only on `input`, while `segment.js:12` dispatches only `change`, so the "Required" message stays after the user picks an option (form validation only adds marks, never removes them; the wizard listens to `change` too and is not affected).
-- Code oddity (not fixed): `resources/assets/devlib.css:831-835` has no `:disabled` style for `.dl-segment__opt`, so a disabled or read-only bar looks active; the label `for` is dangling here too (`field.blade.php:4`, no element has the id).
+- Code oddity (not fixed): `resources/assets/devlib.css:831-835` has no `:disabled` style for `.dl-segment__opt`, so a disabled or read-only bar looks active.
 
 ## Example
 

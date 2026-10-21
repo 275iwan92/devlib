@@ -29,8 +29,8 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | `value` | `mixed`, `null` | Not used: the view does not write it into any input. Pre-filling card data is deliberately not supported. |
 | `placeholder` | `?string`, `null` | Not used: the boxes have fixed placeholders (`1234 5678 9012 3456`, `MM/YY`, `•••`). |
 | `required` | `bool`, `false` | Red `*` and `x-dl::form` "Required" check. The check looks at all named inputs of the field (number, expiry, CVV, holder AND the brand hidden): ANY of them filled counts as "has a value" (see pitfalls). Not the HTML `required`, no server check. |
-| `disabled` | `bool`, `false` | Disables the number, expiry, CVV and holder inputs (not posted). The hidden brand input stays enabled and posts `<name>_brand`. |
-| `readonly` | `bool`, `false` | The four inputs `readonly` (posted), `is-readonly` on the root; also forced by `Field::$readonlyAll`. The holder case button is NOT disabled (see oddity). |
+| `disabled` | `bool`, `false` | Disables the number, expiry, CVV and holder inputs (not posted). The hidden brand input and the holder case button are disabled too. |
+| `readonly` | `bool`, `false` | The four inputs `readonly` (posted), `is-readonly` on the root; also forced by `Field::$readonlyAll`. The holder case button is disabled too. |
 | `icon` | `?string`, `null` | Not used: the number box shows the brand icon by itself. |
 | `size` | `string`, `'sm'` | Root class `dl-field--sm` / `dl-field--lg` only. |
 | `i18n` | `?string`, `null` | Key for `data-i18n` on the label (auth screens). |
@@ -95,7 +95,7 @@ The expiry is compared with "now" in the application time zone: the `data-dl-tz`
 
 ### Read-only, disabled and locked display
 
-`readonly` / `disabled` act on the four text inputs only (see the prop table). A locked `x-dl::form` disables them, the case button and the hidden brand input together. The preview card stays visible and shows what was typed or stored by script; because `value` is not supported, a read-only card is empty unless a script fills it with `Devlib.fill`.
+`readonly` / `disabled` act on the four text inputs and the holder case button (`disabled` also disables the hidden brand input; see the prop table). A locked `x-dl::form` disables them, the case button and the hidden brand input together. The preview card stays visible and shows what was typed or stored by script; because `value` is not supported, a read-only card is empty unless a script fills it with `Devlib.fill`.
 
 ### Locale and language
 
@@ -117,7 +117,7 @@ The field label is a real `<label for>` for the number input; the expiry, CVV an
 | `<name>_holder` | The name in the case mode shown (UPPER by default). Only with `holder`. |
 | `<name>_brand` | `amex`, `diners`, `visa`, `mastercard`, `jcb`, `discover`, `unionpay` or `''`. Derived in the browser: never trust it. |
 
-Strip the spaces on the server and validate length, Luhn and expiry again. Disabled inputs are not posted (the brand hidden still is).
+Strip the spaces on the server and validate length, Luhn and expiry again. Disabled inputs are not posted (nor is the brand hidden).
 
 ### Events and hooks
 
@@ -135,7 +135,6 @@ Strip the spaces on the server and validate length, Luhn and expiry again. Disab
 - With `:holder="false"` the preview still shows the text "CARD HOLDER"; also set `:preview="false"` if there is no holder to show.
 - A card that expires this month is still valid; do not apply an extra "next month" rule without saying so.
 - The time zone for the expiry comes from the page, not from the user's device.
-- Code oddity (not fixed): the holder case button is not disabled by `readonly` or `disabled` (`resources/views/components/field/credit-card.blade.php:17`, handler `resources/assets/js/components/credit-card.js:27`), so a locked field can still have its holder text changed.
 - Code oddity (not fixed): the case button rewrites the holder value without firing `input`/`change` (`resources/assets/js/components/credit-card.js:27`), so it does not mark the form dirty.
 - Code oddity (not fixed): `check()` (`resources/assets/js/components/credit-card.js:71`) always rewrites the error line, so a server `error` disappears on the first blur of the number, expiry or CVV.
 - Code oddity (not fixed): `hasValue` (`resources/assets/js/core.js:689`) counts every named input, including `<name>_brand`, so the form-level required check passes with a single sub-input filled.

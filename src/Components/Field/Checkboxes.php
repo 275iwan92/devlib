@@ -35,6 +35,11 @@ class Checkboxes extends Field
         parent::__construct($name, $label, $tooltip, $hint, $error, $value, $placeholder, $required, $disabled, $readonly, $icon, $size, $i18n, $source);
     }
 
+    public function labelable(): bool
+    {
+        return false;
+    }
+
     public function control(): string
     {
         return 'checkboxes';

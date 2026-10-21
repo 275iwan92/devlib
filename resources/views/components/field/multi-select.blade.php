@@ -8,7 +8,7 @@
         <div class="dl-dd__search"><input type="text" placeholder="{{ \Devlib\Lang::text('Search...') }}" data-dl-dd-search></div>
         <div class="dl-dd__list">
             @foreach ($opts as $v => $l)
-                <label class="dl-dd__item dl-dd__item--split" data-search-item><span>{{ $l }}</span><input type="checkbox" name="{{ $name }}[]" value="{{ $v }}" data-label="{{ $v }}" @checked(in_array((string) $v, $vals, true))></label>
+                <label class="dl-dd__item dl-dd__item--split" data-search-item><span>{{ $l }}</span><input type="checkbox" name="{{ $name }}[]" value="{{ $v }}" data-label="{{ $l }}" @checked(in_array((string) $v, $vals, true)) @disabled($disabled)></label>
             @endforeach
         </div>
     </div>

@@ -1,5 +1,5 @@
 <div class="dl-sign {{ $readonly || $disabled ? 'is-readonly' : '' }}" data-dl-sign style="--dl-sign-h:{{ $height }}px">
-    <input type="hidden" name="{{ $name }}" value="{{ $value }}" data-dl-value>
+    <input type="hidden" name="{{ $name }}" value="{{ $value }}" data-dl-value @disabled($disabled)>
     <div class="dl-sign__pad">
         <canvas id="{{ $uid }}" aria-label="{{ \Devlib\Lang::text('Signature area') }}"></canvas>
         <span class="dl-sign__ph" data-dl-sign-ph><i class="fa-solid fa-signature"></i> {{ $placeholder ?? \Devlib\Lang::text('Sign here') }}</span>

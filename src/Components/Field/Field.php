@@ -47,6 +47,13 @@ abstract class Field extends DevlibComponent
         $this->uid = 'dlf-'.($name !== '' ? Str::slug($name, '_').'-' : '').Str::random(5);
     }
 
+    // false = kontrol berupa kelompok (bukan input/button/select/textarea), jadi <label for> tidak punya sasaran;
+    // view kontrol memberi role + aria-labelledby ke label (id "<uid>-lbl") sebagai gantinya.
+    public function labelable(): bool
+    {
+        return true;
+    }
+
     // Nama kontrol = nama view di resources/views/components/field/<kontrol>.blade.php
     abstract public function control(): string;
 

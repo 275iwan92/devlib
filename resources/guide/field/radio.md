@@ -21,7 +21,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | Prop | Type, default | Effect here |
 |---|---|---|
 | `name` | `string`, `''` | `name` shared by all radios of the group (that is what makes them one choice), `data-dl-field` on the root, slug of the generated id. |
-| `label` | `string`, `''` | Group caption above the buttons. Empty = no caption row, and then no `*` and no tooltip. The `<label for>` points at an id that no element carries (see Behavior). |
+| `label` | `string`, `''` | Group caption above the buttons. Empty = no caption row, and then no `*` and no tooltip. The caption is tied to the group with `aria-labelledby` (see Accessibility). |
 | `tooltip` | `?string`, `null` | (i) bubble next to the caption; only with a non-empty `label`. |
 | `hint` | `?string`, `null` | Help line under the group; rendered whenever not `null`. |
 | `error` | `?string`, `null` | Server error text; non-empty adds `is-invalid` on the root (message only, no bordered box). |
@@ -43,8 +43,8 @@ Other HTML attributes (`id`, `class`, `data-*`) and `can="module.action"` go on 
 
 ```html
 <div class="dl-field dl-field--radio dl-field--sm" data-dl-field="gender">
-  <div class="dl-field__labelrow"><label class="dl-field__label" for="dlf-gender-xxxxx">Gender</label></div>
-  <div class="dl-choices">
+  <div class="dl-field__labelrow"><label class="dl-field__label" id="dlf-gender-xxxxx-lbl">Gender</label></div>
+  <div class="dl-choices" role="radiogroup" aria-labelledby="dlf-gender-xxxxx-lbl">
     <label class="dl-choice"><input type="radio" name="gender" value="M" checked> Male</label>
     <label class="dl-choice"><input type="radio" name="gender" value="F"> Female</label>
   </div>
@@ -68,7 +68,7 @@ The selected option posts `name=<value>`. When nothing is selected nothing is po
 
 ### Accessibility as implemented
 
-Native radios: the browser provides the group semantics for the shared `name`, Tab moves into and out of the group, arrow keys move the selection. There is no `<fieldset>`/`<legend>` and no `role="radiogroup"`; the caption is a `<label for>` pointing at an id that no element in this control has, so it does not name the group for a screen reader and clicking it does nothing. Each radio is named by its own option text.
+Native radios: the browser provides the group semantics for the shared `name`, Tab moves into and out of the group, arrow keys move the selection. The options sit in a `div` with `role="radiogroup"` and `aria-labelledby` pointing at the caption, so a screen reader announces the group name. The caption has no `for` (nothing in this control can be labelled as a whole), so clicking it does nothing; with an empty `label` there is no `aria-labelledby`. There is no `<fieldset>`/`<legend>`. Each radio is named by its own option text.
 
 ## Data and events
 
@@ -90,7 +90,6 @@ Native radios: the browser provides the group semantics for the shared `name`, T
 - `required` only works with a non-empty `label`: the `*` marker the form looks for lives in the label row.
 - Option labels are not translated and are not in the dictionary; translate them before passing them in.
 - No default selection: set `value` to the default key if one choice must be pre-selected.
-- Code oddity (not fixed): `resources/views/components/field.blade.php:4` writes `for="<uid>"` on the caption, but `radio.blade.php` puts no `id` on any element, so the caption is a dangling label and the group has no accessible group name (same in `checkboxes` and `toggle-group`).
 
 ## Example
 

@@ -27,7 +27,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | `placeholder` | `?string`, `null` | Not used by this control. |
 | `required` | `bool`, `false` | Red `*` after the caption, but the form validation can never fail: a colour input always holds a non-empty value, so `hasValue()` is always true. Not an HTML `required`. |
 | `disabled` | `bool`, `false` | `disabled` on the colour input; it cannot be opened and nothing is posted. |
-| `readonly` | `bool`, `false` | The colour input is rendered `disabled` and, when not also `disabled`, a hidden `<input name="<name>">` with the initial value (or the default blue) is added so the colour is still posted. Root gets `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
+| `readonly` | `bool`, `false` | The colour input is rendered `disabled` and, when not also `disabled`, a hidden `<input name="<name>">` with the normalised initial value (or the default blue) is added so the colour is still posted. Root gets `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | `?string`, `null` | Not used by this control. |
 | `size` | `string`, `'sm'` | Only changes the root class `dl-field--sm` / `dl-field--lg`. |
 | `i18n` | `?string`, `null` | Written to `data-i18n` on the caption `<label>`. |
@@ -85,12 +85,11 @@ A native `<input type="color">`: focusable with Tab, opened with Enter or Space,
 
 ## Rules and pitfalls
 
-- Pass `#rrggbb` only. `#fff`, `fff`, `rgb(...)`, a colour name or an empty string are not valid for the browser and it shows black (`#000000`) and posts `#000000`. Convert on the server before passing a value in.
-- `null` means "use the default blue", not "no colour". A model with a nullable colour column shows `#2563EB`, and the user's untouched form posts that blue; the user cannot clear it.
+- Pass `#rrggbb`. `#rgb` (`#fff`) is expanded to `#rrggbb`; anything else the browser would reject (`fff`, `rgb(...)`, a colour name, `#12345`, an empty string) is replaced by the default blue `#2563EB`, so the swatch, the HEX text and the posted value always agree. Convert other notations on the server before passing a value in.
+- `null` (and any invalid value) means "use the default blue", not "no colour". A model with a nullable colour column shows `#2563EB`, and the user's untouched form posts that blue; the user cannot clear it.
 - `required` has no effect on this control (always passes); do not rely on it. Validate the format on the server.
 - `size`, `placeholder` and `icon` change nothing here except the `dl-field--sm|lg` class.
 - Restoring after a failed validation: `old('warna', $m->warna)` works as usual, because the colour is always posted.
-- Code oddity (not fixed): `resources/views/components/field/color.blade.php:2-4` prints `strtoupper($value)` in the code label even when the browser rejected the value, so `value="#fff"` shows `#FFF` while the swatch is black and `#000000` is posted; and an empty string (not `null`) is not replaced by the default.
 
 ## Example
 

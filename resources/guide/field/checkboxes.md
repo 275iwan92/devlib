@@ -21,7 +21,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | Prop | Type, default | Effect here |
 |---|---|---|
 | `name` | `string`, `''` | Written as `name="<name>[]"` on every box (write it WITHOUT brackets), `data-dl-field="<name>"` on the root, and the slug of the generated id. |
-| `label` | `string`, `''` | Group caption above the boxes. Empty = no caption row, and then no `*` and no tooltip. The `<label for>` points at an id that no element carries (see Behavior). |
+| `label` | `string`, `''` | Group caption above the boxes. Empty = no caption row, and then no `*` and no tooltip. The caption is tied to the group with `aria-labelledby` (see Accessibility). |
 | `tooltip` | `?string`, `null` | (i) bubble next to the caption; only with a non-empty `label`. |
 | `hint` | `?string`, `null` | Help line under the group; rendered whenever not `null`. |
 | `error` | `?string`, `null` | Server error text under the group; non-empty adds `is-invalid` on the root (message only, there is no bordered box). |
@@ -43,8 +43,8 @@ Other HTML attributes (`id`, `class`, `data-*`) and `can="module.action"` go on 
 
 ```html
 <div class="dl-field dl-field--checkboxes dl-field--sm" data-dl-field="hobi">
-  <div class="dl-field__labelrow"><label class="dl-field__label" for="dlf-hobi-xxxxx">Hobi</label></div>
-  <div class="dl-choices">
+  <div class="dl-field__labelrow"><label class="dl-field__label" id="dlf-hobi-xxxxx-lbl">Hobi</label></div>
+  <div class="dl-choices" role="group" aria-labelledby="dlf-hobi-xxxxx-lbl">
     <label class="dl-choice"><input type="checkbox" name="hobi[]" value="Coding" checked> Coding</label>
     ...
   </div>
@@ -68,7 +68,7 @@ Only ticked boxes are sent, each as one element of `name[]`: `hobi[]=Coding&hobi
 
 ### Accessibility as implemented
 
-Native checkboxes, native keyboard (Tab to each box, Space to tick). There is no `<fieldset>`/`<legend>` and no `role="group"`: the caption is a `<label for>` pointing at a generated id that no element in this control has, so the caption does not name the group for a screen reader and clicking it does nothing. Each box is named by its own option text.
+Native checkboxes, native keyboard (Tab to each box, Space to tick). The boxes sit in a `div` with `role="group"` and `aria-labelledby` pointing at the caption, so a screen reader announces the group name. The caption has no `for` (nothing in this control can be labelled as a whole), so clicking it does nothing; with an empty `label` there is no `aria-labelledby`. There is no `<fieldset>`/`<legend>`. Each box is named by its own option text.
 
 ## Data and events
 
@@ -90,7 +90,6 @@ Native checkboxes, native keyboard (Tab to each box, Space to tick). There is no
 - `required` only works with a non-empty `label`: the `*` marker the form looks for lives in the label row.
 - Option labels are not translated and are not in the dictionary; translate them before passing them in.
 - Code oddity (not fixed): `resources/assets/js/core.js:681` (`fillForm`) ignores field names containing `[`, so Form Undo and `Devlib.fill` never restore or clear the boxes of this control after the user changed them.
-- Code oddity (not fixed): `resources/views/components/field.blade.php:4` writes `for="<uid>"` on the caption, but `checkboxes.blade.php` (like `radio` and `toggle-group`) puts no `id` on any element, so the caption is a dangling label and the group has no accessible group name.
 
 ## Example
 

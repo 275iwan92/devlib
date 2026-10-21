@@ -34,8 +34,8 @@ Defined once in `Field`; the full reference is in `x-dl::field.text`. Difference
 | `value` | `mixed`, `null` | Initial tags: an array of strings (`(array) $value` is looped, so a single string becomes one tag, `'a,b'` is **one** tag `a,b`, `null` is none). For an associative array only the values are used. |
 | `placeholder` | `?string`, `null` | Placeholder of the text input (translated); default is the dictionary text "Type, then Enter...". It is visible whenever the input is empty, also when chips exist. |
 | `required` | `bool`, `false` | Red `*` and the `x-dl::form` "Required" check (at least one chip). No HTML `required`, no server check. |
-| `disabled` | `bool`, `false` | Disables the **text input** (nothing can be typed). Existing chips and their `x` buttons stay active and the chips are still posted (see pitfalls). |
-| `readonly` | `bool`, `false` | Same as `disabled` for the text input, plus the class `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
+| `disabled` | `bool`, `false` | Disables the **text input** (nothing can be typed), the `x` buttons of the chips and their hidden inputs, so nothing is posted. |
+| `readonly` | `bool`, `false` | Same as `disabled` for the text input and the `x` buttons (the chips are still posted), plus the class `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | `?string`, `null` | Not used by this control. |
 | `size` | `string`, `'sm'` | `sm` or `lg`; only the CSS class `dl-field--sm\|lg`. |
 | `i18n` | `?string`, `null` | Written to `data-i18n` on the label for auth screens. |
@@ -73,7 +73,7 @@ Pasting `a,b,c` and pressing `Enter` creates one tag `a,b,c`: only a trailing co
 
 ### Read-only and disabled
 
-Only the text input is disabled. The chips keep their `x` buttons, the click handler does not look at `disabled`/`readonly`, and the hidden inputs are enabled. Inside a locked `x-dl::form` (disabled fieldset, or `mode="view"`) the browser disables the buttons and the inputs, so the chips cannot be edited and are not submitted.
+The text input and the `x` buttons of the chips carry `disabled` for both flags (a disabled button gets no click). The hidden inputs are disabled by `disabled` (nothing is posted) and stay enabled for `readonly`. Chips added by script after load get an enabled `x`. Inside a locked `x-dl::form` (disabled fieldset, or `mode="view"`) the browser disables the buttons and the inputs, so the chips cannot be edited and are not submitted.
 
 ## Data and events
 
@@ -109,12 +109,11 @@ The text input and the datalist are not posted. Text that is typed but not yet c
 - Write the `name` without `[]`.
 - An empty list is simply missing in the request. Update stored data with `$request->input('x', [])`, otherwise the last tag cannot be removed.
 - The server must normalise and validate the strings (trim, unique, max count, max length, allowed characters). The browser removes only exact case-insensitive duplicates of the current chips.
-- Do not rely on `disabled`/`readonly` to freeze the chips: users can still remove them and they are still posted. Freeze with a locked form, or do not render the field.
+- `disabled`/`readonly` freeze the chips that were rendered; `disabled` also keeps them out of the request.
 - Typed-but-uncommitted text is lost on a scripted submit that does not blur the input; commit it with `Enter` or by leaving the field first. Submitting with the Save button works because the click blurs the input first.
 - Tags are not translated; the placeholder is.
 - Keyboard: the text input is a normal input (`Tab`, typing, `Enter`/`,` to add, `Backspace` to delete the last chip); each chip's `x` is a `<button>` that can be reached with `Tab` and pressed with `Enter`/`Space`, but it has no accessible name (only the "x" glyph) and the chip list is not announced. The native datalist supports the arrow keys.
 - Code oddity (not fixed): `resources/assets/js/components/tags.js:12-18` - adding or removing a chip dispatches no event, so the dirty guard, Undo and the "Required" error clearing of `x-dl::form` do not react to tag changes.
-- Code oddity (not fixed): `resources/assets/js/components/tags.js:17` and `resources/views/components/field/tags.blade.php:4` - the `x` handler ignores `disabled`/`readonly`, and the chip inputs are not disabled, so a disabled or read-only field still lets chips be removed and still posts them.
 - Code oddity (not fixed): `resources/assets/js/core.js:680-683` (`fillForm`) skips names containing `[`, so Undo and view-mode Cancel do not restore tag changes.
 
 ## Example

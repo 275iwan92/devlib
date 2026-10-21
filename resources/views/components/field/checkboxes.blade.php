@@ -2,7 +2,7 @@
     $opts = array_is_list($options) ? array_combine($options, $options) : $options;
     $vals = array_map('strval', (array) $value);
 @endphp
-<div class="dl-choices">
+<div class="dl-choices" role="group" @if ($label !== '') aria-labelledby="{{ $uid }}-lbl" @endif>
     @foreach ($opts as $v => $l)
         <label class="dl-choice"><input type="checkbox" name="{{ $name }}[]" value="{{ $v }}" @checked(in_array((string) $v, $vals, true)) @disabled($disabled || $readonly)> {{ $l }}</label>
     @endforeach

@@ -28,7 +28,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | `value` | `mixed`, `null` | Written as `value="..."` into the HTML. Leave it empty: a real password here is readable in the page source and through the eye button. |
 | `placeholder` | `?string`, `null` | Placeholder text. Translated. Shown while empty. |
 | `required` | `bool`, `false` | Red `*` after the label; `x-dl::form` Save/Confirm marks the field "Required" when empty. Not the HTML `required` attribute, no server check. |
-| `disabled` | `bool`, `false` | Input `disabled` (not posted). The eye button is still clickable. |
+| `disabled` | `bool`, `false` | Input `disabled` (not posted). The eye button is `disabled` too. |
 | `readonly` | `bool`, `false` | Input `readonly` (posted), `is-readonly` on the root; also forced by `Field::$readonlyAll`. The eye button still works. |
 | `icon` | `?string`, `null` | Font Awesome solid class (`fa-lock`, `fa-key`) shown at the left inside the box; adds `has-icon`. Used by the login, register, forgot and lock screens. |
 | `size` | `string`, `'sm'` | `sm` or `lg` (login mockup): root class `dl-field--sm` / `dl-field--lg` only. |
@@ -55,7 +55,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 
 ### Read-only, disabled and locked display
 
-`readonly` and `disabled` set the matching attribute on the input only. The eye button is not disabled in either state, so a pre-filled `value` can still be revealed. A locked `x-dl::form` (fieldset disabled) disables the input and the button together. The form's QR extra masks password fields.
+`readonly` and `disabled` set the matching attribute on the input only. `disabled` also disables the eye button; with `readonly` the eye button still works, so a pre-filled `value` can still be revealed. A locked `x-dl::form` (fieldset disabled) disables the input and the button together. The form's QR extra masks password fields.
 
 ### Validation
 
@@ -89,7 +89,7 @@ Real `<label for>` to the input id; native password input (managers and screen r
 - A password confirmation is a second `x-dl::field.password` (`name="password_confirmation"`); the `confirmed` Laravel rule does the real check. The client-side match message exists only inside the register and forgot boxes.
 - A visible password stays visible after Save if the page does not reload; screens that post by script should hide it again (click the eye or set `type="password"`).
 - The field has no case badge, `maxlength` or counter. If a rule needs a maximum length, validate on the server.
-- Code oddity (not fixed): the eye button is not disabled by `readonly` or `disabled` (`resources/views/components/field/password.blade.php:4`), so a locked field that was given a `value` can still be shown in clear text.
+- Code oddity (not fixed): the eye button is not disabled by `readonly` (`resources/views/components/field/password.blade.php:4`), so a read-only field that was given a `value` can still be shown in clear text (`disabled` does disable it).
 
 ## Example
 

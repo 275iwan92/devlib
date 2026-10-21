@@ -16,8 +16,8 @@ It is a `Devlib\Components\Field\Slider` (the numeric slider) specialised for da
 
 | Prop | Type, default | Meaning |
 |---|---|---|
-| `from` | `string`, `''` | First selectable date, `yyyy-mm-dd`. Empty = the first day of the current month (PHP `date('Y-m-01')`, PHP default time zone). |
-| `until` | `string`, `''` | Last selectable date, `yyyy-mm-dd`, inclusive. Empty = the last day of the month two months from now (`date('Y-m-t', strtotime('+2 months'))`). Must not be before `from`. The scale has `days between + 1` positions. |
+| `from` | `string`, `''` | First selectable date, `yyyy-mm-dd`. Empty = the first day of the current month in the application time zone (`Devlib\Locale::timezone()`). |
+| `until` | `string`, `''` | Last selectable date, `yyyy-mm-dd`, inclusive. Empty = the last day of the month two months from now, in the application time zone and without day overflow (from 31 December: 28 February). Must not be before `from`. The scale has `days between + 1` positions. |
 | `range` | `bool`, `false` | `true` = two handles (period). Adds class `is-range`, a second hidden input and the day count. Written as the bare attribute `range` or `:range="true"`. |
 | `value-to` | `mixed`, `null` | End date of the period (`range` only), `yyyy-mm-dd`. Empty = `until`. Ignored without `range`. |
 | `name-to` | `?string`, `null` | `name` of the end hidden input (`range` only). Empty = `<name>_to`. |
@@ -113,8 +113,6 @@ The hidden inputs get **no** event when they are updated and the handles have no
 - `Devlib.h.fillForm` / form Undo write the hidden input only; per `setField` in `core.js` the handles and the text are not moved, so after Undo they can disagree with the posted value until the user touches the slider again.
 - Code oddity (not fixed): `slider.js` shows the date with `fmt.date(iso + 'T12:00:00+07:00')`, a fixed `+07:00` offset. For an application time zone at UTC-6 or further west the shown date can be one day earlier than the posted ISO value (the hidden value stays correct).
 - Code oddity (not fixed): `disabled`/`readonly` only disable the range inputs (`slider.blade.php`); the hidden inputs are still posted. Moving the slider also fires no event on them and does not mark the form dirty, because the handles have no `name`.
-- Code oddity (not fixed): the default `until` uses `strtotime('+2 months')` then `Y-m-t`; from the 29th-31st this overflows (on 31 December: +2 months = 3 March, so `until` becomes 31 March). `date()` also uses the PHP default time zone, not `Devlib\Locale::timezone()`.
-- Code oddity (not fixed): the REMARK header of `DateSlider.php` says "Markup Blade inline (render() kelas ini)", but the class has no `render()`; it uses the shared field frame and `slider.blade.php`.
 
 ## Example
 

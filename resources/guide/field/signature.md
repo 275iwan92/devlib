@@ -32,7 +32,7 @@ All 14 props come from `Field` (full reference: `x-dl::field.text`). Where this 
 | `value` | An existing signature as a data URL (or a same-origin image URL, see pitfalls). Written to the hidden input and drawn on the pad on load. |
 | `placeholder` | Text shown on the empty pad. Default: the translated "Sign here". Hidden once there is a drawing. |
 | `required` | Red `*`; `x-dl::form` Save/Confirm marks the field "Required" when the hidden value is empty. |
-| `disabled` | Same look and behaviour as `readonly` (pad locked), but the hidden input is not disabled, so the value is still posted. |
+| `disabled` | Same look and behaviour as `readonly` (pad locked), and the hidden input is disabled, so nothing is posted (`readonly` still posts it). |
 | `readonly` | Pad locked (`is-readonly`): no drawing, Undo and Clear do nothing; the saved drawing stays visible and PNG still downloads. The value is posted. |
 | `icon` | Unused. |
 | `size` | `sm` (default) or `lg`: only the CSS class `dl-field--sm` / `dl-field--lg`. |
@@ -136,7 +136,7 @@ document.addEventListener('change', e => { if (e.target.matches('[data-dl-sign] 
 - A signature in `value` must be a data URL or a same-origin URL. A cross-origin image taints the canvas and `toDataURL` throws, which stops `sync()` (the value is not updated).
 - The value is a picture. Keep who signed and when in your own columns; do not treat the image as proof.
 - `required` only checks "not empty"; a single dot counts as signed.
-- `disabled` still posts the value. To really keep a locked signature out of the request, rely on a disabled form (fieldset) or do not read the field on the server.
+- `disabled` keeps the value out of the request; `readonly` still posts it. A disabled fieldset does too.
 - A locked form (fieldset disabled) posts no signature; a server action on a locked document must work from the stored record.
 - A wide pad is scaled by the screen: a PNG saved on a phone has different pixel dimensions from one saved on a desktop. Store the image as-is; do not assume a size.
 - Drawing needs a pointer (no keyboard path). Offer another way to confirm for users who cannot draw.

@@ -31,7 +31,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | `placeholder` | `?string`, `null` | Not used by this control. |
 | `required` | `bool`, `false` | Red `*` after the caption and form validation (Save/Confirm): "Required" unless the box is ticked, i.e. "must be ticked". Needs a non-empty `label` (see pitfalls). Not an HTML `required`, no server check. |
 | `disabled` | `bool`, `false` | `disabled` on the input; not posted. |
-| `readonly` | `bool`, `false` | Also renders the input `disabled` (a native checkbox has no read-only state), and root gets `is-readonly`. Unlike its siblings no hidden mirror is written, so the value is NOT posted (see oddity). Forced on while `Field::$readonlyAll` is true. |
+| `readonly` | `bool`, `false` | Also renders the input `disabled` (a native checkbox has no read-only state), and root gets `is-readonly`. When it is ticked and not also `disabled`, a hidden `<input name="<name>" value="1">` is written (as in `x-dl::field.toggle`), so the value is still posted. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | `?string`, `null` | Not used by this control. |
 | `size` | `string`, `'sm'` | Only changes the root class `dl-field--sm` / `dl-field--lg`. |
 | `i18n` | `?string`, `null` | Written to `data-i18n` on the caption `<label>` (auth screens re-translate it on language change). Does not touch `text`. |
@@ -63,7 +63,7 @@ An unticked HTML checkbox sends nothing, and the view writes no hidden "0" fallb
 
 ### Disabled and read-only
 
-Both set the `disabled` attribute, so the box cannot be clicked or focused and is not posted. `readonly` differs from `disabled` only by the `is-readonly` class. Inside a locked `x-dl::form` (disabled fieldset) the box is disabled in the same way.
+Both set the `disabled` attribute, so the box cannot be clicked or focused and the box itself is never posted. `readonly` additionally writes a hidden `<input name="<name>" value="1">` when the box is ticked, so a ticked read-only box still posts `name=1` (an unticked one posts nothing), and adds the `is-readonly` class; `disabled` posts nothing. Inside a locked `x-dl::form` (disabled fieldset) the box is disabled in the same way.
 
 ### Accessibility as implemented
 
@@ -88,8 +88,7 @@ A real `<input type="checkbox">`: keyboard (Tab, Space), label click and screen-
 - Never trust the browser for "must be ticked": validate with `accepted` on the server; the form has `novalidate`.
 - `text` and `label` are translated, so wrap data values (names, numbers) in `raw()`.
 - Do not add your own `<input type="hidden" name="same_name" value="0">` to get a "0" for unticked: `Devlib.h.setField` acts on the first element with that name (the hidden one), so Undo and `Devlib.fill` would no longer tick the box. Read "absent = false" on the server instead.
-- A read-only value must reach the server some other way (hidden `hidden` prop of the form, or the stored record), see the oddity below.
-- Code oddity (not fixed): `resources/views/components/field/checkbox.blade.php:1` renders a read-only box as `disabled` without a hidden mirror, so a ticked read-only checkbox is not posted, while `toggle.blade.php:2`, `radio.blade.php:6`, `checkboxes.blade.php:9` and `color.blade.php:3` do post their value when read-only.
+- A ticked read-only box is posted as `name=1` through a hidden mirror, so saving a locked form does not turn the answer into "false".
 
 ## Example
 

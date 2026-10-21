@@ -44,7 +44,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | `value` | `mixed`, `null` | The stored number, written to the hidden input and copied into the visible one. Best: international `+62812...` of the SAME country as `country`. National digits (`0812...`) are accepted too. It is normalised on load and posted back normalised (see Behavior). |
 | `placeholder` | `?string`, `null` | Rendered but overwritten at once by the script with the example number of the selected country and `kind` (for example `812-3456-7890`). Effectively unused. |
 | `required` | `bool`, `false` | Red `*` and `x-dl::form` "Required" check: passes when the hidden number is not empty (the country input is excluded from this test). Not the HTML `required`, no server check. |
-| `disabled` | `bool`, `false` | Disables the number input and the country button. The two hidden inputs are not disabled, so the stored number and country are still posted. |
+| `disabled` | `bool`, `false` | Disables the number input and the country button. The two hidden inputs are disabled too, so nothing is posted. |
 | `readonly` | `bool`, `false` | Number input `readonly`, country button disabled, `is-readonly` on the root; also forced by `Field::$readonlyAll`. The number and country are posted. |
 | `icon` | `?string`, `null` | Not used by this control (the flag button takes that place). |
 | `size` | `string`, `'sm'` | Root class `dl-field--sm` / `dl-field--lg` only. |
@@ -86,7 +86,7 @@ On load the same pass runs on the value, so `value="08123456789"` becomes `+6281
 
 ### Read-only, disabled and locked display
 
-`readonly`: number input read-only, country button disabled, the read-out line still shows the interpretation. `disabled` additionally disables the input; the hidden inputs stay enabled (see `disabled`). A locked `x-dl::form` (fieldset disabled) disables everything including the hidden inputs.
+`readonly`: number input read-only, country button disabled, the read-out line still shows the interpretation. `disabled` additionally disables the input and the two hidden inputs. A locked `x-dl::form` (fieldset disabled) disables everything including the hidden inputs.
 
 ### Locale and language
 
@@ -105,7 +105,7 @@ Real `<label for>` to the visible number input; `type="tel"`, `inputmode="tel"` 
 | `<name>` | `+` + dial digits + national digits, no spaces or dashes (`+6281234567890`), or `''` when empty. |
 | `<name>_country` | ISO code of the selected country (`ID`, `SG`, ...). |
 
-The visible number box is not posted. Store `<name>` as it comes (it is already E.164 style) and use `<name>_country` only for display. A phone that is `disabled` still posts both hidden inputs.
+The visible number box is not posted. Store `<name>` as it comes (it is already E.164 style) and use `<name>_country` only for display. A phone that is `disabled` posts nothing.
 
 ### Events and hooks
 

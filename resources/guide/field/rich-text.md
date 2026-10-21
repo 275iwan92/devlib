@@ -32,8 +32,8 @@ All 14 props come from `Field` (full reference: `x-dl::field.text`). Where this 
 | `value` | Initial content as an HTML string. Output twice: raw (`{!! !!}`) into the editing area, escaped into the hidden textarea. Must be sanitised HTML (see pitfalls). |
 | `placeholder` | Written to `data-placeholder`; CSS shows it while the area is `:empty`. Translated like other text props. |
 | `required` | Red `*`; `x-dl::form` Save/Confirm marks the field "Required" when the hidden textarea is blank. |
-| `disabled` | `contenteditable="false"` (text cannot be edited). The hidden textarea is not disabled, so the value is still posted. |
-| `readonly` | Same as `disabled` for this control: `contenteditable="false"`, value posted. The root also gets `is-readonly`. |
+| `disabled` | `contenteditable="false"` (text cannot be edited). The hidden textarea is disabled too, so nothing is posted. |
+| `readonly` | `contenteditable="false"` like `disabled`, but the value is still posted. The root also gets `is-readonly`. |
 | `icon` | Unused. |
 | `size` | `sm` (default) or `lg`: only the CSS class `dl-field--sm` / `dl-field--lg`. |
 | `i18n` | `data-i18n` on the label (auth screens only). |
@@ -137,9 +137,9 @@ r.area.innerHTML = sanitisedHtml; r.sync();
 - Limit the length on the server (the HTML is longer than the visible text) and make the column type big enough.
 - Pasting from Word or the web brings a lot of markup; the server allow-list must cope with it. Ask users to use "Clear formatting" if it looks odd.
 - `execCommand` is deprecated; it still works in current browsers, but DevLib depends on the browser for the markup.
-- `disabled` / `readonly` still post the value (unlike a disabled `x-dl::field.text`), and a locked form's area stays typable but is not posted.
+- `disabled` keeps the value out of the request (like a disabled `x-dl::field.text`), `readonly` still posts it; a locked form's area stays typable but is not posted.
 - Not for large documents or collaborative editing.
-- Code oddity (not fixed): (1) `resources/assets/js/components/rich.js` `sync()` writes the textarea without an event, and typing fires `input` on the unnamed `div`, so the dirty guard (`core.js` `markDirty`, needs `e.target.name`) never sees edits: editing only this field does not mark the form dirty (no leave warning, the form's Undo stays disabled). (2) The form's own "clear the error on input" handler (`form.js` line 23) runs in the capture phase before `sync()`, so it reads the old textarea value; a rich field marked "Required" is cleared one keystroke late. (3) `rich-text.blade.php` line 7 gives `disabled` no `disabled` on the textarea (value still posted) and a disabled fieldset leaves the area editable. (4) The form's Undo and `Devlib.fill()` set the textarea only, so the visible area keeps the edited text while the posted value is the restored one. (5) `value` is output with `{!! !!}` (line 7).
+- Code oddity (not fixed): (1) `resources/assets/js/components/rich.js` `sync()` writes the textarea without an event, and typing fires `input` on the unnamed `div`, so the dirty guard (`core.js` `markDirty`, needs `e.target.name`) never sees edits: editing only this field does not mark the form dirty (no leave warning, the form's Undo stays disabled). (2) The form's own "clear the error on input" handler (`form.js` line 23) runs in the capture phase before `sync()`, so it reads the old textarea value; a rich field marked "Required" is cleared one keystroke late. (3) A disabled fieldset leaves the editing area editable. (4) The form's Undo and `Devlib.fill()` set the textarea only, so the visible area keeps the edited text while the posted value is the restored one. (5) `value` is output with `{!! !!}` (line 7).
 
 ## Example
 

@@ -36,8 +36,8 @@ Defined once in `Field`; the full reference is in `x-dl::field.text`. Difference
 | `value` | `mixed`, `null` | The ticked values: an array of option keys (a single scalar is treated as a one-item array, `null` as none). Compared as strings, strictly. Typical: `old('x', $model->x ?? [])`. |
 | `placeholder` | `?string`, `null` | **Not used.** The button text comes from `empty-text`. |
 | `required` | `bool`, `false` | Red `*` and the `x-dl::form` "Required" check (at least one box ticked). No HTML `required`, no server check. |
-| `disabled` | `bool`, `false` | Disables the **button**, so the panel cannot be opened. The ticked checkboxes are not disabled and are still posted. |
-| `readonly` | `bool`, `false` | Same as `disabled` on the button, plus the class `is-readonly`; ticked values are posted. Forced on while `Field::$readonlyAll` is true. |
+| `disabled` | `bool`, `false` | Disables the **button**, so the panel cannot be opened, and the checkboxes, so nothing is posted. |
+| `readonly` | `bool`, `false` | Same as `disabled` on the button, plus the class `is-readonly`; the checkboxes stay enabled, so the ticked values are posted. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | `?string`, `null` | Not used by this control. |
 | `size` | `string`, `'sm'` | `sm` or `lg`; only the CSS class `dl-field--sm\|lg`. |
 | `i18n` | `?string`, `null` | Written to `data-i18n` on the label for auth screens. |
@@ -73,11 +73,11 @@ After every change the script rebuilds the button text from the ticked boxes:
 | one | that option's **value** |
 | two or more | `<n> <noun> (<value1>, <value2>, ...)` |
 
-The summary uses the option **value** (the checkbox `data-label` is the key), not the label. With a list of strings value and label are equal; with an associative array the key is shown. The text is computed once at page load, so the initial `value` is reflected at once.
+The summary uses the option **label** (the checkbox `data-label`), not the key, so an associative `options` shows the labels. The text is computed once at page load, so the initial `value` is reflected at once.
 
 ### Read-only and disabled
 
-Only the button is disabled (opacity 0.45); `readonly` adds the grey `is-readonly` background. In a locked `x-dl::form` (disabled fieldset, or `mode="view"`) the button reads as plain text with its summary and the checkboxes are excluded from the submit by the browser.
+The button is disabled (opacity 0.45) for both flags and `disabled` also disables the checkboxes (nothing is posted); `readonly` adds the grey `is-readonly` background and keeps the checkboxes enabled (posted). In a locked `x-dl::form` (disabled fieldset, or `mode="view"`) the button reads as plain text with its summary and the checkboxes are excluded from the submit by the browser.
 
 ## Data and events
 
@@ -114,13 +114,11 @@ $request->validate(['languages' => ['array'], 'languages.*' => [Rule::in(array_k
 - An empty selection is simply missing in the request. Update stored data with `$request->input('x', [])`, otherwise a user can never clear the last value.
 - `value` must be an array of keys. Keys are compared as strings, so `1` and `'1'` match; a value that is not an option is ignored (nothing is ticked, nothing is posted for it).
 - The summary shows keys, not labels (see above). If the key is a code (`'ID'`) and the label a description, the user sees the code in the button. Use a list of readable strings as keys when the summary should read well.
-- `disabled` and `readonly` do not stop the ticked values from being posted; only a disabled fieldset does. Do not rely on `disabled` to keep a value out of the request.
+- `disabled` keeps the values out of the request; `readonly` posts them. A disabled fieldset also stops them.
 - Script changes must go through the checkboxes: set `checked`, then dispatch `new Event('change', {bubbles: true})` on one of them so the summary and the dirty guard update.
 - All options are in the DOM; thousands of options make the page slow.
 - Option labels are data and not translated; `empty-text` and `noun` are.
 - Keyboard: the button is reachable with `Tab` and opens with `Enter`/`Space`; after opening, `Tab` moves into the search box and then through the checkboxes, and `Space` ticks one. There is no `aria-expanded` and no `Esc` to close; the panel closes on an outside click.
-- Code oddity (not fixed): `resources/views/components/field/multi-select.blade.php:11` - `data-label="{{ $v }}"` is the option key, so the button summary (built from `data-label` in `field.js`) shows keys instead of labels for an associative `options`.
-- Code oddity (not fixed): `resources/views/components/field/multi-select.blade.php:6` and `:11` - `disabled`/`readonly` disable only the button, not the checkboxes, so a standalone disabled multi-select still posts its ticked values.
 - Code oddity (not fixed): `resources/assets/js/core.js:680-683` (`fillForm`) excludes names containing `[`, so the form's Undo and view-mode Cancel do not restore a multi-select (nor `x-dl::field.tags` / `x-dl::field.key-value`).
 
 ## Example

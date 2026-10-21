@@ -1,7 +1,7 @@
 <div class="dl-tags" data-dl-tags data-name="{{ $name }}">
     <div class="dl-tags__box">
         @foreach ((array) $value as $t)
-            <span class="dl-tags__chip">{{ $t }}<input type="hidden" name="{{ $name }}[]" value="{{ $t }}"><button type="button" data-dl-tag-x>&times;</button></span>
+            <span class="dl-tags__chip">{{ $t }}<input type="hidden" name="{{ $name }}[]" value="{{ $t }}" @disabled($disabled)><button type="button" data-dl-tag-x @disabled($disabled || $readonly)>&times;</button></span>
         @endforeach
         <input id="{{ $uid }}" type="text" class="dl-tags__input" placeholder="{{ $placeholder ?? \Devlib\Lang::text('Type, then Enter...') }}" list="{{ $uid }}-list" @disabled($disabled || $readonly)>
     </div>

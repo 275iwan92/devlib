@@ -25,10 +25,10 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | `tooltip` | `?string`, `null` | (i) bubble next to a non-empty label. Translated. |
 | `hint` | `?string`, `null` | Help line under the boxes ("the code was sent to ..."). Translated. |
 | `error` | `?string`, `null` | Server error text (for example "wrong code"); non-empty adds `is-invalid`. Not translated. |
-| `value` | `mixed`, `null` | Not used: the view writes no value into the hidden input or the boxes. A code cannot be pre-filled. |
+| `value` | `mixed`, `null` | The initial code: written into the hidden input and spread one character per box (extra characters are dropped, missing boxes stay empty). Not a secret: it is visible in the page source. |
 | `placeholder` | `?string`, `null` | Not used. |
 | `required` | `bool`, `false` | Red `*` and `x-dl::form` "Required" check: empty hidden value = error. A partial code (3 of 6 digits) passes. Not the HTML `required`, no server check. |
-| `disabled` | `bool`, `false` | Disables the boxes. The hidden input is not disabled and still posts (an empty `name=`). |
+| `disabled` | `bool`, `false` | Disables the boxes and the hidden input, so nothing is posted. |
 | `readonly` | `bool`, `false` | Boxes `readonly`, `is-readonly` on the root; also forced by `Field::$readonlyAll`. |
 | `icon` | `?string`, `null` | Not used. |
 | `size` | `string`, `'sm'` | Root class `dl-field--sm` / `dl-field--lg` only (the box size is fixed in CSS). |
@@ -41,7 +41,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 
 ```html
 <div class="dl-otp" data-dl-otp>
-  <input type="hidden" name="otp" data-dl-value>
+  <input type="hidden" name="otp" value="" data-dl-value>
   <input type="text" inputmode="numeric" maxlength="1" class="dl-otp__box" id="dlf-otp-xxxxx">
   <input type="text" inputmode="numeric" maxlength="1" class="dl-otp__box">
   ... (length boxes in total)
@@ -65,7 +65,7 @@ None on the client: no length check, no "only digits" message, no auto-submit wh
 
 ### Read-only, disabled and locked display
 
-`readonly` / `disabled` act on the boxes. A locked `x-dl::form` disables them (and the hidden input) too. Boxes are never pre-filled, so a read-only OTP is always empty.
+`readonly` / `disabled` act on the boxes. A locked `x-dl::form` disables them (and the hidden input) too. A `value` is shown in the boxes, so a read-only OTP shows it; do not pre-fill a real one-time code.
 
 ### Locale and language
 
@@ -99,8 +99,6 @@ One field: `<name>` = the digits in order, for example `123456`; shorter if not 
 - Do not use this field for a password or PIN that must stay hidden.
 - Code oddity (not fixed): Undo / `Devlib.fill` (`setField` in `resources/assets/js/core.js:663`) clear or restore only the hidden input, not the digit boxes, so after Undo the boxes still show the old digits while the posted code is empty.
 - Code oddity (not fixed): the boxes have no `name`, so `markDirty` (`resources/assets/js/core.js:460`) ignores them; typing a code never sets `is-dirty` on the form.
-- Code oddity (not fixed): `disabled` does not disable the hidden input (`resources/views/components/field/otp.blade.php:2`), so a disabled OTP field still posts an empty `name=`.
-- Code oddity (not fixed): the `value` prop is accepted by the constructor but never rendered (`otp.blade.php` has no value or box fill), so it silently does nothing.
 
 ## Example
 

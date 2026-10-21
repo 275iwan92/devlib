@@ -38,8 +38,8 @@ All 14 come from `Devlib\Components\Field\Field`; the full reference is on `x-dl
 | `value` | Initial amount, canonical (`1250000`, `"1250000.50"`). Rendered formatted with `decimals` in the server's display language (`1.250.000,00`). |
 | `placeholder` | Placeholder text (translated); default is the zero formatted with `decimals`. |
 | `required` | Red `*`; the form check marks an empty **amount** "Required" (the always-filled currency code is ignored). `0,00` counts as a value. |
-| `disabled` | Disables the amount input (not posted) and removes the "00" button. The currency button and the posted currency code are not disabled (see the oddity). |
-| `readonly` | Read-only amount (posted), no "00" button, root gets `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
+| `disabled` | Disables the amount input (not posted) and removes the "00" button. The currency button and the hidden `<name>_currency` are disabled too, so neither the amount nor the currency is posted. |
+| `readonly` | Read-only amount (posted), currency button disabled (the currency is posted), no "00" button, root gets `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | Not used by this control. |
 | `size` | `sm` (default) or `lg`; only the CSS class `dl-field--sm` / `dl-field--lg`. |
 | `i18n` | `data-i18n` key on the label for auth screens; normal screens never set it. |
@@ -99,7 +99,7 @@ With `words`, the line under the field is rewritten on every input, every curren
 | Field | Value |
 |---|---|
 | `<name>` | Canonical number, `.` as decimal separator, no grouping: `1250000.5`. Rewritten from the displayed text by the `formdata` handler in `core.js` (both for a normal submit and `new FormData(form)`) because the input has `data-dl-num`. Empty stays empty; text that is not a number is posted unchanged. |
-| `<name>_currency` | The currency code, for example `IDR`. Always present (also for a disabled field, see the oddity). |
+| `<name>_currency` | The currency code, for example `IDR`. Present unless the field is `disabled`. |
 
 The amount is not tied to the currency on the server: store both, and round to the currency's decimals there.
 
@@ -135,7 +135,7 @@ The `<label for>` is tied to the amount input; `inputmode="decimal"` opens the d
 - `required` ignores the currency, so an amount of `0,00` is accepted; check "greater than zero" on the server.
 - Custom `currencies` rows must have the `code` key: the view reads `$c['code']` and a row without it fails with an undefined-key error.
 - Precision: more than about 15 significant digits lose precision on blur, because the value passes through a JavaScript number.
-- Code oddity (not fixed): (1) `resources/assets/js/components/field.js:132-136` fires no event when a currency is chosen, so a change of currency alone does not mark the form dirty and no `change` reaches listeners on the amount. (2) `money.blade.php:7` leaves the currency button and the hidden `<name>_currency` enabled for `disabled` / `readonly` fields: the currency can still be changed and is still posted. (3) With `words`, an empty amount leaves the empty tinted `.dl-words__text` bar visible (`field.js:130` never toggles `is-empty`, unlike `number-words.js`). (4) `Devlib.fill()` / `setField` (`core.js:663-677`) writes the text and dispatches `input`; on an integer-mode amount the input handler keeps digits only, so filling `1250000.50` gives `125000050`. The mount path guards against this case, the input path does not. In spreadsheet mode the filled canonical text is shown unformatted until the next focus/blur.
+- Code oddity (not fixed): (1) `resources/assets/js/components/field.js:132-136` fires no event when a currency is chosen, so a change of currency alone does not mark the form dirty and no `change` reaches listeners on the amount. (2) With `words`, an empty amount leaves the empty tinted `.dl-words__text` bar visible (`field.js:130` never toggles `is-empty`, unlike `number-words.js`). (3) `Devlib.fill()` / `setField` (`core.js:663-677`) writes the text and dispatches `input`; on an integer-mode amount the input handler keeps digits only, so filling `1250000.50` gives `125000050`. The mount path guards against this case, the input path does not. In spreadsheet mode the filled canonical text is shown unformatted until the next focus/blur.
 
 ## Example
 

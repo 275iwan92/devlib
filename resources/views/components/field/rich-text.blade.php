@@ -5,5 +5,5 @@
         <button type="button" data-cmd="removeFormat" title="{{ \Devlib\Lang::text('Clear formatting') }}"><i class="fa-solid fa-eraser"></i></button>
     </div>
     <div id="{{ $uid }}" class="dl-rich__area" contenteditable="{{ $disabled || $readonly ? 'false' : 'true' }}" style="min-height:calc({{ $rows }} * 1.5em)" data-placeholder="{{ $placeholder }}">{!! $value !!}</div>
-    <textarea name="{{ $name }}" hidden data-dl-rich-value>{{ $value }}</textarea>
+    <textarea name="{{ $name }}" hidden data-dl-rich-value @disabled($disabled)>{{ $value }}</textarea>
 </div>

@@ -26,7 +26,7 @@ It is a thin class (`Devlib\Components\Field\Date`, no own props, `control()` = 
 | `value` | `mixed`, `null` | Initial value, written to the hidden input. Read by `DlDate`: `yyyy-mm-dd` (also `yyyy-mm-dd hh:mm...`, date part only) and any form the user may type. A Carbon object works because it is cast to a string (`Y-m-d H:i:s`). An unreadable value is shown as empty and the hidden input is emptied on load. |
 | `placeholder` | `?string`, `null` | Placeholder of the text box; default `dd-Mmm-yyyy` (not translated when left at the default). |
 | `required` | `bool`, `false` | Red `*` and the `x-dl::form` check on Save/Confirm ("Required" when the hidden value is empty). No HTML `required` attribute; the server must check again. |
-| `disabled` | `bool`, `false` | Disables the **text box only** (grey). See the oddity at the end of "Rules and pitfalls": the hidden input is still posted and the calendar button still works. |
+| `disabled` | `bool`, `false` | Disables the text box, the 📅 button and the hidden input (grey, nothing is posted). |
 | `readonly` | `bool`, `false` | Text box read-only, the calendar button is not rendered, root gets `is-readonly`. The value is still posted. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | `?string`, `null` | Not used by this control (the 📅 button is fixed). |
 | `size` | `string`, `'sm'` | CSS size class only: `sm` or `lg`. |
@@ -112,7 +112,6 @@ Because the hidden input has a `name`, these events mark an `x-dl::form` as dirt
 - For a two-field period use `x-dl::field.date-range` (native pickers) or two `x-dl::field.date`; there is no link between two date fields (no "end must be after start").
 - An invalid typed entry leaves the **old** value in the hidden input while the box shows the bad text. Only a red border is shown. A user who ignores it submits the old value; add a server error.
 - Accessibility as implemented: the text box is a normal input with a `<label for>`, the 📅 button and every day are real `<button>` elements (reachable with Tab, activated with Enter/Space), and Enter in the text box commits the typing. There are no arrow-key moves between days, no Escape, no focus management into the popover, no `aria-expanded` and no `aria-label` on the button (its accessible name is the emoji/title).
-- Code oddity (not fixed): `disabled` only disables the text box (`date.blade.php`); the hidden input is not disabled, so the value is still posted, and the 📅 button is still rendered and clickable, so a "disabled" date can be changed through the calendar. Only `readonly` removes the button. (Inside a disabled `x-dl::form` fieldset everything is disabled correctly.)
 - Code oddity (not fixed): month navigation in `field.js` (`view.setMonth(view.getMonth() ± 1)`) overflows when the day of the view is 29-31: from `31 Oct`, "previous" goes to `Sep 31` = `1 Oct` (the calendar does not move); from `31 Jan`, "next" jumps to March. The view starts at today or at the current value, so it happens on those days.
 - Code oddity (not fixed): the initial calendar view uses `new Date(hidden.value)`, which reads `yyyy-mm-dd` as UTC midnight; in browsers west of UTC the calendar can open on the previous month when the value is the 1st.
 

@@ -33,6 +33,13 @@ class Display extends Field
         ?string $source = null,
     ) {
         parent::__construct($name, $label, $tooltip, $hint, $error, $value, $placeholder, $required, $disabled, $readonly, $icon, $size, $i18n, $source);
+        // Tampilan tanpa input bernama: required tidak berarti (form.js menganggapnya selalu kosong).
+        $this->required = false;
+    }
+
+    public function labelable(): bool
+    {
+        return false;
     }
 
     public function control(): string

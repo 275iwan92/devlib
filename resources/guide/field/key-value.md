@@ -30,15 +30,15 @@ Defined once in `Field`; the full reference is in `x-dl::field.text`. Difference
 | Prop | Type, default | In this field |
 |---|---|---|
 | `name` | `string`, `''` | Base name. The cells are named `<name>[<n>][key]` and `<name>[<n>][value]`, so write the name **without** brackets. Also `data-dl-field` and the `data-name` of the control. |
-| `label` | `string`, `''` | Label text (translated). Empty = no label row. The generated id is **not** placed on any element of this control, so `<label for>` points to nothing. |
+| `label` | `string`, `''` | Label text (translated). Empty = no label row. The label has no `for` (the control is a table, not one input); the group `div` carries `role="group"` and `aria-labelledby` pointing at the label. |
 | `tooltip` | `?string`, `null` | Text of the (i) bubble (translated). |
 | `hint` | `?string`, `null` | Help line under the control (translated). |
 | `error` | `?string`, `null` | Server error text; non-empty adds `is-invalid`. Not translated. |
 | `value` | `mixed`, `null` | Initial rows as an **associative array** `name => value` (`['Weight' => '250 gsm']`); it is looped as `$k => $v`, so values must be scalars (an array value breaks the view with an "Array to string" error). A list of pairs (`[['key' => .., 'value' => ..]]`) is **not** accepted: it would render keys `0, 1, ...`. |
 | `placeholder` | `?string`, `null` | **Not used** (the cells have no placeholder). |
 | `required` | `bool`, `false` | Red `*` and the `x-dl::form` "Required" check: at least one cell (key or value) of any row has text. No HTML `required`, no server check. |
-| `disabled` | `bool`, `false` | Disables the "+ Add row" button **only**; the cells and the delete buttons stay active (see pitfalls). |
-| `readonly` | `bool`, `false` | Same as `disabled` for the add button, plus the class `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
+| `disabled` | `bool`, `false` | `disabled` on the "+ Add row" button, every cell input and every delete button; the cells are not posted. |
+| `readonly` | `bool`, `false` | The add and delete buttons are `disabled` and the cells are `readonly` (still posted), plus the class `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | `?string`, `null` | Not used by this control. |
 | `size` | `string`, `'sm'` | `sm` or `lg`; only the CSS class `dl-field--sm\|lg`. |
 | `i18n` | `?string`, `null` | Written to `data-i18n` on the label for auth screens. |
@@ -50,8 +50,8 @@ Defined once in `Field`; the full reference is in `x-dl::field.text`. Difference
 
 ```
 div.dl-field.dl-field--key-value[data-dl-field=name]
-  label ...                                                (its for= matches no element)
-  div.dl-kvedit[data-dl-kv][data-name=name]
+  label#<uid>-lbl ...                                      (no for=)
+  div.dl-kvedit[data-dl-kv][data-name=name][role=group][aria-labelledby=<uid>-lbl]
     table.dl-kvedit__table
       thead > tr > th key-label | th value-label | th (empty)
       tbody[data-dl-kv-body] > tr > td input[type=text][name="name[0][key]"] | td input[name="name[0][value]"] | td button[data-dl-kv-x] ×
@@ -70,7 +70,7 @@ The class `Kv` (`components/kv.js`) is wired to the add button and to the table 
 
 ### Read-only and disabled
 
-`disabled`/`readonly` switch off only the add button (opacity 0.45); the cells are neither disabled nor read-only and the delete buttons still work. Inside a locked `x-dl::form` (disabled fieldset, or `mode="view"`) the browser disables every input and button, so the table cannot be edited and its cells are not submitted.
+`disabled` switches off the add button (opacity 0.45), the delete buttons and every cell (`disabled`, so nothing is posted); `readonly` also switches off the buttons and makes the cells `readonly`, so the pairs are still posted. Inside a locked `x-dl::form` (disabled fieldset, or `mode="view"`) the browser disables every input and button, so the table cannot be edited and its cells are not submitted.
 
 ## Data and events
 
@@ -119,12 +119,10 @@ $spec = collect($request->input('spec', []))
 - Names that look like integers (`'1'`) become integer keys in PHP arrays; keep the order and the exact spelling you need by storing the rows as a list of pairs (JSON) if that matters.
 - Empty rows are posted as empty strings. Always filter them out.
 - An empty table posts nothing: update stored data with `$request->input('x', [])`, otherwise the last row can never be deleted.
-- `disabled`/`readonly` do not lock the rows. Freeze the field with a locked form, or render the pairs as text instead.
+- `disabled`/`readonly` lock the rows in the markup (cells, add and delete buttons). Rows added or deleted by script are not covered; freeze with a locked form if a script may change them.
 - Deleting a row has no confirmation and no undo inside the field.
-- Keyboard: the cells are normal inputs and the add/delete controls are `<button>` elements, so everything is reachable with `Tab`, `Enter` and `Space`. The cells have no `aria-label` (the column headings are `<th>` only), the delete button has only a `title`, and the `<label for>` of the field is not linked to any control.
+- Keyboard: the cells are normal inputs and the add/delete controls are `<button>` elements, so everything is reachable with `Tab`, `Enter` and `Space`. The cells have no `aria-label` (the column headings are `<th>` only), the delete button has only a `title`, and the label is linked to the group through `aria-labelledby`, not to a single control.
 - Texts of the headings are translated; the values are data and not.
-- Code oddity (not fixed): `resources/views/components/field/key-value.blade.php:10` - `@disabled($disabled || $readonly)` is applied to the add button only; the cell inputs (`:6`) and the delete buttons ignore `disabled`/`readonly`, so a standalone disabled or read-only key-value field is still fully editable and posted.
-- Code oddity (not fixed): `resources/views/components/field/key-value.blade.php` - no element carries `id="{{ $uid }}"`, so the `for` of the field label (set in `components/field.blade.php`) matches nothing and clicking the label does not focus the control.
 - Code oddity (not fixed): `resources/assets/js/components/kv.js:11-16` - adding or deleting a row dispatches no event, so the dirty guard and Undo of `x-dl::form` miss these changes; and `resources/assets/js/core.js:680-683` (`fillForm`) skips names containing `[`, so Undo does not restore the rows.
 
 ## Example

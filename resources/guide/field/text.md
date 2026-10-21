@@ -8,7 +8,7 @@ Pick another object when the data is not plain text: `x-dl::field.number`, `x-dl
 
 ```html
 <div class="dl-field dl-field--text dl-field--sm [is-invalid] [is-readonly]" data-dl-field="<name>">
-  <div class="dl-field__labelrow"><label class="dl-field__label" for="dlf-<name>-xxxxx">Label</label><span class="dl-field__req">*</span> (i) tooltip</div>
+  <div class="dl-field__labelrow"><label class="dl-field__label" id="dlf-<name>-xxxxx-lbl" for="dlf-<name>-xxxxx">Label</label><span class="dl-field__req">*</span> (i) tooltip</div>
   <div class="dl-field__box [has-icon]"> ...control... </div>
   <div class="dl-field__counter" data-dl-counter data-max="120"></div>   <!-- only with counter -->
   <div class="dl-field__error" data-dl-field-error>server error text</div> <!-- always present -->
@@ -157,7 +157,6 @@ DevLib does not trim the text. In a default Laravel app the `TrimStrings` and `C
 - An `old()` / `$model` value that starts with a line break loses it inside a textarea (HTML parser rule).
 - Code oddity (not fixed): the `Aa` mode uses `t.replace(/\b\w/g, ...)` in `resources/assets/js/core.js:96`, an ASCII-only word test, so a letter after an accented letter is also upper-cased (`étienne` becomes `éTienne`) while `o'neil` becomes `O'Neil`.
 - Code oddity (not fixed): clicking the case badge (`resources/assets/js/components/field.js:43`) changes the value without dispatching `input` or `change`, so the dirty guard of `x-dl::form` is not marked and listeners are not told; only typing marks the form dirty.
-- Code oddity (not fixed): the demo tooltip `Kode: tanpa badge huruf` in `site/resources/views/demos/field-text.blade.php:4` says `code` removes the case badge, but `Text::showCase()` ignores `code`; the badge is shown unless `:case-toggle="false"`.
 
 ## Example
 

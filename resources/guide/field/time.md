@@ -26,7 +26,7 @@ The class is `Devlib\Components\Field\Time` (no own props, `control()` = `time`)
 | `value` | `mixed`, `null` | Initial text, written to the box **as given** (not normalized on load). Pass `HH:MM`. |
 | `placeholder` | `?string`, `null` | Placeholder of the box; default `14:30`. |
 | `required` | `bool`, `false` | Red `*` and the `x-dl::form` Save/Confirm check (empty text = "Required"). No HTML `required`; the server must check again. |
-| `disabled` | `bool`, `false` | Disables the text box (not posted by the browser). See the oddity: the ⏰ button stays active. |
+| `disabled` | `bool`, `false` | Disables the text box (not posted by the browser). The ⏰ button is disabled too. |
 | `readonly` | `bool`, `false` | Text box read-only, ⏰ button not rendered, root gets `is-readonly`. The value is still posted. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | `?string`, `null` | Not used by this control (the ⏰ button is fixed). |
 | `size` | `string`, `'sm'` | CSS size class only: `sm` or `lg`. |
@@ -102,7 +102,6 @@ One field `name` with the text of the box: `HH:MM` when valid, otherwise whateve
 - A time of day has no date or zone. For a point in time use `x-dl::field.date-time`.
 - Accessibility as implemented: the box is a normal labelled input; the ⏰ button, both selects and `Apply`/`Clear` are native controls reachable with Tab. There is no key to open the popover from the box, no Escape, no focus management and no ARIA state on the button.
 - Code oddity (not fixed): `Apply` and `Clear` change the value without `input`/`change` events (`field.js`), so they do not mark an `x-dl::form` as dirty and do not remove an existing `is-invalid` or "Required" mark.
-- Code oddity (not fixed): `disabled` only disables the text box; the ⏰ button is still rendered and works (`time.blade.php`), so the popover opens and writes into a disabled box (the value is not posted, but it looks changed).
 - Code oddity (not fixed): the popover rounds the minute to a multiple of 5 and wraps `58`/`59` to `00` without adding an hour; opening and applying `07:58` gives `07:00`.
 
 ## Example

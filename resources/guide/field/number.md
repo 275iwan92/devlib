@@ -39,7 +39,7 @@ All 14 come from `Devlib\Components\Field\Field`; the full reference is on `x-dl
 | `value` | Initial value, written into the box as-is (`value ?? min`). Pass a whole number (`:value="2"`). It is **not** clamped when rendered. |
 | `placeholder` | Accepted but **not used**: the view renders no `placeholder` attribute (the box always shows a number). |
 | `required` | Red `*` next to the label. The form check "Required" can practically never fire (the box is never empty, see Behavior). |
-| `disabled` | Disables the input (not posted). The spin buttons stay rendered (see the oddity below). |
+| `disabled` | Disables the input (not posted). The ▲ ▼ buttons stay rendered but are `disabled`. |
 | `readonly` | Input `readonly` (posted), no spin buttons, no `has-spin` padding, root gets `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | Not used by this control. |
 | `size` | `sm` (default) or `lg`; only changes the CSS class `dl-field--sm` / `dl-field--lg`. |
@@ -78,7 +78,7 @@ There is no keyboard shortcut (the arrow keys do nothing: it is a text input) an
 ### Read-only, disabled, locked
 
 - `readonly`: no spin buttons; the value is posted.
-- `disabled`: the input is not posted; the ▲ ▼ buttons are still rendered and still change the (disabled, unposted) value when the field is not inside a disabled fieldset.
+- `disabled`: the input is not posted; the ▲ ▼ buttons are rendered with `disabled`, so they cannot change the value.
 - Inside a locked `x-dl::form` (Confirmed, Cancelled, ...) the form disables the whole fieldset, which also disables the spin buttons and stops the post.
 
 ### Language and number format
@@ -120,7 +120,7 @@ The `<label for>` is tied to the input id; `inputmode="numeric"` opens the numer
 - `step` is only the spin increment; it does not reject typed values that are off-step.
 - Use `x-dl::field.decimal` for fractions and `x-dl::field.money` for amounts; the digits-only rule makes a `.` or `,` impossible here.
 - Do not add your own `<input type="number">` next to it; the object already covers the case, and its look follows the field theme.
-- Code oddity (not fixed): (1) `resources/views/components/field/number.blade.php:3` and `resources/assets/js/components/field.js:166` leave the ▲ ▼ buttons active when only `disabled` is set (they change the value of a disabled input; harmless for the post, confusing for the user). (2) `field.js:167` removes `-` on every keystroke, so a negative `min` is reachable only by the spin buttons and the sign disappears at the next keystroke; the `int $min` type suggests negatives are meant to work.
+- Code oddity (not fixed): (1) `field.js:167` removes `-` on every keystroke, so a negative `min` is reachable only by the spin buttons and the sign disappears at the next keystroke; the `int $min` type suggests negatives are meant to work.
 
 ## Example
 
