@@ -21,6 +21,13 @@ Aturan sumber ada di `skills/devlib/*.md` (mulai `SKILL.md`; membangun object: `
 - Kode versi lama yang masih hidup tidak dihapus sendiri: daftarkan ke Jo (jalur dan pemakainya) dan tunggu persetujuan, karena penghapusan butuh izin eksplisit (bagian 4).
 - Contoh: **Layer Menu (panel kiri) adalah menu utama (v2)**; Menu Classic adalah versi lama.
 
+**Aturan default dan versi (Jo, 2026-10-21):**
+1. **Hanya SATU default**, dan default = **versi terakhir** (nomor tertinggi). Punya v1, v2, v3: yang default v3.
+2. Versi lama = **kode sejarah (historical code)**: dikubur di riwayat git (diberi tag `history/<nama>-vN` agar mudah dibangunkan), tidak tinggal sebagai kode aktif, **tidak jadi default, dan tidak ada saklar/pilihan untuk berpindah antar versi**.
+3. Nama object/komponen/menu tetap satu (tanpa akhiran versi seperti `V2`/`V3` pada kode aktif); nomor versi dicatat di `CHANGELOG.md`/tag.
+4. **Tidak ada "mundur".** Bila Jo tidak suka versi terakhir (vN): ambil versi sebelumnya dari riwayat, **duplikasikan menjadi versi baru (vN+1)**, dan vN+1 menjadi default. vN tetap tercatat sebagai riwayat. Nomor versi selalu maju, dan default selalu yang terbaru.
+5. Berlaku untuk semua: menu, object, engine, layar, aturan.
+
 ## 4. Git dan penghapusan
 - **Jangan push, jangan menulis ulang riwayat, jangan menghapus berkas/folder/branch** sebelum Jo menyetujui secara eksplisit. Setelah disetujui, kerjakan sampai tuntas.
 - Banyak sesi menulis di folder yang sama: jalankan `git status` dulu; commit hanya jalur sendiri `git commit --only -m "..." -- <jalur>` (berkas baru: `git add -N` dulu); cek `git show --stat`. Pesan commit Indonesia, akhiri dengan trailer yang ditetapkan sesi.
