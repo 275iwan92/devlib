@@ -83,7 +83,7 @@ Copied in shape from the catalog demo (fictional authors and texts):
 ```blade
 @php
     $posts = [
-        ['title' => 'Why the old screen documents were removed', 'meta' => 'Agent Iwan · Report · 07-Oct-2026', 'badge' => 'Unread', 'tone' => 'warn', 'pinned' => true,
+        ['title' => 'Why the old screen documents were removed', 'meta' => 'Agent One · Report · 07-Oct-2026', 'badge' => 'Unread', 'tone' => 'warn', 'pinned' => true,
             'body' => "The per-screen documents described screens that were replaced.
 
 - Replaced by v2 screens
