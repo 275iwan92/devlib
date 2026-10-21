@@ -106,15 +106,6 @@ final class Catalog
                     'p5-grid-pivot' => $page('Grid Pivot', 'fa-solid fa-table-cells-large', [
                         'grid-pivot' => ['Grid Pivot (rows × columns × values)', $c('Pivot')],
                     ]) + ['folder' => 'Grid Report'],
-                    // Variant: isi belum ditinjau ulang (user 2026-10-21: "skip dulu"), hanya pindah ke Grid Report.
-                    'p5-grid-variant' => $page('Grid Variant', 'fa-solid fa-shapes', [
-                        'grid-master-detail' => ['Grid Master-Detail (expand row = items)', $c('Grid')],
-                        'grid-status' => ['Grid with Status Bar (stages + progress)', $c('Grid')],
-                        'grid-photos' => ['Grid with Photos (table ↔ cards)', $c('Grid')],
-                        'grid-mix' => ['Grid with Mix Component', $c('Grid')],
-                        'grid-sheet' => ['Grid Spreadsheet (bulk edit, Excel copy/paste, drag-fill)', $c('Sheet')],
-                        'grid-coverage' => ['Grid Coverage (matrix: rows x document types, status chips, expand = details)', $c('Coverage')],
-                    ]) + ['folder' => 'Grid Report'],
                     // Transactional: grid kerapatan rapat, tanpa kotak per baris; form = siklus ketat (Draft/Confirmed/Cancelled), Rupiah.
                     'p5-flow-document' => $page('Master-Detail', 'fa-solid fa-file-signature', [
                         'flow-document' => ['Master-Detail flow: Customer Order (#1) / Purchase Order (#2) grid → Form Master-Detail → Edit / Confirm / Cancel / Print → Back to the grid', $c('Grid', 'Form', 'Lines')],

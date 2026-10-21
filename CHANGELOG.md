@@ -86,6 +86,9 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Dihapus
 
+- **Halaman katalog Grid Variant** (`p5-grid-variant`, 2026-10-21, atas permintaan pemilik; akan diganti Nested Grid) beserta enam demonya (`grid-master-detail`, `grid-status`, `grid-photos`,
+  `grid-mix`, `grid-sheet`, `grid-coverage`). Komponen `x-dl::sheet`, `x-dl::coverage`, dan `x-dl::grid` tidak berubah; hanya halaman demonya yang hilang.
+
 - **Merusak: komponen `x-dl::master`** (grid + form edit dalam satu layar): `Devlib\Components\Master`, `master.js` (`data-dl-master`, event
   `dl:master-save`), CSS `.dl-master*`, dan di situs acuan halaman `p5-master`, `p5-master-detail` (generasi lama, disetujui 2026-09-26) beserta demo
   `master-employee` dan `master-detail-po`. Penggantinya alur grid → form di halaman terpisah (`grid-form-flow.md`, `x-dl::grid restore` + `x-dl::form :back`).

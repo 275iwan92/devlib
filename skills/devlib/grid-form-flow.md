@@ -10,7 +10,7 @@ Demo hidup di menu **Grid and Form** (`/lib/p5-flow-document`, `-single`, `-appr
 
 ```
 Grid and Form
-├─ Grid Report (tanpa form): List · Group By · Summary → Details · Pivot · Variant
+├─ Grid Report (tanpa form): List · Group By · Summary → Details · Pivot
 ├─ Grid Pre-Entry
 │   ├─ Transactional: Master-Detail · Single · Approval   (grid → form)
 │   ├─ Master                                             (grid → Master Form)

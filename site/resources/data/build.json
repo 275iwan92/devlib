@@ -1,24 +1,24 @@
 {
-    "generated": "2026-10-21 00:51",
+    "generated": "2026-10-21 07:42",
     "database": "devlib",
     "totals": {
-        "objects": 84,
+        "objects": 83,
         "modules": 14,
         "modules_done": 2,
-        "screens": 166,
-        "v2": 166,
+        "screens": 160,
+        "v2": 160,
         "v1": 0,
         "not_built": 0,
-        "waiting_qc": 36,
+        "waiting_qc": 35,
         "locked": 48,
         "forms": 4,
-        "grids": 8,
+        "grids": 7,
         "reports": 2,
         "engines": 4,
         "engine_groups": 3,
         "migrations": 9,
         "tests": 17,
-        "commits": 350,
+        "commits": 353,
         "since": "2026-09-23"
     },
     "modules": [
@@ -96,14 +96,14 @@
         },
         {
             "label": "Grid and Form",
-            "total": 16,
-            "v2": 16,
+            "total": 15,
+            "v2": 15,
             "v1": 0,
             "not_built": 0,
-            "waiting_qc": 5,
+            "waiting_qc": 4,
             "locked": 11,
             "form": 4,
-            "grid": 8,
+            "grid": 7,
             "report": 1
         },
         {
@@ -662,17 +662,6 @@
             "built_at": "2026-09-26",
             "built_by": null,
             "changed_at": "2026-09-26",
-            "changed_by": null
-        },
-        {
-            "type": "OBJECT",
-            "key": "page:p5-grid-variant",
-            "name": "Grid Variant",
-            "module": "Grid and Form",
-            "qc": "READY_FOR_QC",
-            "built_at": null,
-            "built_by": null,
-            "changed_at": null,
             "changed_by": null
         },
         {
