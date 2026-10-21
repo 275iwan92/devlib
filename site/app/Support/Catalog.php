@@ -234,7 +234,15 @@ final class Catalog
             // Aturan untuk developer, bukan komponen yang dipakai user (user 2026-09-26). Halaman dokumen = skills/devlib/*.md apa adanya (RulesDocs).
             ['code' => 'DR', 'short' => 'DR', 'label' => 'DEV Rules', 'icon' => 'fa-solid fa-code',
                 'pages' => RulesDocs::pages() + [
-                    'p5-override' => $page('OO Methods and Properties', 'fa-solid fa-code-branch', ['oo-override' => ['Kanban subclass: properties overridden in PHP, methods overridden in JS (super)', ['App\\View\\Components\\Demo\\KanbanProduksi', ...$c('Kanban')]]], null, $c('Kanban')),
+                    // Cerita satu object (contoh kerja: Kanban) dalam enam bagian; tabel properti dan method dibaca dari kode (App\Support\ObjectDoc), bukan salinan.
+                    'p5-override' => $page('OO Methods and Properties', 'fa-solid fa-code-branch', [
+                        'oo-story' => ['1 · The object: what Kanban is, what it is for, what it does not do', $c('Kanban')],
+                        'oo-properties' => ['2 · Properties: what you can set', []],
+                        'oo-methods' => ['3 · Methods: what you can override', []],
+                        'oo-inherit' => ['4 · Inheriting: how to make a subclass', []],
+                        'oo-override' => ['5 · Live demo: the KanbanProduksi subclass', ['App\\View\\Components\\Demo\\KanbanProduksi', ...$c('Kanban')]],
+                        'oo-rules' => ['6 · Related rules', []],
+                    ], null, $c('Kanban')),
                 ]],
             // Bagian Flow (user 2026-10-21): diagram alur dengan x-dl::flow; contoh fiktif, belum ditinjau user (bukan APPROVED).
             ['code' => 'FL', 'short' => 'FL', 'label' => 'Flow Diagrams', 'icon' => 'fa-solid fa-diagram-project',

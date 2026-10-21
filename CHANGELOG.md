@@ -9,6 +9,11 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Diubah
 
+- **Halaman katalog `p5-override` (OO Methods and Properties) kini menceritakan satu object, contoh kerja Kanban** (permintaan Jo
+  2026-10-21), enam bagian: cerita object, tabel properti, tabel method (PHP dan JS), cara membuat turunan (kode asli
+  `KanbanProduksi`), demo hidup, aturan terkait (`object.md`, `inheritance.md`, entri Technical Guide). Tabel dibaca dari
+  kode lewat `App\Support\ObjectDoc` (refleksi konstruktor dan method, header REMARK, berkas kelas JS); arti singkat di
+  `ObjectNotes` dicocokkan dengan kode oleh `ObjectDocTest`. Status Review (belum APPROVED); `x-dl::kanban` tidak diubah.
 - **Alur Approval (Grid and Form, `p5-flow-approval`) memakai Form Approval baku** (keputusan Jo 2026-10-21): grid
   awal tetap; klik baris membuka `x-dl::approval` untuk SATU dokumen (hanya-baca, Level n of N, Riwayat, Reject / Hold /
   Setujui), Back kembali ke grid. `x-dl::approval` mendapat prop opt-in `single` (tanpa daftar kiri; dokumen
