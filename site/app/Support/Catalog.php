@@ -256,7 +256,7 @@ final class Catalog
 
         return [
             'Foundations & Rules' => [
-                ['code' => 'DT', 'label' => 'Basics & Themes', 'icon' => 'fa-solid fa-palette', 'pages' => $in('basic-', ['colors', 'typography', 'shape', 'themes', 'density', 'icons', 'breakpoints', 'locale'])],
+                ['code' => 'DT', 'label' => 'Basics & Themes', 'icon' => 'fa-solid fa-palette', 'pages' => $in('basic-', ['colors', 'typography', 'shape', 'density', 'icons', 'breakpoints', 'locale'])],
                 ['code' => 'BH', 'label' => 'Global Behaviors', 'icon' => 'fa-solid fa-sliders', 'pages' => $in('p4-', ['developer', 'guard', 'shortcuts', 'permissions', 'i18n', 'metadata'])],
                 ['code' => 'DR', 'label' => 'Rules', 'icon' => 'fa-solid fa-code', 'pages' => [...array_keys(RulesDocs::pages()), 'p5-override'],
                     'folders' => ['p5-override' => ['Develop & Coding']]],
@@ -271,7 +271,7 @@ final class Catalog
                 ['code' => 'CH', 'label' => 'Charts & Dashboards', 'icon' => 'fa-solid fa-chart-pie', 'pages' => ['p6-charts', 'p6-indicators', 'p6-dashboard', 'p5-org']],
                 ['code' => 'SC', 'label' => 'Schedule', 'icon' => 'fa-solid fa-calendar-days', 'pages' => ['p5-kanban', 'p5-gantt', 'p5-calendar']],
                 ['code' => 'DK', 'label' => 'Print & Report', 'icon' => 'fa-solid fa-print', 'from' => ['DK'], 'pages' => ['p6-statement']],
-                ['code' => 'SP', 'label' => 'Special Screen', 'icon' => 'fa-solid fa-star', 'pages' => ['p6-wh-map', 'p6-wh-labels', 'p6-wh-scan', 'p6-delivery', 'p7-chat', 'p7-chat-model', 'p7-assistant'],
+                ['code' => 'SP', 'label' => 'Special Screen', 'icon' => 'fa-solid fa-star', 'pages' => ['basic-themes', 'p6-wh-map', 'p6-wh-labels', 'p6-wh-scan', 'p6-delivery', 'p7-chat', 'p7-chat-model', 'p7-assistant'],
                     'folders' => ['p6-delivery' => ['Warehouse', 'fa-solid fa-warehouse'], 'p7-chat' => ['Chat', 'fa-solid fa-comments'], 'p7-chat-model' => ['Chat', 'fa-solid fa-comments'], 'p7-assistant' => ['Chat', 'fa-solid fa-comments']]],
                 ['code' => 'MA', 'label' => 'Shell, Account & Security', 'icon' => 'fa-solid fa-table-columns', 'pages' => ['shell', 'screen-nav', 'p7-menus', 'p7-layer', 'login-1', 'login-2', 'login-3', 'register', 'forgot-1', 'forgot-2', 'p8-lock', 'p8-security']],
             ],
