@@ -36,7 +36,7 @@ All 14 come from `Devlib\Components\Field\Field`; the full reference is on `x-dl
 | `value` | Initial number, canonical (`1250000`, `"1234.56"`, `12.5`). Written unformatted into the hidden input; the script then shows it in the box. |
 | `placeholder` | Placeholder of the visible input (translated); default `0`. |
 | `required` | Red `*`; the form check marks an empty number "Required" (it tests the hidden input; the currency code is ignored). `0` counts as a value. |
-| `disabled` | Disables the visible input (and with a picker nothing else). The hidden number and currency are still posted (see the oddity). |
+| `disabled` | Disables the visible input, the hidden number and currency inputs (not posted) and the currency picker button. |
 | `readonly` | Read-only visible input; root gets `is-readonly`. Forced on while `Field::$readonlyAll` is true. The value is posted. |
 | `icon` | Not used by this control. |
 | `size` | `sm` (default) or `lg`; only the CSS class `dl-field--sm` / `dl-field--lg`. |
@@ -84,15 +84,15 @@ The language of the words is the live display language (`Devlib.lang`: the `?lan
 
 ### Currency picker
 
-With `picker` the button opens a searchable list (`CODE · name` and the symbol column). Choosing a row sets `<name>_currency`, the button text, re-applies `places` to the typed text (switching from USD to IDR drops the typed cents), refreshes the words and fires a bubbling `change` event on the hidden number input. The code appears twice on the button (`IDR IDR`) because the first element of each `Terbilang::CURRENCIES` row is now the code itself.
+With `picker` the button opens a searchable list (`CODE · name` and the symbol column). Choosing a row sets `<name>_currency`, the button text, re-applies `places` to the typed text (switching from USD to IDR drops the typed cents), refreshes the words and fires a bubbling `change` event on the hidden number input. The button shows the code once (the first element of each `Terbilang::CURRENCIES` row is the code itself, so there is no separate symbol span, as in `x-dl::field.money`).
 
 ### Mount
 
-If the hidden input has a value, the script writes it into the box with the first `.` replaced by `,` and then runs `upd()`. Digits beyond `places` are cut: a value `1250000.50` with `currency="IDR"` becomes `1250000` in the hidden input as soon as the page mounts.
+If the hidden input has a value, the script writes it into the box with the first `.` replaced by the decimal separator of the display language and then runs `upd()`. Digits beyond `places` are cut: a value `1250000.50` with `currency="IDR"` becomes `1250000` in the hidden input as soon as the page mounts.
 
 ### Read-only, disabled, locked
 
-`readonly` and `disabled` apply to the visible input only. Inside a locked `x-dl::form` the fieldset is disabled, which disables the visible input and the currency button and stops the post of the hidden inputs.
+`readonly` applies to the visible input only (the value is posted); `disabled` also disables the hidden inputs and the picker button. Inside a locked `x-dl::form` the fieldset is disabled, which disables the visible input and the currency button and stops the post of the hidden inputs.
 
 ## Data and events
 
@@ -113,15 +113,15 @@ The visible input has no `name` and is never posted.
 | `data-dl-words-value` | hidden input with the posted number |
 | `data-dl-words-input` | the visible input |
 | `data-dl-words-text` | the words line (`.is-empty` while there is no number) |
-| `data-dl-prefix`, `data-dl-prefix-value`, `data-dl-prefix-a`, `data-dl-prefix-b` | currency wrapper, hidden code, button parts |
+| `data-dl-prefix`, `data-dl-prefix-value`, `data-dl-prefix-b` | currency wrapper, hidden code, button text |
 | `data-dl-dd-toggle`, `data-dl-dd-panel`, `data-dl-dd-search`, `.dl-dd__item` | the picker |
 
 ### Events and JavaScript
 
 - No `dl:*` event. `el.dlComponent` on the `.dl-words` element is the `NumberWords` instance (`inp`, `hid`, `out`, `cc`, `C`; methods `places()` and `upd()`); on the outer `.dl-field` it is the shared `Field` instance.
-- The visible input emits native `input` events (it has no name). A currency choice fires a bubbling `change` on the **hidden** input.
-- To set a value from script, assign the visible input and dispatch `input` on it; setting only the hidden input does not update the box or the words (this is what `Devlib.fill()` and Undo do, see the oddity).
-- Typing in the box does not mark an `x-dl::form` dirty (the dirty guard only reacts to named inputs); choosing a currency does.
+- The visible input emits native `input` events (it has no name). After each keystroke the script writes the hidden input and fires a bubbling `input` on it. A currency choice fires a bubbling `change` on the **hidden** input (not while `Devlib.fill` runs).
+- To set a value from script, assign the visible input and dispatch `input` on it, or write the canonical value to the hidden input and dispatch `input` on that: the box and the words follow (this is what `Devlib.fill()` and Undo do).
+- Typing in the box marks an `x-dl::form` dirty through the named hidden input, and so does choosing a currency.
 
 ### Accessibility as implemented
 
@@ -135,7 +135,6 @@ The `<label for>` is tied to the visible input; `inputmode="decimal"` opens the 
 - The visible text and the posted number can differ in format by design: store only the posted value, and print the words from the stored value with `Devlib\Terbilang::words($value, $currency)`.
 - `required` tests the hidden number: it fails when the box is empty, and `0` passes.
 - Do not read the visible input on the server or in your script; it has no name. Listen to `input` on `[data-dl-words-input]` or read `[data-dl-words-value]`.
-- Code oddity (not fixed): (1) `resources/assets/js/components/number-words.js:16` always replaces the dot of the initial value with a comma, but in an English display language `NUM.dec` is `.`, so `upd()` strips that comma and a value such as `12.5` becomes `125` (and is posted as `125`). (2) `number-words.blade.php:2-6`: the hidden number and currency inputs are not disabled by `disabled`, so a disabled field still posts. (3) Typing never marks the form dirty and the Undo button stays "nothing to undo" after typing only (the visible input has no name; `number-words.js` changes the hidden input without an event). (4) `Devlib.fill()` / Undo (`core.js:663-677`) set only the hidden input, so the box and the words keep showing the old text while the old value is posted. (5) The button shows the code twice (`IDR IDR`), see Currency picker.
 
 ## Example
 

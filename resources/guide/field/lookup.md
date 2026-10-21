@@ -61,7 +61,7 @@ Defined once in `Field`; the full reference is in `x-dl::field.text`. Difference
 | `value` | `mixed`, `null` | The stored **key**. Client mode: compared as strings with the key column to find the label for the button. Remote mode: passed to `find`. A value without a matching row still goes into the hidden input and is posted, while the button shows the placeholder. |
 | `placeholder` | `?string`, `null` | Button text while nothing is shown (translated); default is the dictionary word `f_choose` ("Choose..."). It is not the placeholder of the search box. |
 | `required` | `bool`, `false` | Red `*` and the `x-dl::form` "Required" check (hidden input empty). No HTML `required`, no server check. |
-| `disabled` | `bool`, `false` | Disables the **button** (cannot open); the hidden input stays enabled and is posted. |
+| `disabled` | `bool`, `false` | Disables the **button** (cannot open) and the hidden input, so the key is not posted. |
 | `readonly` | `bool`, `false` | Same as `disabled` on the button, plus the class `is-readonly`; value is posted. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | `?string`, `null` | Not used: the button always shows a magnifier icon. |
 | `size` | `string`, `'sm'` | `sm` or `lg`; only the CSS class `dl-field--sm\|lg`. |
@@ -74,7 +74,7 @@ Defined once in `Field`; the full reference is in `x-dl::field.text`. Difference
 
 ```
 div.dl-field.dl-field--lookup[data-dl-field=name]
-  div.dl-dd.dl-lookup[data-dl-lookup][data-fill][data-rows][data-key][data-label]([data-create])([data-url][data-columns])
+  div.dl-dd.dl-lookup[data-dl-lookup][data-empty][data-fill][data-rows][data-key][data-label]([data-create])([data-url][data-columns])
     input[type=hidden][name=name][data-dl-value]
     button#uid.dl-dd__btn[data-dl-dd-toggle] > span[data-dl-dd-text] (label of the chosen row) + magnifier
     div.dl-dd__panel.dl-lookup__panel[data-dl-dd-panel]
@@ -101,14 +101,14 @@ div.dl-field.dl-field--lookup[data-dl-field=name]
 While typing, the button "+ Add new: <text>" appears when the text is not empty and no row of the current list has exactly that label (case-insensitive). A click:
 
 - adds a row `{<key>: 'new:<text>', <label>: <text>}` to the list (shown with "(new)" in its first cell),
-- sets the hidden input to `new:<text>`, the button text to `<text>`, closes the panel,
+- sets the hidden input to `new:<text>`, the button text to `<text>`, closes the panel and fires a bubbling `change` on the hidden input (as a row click does),
 - dispatches the custom event `dl:lookup-create` (bubbles, `detail: {text}`) on the `.dl-lookup` element and shows a toast "Added: <text>".
 
 Nothing is saved by DevLib and no `change` event or fill happens. The screen must save the new master record: on submit the server sees the value `new:<text>` instead of a key.
 
 ### Read-only and disabled display
 
-Only the button is disabled (opacity 0.45); `readonly` adds the grey `is-readonly` background. In a locked `x-dl::form` the button reads as plain text (label only), and the hidden input is excluded from the submit by the browser.
+`disabled` disables the button (opacity 0.45) and the hidden input; `readonly` disables the button only, adds the grey `is-readonly` background and still posts the key. In a locked `x-dl::form` the button reads as plain text (label only), and the hidden input is excluded from the submit by the browser.
 
 ## Data and events
 
@@ -139,11 +139,11 @@ Always re-read the master row on the server; the `fill` values are ordinary requ
 
 ### JavaScript helpers
 
-`Devlib.setField(form, name, key)` and `Devlib.fill` (also used by Undo) set the hidden input and the button text from the **embedded** rows; with no matching row (always the case in remote mode) the button shows the default "Choose..." text, ignoring the `placeholder` prop. No `change` event is fired. The wizard review reads the button text.
+`Devlib.setField(form, name, key)` and `Devlib.fill` (also used by Undo) set the hidden input and the button text from the **embedded** rows; with no matching row (always the case in remote mode) the button shows the field's `placeholder` (`data-empty`, default "Choose..."). No `change` event is fired. The wizard review reads the button text.
 
 ### Form integration
 
-- The Save/Confirm check marks the field "Required" when the hidden input is empty. The red error is cleared only on an `input` event, which this control does not dispatch for itself (only for the filled targets), so it stays until the form is reloaded or Undone.
+- The Save/Confirm check marks the field "Required" when the hidden input is empty. The red error is cleared as soon as the field has a value: the form listens to `input` and `change`, and a choice (or a created entry) fires `change`.
 - A change marks the guarded form dirty (named hidden input). Filled targets mark it dirty too.
 - Lint F201 (warning): in a `kind="document"` form a `field.lookup` without `value`, `readonly` or `options-default` is reported.
 
@@ -160,11 +160,8 @@ Always re-read the master row on the server; the `fill` values are ordinary requ
 - A lookup `rows` closure may return an array, a Collection or any iterable of rows (arrays or objects); each row is cast to an array.
 - Columns are plain text: values are escaped and not translated; headings are translated.
 - Keyboard: the button is reachable with `Tab` and opens with `Enter`/`Space`; the search box is focused, so typing filters. The rows are plain `<tr>` elements without `tabindex`, roles or key handling, so the choice itself needs a pointer or touch. There is no `aria-expanded`.
-- `disabled`/`readonly` disable only the button; a standalone disabled lookup still posts its key.
-- Code oddity (not fixed): `resources/views/components/field/lookup.blade.php:3` and `:4` - the hidden input is never disabled, so `disabled` does not keep the value out of the request.
-- Code oddity (not fixed): `resources/assets/js/core.js:672` - `setField` (used by `Devlib.fill` and form Undo) shows `T('f_choose')` for a cleared or unmatched lookup, not the field's `placeholder`; and it cannot resolve a remote lookup label because remote rows are not embedded.
-- Code oddity (not fixed): `resources/assets/js/components/form.js:23` clears a "Required" error only on `input` events; a lookup choice dispatches only `change`, so the error stays.
-- Code oddity (not fixed): `resources/assets/js/components/lookup.js:56-67` - the `create` click sets the hidden value but dispatches no `change`/`input`, so the form's dirty guard is not marked by it.
+- `disabled` disables the button and the hidden input (the key is not posted); `readonly` disables only the button and still posts the key.
+- Code oddity (not fixed): `resources/assets/js/core.js` `setField` (used by `Devlib.fill` and form Undo) cannot resolve the button label of a remote lookup because remote rows are not embedded; it shows the placeholder while the key is still written to the hidden input and posted.
 
 ## Example
 

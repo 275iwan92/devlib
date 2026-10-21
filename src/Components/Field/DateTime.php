@@ -13,7 +13,7 @@
 namespace Devlib\Components\Field;
 
 // Tanggal + jam dalam satu popover (mockup form: "Select Date & Time").
-// Nilai tersimpan "YYYY-MM-DD HH:MM" (zona waktu sistem, WIB); tampil "1 Okt 1969, 14:30 WIB".
+// Nilai tersimpan "YYYY-MM-DD HH:MM" (zona waktu sistem, WIB); tampil "01-Okt-1969 14:30 WIB".
 class DateTime extends Field
 {
     public function __construct(

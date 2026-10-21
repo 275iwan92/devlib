@@ -32,7 +32,7 @@ All 14 come from the shared `Field` base. The full reference is in `x-dl::field.
 | `value` | `mixed`, `null` | Initial value, written to the hidden input as given. Use `yyyy-mm-dd HH:mm` (zero-padded; `T` instead of the space also works). Also see the pitfalls about minutes, seconds and time zones. |
 | `placeholder` | `?string`, `null` | Placeholder of the box; default `—`. |
 | `required` | `bool`, `false` | Red `*` and the `x-dl::form` Save/Confirm check (hidden value empty = "Required"). No HTML `required`; the server must check again. |
-| `disabled` | `bool`, `false` | Disables the box and the calendar button. See the oddity: the hidden input is still posted. |
+| `disabled` | `bool`, `false` | Disables the box, the calendar button and the hidden input, so the value is not posted. |
 | `readonly` | `bool`, `false` | Disables the calendar button (the box is read-only anyway) and gives the root `is-readonly`. The value is still posted. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | `?string`, `null` | Not used by this control (the 📅 button is fixed). |
 | `size` | `string`, `'sm'` | CSS size class only: `sm` or `lg`. |
@@ -49,8 +49,8 @@ Root `.dl-field.dl-field--date-time`, inside it `.dl-field__box.dl-pick[data-dl-
 
 1. Click the box or the 📅 button: the popover opens (the box click simply clicks the button, so it does nothing when the button is disabled).
 2. Click a day: it is only *selected* (the popover stays open and the preview updates). Change hour/minute: the preview updates.
-3. `Apply` writes the hidden input as `yyyy-mm-dd HH:mm`, shows `dd-Mmm-yyyy HH:mm <label>` in the box, closes the popover and fires `change`. If no day is selected, `Apply` uses **today** (the browser's local date).
-4. `Clear` empties the hidden input and the box and closes the popover (no event, see the oddity).
+3. `Apply` writes the hidden input as `yyyy-mm-dd HH:mm`, shows `dd-Mmm-yyyy HH:mm <label>` in the box, closes the popover and fires `change`. If no day is selected, `Apply` uses **today** in the application time zone (as `Today` in `x-dl::field.date`).
+4. `Clear` empties the hidden input and the box and closes the popover and fires `change`.
 
 Closing the popover by clicking outside throws the pending choice away *from the hidden input*, but the selected day stays highlighted and in the preview until the page is reloaded, so the popover can show a selection that was never applied.
 
@@ -60,7 +60,7 @@ The hidden input keeps the value exactly as rendered. The script splits it at th
 
 ### Time zone label
 
-`data-tz-label` comes from `config('devlib.timezone_label')` (default `WIB`), appended to the box text and the preview. The label does not change the posted value. The PHP class comment (`1 Okt 1969, 14:30 WIB`) is outdated; the real text is `01-Okt-1969 14:30 WIB`.
+`data-tz-label` comes from `config('devlib.timezone_label')` (default `WIB`), appended to the box text and the preview. The label does not change the posted value.
 
 ### Language and format
 
@@ -80,9 +80,9 @@ One field `name` with `yyyy-mm-dd HH:mm` after the user applied, or the original
 
 | Event | Target | When |
 |---|---|---|
-| `change` (bubbles) | the hidden `[data-dl-value]` input | `Apply` only. Not fired by `Clear`, nor on load. |
+| `change` (bubbles) | the hidden `[data-dl-value]` input | `Apply` and `Clear`. Not fired on load. |
 
-No `dl:*` event. Because the hidden input is named, `Apply` marks an `x-dl::form` as dirty. `el.dlComponent` on the root `.dl-field` is the shared `Field` instance with no public method for this control.
+No `dl:*` event. Because the hidden input is named, `Apply` and `Clear` mark an `x-dl::form` as dirty. `el.dlComponent` on the root `.dl-field` is the shared `Field` instance with no public method for this control.
 
 ### Markup hooks
 
@@ -101,13 +101,10 @@ No `dl:*` event. Because the hidden input is named, `Apply` marks an `x-dl::form
 - Render stored values as `$model->at?->format('Y-m-d H:i')`; do not pass seconds, `T...Z` or offsets. Convert to the application time zone on the server first: the field does not.
 - Choose a `minute-step` that matches the data. Existing minutes that are not on the step are only *displayed* rounded and stay unchanged in the hidden input until the user applies.
 - The user must press `Apply`; picking a day alone changes nothing. Tell users in the hint when that matters.
-- `Clear` fires no `change`, so a clear alone does not mark the form dirty and any listener on the hidden input misses it.
 - `required` only checks that the hidden value is not empty; whether the time is sensible is a server rule.
 - Accessibility as implemented: the box is a read-only input with a `<label for>`; the 📅 button, day buttons, selects and `Apply`/`Clear` are native controls reachable with Tab; clicking the box opens the popover but there is no key to open it from the box itself, no arrow-key day navigation, no Escape, no focus management and no ARIA state on the button. The hour and minute selects are labelled.
-- Form Undo / `Devlib.h.fillForm` restores the hidden input but has no branch for this control, so the visible text can stay at the old value after Undo (per `setField` in `core.js`). Re-render or reload when you set values from script.
-- Code oddity (not fixed): `disabled` disables the box and the button, but the hidden input is not disabled (`date-time.blade.php`), so a disabled date-time is still posted.
-- Code oddity (not fixed): the same month navigation overflow as in `x-dl::field.date` (`setMonth(± 1)` from the 29th-31st), and `Apply` without a selected day takes the browser's local date instead of the application time zone used by `Today` in `x-dl::field.date`.
-- Code oddity (not fixed): the PHP comment in `DateTime.php` says the display is `1 Okt 1969, 14:30 WIB`; the code shows `01-Okt-1969 14:30 WIB`.
+- Form Undo / `Devlib.fill` write the hidden input and fire `input`; the box, the selected day, the calendar month and the hour/minute selects follow it (an empty value clears the box).
+- Code oddity (not fixed): an existing minute that is not on the `minute-step` is shown rounded in the box (`14:33` shows `14:35`) while the hidden input keeps `14:33`. Either showing the real minute or rounding the hidden value changes what the user sees or what is posted, so it waits for the owner's choice.
 
 ## Example
 

@@ -43,7 +43,7 @@ All 14 come from `Devlib\Components\Field\Field`; the full reference is on `x-dl
 | `value` | Initial value (first handle); `null` = `min`. Pass a number (a numeric string such as `'25'` also works). The browser clamps it to `min..max`. An empty or non-numeric string is treated like `null` (`min`). |
 | `placeholder` | Not used by this control. |
 | `required` | Red `*` only. The slider always has a value, so the form check can never fail. |
-| `disabled` | Disables the range inputs (greyed handles). The hidden inputs stay enabled (see the oddity). |
+| `disabled` | Disables the range inputs (greyed handles). The hidden inputs are disabled too, so the value is not posted. |
 | `readonly` | Also disables the range inputs (a range input has no read-only state), so it looks and behaves like `disabled`, but the value is posted. Root gets `is-readonly`. Forced on while `Field::$readonlyAll` is true. |
 | `icon` | Not used by this control. |
 | `size` | `sm` (default) or `lg`; only the CSS class `dl-field--sm` / `dl-field--lg`. |
@@ -75,7 +75,7 @@ Extra HTML attributes go on the root `div.dl-field`.
 
 ### Script (`Slider` class)
 
-On mount the class finds the range inputs, the hidden inputs and the value text, then runs `u()` once and again on every `input` event of a range input:
+On mount the class finds the range inputs, the hidden inputs and the value text, then runs `u()` once and again on every `input` event of a range input (after `u()` the script fires `input` on the hidden inputs, see Events). An `input` event on a hidden input (`Devlib.fill`, Undo) moves the handles and the text to the written value:
 
 - **Crossing**: with `range`, if the first handle is above the second, the handle being dragged stops at the other one (the second handle cannot go below the first and the first cannot pass the second).
 - **Fill**: the CSS variables `--a` and `--b` (percent positions) paint the coloured part of the rail; the first handle is raised above the second when both are at the far end, so they can be separated again.
@@ -119,10 +119,10 @@ Both are text; read them as numbers and check `min`, `max`, step and that `from 
 
 ### Events and JavaScript
 
-- No `dl:*` event. `el.dlComponent` on the `.dl-slider` element is the `Slider` instance (`ia`, `ib`, `ha`, `hb`, `out`; methods `u()`, `show()`, `pct()`); on the outer `.dl-field` it is the shared `Field` instance.
-- The range inputs emit the native `input` (while dragging) and `change` (on release) events, which bubble to the field. The hidden inputs are written by script and emit nothing. A listener on the root sees the updated hidden values, because the slider handles the event first.
-- The range inputs have no `name`, so moving a slider does **not** mark an `x-dl::form` dirty and the Undo button stays "nothing to undo".
-- To set a value from script, set the range input's `value` and dispatch `input` on it.
+- No `dl:*` event. `el.dlComponent` on the `.dl-slider` element is the `Slider` instance (`ia`, `ib`, `ha`, `hb`, `out`; methods `u()`, `sync()`, `draw()`, `show()`, `pct()`); on the outer `.dl-field` it is the shared `Field` instance.
+- The range inputs emit the native `input` (while dragging) and `change` (on release) events, which bubble to the field. After a range input moves, the script writes the hidden inputs and fires a bubbling `input` on them. A listener on the root sees the updated hidden values, because the slider handles the event first.
+- Moving a slider marks an `x-dl::form` as dirty through the named hidden input (the range inputs themselves have no `name`).
+- To set a value from script, set the range input's `value` and dispatch `input` on it, or write the hidden input and dispatch `input` on that (`Devlib.fill`, Undo and `Devlib.setField` do it; a value outside the `step` grid is posted as written while the handle snaps to the nearest step).
 
 ### Accessibility as implemented
 
@@ -136,7 +136,6 @@ Each handle is a native range input, so role, keyboard operation and (in most br
 - A readonly slider is a disabled one: it looks greyed. Show a calculated value with `x-dl::field.decimal` `readonly` if it should look like text.
 - `ticks` of 5 or 6 reads well on a normal width; labels of many digits crowd on a narrow screen.
 - Use `name-to` when the second value has a name of its own in your model (`:name-to="'price_max'"`).
-- Code oddity (not fixed): (1) `slider.blade.php:6-7` gives the range inputs no `name`, and `slider.js` writes the hidden inputs without an event, so the dirty guard never sees a change (no leave warning, Undo disabled). (2) `slider.blade.php:2-3`: the hidden inputs are not disabled by `disabled`, so a disabled slider is still posted. (3) `Devlib.fill()` / Undo (`core.js:663-677`) set only the first hidden input, so the handle and text keep the old position while the restored value is posted.
 
 ## Example
 

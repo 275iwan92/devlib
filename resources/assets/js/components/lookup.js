@@ -62,6 +62,7 @@
           tr.children[Math.min(1, tr.children.length - 1)].textContent = q;
           $(this.el, '[data-dl-dd-list]').appendChild(tr);
           $(this.el, '[data-dl-value]').value = r[this.el.dataset.key]; $(this.el, '[data-dl-dd-text]').textContent = q; btn.hidden = true; this.p.close();
+          $(this.el, '[data-dl-value]').dispatchEvent(new Event('change', {bubbles: true}));
           this.el.dispatchEvent(new CustomEvent('dl:lookup-create', {bubbles: true, detail: {text: q}}));
           toast(T('lu_added') + ': ' + q);
         });

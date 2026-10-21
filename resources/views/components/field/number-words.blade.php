@@ -1,10 +1,10 @@
 @php($cs = $currencies())
 <div class="dl-words" data-dl-words data-currencies="{{ json_encode($cs) }}" data-decimals="{{ $decimals }}">
-    <input type="hidden" name="{{ $name }}" value="{{ $value }}" data-dl-words-value>
+    <input type="hidden" name="{{ $name }}" value="{{ $value }}" data-dl-words-value @disabled($disabled)>
     @if ($currency)
         <div class="dl-prefix" data-dl-prefix>
-            <input type="hidden" name="{{ $name }}_currency" value="{{ $currency }}" data-dl-prefix-value>
-            <button type="button" class="dl-prefix__btn" @if ($picker) data-dl-dd-toggle @else disabled @endif><span data-dl-prefix-a>{{ $cs[$currency][0] ?? '' }}</span><span data-dl-prefix-b>{{ $currency }}</span></button>
+            <input type="hidden" name="{{ $name }}_currency" value="{{ $currency }}" data-dl-prefix-value @disabled($disabled)>
+            <button type="button" class="dl-prefix__btn" @if ($picker && ! $disabled && ! $readonly) data-dl-dd-toggle @else disabled @endif><span data-dl-prefix-b>{{ $currency }}</span></button>
             <input id="{{ $uid }}" type="text" inputmode="decimal" class="dl-input dl-input--boxed dl-input--prefixed dl-words__input" placeholder="{{ $placeholder ?? '0' }}" data-dl-words-input @disabled($disabled) @readonly($readonly)>
             @if ($picker)
                 <div class="dl-dd__panel" data-dl-dd-panel>

@@ -231,10 +231,7 @@
         const hh = $(this.dtt, '[data-dl-time-h]'), mm = $(this.dtt, '[data-dl-time-m]'), prev = $(this.dtt, '[data-dl-dt-preview]'), tz = this.dtt.dataset.tzLabel || 'WIB';
         const MON = NUM.months;
         const pad = n => String(n).padStart(2, '0');
-        let [d0, t0] = (hidden.value || '').split(/[ T]/);
-        let sel = d0 ? d0 : null;
-        let view = sel ? new Date(sel) : new Date();
-        if (t0) { hh.value = t0.slice(0, 2); const m = Math.round(+t0.slice(3, 5) / +mm.options[1].value) * +mm.options[1].value; mm.value = pad(m % 60); }
+        let sel = null, view = new Date();
         const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
         const label = (ds, h, m) => `${DlDateTime.of(`${ds} ${h}:${m}`)?.display() ?? ''} ${tz}`;  // objek tanggal+jam DevLib
         const preview = () => { prev.textContent = T('fd_selected') + ': ' + (sel ? label(sel, hh.value, mm.value) : '-'); };
@@ -245,19 +242,29 @@
           for (let d = 1; d <= total; d++) { const v = iso(new Date(view.getFullYear(), view.getMonth(), d)); h += `<button type="button" data-d="${v}" class="${v === sel ? 'is-sel' : ''}">${d}</button>`; }
           days.innerHTML = h; preview();
         };
+        // Tampilan dibaca dari hidden (nilai awal, Devlib.fill / Undo). yyyy-mm-dd dibaca sebagai tanggal lokal (new Date(iso) = tengah malam UTC: sehari bergeser di barat UTC).
+        const load = () => {
+          const [d0, t0] = (hidden.value || '').split(/[ T]/), d = DlDate.of(d0);
+          sel = d ? d.iso() : null;
+          view = d ? d.toDate() : new Date();
+          if (t0) { hh.value = t0.slice(0, 2); const step = +mm.options[1].value; mm.value = pad(Math.round(+t0.slice(3, 5) / step) * step % 60); }
+          text.value = sel ? label(sel, hh.value, mm.value) : '';
+        };
         const p = bindPanel(this.dtt, draw);
         days.addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (b) { sel = b.dataset.d; draw(); } });
         [hh, mm].forEach(s => s.addEventListener('change', preview));
-        $(this.dtt, '[data-dl-cal-prev]').addEventListener('click', () => { view.setMonth(view.getMonth() - 1); draw(); });
-        $(this.dtt, '[data-dl-cal-next]').addEventListener('click', () => { view.setMonth(view.getMonth() + 1); draw(); });
-        $(this.dtt, '[data-dl-cal-clear]').addEventListener('click', () => { sel = null; hidden.value = ''; text.value = ''; p.close(); });
+        // Pindah bulan dari tanggal 1: setMonth(±1) dari tanggal 29-31 melompat ke bulan berikutnya.
+        $(this.dtt, '[data-dl-cal-prev]').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); draw(); });
+        $(this.dtt, '[data-dl-cal-next]').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); draw(); });
+        $(this.dtt, '[data-dl-cal-clear]').addEventListener('click', () => { sel = null; hidden.value = ''; text.value = ''; p.close(); hidden.dispatchEvent(new Event('change', {bubbles: true})); });
         $(this.dtt, '[data-dl-dt-apply]').addEventListener('click', () => {
-          if (!sel) { sel = iso(new Date()); }
+          if (!sel) { sel = DlDate.today().iso(); }  // hari ini menurut zona waktu aplikasi, sama dengan Today pada x-dl::field.date
           hidden.value = `${sel} ${hh.value}:${mm.value}`; text.value = label(sel, hh.value, mm.value); p.close();
           hidden.dispatchEvent(new Event('change', {bubbles: true}));
         });
         text.addEventListener('click', () => $(this.dtt, '[data-dl-dd-toggle]').click());
-        if (sel) text.value = label(sel, hh.value, mm.value);
+        hidden.addEventListener('input', load);  // Devlib.fill / Undo menulis hidden lalu menembak input
+        load();
       }
 
       this.tm = $(this.el, '[data-dl-time]');

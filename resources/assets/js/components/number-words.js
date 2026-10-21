@@ -1,7 +1,7 @@
 /* DevLib · NumberWords */
 (function (Devlib) {
   'use strict';
-  const {$, $$, words, fmt, NUM} = Devlib.h;
+  const {$, $$, words, fmt, NUM, fillState} = Devlib.h;
 
   class NumberWords extends Devlib.Component {
     static selector = "[data-dl-words]";
@@ -11,9 +11,20 @@
       this.hid = $(this.el, '[data-dl-words-value]');
       this.out = $(this.el, '[data-dl-words-text]');
       this.cc = $(this.el, '[data-dl-prefix-value]');
-      this.inp.addEventListener('input', this.upd);
-      $$(this.el, '.dl-dd__item').forEach(it => it.addEventListener('click', () => { this.upd(); this.hid.dispatchEvent(new Event('change', {bubbles: true})); }));
-      if (this.hid.value) this.inp.value = String(this.hid.value).replace('.', ',');
+      // Kotak ketik tidak bernama: hidden yang melapor ke dirty-guard; Devlib.fill / Undo menulis hidden lalu menembak input.
+      this.inp.addEventListener('input', () => {
+        this.upd(); this.own = true;
+        this.hid.dispatchEvent(new Event('input', {bubbles: true}));
+        this.own = false;
+      });
+      this.hid.addEventListener('input', () => { if (!this.own) this.sync(); });
+      $$(this.el, '.dl-dd__item').forEach(it => it.addEventListener('click', () => { this.upd(); if (!fillState.on) this.hid.dispatchEvent(new Event('change', {bubbles: true})); }));
+      this.sync();
+    }
+
+    // hidden (titik desimal kanonik) -> kotak ketik dengan pemisah desimal bahasa tampilan.
+    sync() {
+      this.inp.value = String(this.hid.value).replace('.', NUM.dec);
       this.upd();
     }
 

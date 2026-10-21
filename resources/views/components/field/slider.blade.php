@@ -1,6 +1,6 @@
 <div class="dl-slider dl-slider--{{ $orientation }} {{ $range ? 'is-range' : '' }}" data-dl-slider data-format="{{ $format }}" data-kind="{{ $kind() }}" data-start="{{ $start() }}" style="--dl-slider-h:{{ $height }}">
-    <input type="hidden" name="{{ $name }}" data-dl-slider-a>
-    @if ($range)<input type="hidden" name="{{ $nameTo ?: $name.'_to' }}" data-dl-slider-b>@endif
+    <input type="hidden" name="{{ $name }}" data-dl-slider-a @disabled($disabled)>
+    @if ($range)<input type="hidden" name="{{ $nameTo ?: $name.'_to' }}" data-dl-slider-b @disabled($disabled)>@endif
     <div class="dl-slider__track">
         <div class="dl-slider__rail"><div class="dl-slider__fill"></div></div>
         <input id="{{ $uid }}" type="range" class="dl-slider__input" min="{{ $min }}" max="{{ $max }}" step="{{ $step }}" value="{{ $fromValue() }}" aria-label="{{ $label }}{{ $range ? ' '.\Devlib\Lang::text('(from)') : '' }}" @disabled($disabled || $readonly)>

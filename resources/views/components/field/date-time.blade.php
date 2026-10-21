@@ -1,5 +1,5 @@
 <div class="dl-field__box dl-pick" data-dl-datetime data-tz-label="{{ \Devlib\Locale::tzLabel() }}">
-    <input type="hidden" name="{{ $name }}" value="{{ $value }}" data-dl-value>
+    <input type="hidden" name="{{ $name }}" value="{{ $value }}" data-dl-value @disabled($disabled)>
     <input id="{{ $uid }}" type="text" class="dl-input" placeholder="{{ $placeholder ?? '—' }}" data-dl-date-text readonly @disabled($disabled)>
     <button type="button" class="dl-field__trigger" data-dl-dd-toggle title="{{ \Devlib\Lang::text('Pick a date & time') }}" @disabled($disabled || $readonly)>📅</button>
     <div class="dl-pick__panel" data-dl-dd-panel>
