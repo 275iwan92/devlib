@@ -7,6 +7,13 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
 
+## [0.3.0] - 2026-10-21
+
+Rilis ketiga. Satu default = versi terakhir (versi lama dikubur sebagai kode sejarah bertag `history/…`); alur Approval
+dengan Form Approval baku; Nested Grid; halaman OO Methods and Properties (Grid, Form, Kanban); halaman Profile
+(Special Screen); menu profil bisa diringkas lewat `without`. **Merusak:** Menu Classic (`x-dl::shell`, `Shell`,
+cookie `dl_menu`, prop `classic`), Dieline v1/v2, dan prop `:approval`/`:otp-url` pada `x-dl::form` dihapus.
+
 ### Ditambahkan
 
 - **Halaman katalog `p7-profile` (Special Screen)**: merekam panel Profil Layer Menu (header + aksi akun) sebagai contoh, bentuk bawaan penuh, data fiktif; tabel item dibaca dari `LayerShell::actions()`. Belum APPROVED; tanpa perubahan komponen.

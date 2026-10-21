@@ -78,6 +78,7 @@ disukai, versi sebelumnya diduplikasi menjadi versi baru dan itu default). Rinci
 | tag lama (satu-satunya sebelum ini) | `b9f127b` | penanda titik pemisahan dari proyek induk lama; bukan rilis, dibiarkan |
 | `v0.1.0` | `75773cc` (commit yang memuat dokumen ini) | keadaan repo mandiri pertama: komponen, engine, Assistant/Chat, PrintDoc, Lint, manifest, skill modular, situs acuan |
 | `v0.2.0` | commit rilis 2026-10-21 | menu katalog 5 bagian + Grid and Form, Technical Guide, kebijakan data dan pengindeks Assistant; **merusak:** `x-dl::master` dan Mode Developer dihapus |
+| `v0.3.0` | commit rilis 2026-10-21 | satu default = versi terakhir (Menu Classic dan Dieline v1/v2 dikubur), alur Approval + Form Approval baku, Nested Grid, halaman OO dan Profile, menu profil `without`; **merusak:** `x-dl::shell`, prop `classic`, `:approval`/`:otp-url` dihapus |
 
 Tidak ada tag mundur di riwayat lama: sebelum `b095b3a` (repo mandiri) tidak
 ada tonggak yang jelas, hanya rangkaian kerja bersama proyek induk lama.
