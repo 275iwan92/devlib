@@ -1,0 +1,35 @@
+# CLAUDE.md: DevLib (jo/devlib)
+
+> Aturan kerja dari Jo (pemilik). Dibaca otomatis oleh setiap sesi yang berjalan di folder ini.
+> Bahasa jawaban ke Jo: Indonesia, pendek, jujur. Jo cepat lelah dengan laporan panjang: sebut hasil, lalu keputusan yang ia butuhkan (ya / tidak / pilih A atau B).
+
+## 1. Tujuan DevLib
+DevLib menciptakan **aturan baku dan object untuk DIWARISKAN** ke proyek lain. Setiap keputusan diuji dua pertanyaan: (1) aturan baku atau object yang diwariskan? (2) dipakai proyek nyata? Jika tidak, bukan tempatnya.
+Aturan sumber ada di `skills/devlib/*.md` (mulai `SKILL.md`; membangun object: `object.md`). Katalog menampilkannya; jangan menduplikasi.
+
+## 2. Sebelum mengubah apa pun yang terlihat (UI/UX, warna, menu, tema, halaman katalog)
+1. **PREVIEW dulu.** Tampilkan tangkapan layar (sebelum, dan sesudah bila mungkin) + penjelasan singkat: apa yang berubah, di halaman/menu mana, dan apa yang TIDAK berubah. Kerjakan setelah Jo menyetujui. Tidak setuju: batalkan.
+2. **Banyak kemungkinan sasaran = sebut daftarnya dan tanya mana.** Contoh: ada dua menu (Layer Menu dan Menu Classic), banyak halaman, banyak tema, default situs vs pengaturan browser Jo. Jangan memilih sendiri.
+3. **Ulangi permintaan dalam satu kalimat** (apa, di mana, berlaku untuk siapa, apa yang tidak diubah) sebelum mengerjakan.
+4. **Uji di tampilan yang Jo lihat:** Chrome Jo (Claude in Chrome, tab baru) selain browser bawaan. Pengaturan tersimpan di browser Jo (`localStorage dl-theme`, `dl-density`, `dl-font-scale`, cookie `dl_menu`, `dl_lang`) menimpa bawaan situs, jadi periksa itu. Jangan menilai dari "tes lulus" saja.
+5. Halaman di `Catalog::APPROVED` (terutama yang bertanda DIKUNCI, mis. `p5-grid-tx`) tidak diubah tampilan/perilakunya tanpa persetujuan eksplisit Jo.
+
+## 3. Versi yang dipakai
+- **Layer Menu (panel kiri) adalah menu utama (v2).** Menu Classic (modul di atas) adalah versi lama (v1): jangan dipakai, diubah, atau dijadikan acuan kecuali Jo menyebutnya.
+- Bila ada dua versi sebuah layar/komponen, versi terbaru yang dipakai dan diuji. Versi lama dihapus atau dipindahkan hanya atas persetujuan Jo, dan semua tautan diarahkan ke versi terbaru.
+
+## 4. Git dan penghapusan
+- **Jangan push, jangan menulis ulang riwayat, jangan menghapus berkas/folder/branch** sebelum Jo menyetujui secara eksplisit. Setelah disetujui, kerjakan sampai tuntas.
+- Banyak sesi menulis di folder yang sama: jalankan `git status` dulu; commit hanya jalur sendiri `git commit --only -m "..." -- <jalur>` (berkas baru: `git add -N` dulu); cek `git show --stat`. Pesan commit Indonesia, akhiri dengan trailer yang ditetapkan sesi.
+- Tag rilis hanya atas keputusan Jo (lihat `docs/versioning.md`).
+
+## 5. Keamanan dan netralitas
+- Netral: tanpa kode `App\` milik proyek di `src/`, tanpa nama client/proyek, tanpa nama asli atau login orang sungguhan di berkas (contoh fiktif). Perubahan library **opt-in**: perilaku proyek lama tidak berubah; periksa pemakaian di proyek pewaris sebelum menghapus.
+- Assistant AI: gaji, payroll, formula HPP, data pribadi, dan orang terlindung tidak pernah disentuh (`skills/devlib/assistant.md`).
+- Jangan memasukkan kata sandi atau kredensial ke bidang mana pun.
+
+## 6. Cara kerja
+- Pekerjaan panjang atau berisiko dikerjakan di **sesi terpisah** agar percakapan utama bebas untuk diskusi; laporkan ringkas, lalu tutup sesi yang selesai.
+- Baca dokumen/kode dulu, jangan menebak. Ragu atau lebih dari satu tafsir: sebut pilihannya dan tanya.
+- Iterasi kecil: satu layar atau fitur per waktu.
+- Uji sendiri: `cd site; php artisan test`, `php artisan devlib:lint` (0 error), `php artisan devlib:manifest --check`, dan buka halaman di browser. Windows: `php` lewat PowerShell (`C:\Users\iwanp\.config\herd\bin\php.bat`); `--filter=A|B` rusak di php.bat, satu filter per perintah.
