@@ -2,7 +2,7 @@
 
 /*
  * REMARK
- * Tujuan       : Ikon kecil </> di pojok layar (Mode Developer): klik -> jendela berisi.
+ * Tujuan       : Ikon kecil </> di pojok layar: klik -> jendela berisi.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
  * Input        : code, file, classes, mockupUrl.
  * Output       : Markup dari resources/views/components/code-button.blade.php.
@@ -18,7 +18,7 @@ use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionUnionType;
 
-// Ikon kecil </> di pojok layar (Mode Developer): klik -> jendela berisi
+// Ikon kecil </> di pojok layar: klik -> jendela berisi
 // kode pemakaian layar ini, properti tiap komponen (dibaca dari constructor
 // class, jadi tak pernah basi), dan rantai induknya.
 class CodeButton extends DevlibComponent

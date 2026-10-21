@@ -1,5 +1,5 @@
 {{-- Halaman Aturan: tampilan langsung skills/devlib/<doc>.md (App\Support\RulesDocs), bukan salinan. Tanpa demo, ikon </> dan bilah QC. --}}
-@extends('layout', ['title' => $page['label'], 'dev' => true, 'bodyClass' => 'dl-page-body'])
+@extends('layout', ['title' => $page['label'], 'bodyClass' => 'dl-page-body'])
 @section('body')
     <div class="dl-cat">
         <div class="dl-cat__nav">

@@ -8,8 +8,8 @@ use Illuminate\Support\HtmlString;
 use Illuminate\View\Component;
 
 // Induk SEMUA komponen DevLib. Tiap turunan otomatis membawa "KTP" (atribut
-// data-dl) = nama komponen + rantai induknya + sumber datanya, yang dibaca
-// Mode Developer (devlib.js) untuk tooltip asal-usul objek.
+// data-dl) = nama komponen + rantai induknya + sumber datanya; data-dl dipakai
+// link judul ke Technical Guide (devlib.js).
 abstract class DevlibComponent extends Component
 {
     // Nama tag, mis. "x-dl::login".
@@ -88,7 +88,7 @@ abstract class DevlibComponent extends Component
 
     // Kelompok pesan di Translation Dictionary (pohon kiri ala ScriptCase, user 2026-10-03): teks yang pertama kali tampil
     // lewat komponen ini tercatat di kelompok tersebut. Turunan boleh menimpa dictionaryGroup(); null = kelompok umum.
-    private const GROUP_OF = [
+    public const GROUP_OF = [
         'buttons' => ['Button', 'IconButton', 'SplitButton', 'MenuButton', 'BackButton', 'CodeButton', 'ActionBar'],
         'grid' => ['Grid', 'LookupGrid', 'Sheet', 'Table', 'Pivot', 'Report', 'Pagination', 'Coverage', 'Drilldown', 'PickMatrix', 'Lines', 'Kanban', 'Gantt'],
         'form' => ['Form', 'ActionForm', 'Wizard', 'Field', 'Import', 'Approval', 'CodeChain'],
@@ -101,12 +101,22 @@ abstract class DevlibComponent extends Component
     {
         $chain = [static::class, ...array_values(class_parents($this))];
         foreach ($chain as $class) {
-            $name = substr($class, strrpos($class, '\\') + 1);
-            $name = str_contains($class, '\\Components\\Field\\') ? 'Field' : (str_contains($class, '\\Components\\Wizard\\') ? 'Wizard' : $name);
-            foreach (self::GROUP_OF as $group => $classes) {
-                if (in_array($name, $classes, true)) {
-                    return $group;
-                }
+            if ($group = self::groupOf($class)) {
+                return $group;
+            }
+        }
+
+        return null;
+    }
+
+    // Kelompok satu kelas (tanpa menelusuri induknya): dipakai kamus terjemahan dan Technical Guide (Devlib\Guide).
+    public static function groupOf(string $class): ?string
+    {
+        $name = substr($class, strrpos($class, '\\') + 1);
+        $name = str_contains($class, '\\Components\\Field\\') ? 'Field' : (str_contains($class, '\\Components\\Wizard\\') ? 'Wizard' : $name);
+        foreach (self::GROUP_OF as $group => $classes) {
+            if (in_array($name, $classes, true)) {
+                return $group;
             }
         }
 
@@ -185,15 +195,11 @@ abstract class DevlibComponent extends Component
     // Dipakai di elemen akar view: <div {!! $dl() !!}>.
     public function dl(): string
     {
-        $lint = '';
-        if ((\Devlib\Lint\Lint::on() || config('app.debug')) && $found = $this->lint()) {
-            \Devlib\Lint\Lint::on() && \Devlib\Lint\Lint::record($found);
-            // Hanya untuk Mode Developer saat debug; produksi tidak berubah.
-            config('app.debug') && $lint = ' data-dl-lint="'.e(implode(' | ', array_map('strval', $found))).'"';
-        }
+        // Temuan aturan hanya dicatat untuk `php artisan devlib:lint`; tidak ada yang ditampilkan di layar.
+        \Devlib\Lint\Lint::on() && ($found = $this->lint()) && \Devlib\Lint\Lint::record($found);
 
         return 'data-dl="'.e($this->tag()).'" data-dl-class="'.e($this->lineage()).'" data-dl-src="'.e($this->source()).'"'
-            .($this->jsClass() ? ' data-dl-js="'.e($this->jsClass()).'"' : '').$lint;
+            .($this->jsClass() ? ' data-dl-js="'.e($this->jsClass()).'"' : '');
     }
 
     // Temuan penegak aturan baku (Devlib\Lint) untuk konfigurasi komponen ini; kosong = tidak ada aturan / patuh.

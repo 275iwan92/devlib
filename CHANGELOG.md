@@ -9,6 +9,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Technical Guide semua object** (pengganti Mode Developer): `Devlib\Guide` menyusun satu halaman HTML English berisi SEMUA object `x-dl::*` (tag, kelas, berkas, prop + tipe + bawaan otomatis dari `Manifest`, ditambah rincian tulisan tangan `resources/guide/<tag>.md` dengan tujuh bagian baku dan semua prop dijelaskan). Halaman = route `devlib.guide` (`/_devlib-guide`, opt-in lewat `config('devlib.guide_middleware')`; `config('devlib.guide_url')` untuk halaman sendiri), dibuka dari menu Help. Judul form/kartu/wizard/flow dan lain-lain, ikon info di toolbar grid, serta nama object di halaman katalog menautkan entri object itu (`guide-link.js`, `window.DL_GUIDE` dari `x-dl::theme-boot`; tanpa URL = tanpa link, proyek lama tidak berubah). Rincian tahap 1: `grid` dan `form`; object lain tercatat di `resources/guide/PENDING.txt` (hanya boleh menyusut; `GuideContractTest` mewajibkan rincian untuk object baru).
 - **Menu katalog 5 bagian** (situs acuan; slug lama utuh, tanpa halaman lama baru di `APPROVED`). Bagian tampil sebagai judul kelompok di akar Layer Menu:
   Foundations & Rules (Basics & Themes, Global Behaviors, Rules), Components (Inputs & Buttons, Display & Feedback, Widgets & Utilities),
   Screen (Grid and Form, Charts & Dashboards, Schedule, Print & Report, Special Screen [Warehouse, Chat], Shell, Account & Security), Flow, Engine.
@@ -91,6 +92,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Dihapus
 
+- **Merusak:** **Mode Developer** (F10, saklar `x-dl::dev-toggle`, kotak asal-usul objek, garis merah objek non-library, tampilan temuan lint di layar) dihapus beserta prop `developer` di `x-dl::shell`/`x-dl::layer-shell`, prop `table`/`record-id` di `x-dl::meta`, dan atribut `data-dl-lint`. Gantinya Technical Guide (lihat Ditambahkan). Temuan aturan tetap lewat `php artisan devlib:lint`.
 - **Halaman katalog Grid Variant** (`p5-grid-variant`, 2026-10-21, atas permintaan pemilik; akan diganti Nested Grid) beserta enam demonya (`grid-master-detail`, `grid-status`, `grid-photos`,
   `grid-mix`, `grid-sheet`, `grid-coverage`). Komponen `x-dl::sheet`, `x-dl::coverage`, dan `x-dl::grid` tidak berubah; hanya halaman demonya yang hilang.
 

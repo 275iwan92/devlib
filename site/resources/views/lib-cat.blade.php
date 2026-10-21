@@ -1,5 +1,9 @@
-@extends('layout', ['title' => $page['label'], 'dev' => true, 'bodyClass' => 'dl-page-body'])
+@extends('layout', ['title' => $page['label'], 'bodyClass' => 'dl-page-body'])
 @section('body')
+    {{-- Nama object = link ke entri Technical Guide (kosong bila guide tidak aktif). --}}
+    @php
+        $ref = fn (string $tag) => ($g = \Devlib\Guide::url()) ? '<a class="dl-guide-link" href="'.e($g.'#'.\Devlib\Guide::anchor($tag)).'" target="_blank" rel="noopener">'.e($tag).'</a>' : e($tag);
+    @endphp
     {{-- Pesan sekali dari alur Grid -> Form (Simpan, Hapus, Confirm ...): dijadikan toast oleh boot.js. --}}
     @if (session('flow_flash'))<div hidden data-dl-flash="{{ session('flow_flash')[0] }}">{{ session('flow_flash')[1] }}</div>@endif
     <div class="dl-cat">
@@ -24,14 +28,14 @@
             @endphp
             <section class="dl-cat__item" id="{{ $slug }}">
                 @if ($mode === null)
-                    <h2>{{ $label }} <code>{{ $objects->pluck(0)->implode(' · ') }}</code></h2>
+                    <h2>{{ $label }} @foreach ($objects as [$tag])<code>{!! $ref($tag) !!}</code> @endforeach</h2>
                     @include('demos.'.$slug, $data)
                 @else
                     {{-- Kelompok per jenis data (user 2026-10-05): nama object + layar dibelah ReadWrite | ReadOnly. --}}
                     <div class="dl-cat__head">
                         <h2>{{ $label }}</h2>
                         @foreach ($objects as [$tag, $class])
-                            <span class="dl-cat__obj"><code>{{ $tag }}</code><small>{{ $class }}</small></span>
+                            <span class="dl-cat__obj"><code>{!! $ref($tag) !!}</code><small>{{ $class }}</small></span>
                         @endforeach
                     </div>
                     @if ($mode === 'wide')

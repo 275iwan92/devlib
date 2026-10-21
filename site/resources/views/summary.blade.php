@@ -1,6 +1,6 @@
 {{-- Executive Summary devlib.test (user 2026-10-05): sembilan halaman, satu berkas. Angka = build.json (katalog DevLib sendiri), daftar hasil
      kerja + rating = database devlib (App\Support\Summary). Disusun dari objek x-dl::*. --}}
-@extends('layout', ['title' => $label, 'dev' => true, 'bodyClass' => 'dl-page-body'])
+@extends('layout', ['title' => $label, 'bodyClass' => 'dl-page-body'])
 @php
     $t = $build['totals'] ?? [];
     $n = fn ($v, $d = 0) => $v === null ? '-' : \Devlib\Locale::number((float) $v, $d);

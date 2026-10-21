@@ -1,6 +1,6 @@
 {{-- Agent History devlib.test (user 2026-10-07): catatan pengingat user. Ringkasan laporan agen Iwan / Jo, keputusan, catatan dan
      tautan Artifact. Aturan = App\Support\AgentHistory, tabel dev_note di database devlib. Disusun dari objek x-dl::*. --}}
-@extends('layout', ['title' => 'Historical', 'dev' => true, 'bodyClass' => 'dl-page-body'])
+@extends('layout', ['title' => 'Historical', 'bodyClass' => 'dl-page-body'])
 @php
     use App\Support\AgentHistory;
     use Devlib\Lang;

@@ -129,7 +129,7 @@ Jam + tanggal berjalan menurut zona waktu SISTEM (default Asia/Jakarta = WIB), i
 - Prop: mode:string='clock', timezone:?string=NULL, tzLabel:?string=NULL
 
 ## `<x-dl::code-button>`
-Ikon kecil </> di pojok layar (Mode Developer): klik -> jendela berisi.
+Ikon kecil </> di pojok layar: klik -> jendela berisi.
 - Berkas: `src/Components/CodeButton.php`, tampilan `resources/views/components/code-button.blade.php`
 - Prop: code:string='', file:string='', classes:array=[], mockupUrl:?string=NULL
 
@@ -162,11 +162,6 @@ Opening screen setelah login (Beranda): salam + jam + cuaca, tombol Job Descript
 Jejak pengiriman skematis (SVG, tanpa peta): gudang -> pelanggan, truk bergerak di sepanjang rute dan berhenti di titik.
 - Berkas: `src/Components/DeliveryTrack.php`
 - Prop: stage:string='draft', from:string='Warehouse', to:string='Customer', position:?float=NULL, times:array=[], title:string='', subtitle:string=''
-
-## `<x-dl::dev-toggle>`
-Saklar Mode Developer (tooltip asal-usul objek + tanda merah objek non-library). Hanya untuk admin/developer.
-- Berkas: `src/Components/DevToggle.php`
-- Prop: floating:bool=true
 
 ## `<x-dl::device-frame>`
 Bingkai pratinjau Laptop / Tablet (768px) / Smartphone (390px) dari mockup form.
@@ -526,7 +521,7 @@ Menu panel kiri berlapis (layer 1 modul -> layer 2 menu -> layer 3 sub -> layer 
 ## `<x-dl::layer-shell>`
 Kerangka aplikasi dengan navigasi x-dl::layer-menu di kiri dan TANPA top bar. Tab MDI, laci, modal.
 - Berkas: `src/Components/LayerShell.php`, tampilan `resources/views/components/layer-shell.blade.php`
-- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', developer:bool=false, chat:array=[], open:?string=NULL, classic:bool=true, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[]
+- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, classic:bool=true, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[]
 
 ## `<x-dl::lines>`
 Tabel baris item dokumen (detail dari Master-Detail: PO, PR, CO, Stock In, ...).
@@ -574,9 +569,9 @@ Tombol + daftar pilihan (dropdown) -- mis. Print ▾ / Email ▾ bila satu form 
 - Prop: items:array=[], preset:?string=NULL, label:string='', icon:?string=NULL, variant:string='secondary', size:string='md'
 
 ## `<x-dl::meta>`
-Info rekaman: dibuat/diubah oleh siapa & kapan (WIB), asal data. Mode Developer menampilkan tabel & ID.
+Info rekaman: dibuat/diubah oleh siapa & kapan (WIB), asal data.
 - Berkas: `src/Components/Meta.php`
-- Prop: createdBy:?string=NULL, createdAt:mixed=NULL, updatedBy:?string=NULL, updatedAt:mixed=NULL, origin:?string=NULL, table:?string=NULL, recordId:mixed=NULL
+- Prop: createdBy:?string=NULL, createdAt:mixed=NULL, updatedBy:?string=NULL, updatedAt:mixed=NULL, origin:?string=NULL
 
 ## `<x-dl::modal>`
 Jendela modal. Dibuka tombol ber-atribut data-dl-open="<id>" atau Devlib.modal.open(id). Slot "footer" = tombol bawah.
@@ -706,7 +701,7 @@ Grid sel mirip spreadsheet; mendukung links (sel terhitung), reasonOnSave, reord
 ## `<x-dl::shell>`
 kerangka aplikasi setelah login (sidebar, mega menu modul, tab MDI, Ctrl+K, laci); induk LayerShell.
 - Berkas: `src/Components/Shell.php`, tampilan `resources/views/components/shell.blade.php`
-- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', developer:bool=false, chat:array=[], open:?string=NULL, classic:bool=true, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[]
+- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, classic:bool=true, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[]
 
 ## `<x-dl::side-menu>`
 Menu panel samping (kiri ATAU kanan). Mode lebar: akordeon bertingkat (grup -> sub -> item), cari (buka otomatis.

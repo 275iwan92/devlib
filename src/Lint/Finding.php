@@ -3,7 +3,7 @@
 namespace Devlib\Lint;
 
 // Satu temuan penegak aturan baku: kode stabil, pesan, tingkat (error = melanggar aturan baku, warn = menyimpang/perlu dicek, info = saran).
-// Dipakai oleh: GridRules, FormRules, ViewLinter, perintah devlib:lint, dan Mode Developer (data-dl-lint).
+// Dipakai oleh: GridRules, FormRules, ViewLinter, dan perintah devlib:lint.
 final class Finding
 {
     public const ERROR = 'error';

@@ -43,6 +43,13 @@ class DevlibServiceProvider extends ServiceProvider
             ->get('/_devlib-lookup/{name}', fn (Request $r, string $name) => response()->json(
                 Lookup::search($name, (string) $r->query('q', ''), $r->except('q'))))
             ->where('name', '[A-Za-z0-9_-]+')->name('devlib.lookup');
+
+        // Technical Guide semua object (opt-in): aktif bila config devlib.guide_middleware diisi (mis. ['web', 'auth']); null = tidak ada route.
+        if (config('devlib.guide_middleware') !== null) {
+            Route::middleware(config('devlib.guide_middleware'))
+                ->get('/_devlib-guide', fn () => view('devlib::guide', ['families' => Guide::byFamily()]))
+                ->name('devlib.guide');
+        }
     }
 
     // URL asset() selalu berversi (?v=), jadi isinya tidak berubah selama versinya sama -> cache selamanya; tanpa ?v= tetap diperiksa ulang.

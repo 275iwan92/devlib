@@ -16,7 +16,7 @@ Status: aktif.
     <x-dl::theme-boot />
     <script src="{{ \Devlib\DevlibServiceProvider::asset('devlib.js') }}" defer></script>
 </head>
-<body class="dl-body {{ $bodyClass ?? '' }}" @if ($dev ?? false) data-dl-dev="1" @endif>
+<body class="dl-body {{ $bodyClass ?? '' }}">
     @yield('body')
 </body>
 </html>

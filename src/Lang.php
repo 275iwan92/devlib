@@ -412,16 +412,11 @@ final class Lang
         'ph_too_short' => ['Terlalu pendek: minimal {n} digit setelah {dial}', 'Too short: at least {n} digits after {dial}'],
         'pv_source_rows' => ['{n} baris sumber', '{n} source rows'],
         'sl_days' => ['{n} hari', '{n} days'],
-        // Teks JS inti (mode developer, pintasan, alasan), dipindah 2026-10-02.
-        'dev_pct' => ['{n}% objek dari library', '{n}% of the objects come from the library'],
-        'dev_hover' => ['Arahkan mouse ke objek…', 'Point the mouse at an object…'],
-        'dev_not_lib' => ['BUKAN dari library', 'NOT from the library'],
-        'dev_element' => ['elemen', 'element'],
+        // Teks JS inti (pintasan, alasan), dipindah 2026-10-02.
         'reason_required' => ['Alasan wajib diisi.', 'A reason is required.'],
         'sc_search' => ['Cari menu / perintah', 'Search a menu / command'],
         'sc_esc' => ['Tutup modal / drawer / popup', 'Close the modal / drawer / popup'],
         'sc_help' => ['Bantuan & dukungan (pedoman + tiket)', 'Help & support (guide + tickets)'],
-        'sc_dev' => ['Mode Developer nyala / mati (admin)', 'Developer Mode on / off (admin)'],
         'sc_list' => ['Tampilkan daftar pintasan ini', 'Show this list of shortcuts'],
         // Toolbar Grid / Permission Matrix / Sheet: teks Blade yang dulu Indonesia mentah (2026-10-02).
         'g_group' => ['Grup', 'Group'], 'g_cols_shown' => ['Kolom tampil', 'Columns shown'], 'g_group_by' => ['Kelompokkan menurut', 'Group by'],
@@ -442,8 +437,6 @@ final class Lang
         'ds_email_failed' => ['Email gagal', 'Email failed'],
         'ds_failed' => ['Gagal', 'Failed'],
         // Teks JS yang tertangkap setelah daftar kata penjaga diperluas (2026-10-02).
-        'dev_class' => ['turunan', 'class'],
-        'dev_source' => ['sumber data', 'data source'],
         'cf_title' => ['Konfirmasi', 'Confirm'],
         'cf_message' => ['Lanjutkan?', 'Continue?'],
         'cf_ok' => ['Ya, lanjutkan', 'Yes, continue'],
@@ -463,8 +456,6 @@ final class Lang
         'nt_tip' => ['Desimal: tanpa / 2 / 4 / kalkulator mini', 'Decimals: none / 2 / 4 / mini calculator'],
         'case_tip' => ['Ganti huruf: kecil / Kapital Tiap Kata / BESAR', 'Change case: lower / Title Case / UPPER'],
         'qr_title' => ['QR Code Isi Form', 'Form QR Code Data'],
-        'dev_mode' => ['Mode Developer', 'Developer Mode'],
-        'dev_f10_off' => ['F10 = mati', 'F10 = off'],
         'f_choose' => ['Pilih...', 'Choose...'],
         'a_n_levels' => ['{n} level approval', '{n} approval levels'],
         'a_done_hold' => ['{no} ditahan.', '{no} is on hold.'],

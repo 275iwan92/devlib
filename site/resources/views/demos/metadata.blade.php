@@ -6,5 +6,4 @@
         </x-dl::form.row>
         <x-dl::meta created-by="Andi Pratama" created-at="2026-09-20 08:15" updated-by="Siti Rahma" updated-at="2026-09-23 14:02" origin="DUMMY" table="purchase.po_order" :record-id="1" />
     </x-dl::card>
-    <p class="dl-note">Nama tabel & ID rekaman hanya tampil saat Mode Developer menyala.</p>
 </div>

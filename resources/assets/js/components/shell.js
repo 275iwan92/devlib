@@ -9,7 +9,7 @@
 /* DevLib · Shell */
 (function (Devlib) {
   'use strict';
-  const {$, $$, esc, typeIcon, HOME, setDevMode, toast, T, Tf, CASES, CASE_LABEL, applyCase} = Devlib.h;
+  const {$, $$, esc, typeIcon, HOME, toast, T, Tf, CASES, CASE_LABEL, applyCase} = Devlib.h;
 
   // Kerangka aplikasi = kerangka kerja (tab MDI, konten, laci, modal, palet Ctrl+K, asisten AI) + navigasi.
   // Shell = navigasi Classic (mega menu + sidebar + top bar). Turunan menimpa initNav() & markActiveLeaf().
@@ -36,7 +36,7 @@
       document.addEventListener('dl:help', () => this.command('help'));
       window.addEventListener('message', e => {
         if (e.origin !== location.origin) return;
-        if (e.data?.dl === 'help') this.command('help');
+        if (e.data?.dl === 'help') this.openHelp(e.data.hash);
         // Help map "Open screen": open the item as a work tab and keep the Help window open, floating so both are visible.
         else if (e.data?.dl === 'open-item') {
           const w = this.wideDrawer('help')?.dlComponent, d = e.data;
@@ -225,7 +225,6 @@
       else if (a === 'edit' || a === 'pass') $(this.el, `[data-dl-modal="${a}"]`).classList.add('is-on');
       else if (a === 'palette') this.openPalette();
       else if (a === 'home') this.goHome();
-      else if (a === 'devmode') setDevMode(!document.body.classList.contains('dl-dev'));
       else if (a === 'help') this.openHelp();
       else if (a === 'menu-layer' || a === 'menu-classic') this.switchMenu(a.slice(5));
       // Logout (user 2026-10-03): semua tab ditutup dan menu kembali ke lapis utama, login berikutnya mendarat di opening screen.
@@ -275,7 +274,7 @@
         const fl = e.target.closest('[data-dl-lang]');
         if (fl) { $$(this.userMenu, '.dl-um-flag').forEach(x => x.classList.remove('is-active')); fl.classList.add('is-active'); toast(T('language') + ': ' + (fl.dataset.dlLang === 'id' ? 'Indonesia' : 'English')); return; }
         const b = e.target.closest('[data-dl-um]'); if (!b) return;
-        if (b.dataset.dlUm !== 'devmode') this.userMenu.classList.remove('is-open');
+        this.userMenu.classList.remove('is-open');
         this.command(b.dataset.dlUm);
       });
 
@@ -289,10 +288,16 @@
     }
 
     // Bantuan = tab biasa (bukan item menu): didaftarkan sekali sebagai item HELP lalu dibuka seperti menu.
-    openHelp() {
+    // hash = anchor entri object di Technical Guide (link judul, guide-link.js): tab Bantuan sudah terbuka -> hanya pindah anchor.
+    openHelp(hash) {
       const url = this.el.dataset.dlHelp;
       if (!url) { toast(T('sh_help_soon')); return; }
-      this.openUrlTab('HELP', T('sh_help'), url, 'fa-solid fa-circle-question');
+      const fr = this.openTabs.get('HELP')?.pane.querySelector('iframe');
+      if (!fr) this.openUrlTab('HELP', T('sh_help'), hash ? url.split('#')[0] + '#' + hash : url, 'fa-solid fa-circle-question');
+      else {
+        this.openTab('HELP');
+        if (hash) { try { fr.contentWindow.location.hash = hash; } catch (e) {} }
+      }
     }
 
     // Halaman profil bernama (mis. tiket bantuan): Shell Classic tidak punya halaman profil -> Bantuan. LayerShell menimpa.

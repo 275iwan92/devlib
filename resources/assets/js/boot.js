@@ -7,7 +7,7 @@
   window.DevlibReady = {push: fn => fn(Devlib)};
   ready.forEach(fn => fn(Devlib));
   document.addEventListener('DOMContentLoaded', () => {
-    Devlib.initDevMode();
+    Devlib.guideLinks();
     // Pesan satu kali dari server sesudah pindah layar (Simpan lalu kembali ke grid): <div hidden data-dl-flash="success|danger|warn|info">teks</div>; lihat skills/devlib/grid-form-flow.md.
     document.querySelectorAll('[data-dl-flash]').forEach(el => { Devlib.toast(el.textContent.trim(), el.dataset.dlFlash || 'info'); el.remove(); });
     // data-dl-fresh="1" (Shell sesudah login baru): tab lama dan posisi Layer Menu dibuang sebelum komponen dipasang.
@@ -38,7 +38,6 @@
     Devlib.mountOne("Counter");
     Devlib.mountOne("Back");
     Devlib.mountOne("Notif");
-    Devlib.mountOne("DevToggle");
     Devlib.mountOne("LoginBox");
     Devlib.mountOne("Code");
     Devlib.mountOne("Grid");

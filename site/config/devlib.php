@@ -57,6 +57,9 @@ return [
     // Route pencarian Lookup remote (/_devlib-lookup/{name}).
     'lookup_middleware' => ['web', 'devlib.auth'],
 
+    // Technical Guide semua object (/_devlib-guide, menu Help): untuk semua akun yang sudah masuk; judul form/grid/kartu menautkannya.
+    'guide_middleware' => ['web', 'devlib.auth'],
+
     'abilities' => ['po.*', 'devlib.*'],
 
     // Back pada form selalu ke alamat :back (grid modul), bukan history.back() (skills/devlib/form.md, grid-form-flow.md; lint F102).

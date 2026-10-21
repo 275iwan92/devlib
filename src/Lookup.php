@@ -9,7 +9,7 @@ namespace Devlib;
 //   key     : kolom nilai tersimpan      label : kolom teks tampil
 //   columns : kolom yang tampil & bisa dicari di daftar pilihan
 //   fill    : nama field lain => kolom sumber (isi otomatis saat dipilih)
-//   source  : asal data (ditampilkan Mode Developer)
+//   source  : asal data
 // Data besar (ribuan baris, mis. product / wilayah): cari ke server, baris tidak ditanam di halaman.
 //   search  : fn (string $q, array $ctx): iterable baris   (dipanggil route devlib.lookup, min. 2 huruf, maks. 50 baris)
 //   find    : fn ($value): ?array baris   (teks nilai yang sudah tersimpan)

@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : kerangka aplikasi setelah login (sidebar, mega menu modul, tab MDI, Ctrl+K, laci); induk LayerShell.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : modules, user, brand, tagline, logo, logoutAction, menuSource, developer, chat, open, … (18 prop).
+ * Input        : modules, user, brand, tagline, logo, logoutAction, menuSource, chat, open, … (17 prop).
  * Output       : Markup dari resources/views/components/shell.blade.php.
  * Dipakai oleh : layar proyek lewat x-dl::shell.
  * Status       : Aktif (DevLib).
@@ -49,7 +49,6 @@ class Shell extends DevlibComponent
         public ?string $logo = null,
         public string $logoutAction = '',
         public string $menuSource = 'sys_app_menu',
-        public bool $developer = false,
         public array $chat = [],
         public ?string $open = null,
         // false = pilihan tukar ke Menu Classic disembunyikan (situs ERP v2 hanya Layer Menu; Classic tetap ada di katalog DevLib).

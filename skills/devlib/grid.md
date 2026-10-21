@@ -1,6 +1,6 @@
 # DevLib: aturan baku Grid
 
-Aturan penuh `x-dl::grid`; ditegakkan kode oleh `Devlib\Lint\GridRules` (`php artisan devlib:lint`, Mode Developer). Prop & tipe kolom: komentar kepala `src/Components/Grid.php` / `components.md`.
+Aturan penuh `x-dl::grid`; ditegakkan kode oleh `Devlib\Lint\GridRules` (`php artisan devlib:lint`). Prop & tipe kolom: komentar kepala `src/Components/Grid.php` / `components.md`.
 
 Dua grid entry: **`kind="master"`** dan **`kind="transactional"`** — `kind` mengatur `actions` dan gaya kolom pertama otomatis (kolom pertama master = `box`, transaksional = polos; `type => doc` lama ikut jadi polos). Tulis `kind`, tidak perlu `actions`/`box`/`avatar` manual. Tanpa `kind` = perilaku lama. Report tetap `mode="report"`.
 

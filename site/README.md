@@ -6,7 +6,7 @@ Aplikasi Laravel mandiri yang memperagakan library [DevLib](../README.md) (`jo/d
 
 - **Katalog komponen**: halaman beranda mendaftar modul dan komponen; tiap halaman `/lib/{slug}` menampilkan komponen hidup beserta kode pemakaiannya (ikon `</>`).
 - **Demo layar**: contoh form, grid, laporan, dasbor, dokumen cetak, login, papan Gantt/Kanban, dan lain-lain, semuanya disusun dari objek `x-dl::*` (`resources/views/demos/`).
-- **Mode Developer**: tekan **F10** (hanya untuk pengguna ber-security Developer/Administrator) untuk melihat asal-usul tiap objek; temuan aturan DevLib per komponen ikut tampil saat `APP_DEBUG=true`.
+- **Technical Guide** (menu Help, `/_devlib-guide`): semua objek `x-dl::*` dijelaskan satu per satu (tanda tangan prop otomatis dari kode, rincian di `resources/guide/*.md`); judul form/kartu dan tag objek di katalog menautkannya. Pengganti Mode Developer (F10, sudah dihapus). Temuan aturan DevLib per komponen: `php artisan devlib:lint`.
 - **Generator** (`/generator`): form permintaan layar baru (Master / Transactional / Custom). Form tidak menulis kode; ia menyimpan permintaan di database untuk dikerjakan agen (`php artisan gen:requests`).
 - **Halaman pendukung**: ringkasan eksekutif (`/summary/{page}`), catatan agen (`/history`, `/agent-log`), QC cepat (Approved / Need improvement per halaman).
 

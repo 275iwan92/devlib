@@ -5,7 +5,7 @@ namespace Devlib\Lint;
 use Devlib\Components\Form;
 
 // Penegak aturan baku Form (SKILL.md "Form" dan "Data transaksional: mode dan tombol"). Murni: memeriksa konfigurasi Form, mengembalikan Finding[].
-// Input: instance Form. Output: Finding[]. Dipakai oleh: Form::lint() (Mode Developer / Lint::record), tes. Status: opt-in, tidak mengubah tampilan.
+// Input: instance Form. Output: Finding[]. Dipakai oleh: Form::lint() (Lint::record), tes. Status: opt-in, tidak mengubah tampilan.
 final class FormRules
 {
     private const STATUSES = [

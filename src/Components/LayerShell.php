@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Kerangka aplikasi dengan navigasi x-dl::layer-menu di kiri dan TANPA top bar. Tab MDI, laci, modal.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : modules, user, brand, tagline, logo, logoutAction, menuSource, developer, chat, open, … (18 prop).
+ * Input        : modules, user, brand, tagline, logo, logoutAction, menuSource, chat, open, … (17 prop).
  * Output       : Markup dari resources/views/components/layer-shell.blade.php.
  * Dipakai oleh : layar proyek lewat x-dl::layer-shell.
  * Status       : Aktif (DevLib).
@@ -89,14 +89,13 @@ class LayerShell extends Shell
     {
         return array_values(array_filter([
             // Urutan panel Profile = keputusan user 2026-10-03: Notifications, Chat, AI Assistant | Edit profile, Help & support,
-            // (Setup = halaman panel, disisipkan sesudah Help), Change password, Developer Mode (saklar), Sign out.
+            // (Setup = halaman panel, disisipkan sesudah Help), Change password, Sign out.
             ['key' => 'notif', 'label' => Lang::text('Notifications'), 'icon' => 'notification'],
             in_array('chat', $this->without) ? null : ['key' => 'chat', 'label' => 'Chat', 'icon' => 'fa-comment-dots'],
             in_array('ai', $this->without) ? null : ['key' => 'ai', 'label' => Lang::text('AI Assistant'), 'icon' => 'ai'],
             ['key' => 'edit', 'label' => Lang::text('Edit profile'), 'icon' => 'fa-user-pen', 'sep' => true],
             in_array('help', $this->without) ? null : ['key' => 'help', 'label' => Lang::text('Help & support'), 'icon' => 'help'],
             ['key' => 'pass', 'label' => Lang::text('Change password'), 'icon' => 'password'],
-            $this->developer ? ['key' => 'devmode', 'label' => Lang::text('Developer Mode'), 'icon' => 'fa-bug'] : null,
             $this->classic ? ['key' => 'menu-classic', 'label' => Lang::text('Classic Menu'), 'icon' => 'fa-table-columns'] : null,
             ['key' => 'logout', 'label' => Lang::text('Sign out'), 'icon' => 'logout', 'tone' => 'danger', 'confirm' => Lang::text('Sign out of the application?')],
         ]));

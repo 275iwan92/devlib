@@ -18,15 +18,16 @@ Urutan kerja; tiap langkah ada penegaknya bila disebut.
    - Komentar `//` satu paragraf tepat di atas `class` (tujuan + cara pakai).
    - `extends DevlibComponent`; semua prop = parameter konstruktor **bertipe** dengan default aman (kecuali `value`, `valueTo`, `valueEnd`).
    - `tag()` = `'x-dl::<kebab>'`; `source()` = asal data (string, boleh `'—'`).
-   - `render()`: tampilan dari berkas view, atau heredoc Blade inline. Elemen akar memakai `{{ $attributes->class([...]) }}` dan `{!! $dl() !!}` (menghasilkan `data-dl`, rantai induk, sumber, `data-dl-js`; dibaca Mode Developer).
+   - `render()`: tampilan dari berkas view, atau heredoc Blade inline. Elemen akar memakai `{{ $attributes->class([...]) }}` dan `{!! $dl() !!}` (menghasilkan `data-dl`, rantai induk, sumber, `data-dl-js`; `data-dl` dipakai link judul ke Technical Guide).
    - Prop teks (`label`, `title`, `hint`, dst.: `TEXT_PROPS`) diterjemahkan otomatis; istilah tetap English (tombol/status) = kosongkan `TEXT_PROPS` seperti `Button`. Atribut `can="modul.aksi"` sudah bekerja di semua komponen.
 3. **JS** hanya bila perlu (`resources/assets/js/components/<nama>.js`): satu kelas per berkas, `class X extends Devlib.Component { static selector = "[data-dl-x]"; init() {} }`, `Devlib.define("X", X)` (contoh: `timer.js`). Berkas otomatis masuk bundel `devlib.js` (`DevlibServiceProvider::scripts`), tanpa langkah build. Pasangkan ke PHP lewat `jsClass()` (nama kelas JS; tes kontrak memeriksa kelasnya ada).
 4. **CSS** di `resources/assets/devlib.css`: kelas berawalan `dl-`, warna dan ukuran **hanya lewat token** `--dl-*` (mis. `calc(13px * var(--dl-font-scale))`); tema hanya menimpa token (`Theme.php`), komponen tidak tahu tema. Teks hitam/terang tanpa abu-abu, abu-abu hanya `--dl-disabled` (kepala `devlib.css`).
 5. **Manifest:** `php artisan devlib:manifest` (jangan edit `components.md` dengan tangan); `--check` dipakai tes.
 6. **Tes kontrak:** `cd site; php artisan test --filter=ComponentContractTest` (turunan `DevlibComponent`, tag `x-dl::`, view atau `render()`, prop bertipe, `jsClass` valid dan ada, komentar tujuan, header REMARK, manifest mutakhir). Logika baru yang tidak sepele = tes kecil (acuan: `inheritance.md` bagian Kode proyek, `engine.md` butir 7).
-7. **Halaman contoh di katalog** (`site/`): demo `site/resources/views/demos/<slug>.blade.php` + entri di `Catalog::groups()` (`site/app/Support/Catalog.php`). `CatalogPagesTest` memastikan halaman terbuka dan tag ter-compile; `php artisan devlib:lint` memeriksa demo; `php artisan build:catalog` memperbarui `resources/data/build.json`. Halaman baru berstatus **Review**: hanya Jo yang menaikkannya ke `Catalog::APPROVED`.
-8. **Catat** di `CHANGELOG.md` `[Belum dirilis]`; perubahan yang merusak antarmuka diawali **Merusak:** (`docs/versioning.md`).
-9. **Commit di repo devlib** (git proyek tidak melihatnya; `inheritance.md` butir 7).
+7. **Technical Guide:** tulis rincian `resources/guide/<tag tanpa x-dl::>.md` (tujuh judul baku, semua prop dijelaskan; bentuk dan aturan: `help.md`). `GuideContractTest` gagal bila object baru belum punya rincian; jangan menambah baris ke `resources/guide/PENDING.txt`.
+8. **Halaman contoh di katalog** (`site/`): demo `site/resources/views/demos/<slug>.blade.php` + entri di `Catalog::groups()` (`site/app/Support/Catalog.php`). `CatalogPagesTest` memastikan halaman terbuka dan tag ter-compile; `php artisan devlib:lint` memeriksa demo; `php artisan build:catalog` memperbarui `resources/data/build.json`. Halaman baru berstatus **Review**: hanya Jo yang menaikkannya ke `Catalog::APPROVED`.
+9. **Catat** di `CHANGELOG.md` `[Belum dirilis]`; perubahan yang merusak antarmuka diawali **Merusak:** (`docs/versioning.md`).
+10. **Commit di repo devlib** (git proyek tidak melihatnya; `inheritance.md` butir 7).
 
 ## 3. Aturan baku object
 

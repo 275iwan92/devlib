@@ -1,6 +1,6 @@
 {{-- Generator devlib.test (user 2026-10-05): form permintaan sederhana + pratinjau yang diisi agen. Form tidak menulis kode;
      isi dan aturan = App\Support\Generator, tabel gen_request / gen_request_object di database devlib. Disusun dari objek x-dl::*. --}}
-@extends('layout', ['title' => 'Generator', 'dev' => true, 'bodyClass' => 'dl-page-body'])
+@extends('layout', ['title' => 'Generator', 'bodyClass' => 'dl-page-body'])
 @php
     use App\Support\Generator;
     use Devlib\Lang;

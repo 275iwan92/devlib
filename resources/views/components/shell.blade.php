@@ -1,4 +1,4 @@
-<div class="dl-shell" {!! $dl() !!} data-dl-modules="{{ json_encode($modules) }}" data-dl-user="{{ json_encode($user) }}" data-dl-developer="{{ $developer ? '1' : '0' }}" data-dl-open-tab="{{ $open }}" data-dl-fresh="{{ $fresh ? '1' : '0' }}" data-dl-help="{{ $helpUrl }}">
+<div class="dl-shell" {!! $dl() !!} data-dl-modules="{{ json_encode($modules) }}" data-dl-user="{{ json_encode($user) }}" data-dl-open-tab="{{ $open }}" data-dl-fresh="{{ $fresh ? '1' : '0' }}" data-dl-help="{{ $helpUrl }}">
     <aside class="dl-side" data-dl="sidebar kontekstual" data-dl-class="bagian Shell" data-dl-src="{{ $menuSource }} (grup + item modul aktif)">
         <div class="dl-side__head">
             <span class="dl-logo-badge dl-logo-badge--sm">@if ($logo)<img src="{{ $logo }}" alt="{{ $brand }}">@endif</span>
@@ -38,11 +38,6 @@
                         <button type="button" class="dl-um-item" data-dl-um="menu-layer"><i class="fa-solid fa-layer-group"></i> {{ \Devlib\Lang::text('Layer Menu (new menu)') }}</button>
                         <button type="button" class="dl-um-item" data-dl-um="help"><i class="fa-solid fa-circle-question"></i> {{ \Devlib\Lang::text('Help & support') }}</button>
                         <div class="dl-um-item dl-um-item--static"><i class="fa-solid fa-globe"></i> {{ \Devlib\Lang::text('Language') }}<span class="dl-um-langs"><button type="button" class="dl-um-flag is-active" data-dl-lang="id">🇮🇩</button><button type="button" class="dl-um-flag" data-dl-lang="en">🇬🇧</button></span></div>
-                        @if ($developer)
-                            <div class="dl-um-sep"></div>
-                            <div class="dl-um-cap">Developer</div>
-                            <button type="button" class="dl-um-item" data-dl-um="devmode"><i class="fa-solid fa-bug"></i> {{ \Devlib\Lang::text('Developer Mode') }}<span class="dl-um-switch" data-dl-devswitch></span></button>
-                        @endif
                         <div class="dl-um-sep"></div>
                         <form method="POST" action="{{ $logoutAction }}" data-dl-logout>
                             @csrf

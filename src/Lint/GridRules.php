@@ -5,7 +5,7 @@ namespace Devlib\Lint;
 use Devlib\Components\Grid;
 
 // Penegak aturan baku Grid (skills/devlib/SKILL.md "Tipe grid"; keputusan user 2026-10-20). Murni: memeriksa konfigurasi Grid, mengembalikan Finding[].
-// Input: instance Grid (setelah applyKind). Output: Finding[]. Dipakai oleh: Grid::lint() (Mode Developer / Lint::record), tes. Status: opt-in, tidak mengubah tampilan.
+// Input: instance Grid (setelah applyKind). Output: Finding[]. Dipakai oleh: Grid::lint() (Lint::record), tes. Status: opt-in, tidak mengubah tampilan.
 final class GridRules
 {
     private const FORBIDDEN_BULK = ['confirm', 'approve', 'cancel', 'delete', 'reject'];

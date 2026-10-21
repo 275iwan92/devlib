@@ -1,6 +1,6 @@
 {{-- Agent Log devlib.test (user 2026-10-07): log pekerjaan agen Iwan dan Jo (satu baris per commit), teks polos per tanggal.
      Aturan = App\Support\AgentLog. --}}
-@extends('layout', ['title' => 'Agent Log', 'dev' => true, 'bodyClass' => 'dl-page-body'])
+@extends('layout', ['title' => 'Agent Log', 'bodyClass' => 'dl-page-body'])
 @php
     use App\Support\AgentLog;
     use Devlib\Lang;

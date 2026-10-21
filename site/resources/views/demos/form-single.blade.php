@@ -1,6 +1,6 @@
 @php
     // Siklus dokumen di DevLib: form dikirim (GET) ke halaman ini dgn _action; status baru ditentukan "server" (blok ini).
-    // Awal selalu Draft -> Confirm = Confirmed (isi terkunci) -> Cancel = Cancelled; Back to Draft (Mode Developer) = Draft lagi.
+    // Awal selalu Draft -> Confirm = Confirmed (isi terkunci) -> Cancel = Cancelled; Back to Draft = Draft lagi.
     // Alur Grid -> Form (rute /lib/p5-flow-master/form/{id}): $flow ada, aksi dikirim POST ke rute alur; tanpa $flow = halaman katalog biasa (GET ke diri sendiri).
     $flow ??= null;
     $keep = $flow ? ['from' => $flow['back']] : [];

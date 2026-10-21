@@ -46,7 +46,6 @@ final class Catalog
         'p3-loading' => '2026-09-26',
         'p3-notifications' => '2026-09-26',
         'p3-errors' => '2026-09-26',
-        'p4-developer' => '2026-09-26',
         'p4-guard' => '2026-09-26',
         'p4-shortcuts' => '2026-09-26',
         'p4-permissions' => '2026-09-26',
@@ -261,7 +260,7 @@ final class Catalog
         return [
             'Foundations & Rules' => [
                 ['code' => 'DT', 'label' => 'Basics & Themes', 'icon' => 'fa-solid fa-palette', 'pages' => $in('basic-', ['colors', 'typography', 'shape', 'density', 'icons', 'breakpoints', 'locale'])],
-                ['code' => 'BH', 'label' => 'Global Behaviors', 'icon' => 'fa-solid fa-sliders', 'pages' => $in('p4-', ['developer', 'guard', 'shortcuts', 'permissions', 'i18n', 'metadata'])],
+                ['code' => 'BH', 'label' => 'Global Behaviors', 'icon' => 'fa-solid fa-sliders', 'pages' => $in('p4-', ['guard', 'shortcuts', 'permissions', 'i18n', 'metadata'])],
                 ['code' => 'DR', 'label' => 'Rules', 'icon' => 'fa-solid fa-code', 'pages' => [...array_keys(RulesDocs::pages()), 'p5-override'],
                     'folders' => ['p5-override' => ['Develop & Coding']]],
             ],
@@ -409,7 +408,6 @@ final class Catalog
     {
         $c = fn (...$cls) => array_map(fn ($x) => 'Devlib\\Components\\'.$x, $cls);
         $cats = [
-            'p4-developer' => ['Developer Mode', 'fa-solid fa-bug', ['dev-mode' => ['Developer Mode', $c('DevToggle')]]],
             'p4-guard' => ['Dirty Guard', 'fa-solid fa-shield-halved', ['dirty-guard' => ['Dirty Guard', $c('Form', 'BackButton')]]],
             'p4-shortcuts' => ['Keyboard Shortcuts', 'fa-solid fa-keyboard', ['shortcuts' => ['Shortcuts', $c('Button')]]],
             'p4-permissions' => ['Permissions', 'fa-solid fa-user-lock', ['permissions' => ['can="..." on every component', $c('DevlibComponent')]]],
