@@ -14,9 +14,12 @@ Aturan sumber ada di `skills/devlib/*.md` (mulai `SKILL.md`; membangun object: `
 4. **Uji di tampilan yang Jo lihat:** Chrome Jo (Claude in Chrome, tab baru) selain browser bawaan. Pengaturan tersimpan di browser Jo (`localStorage dl-theme`, `dl-density`, `dl-font-scale`, cookie `dl_menu`, `dl_lang`) menimpa bawaan situs, jadi periksa itu. Jangan menilai dari "tes lulus" saja.
 5. Halaman di `Catalog::APPROVED` (terutama yang bertanda DIKUNCI, mis. `p5-grid-tx`) tidak diubah tampilan/perilakunya tanpa persetujuan eksplisit Jo.
 
-## 3. Versi yang dipakai
-- **Layer Menu (panel kiri) adalah menu utama (v2).** Menu Classic (modul di atas) adalah versi lama (v1): jangan dipakai, diubah, atau dijadikan acuan kecuali Jo menyebutnya.
-- Bila ada dua versi sebuah layar/komponen, versi terbaru yang dipakai dan diuji. Versi lama dihapus atau dipindahkan hanya atas persetujuan Jo, dan semua tautan diarahkan ke versi terbaru.
+## 3. Versi lama dikubur (prinsip Jo, berlaku untuk SEMUA: menu, object, engine, layar, aturan, apa pun)
+- Setelah sesuatu naik versi, versi lama **ditinggalkan sebagai riwayat** (git). Ia tidak dijadikan kanvas, acuan, contoh, bahan perbandingan, atau topik pembahasan atas permintaan Jo. Yang lama dikubur dan tidak dibicarakan lagi.
+- **Setiap permintaan Jo berlaku pada versi terbaru.** Ragu mana yang terbaru: tanya. Jangan memilih yang lama, dan jangan menguji atau mengubah yang lama "sekalian".
+- Versi lama hanya dibangunkan bila Jo berkata **"bangunkan"** dan menyebut yang mana; lalu diambil dari riwayat git.
+- Kode versi lama yang masih hidup tidak dihapus sendiri: daftarkan ke Jo (jalur dan pemakainya) dan tunggu persetujuan, karena penghapusan butuh izin eksplisit (bagian 4).
+- Contoh: **Layer Menu (panel kiri) adalah menu utama (v2)**; Menu Classic adalah versi lama.
 
 ## 4. Git dan penghapusan
 - **Jangan push, jangan menulis ulang riwayat, jangan menghapus berkas/folder/branch** sebelum Jo menyetujui secara eksplisit. Setelah disetujui, kerjakan sampai tuntas.
