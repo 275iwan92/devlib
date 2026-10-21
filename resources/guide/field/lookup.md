@@ -38,7 +38,7 @@ Constructor of `Devlib\Components\Field\Lookup` (18 props). Blade names are keba
 
 | Key | Default | Meaning |
 |---|---|---|
-| `rows` | `[]` | Client mode. A **plain array** of associative arrays, or a `Closure` returning one (called at every render). Each row may contain more columns than shown (they are all serialised into the page, so do not put secrets in them). A Collection is not converted correctly: call `->all()`. |
+| `rows` | `[]` | Client mode. A **plain array** of associative arrays, or a `Closure` returning one (called at every render). Each row may contain more columns than shown (they are all serialised into the page, so do not put secrets in them). A `Collection` or other iterable (for example a generator) is converted to a plain list. |
 | `key` | `'id'` | Column whose value is posted and stored. |
 | `label` | `'name'` | Column shown on the button after a choice and used for the `create` duplicate check. |
 | `columns` | `[label => 'Nama']` | `column => heading`: the columns of the panel table (headings translated). Only these are shown and searched. |
@@ -157,11 +157,10 @@ Always re-read the master row on the server; the `fill` values are ordinary requ
 - The fill values are not locked: the user can overwrite them, and the server must take its data from the master row, not from the filled fields, when they must stay consistent.
 - `params` are fixed at render time, are visible in the URL and are client-controlled: they are context for `search`, never an authorisation. Check rights inside the `search` closure and set `lookup_middleware` to include authentication (the default `['web']` is open to guests).
 - With `create`, the value `new:<text>` is posted instead of a key. Handle it in the controller (create the record, then use its key) and validate the text. No `change` event follows a creation, so the dirty guard is not triggered by it alone.
-- A lookup `rows` closure must return a plain array; a Collection from a query needs `->all()` / `->toArray()`.
+- A lookup `rows` closure may return an array, a Collection or any iterable of rows (arrays or objects); each row is cast to an array.
 - Columns are plain text: values are escaped and not translated; headings are translated.
 - Keyboard: the button is reachable with `Tab` and opens with `Enter`/`Space`; the search box is focused, so typing filters. The rows are plain `<tr>` elements without `tabindex`, roles or key handling, so the choice itself needs a pointer or touch. There is no `aria-expanded`.
 - `disabled`/`readonly` disable only the button; a standalone disabled lookup still posts its key.
-- Code oddity (not fixed): `src/Lookup.php:41` - `(array) $rows` on an iterable that is a Collection returns the object's internal properties instead of its items (checked: a one-row Collection yields garbage rows), so a `rows` closure returning a Collection silently breaks the field.
 - Code oddity (not fixed): `resources/views/components/field/lookup.blade.php:3` and `:4` - the hidden input is never disabled, so `disabled` does not keep the value out of the request.
 - Code oddity (not fixed): `resources/assets/js/core.js:672` - `setField` (used by `Devlib.fill` and form Undo) shows `T('f_choose')` for a cleared or unmatched lookup, not the field's `placeholder`; and it cannot resolve a remote lookup label because remote rows are not embedded.
 - Code oddity (not fixed): `resources/assets/js/components/form.js:23` clears a "Required" error only on `input` events; a lookup choice dispatches only `change`, so the error stays.

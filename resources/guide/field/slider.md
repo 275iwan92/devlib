@@ -40,7 +40,7 @@ All 14 come from `Devlib\Components\Field\Field`; the full reference is on `x-dl
 | `tooltip` | The (i) bubble next to the label (needs a label). Translated. |
 | `hint` | Help line under the control. Translated. |
 | `error` | Server error text; non-empty marks the field invalid. Not translated. |
-| `value` | Initial value (first handle); `null` = `min`. Pass a number. The browser clamps it to `min..max`. A non-numeric string, including `''`, is a `TypeError` in `Slider::fromValue()`. |
+| `value` | Initial value (first handle); `null` = `min`. Pass a number (a numeric string such as `'25'` also works). The browser clamps it to `min..max`. An empty or non-numeric string is treated like `null` (`min`). |
 | `placeholder` | Not used by this control. |
 | `required` | Red `*` only. The slider always has a value, so the form check can never fail. |
 | `disabled` | Disables the range inputs (greyed handles). The hidden inputs stay enabled (see the oddity). |
@@ -136,7 +136,7 @@ Each handle is a native range input, so role, keyboard operation and (in most br
 - A readonly slider is a disabled one: it looks greyed. Show a calculated value with `x-dl::field.decimal` `readonly` if it should look like text.
 - `ticks` of 5 or 6 reads well on a normal width; labels of many digits crowd on a narrow screen.
 - Use `name-to` when the second value has a name of its own in your model (`:name-to="'price_max'"`).
-- Code oddity (not fixed): (1) `slider.blade.php:6-7` gives the range inputs no `name`, and `slider.js` writes the hidden inputs without an event, so the dirty guard never sees a change (no leave warning, Undo disabled). (2) `slider.blade.php:2-3`: the hidden inputs are not disabled by `disabled`, so a disabled slider is still posted. (3) `Devlib.fill()` / Undo (`core.js:663-677`) set only the first hidden input, so the handle and text keep the old position while the restored value is posted. (4) `Slider::fromValue()` (`Slider.php:63`) throws a `TypeError` for an empty-string `value`.
+- Code oddity (not fixed): (1) `slider.blade.php:6-7` gives the range inputs no `name`, and `slider.js` writes the hidden inputs without an event, so the dirty guard never sees a change (no leave warning, Undo disabled). (2) `slider.blade.php:2-3`: the hidden inputs are not disabled by `disabled`, so a disabled slider is still posted. (3) `Devlib.fill()` / Undo (`core.js:663-677`) set only the first hidden input, so the handle and text keep the old position while the restored value is posted.
 
 ## Example
 

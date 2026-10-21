@@ -34,6 +34,7 @@ class DateTime extends Field
         ?string $source = null,
     ) {
         parent::__construct($name, $label, $tooltip, $hint, $error, $value, $placeholder, $required, $disabled, $readonly, $icon, $size, $i18n, $source);
+        $this->minuteStep = max(1, min(30, $minuteStep));  // 0 / negatif = loop view tanpa akhir; >= 60 = satu opsi menit, field.js error
     }
 
     public function control(): string

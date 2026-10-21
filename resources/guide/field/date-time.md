@@ -16,7 +16,7 @@ The class is `Devlib\Components\Field\DateTime` (`control()` = `date-time`, one 
 
 | Prop | Type, default | Meaning |
 |---|---|---|
-| `minute-step` | `int`, `5` | Step of the minute drop-down: options `00, step, 2*step, ...` below 60 (`5` = 00, 05, ... 55; `15` = 00, 15, 30, 45). Rendered by a PHP loop in the view, so the value must be a whole number of at least `1`. It also controls how a loaded minute is rounded (see Behavior). Written as `:minute-step="15"` in the demo. |
+| `minute-step` | `int`, `5` | Step of the minute drop-down: options `00, step, 2*step, ...` below 60 (`5` = 00, 05, ... 55; `15` = 00, 15, 30, 45). Rendered by a PHP loop in the view; the constructor clamps the value to `1..30`, so `0`, a negative number or `60` or more cannot hang the page or break the script. It also controls how a loaded minute is rounded (see Behavior). Written as `:minute-step="15"` in the demo. |
 
 ### Inherited props
 
@@ -106,7 +106,6 @@ No `dl:*` event. Because the hidden input is named, `Apply` marks an `x-dl::form
 - Accessibility as implemented: the box is a read-only input with a `<label for>`; the 📅 button, day buttons, selects and `Apply`/`Clear` are native controls reachable with Tab; clicking the box opens the popover but there is no key to open it from the box itself, no arrow-key day navigation, no Escape, no focus management and no ARIA state on the button. The hour and minute selects are labelled.
 - Form Undo / `Devlib.h.fillForm` restores the hidden input but has no branch for this control, so the visible text can stay at the old value after Undo (per `setField` in `core.js`). Re-render or reload when you set values from script.
 - Code oddity (not fixed): `disabled` disables the box and the button, but the hidden input is not disabled (`date-time.blade.php`), so a disabled date-time is still posted.
-- Code oddity (not fixed): `minute-step` is not validated; `0` or a negative number makes the `@for` loop in the view never end, and a value of `60` or more leaves one minute option so `mm.options[1].value` in `field.js` throws when the field has an initial time.
 - Code oddity (not fixed): the same month navigation overflow as in `x-dl::field.date` (`setMonth(± 1)` from the 29th-31st), and `Apply` without a selected day takes the browser's local date instead of the application time zone used by `Today` in `x-dl::field.date`.
 - Code oddity (not fixed): the PHP comment in `DateTime.php` says the display is `1 Okt 1969, 14:30 WIB`; the code shows `01-Okt-1969 14:30 WIB`.
 

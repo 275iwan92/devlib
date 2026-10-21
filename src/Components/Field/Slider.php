@@ -62,12 +62,12 @@ class Slider extends Field
 
     public function fromValue(): int|float
     {
-        return $this->value ?? $this->min;
+        return is_numeric($this->value) ? $this->value + 0 : $this->min;
     }
 
     public function toValue(): int|float
     {
-        return $this->valueTo ?? $this->max;
+        return is_numeric($this->valueTo) ? $this->valueTo + 0 : $this->max;
     }
 
     // [[posisi %, label], ...]

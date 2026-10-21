@@ -38,7 +38,7 @@ final class Lookup
         }
 
         return [
-            'rows' => array_values(array_map(fn ($r) => (array) $r, is_iterable($rows) ? (array) $rows : [])),
+            'rows' => array_values(array_map(fn ($r) => (array) $r, is_array($rows) ? $rows : (is_iterable($rows) ? iterator_to_array($rows, false) : []))),
             'key' => $def['key'] ?? 'id',
             'label' => $def['label'] ?? 'name',
             'columns' => $def['columns'] ?? [($def['label'] ?? 'name') => 'Nama'],

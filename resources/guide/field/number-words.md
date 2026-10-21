@@ -129,7 +129,7 @@ The `<label for>` is tied to the visible input; `inputmode="decimal"` opens the 
 
 ## Rules and pitfalls
 
-- Pass `currency` exactly as in `Terbilang::CURRENCIES` (upper case). A lowercase or unknown code makes `places()` throw a `TypeError` while the field mounts, which can keep later components from initialising. `Terbilang::words()` in PHP is more tolerant (it upper-cases), the script is not.
+- Pass `currency` as in `Terbilang::CURRENCIES`. The constructor upper-cases it (`usd` becomes `USD`); a code that is not in the list is dropped (no currency, a plain number; with `picker` it becomes `IDR`), so the script never receives an unknown code.
 - Pass `value` canonical (`1234.56`), never a formatted text. It is printed unformatted into the hidden input.
 - Decimals beyond the currency's own are cut at mount and while typing. For a price list in IDR use `x-dl::field.money`.
 - The visible text and the posted number can differ in format by design: store only the posted value, and print the words from the stored value with `Devlib\Terbilang::words($value, $currency)`.

@@ -11,6 +11,10 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 - **Varian panel Profil di halaman `p7-profile`** (permintaan Jo 2026-10-21): pemilih `?variant=tmerp|sstock|devlib`, bawaan **tmerp** (tanpa parameter isi halaman yang disetujui tidak berubah, dibuktikan perbandingan HTML). tmerp = tanpa `without`; sstock = `without ['chat','ai','theme']` (Setup hanya Bahasa); devlib = `without ['notif','chat','ai','edit','help','setup']` (hanya Change password dan Sign out). Tiap varian: panel hidup, tabel item (tampil / nilai `without` / yang disediakan aplikasi), cuplikan pemakaian. Tanpa komponen baru; `App\Support\ProfileVariants`. Tes `ProfilePageTest`.
 
+### Diperbaiki
+
+- **Field: empat masukan yang membuat halaman crash atau macet** (disetujui Jo 2026-10-21). `field.date-time`: `minute-step` ≤ 0 membuat loop di view tanpa akhir dan ≥ 60 membuat `field.js` error; kini dijepit ke 1..30. `field.slider`: `value`/`value-to` string kosong atau non-angka melempar `TypeError`; kini dianggap kosong (min/max), string angka tetap bekerja. `field.number-words`: kode `currency` huruf kecil atau tak dikenal membuat skrip error; kini dijadikan huruf besar, kode tak dikenal = tanpa mata uang. `Lookup`: `rows` berupa Collection/iterable kini dikonversi benar (sebelumnya properti internal Collection). Masukan sah tidak berubah. Tes `FieldCrashFixesTest`.
+
 ## [0.3.0] - 2026-10-21
 
 Rilis ketiga. Satu default = versi terakhir (versi lama dikubur sebagai kode sejarah bertag `history/…`); alur Approval

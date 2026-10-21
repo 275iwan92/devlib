@@ -40,6 +40,9 @@ class NumberWords extends Field
         ?string $source = null,
     ) {
         parent::__construct($name, $label, $tooltip, $hint, $error, $value, $placeholder, $required, $disabled, $readonly, $icon, $size, $i18n, $source);
+        // Kode huruf kecil dinormalkan; kode tak dikenal = tanpa mata uang (number-words.js error bila kode tak ada di CURRENCIES).
+        $code = strtoupper((string) $this->currency);
+        $this->currency = isset(Terbilang::CURRENCIES[$code]) ? $code : null;
         if ($this->picker && ! $this->currency) {
             $this->currency = 'IDR';
         }
