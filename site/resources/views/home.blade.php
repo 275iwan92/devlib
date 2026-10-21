@@ -1,6 +1,6 @@
 @extends('layout', ['title' => 'DevLib'])
 @section('body')
-    <x-dl::layer-shell :modules="$modules" :user="$user" :logout-action="route('logout')" :chat="\App\Support\DemoData::chat()" :help-url="\Devlib\Guide::url()" menu-source="Catalog DevLib — tanpa database">
+    <x-dl::layer-shell :modules="$modules" :user="$user" :logout-action="route('logout')" :chat="\App\Support\DemoData::chat()" :help-url="\Devlib\Guide::url()" :without="['notif','chat','ai','edit','help','setup']" menu-source="Catalog DevLib — tanpa database">
         <x-slot:dashboard>
             {{-- Developer (user 2026-10-05): sambutan sama, bagian widget = papan Build Progress (pemantauan user + dua agen).
                  Akun lain tetap melihat dashboard contoh per jabatan. --}}
