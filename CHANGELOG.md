@@ -9,6 +9,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Halaman katalog `p7-profile` (Special Screen)**: merekam panel Profil Layer Menu (header + aksi akun) sebagai contoh, bentuk bawaan penuh, data fiktif; tabel item dibaca dari `LayerShell::actions()`. Belum APPROVED; tanpa perubahan komponen.
 - **`x-dl::layer-shell :without` mengenali `notif`, `edit`, dan `setup`** (permintaan Jo 2026-10-21: menu profil aplikasi cukup Ubah password):
   `notif` = aksi Notifikasi + laci-nya, `edit` = aksi Edit profile + modal / laci-nya, `setup` = halaman Setup (Tema, Bahasa) beserta entrinya.
   Dengan `['notif','chat','ai','edit','help','setup']` menu profil tinggal header, Ubah password, dan Sign out. Opt-in: tanpa `without`
