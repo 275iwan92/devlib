@@ -198,7 +198,7 @@ class Form extends DevlibComponent
         };
     }
 
-    // Cap status pojok kanan atas (siklus ketat): status dokumen + (confirmed) status approval. [label, nada].
+    // Cap status pojok kanan atas (siklus ketat): status dokumen + (confirmed) status approval. [label, nada]. Istilah status SELALU English (tidak diterjemahkan).
     public function stamps(): array
     {
         $doc = match ($this->status) {
@@ -333,7 +333,7 @@ class Form extends DevlibComponent
                         @if (! $panelActions() && isset($special)){{ $special }}@endif
                         <span class="dl-form__sep"></span>
                         <x-dl::button variant="secondary" size="sm" icon="back" label="Back" :href="$back" data-f-act="back" data-dl-back />
-                        @if ($strict)<span class="dl-form__stamps">@foreach ($stamps() as [$sl, $st])<span class="dl-form__stamp dl-form__stamp--{{ $st }}">{{ \Devlib\Lang::text($sl) }}</span>@endforeach</span>@endif
+                        @if ($strict)<span class="dl-form__stamps">@foreach ($stamps() as [$sl, $st])<span class="dl-form__stamp dl-form__stamp--{{ $st }}">{{ $sl }}</span>@endforeach</span>@endif
                     </div>
                 @elseif ($title !== '')
                     <div class="dl-form__head"><div class="dl-form__title">{{ $title }}</div>@if ($mode === 'view')<x-dl::button variant="secondary" size="sm" icon="edit" label="Edit" data-f-edit />@endif</div>
