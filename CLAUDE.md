@@ -27,6 +27,7 @@ Aturan sumber ada di `skills/devlib/*.md` (mulai `SKILL.md`; membangun object: `
 3. Nama object/komponen/menu tetap satu (tanpa akhiran versi seperti `V2`/`V3` pada kode aktif); nomor versi dicatat di `CHANGELOG.md`/tag.
 4. **Tidak ada "mundur".** Bila Jo tidak suka versi terakhir (vN): ambil versi sebelumnya dari riwayat, **duplikasikan menjadi versi baru (vN+1)**, dan vN+1 menjadi default. vN tetap tercatat sebagai riwayat. Nomor versi selalu maju, dan default selalu yang terbaru.
 5. Berlaku untuk semua: menu, object, engine, layar, aturan.
+6. **Yang Jo nyatakan SALAH atau ditolak (belum pernah disetujui) DIHAPUS TOTAL**, langsung, tanpa tag `history/` dan tanpa disimpan sebagai riwayat. Tag riwayat hanya untuk versi lama yang pernah dipakai atau disetujui lalu digantikan. Contoh: bentuk Form Approval dengan login simulasi dan OTP ditolak, jadi dihapus; Menu Classic adalah versi lama yang pernah dipakai, jadi dikubur.
 
 ## 3b. Scope: hanya devlib (perintah Jo, 2026-10-21)
 - **Jangan menyentuh proyek lain**: tmerp (termasuk mockup.test, yang adalah aplikasi tmerp) dan sstock. Jangan mengubah berkasnya, menjalankan tes, artisan, atau perintah di sana, dan jangan membuka mockup.test.
