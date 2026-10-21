@@ -15,6 +15,7 @@ final class Summary
 {
     // slug => [label, ikon, pertanyaan yang dijawab]
     public const PAGES = [
+        'projects' => ['All Projects', 'fa-solid fa-diagram-project', 'How much has been done across all projects, and where does each one stand?'],
         'overview' => ['Overview', 'fa-solid fa-gauge-high', 'Where does the project stand today?'],
         'module' => ['By Module', 'fa-solid fa-layer-group', 'Which module is complete, which is not, and what is still missing?'],
         'object' => ['By Object', 'fa-solid fa-shapes', 'Every form, grid, report, engine and DevLib object: who built it, when, and the rating.'],
@@ -103,6 +104,11 @@ final class Summary
     public static function page(string $page, array $user): array
     {
         [$label, , $question] = self::PAGES[$page];
+        if ($page === 'projects') {
+            $all = Projects::page();
+
+            return ['page' => $page, 'label' => $label, 'question' => $question, 'build' => ['generated' => $all['generated'] ?? null], 'all' => $all];
+        }
         $build = self::build();
         $items = self::items();
         $ratings = self::ratings($items);

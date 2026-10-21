@@ -45,6 +45,17 @@ return [
         'resources/views/demos/lock-screen.blade.php' => ['L003'],
     ],
 
+    // Executive Summary > All Projects: `php artisan projects:snapshot` HANYA membaca `git log` tiap path dan menghitung berkas sesi Claude
+    // (awalan nama folder di ~/.claude/projects, termasuk folder worktree), lalu menulis resources/data/projects.json (angka agregat saja).
+    // tone = warna tetap di grafik (blue = biru, gaya di summary.blade.php | warn oranye | teal hijau-aqua). Path yang tidak ada = project dilewati.
+    'projects' => [
+        'devlib' => ['label' => 'DevLib', 'path' => base_path('..'), 'sessions' => 'C--Users-iwanp-Herd-devlib', 'tone' => 'blue', 'position' => 'Shared library: rules and objects inherited by the other projects'],
+        'tmerp' => ['label' => 'tmerp', 'path' => 'C:\Users\iwanp\Herd\tmerp', 'sessions' => 'C--Users-iwanp-Herd-tmerp', 'tone' => 'warn', 'position' => 'Main ERP app: features proven in mockup, then applied'],
+        'sstock' => ['label' => 'sstock', 'path' => 'C:\Users\iwanp\Herd\sstock', 'sessions' => 'C--Users-iwanp-Herd-sstock', 'tone' => 'teal', 'position' => 'Stock app: just started'],
+    ],
+    'projects_json' => base_path('resources/data/projects.json'),
+    'claude_sessions_path' => env('CLAUDE_SESSIONS_PATH', 'C:\Users\iwanp\.claude\projects'),
+
     // Opening screen (x-dl::dashboard): profil per KODE JABATAN. Jabatan yang tidak terdaftar = 'general'
     // (mekanisme sama, isi KPI/aktivitas umum). Profil baru cukup ditambah di sini + App\Support\DashboardData.
     'dashboards' => [

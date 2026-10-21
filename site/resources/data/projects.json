@@ -1,0 +1,53 @@
+{
+    "generated": "2026-10-21",
+    "projects": {
+        "devlib": {
+            "label": "DevLib",
+            "tone": "blue",
+            "position": "Shared library: rules and objects inherited by the other projects",
+            "commits": 392,
+            "claude_commits": 0,
+            "active_days": 24,
+            "first": "2026-09-23",
+            "last": "2026-10-21",
+            "months": {
+                "2026-09": 123,
+                "2026-10": 269
+            },
+            "sessions": 49,
+            "sessions_first": "2026-10-20"
+        },
+        "tmerp": {
+            "label": "tmerp",
+            "tone": "warn",
+            "position": "Main ERP app: features proven in mockup, then applied",
+            "commits": 1540,
+            "claude_commits": 79,
+            "active_days": 58,
+            "first": "2026-08-06",
+            "last": "2026-10-21",
+            "months": {
+                "2026-08": 161,
+                "2026-09": 621,
+                "2026-10": 758
+            },
+            "sessions": 243,
+            "sessions_first": "2026-08-13"
+        },
+        "sstock": {
+            "label": "sstock",
+            "tone": "teal",
+            "position": "Stock app: just started",
+            "commits": 55,
+            "claude_commits": 0,
+            "active_days": 2,
+            "first": "2026-10-19",
+            "last": "2026-10-20",
+            "months": {
+                "2026-10": 55
+            },
+            "sessions": 6,
+            "sessions_first": "2026-10-19"
+        }
+    }
+}

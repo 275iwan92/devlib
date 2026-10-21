@@ -12,6 +12,38 @@
     <header class="dl-sum__head"><b>{{ $label }}</b><small>{{ $question }} · {{ \Devlib\Lang::text('Snapshot') }} {{ isset($build['generated']) ? \Devlib\Locale::dateTime($build['generated']) : '-' }}</small></header>
 
     @switch($page)
+        @case('projects')
+            @if (! $all)
+                <x-dl::empty-state icon="fa-diagram-project" title="No project snapshot yet" message="Run php artisan projects:snapshot to create resources/data/projects.json." />
+                @break
+            @endif
+            @php($lanes = $all['lanes'])
+            <style>.dl-chart--blue{--c:var(--dl-doc-2a)}</style>
+            <div class="dl-sum__tiles">
+                <x-dl::stat-box label="Commits" :value="$n($all['commits'])" :sub="\Devlib\Lang::raw('all projects, all branches')" />
+                <x-dl::stat-box label="Claude sessions" :value="$n($all['sessions'])" tone="warn" :sub="\Devlib\Lang::raw('all projects')" />
+                <x-dl::stat-box label="First work day" :value="$all['first'] ? \Devlib\Locale::date($all['first']) : '-'" tone="neutral" />
+                <x-dl::stat-box label="Active projects" :value="$n($all['active'])" tone="success" :sub="\Devlib\Lang::raw('of '.count($all['projects']).', commit in the last 30 days')" />
+            </div>
+            <x-dl::chart type="stacked" title="Commits per month" :labels="$all['months']" height="300px"
+                :series="array_map(fn ($s, $p) => ['name' => $s['name'].' · '.$n($p['commits'])] + $s, $all['series'], array_values($all['projects']))" source="resources/data/projects.json" />
+            <x-dl::card title="Per project">
+                <x-dl::table :striped="false" :columns="['label' => 'Project', 'commits' => ['Commits', 'num' => true, 'raw' => true], 'sessions' => ['Claude sessions', 'num' => true, 'raw' => true], 'days' => ['Active days', 'num' => true, 'raw' => true], 'started' => 'Started', 'position' => 'Position']" :rows="\App\Support\Projects::rows($all)" />
+                <div class="dl-sum__note">{{ \Devlib\Lang::text('DevLib sessions are counted only since DevLib became a standalone folder (20 Oct 2026). tmerp commits include worktree branches. Numbers come from the last snapshot: php artisan projects:snapshot.') }}</div>
+            </x-dl::card>
+            <div class="dl-sum__cols">
+                <x-dl::card title="Mockup lane" description="tmerp features tested with dummy data until correct">
+                    <x-dl::table :striped="false" empty="Not recorded yet" :columns="['stage' => 'Stage', 'count' => ['Features', 'num' => true]]" :rows="$lanes['mockup'] ?? []" />
+                </x-dl::card>
+                <x-dl::card title="Applied lane" description="tmerp compatibility made, applied, UAT">
+                    <x-dl::table :striped="false" empty="Not recorded yet" :columns="['stage' => 'Stage', 'count' => ['Features', 'num' => true]]" :rows="$lanes['applied'] ?? []" />
+                </x-dl::card>
+            </div>
+            @if ($lanes['unrecorded'])
+                <div class="dl-sum__note">{{ $n($lanes['unrecorded']) }} {{ \Devlib\Lang::text('tmerp features have no stage recorded yet (php artisan stage:set, stage:list).') }}</div>
+            @endif
+            @break
+
         @case('overview')
             <div class="dl-sum__tiles">
                 <x-dl::stat-box label="Built on v2" :value="\Devlib\Locale::percent($pct($t['v2'], $t['screens']), 0)" :sub="\Devlib\Lang::raw($n($t['v2']).' / '.$n($t['screens']).' screens')" />
