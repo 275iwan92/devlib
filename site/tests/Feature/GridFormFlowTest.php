@@ -48,9 +48,11 @@ class GridFormFlowTest extends TestCase
             $this->assertFalse($group['pages'][$slug]['menu']);
             $this->get('/lib/'.$slug)->assertOk();
         }
-        foreach (['p5-flow-master', 'p5-flow-document', 'p5-flow-single', 'p5-flow-approval'] as $slug) {
+        foreach (['p5-flow-master', 'p5-flow-document', 'p5-flow-single'] as $slug) {
             $this->assertArrayHasKey($slug, Catalog::APPROVED);   // disetujui Jo (overall) 2026-10-21
         }
+        // Alur Approval: Jo menyatakan bentuk form-nya salah (2026-10-21), kembali ke bentuk Form Approval yang lalu; belum disetujui
+        $this->assertArrayNotHasKey('p5-flow-approval', Catalog::APPROVED);
 
         $menu = collect(Catalog::modules())->firstWhere('label', 'Grid and Form')['children'];
         $this->assertSame(['Grid Report', 'Grid Pre-Entry', 'Form Wizard'], array_column($menu, 'label'));

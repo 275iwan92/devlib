@@ -1,16 +1,16 @@
 {
-    "generated": "2026-10-21 09:03",
+    "generated": "2026-10-21 09:06",
     "database": "devlib",
     "totals": {
         "objects": 83,
         "modules": 14,
-        "modules_done": 3,
+        "modules_done": 2,
         "screens": 161,
         "v2": 161,
         "v1": 0,
         "not_built": 0,
-        "waiting_qc": 31,
-        "locked": 52,
+        "waiting_qc": 32,
+        "locked": 51,
         "forms": 4,
         "grids": 8,
         "reports": 2,
@@ -18,7 +18,7 @@
         "engine_groups": 3,
         "migrations": 9,
         "tests": 19,
-        "commits": 365,
+        "commits": 366,
         "since": "2026-09-23"
     },
     "modules": [
@@ -100,8 +100,8 @@
             "v2": 16,
             "v1": 0,
             "not_built": 0,
-            "waiting_qc": 0,
-            "locked": 16,
+            "waiting_qc": 1,
+            "locked": 15,
             "form": 4,
             "grid": 8,
             "report": 1
@@ -680,10 +680,10 @@
             "key": "page:p5-flow-approval",
             "name": "Approval",
             "module": "Grid and Form",
-            "qc": "LOCKED",
-            "built_at": "2026-10-21",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
             "built_by": null,
-            "changed_at": "2026-10-21",
+            "changed_at": null,
             "changed_by": null
         },
         {
