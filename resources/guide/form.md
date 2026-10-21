@@ -32,7 +32,7 @@ Status and button words are always English (New, Save, Undo, Delete, Confirm, Ca
 
 ## Props
 
-All constructor props of `Devlib\Components\Form` (36). Blade names are kebab-case; use `:prop="expr"` for anything that is not a plain string.
+All constructor props of `Devlib\Components\Form` (34). Blade names are kebab-case; use `:prop="expr"` for anything that is not a plain string.
 
 ### Basics
 

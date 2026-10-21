@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Induk form (mockup UIUX_components_part1.html): judul + isi (kolom/baris field) + kaki berisi tombol tambahan opsional dan tombol split aksi.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : title, action, method, actions, extraAction, extraIcon, footer, guard, mode, panel, … (32 prop).
+ * Input        : title, action, method, actions, extraAction, extraIcon, footer, guard, mode, panel, … (34 prop).
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : dirty-guard, form-md-po, form-md, form-single dan 2 lainnya (layar katalog/proyek).
  * Status       : Aktif (DevLib).

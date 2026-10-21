@@ -414,7 +414,6 @@ Other project rules (from `skills/devlib/grid.md` and `grid-form-flow.md`):
 
 ### Notes on inconsistencies found while writing this entry (not fixed)
 
-- Header comment of `Grid.php` says "27 prop" but the constructor has 28.
 - `columns` are documented positionally in the header comment but read by name in code.
 - Link columns: type `link` replaces only `{id}` in `url`, text columns replace `{id}` and `{field}`.
 - Export treats the type `decimal` as numeric, but `decimal` is not a column type of the grid (no special formatting).
