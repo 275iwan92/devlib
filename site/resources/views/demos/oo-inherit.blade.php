@@ -1,10 +1,10 @@
 {{-- Cara membuat turunan: langkah (teks) + kode contoh ASLI yang dibaca dari berkas (KanbanProduksi.php dan skrip demo oo-override), bukan salinan. --}}
-@php($doc = $objectDoc ?? \App\Support\ObjectDoc::kanban())
+@php($doc = $objectDoc ?? \App\Support\ObjectDoc::current())
 @php($child = class_basename((string) $doc->child))
 <p class="dl-note"><b>PHP side: properties</b></p>
 <ol class="dl-note">
     <li>Write <code>class {{ $child }} extends {{ class_basename($doc->class) }}</code> in your project.</li>
-    <li>In the constructor call <code>parent::__construct(...)</code> with the new values (columns, transitions, members, ...): that overrides the properties.</li>
+    <li>In the constructor call <code>parent::__construct(...)</code> with the new values ({{ $doc->notes()['values'] ?? 'columns, transitions, members, ...' }}): that overrides the properties.</li>
     <li>Return your own tag from <code>tag()</code>, and <code>source()</code> if the data comes from somewhere else.</li>
     <li>Return the name of your JS class from <code>jsClass()</code> when you override behavior in JavaScript.</li>
 </ol>

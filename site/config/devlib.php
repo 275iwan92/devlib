@@ -35,9 +35,11 @@ return [
         'resources/views/generator.blade.php' => ['L001'],
         'resources/views/demos/screen-nav.blade.php' => ['L001'],
         'resources/views/demos/basic-locale.blade.php' => ['L001'],  // tabel mentah dl-kv = bagian yang didemokan
-        // L002: skrip peragaan (simulasi balasan chat; subclass JS Kanban) -- contoh cara menurunkan JS, bukan perilaku komponen.
+        // L002: skrip peragaan (simulasi balasan chat; subclass JS Kanban, Grid, Form) -- contoh cara menurunkan JS, bukan perilaku komponen.
         'resources/views/demos/layer-menu.blade.php' => ['L002'],
         'resources/views/demos/oo-override.blade.php' => ['L002'],
+        'resources/views/demos/oo-override-grid.blade.php' => ['L002'],
+        'resources/views/demos/oo-override-form.blade.php' => ['L002'],
         // L003: hex adalah DATA contoh yang dioper ke komponen (nilai field.color, warna legenda label, warna avatar), bukan gaya sendiri.
         'resources/views/demos/field-color.blade.php' => ['L003'],
         'resources/views/demos/lock-screen.blade.php' => ['L003'],

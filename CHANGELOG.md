@@ -14,6 +14,12 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   `KanbanProduksi`), demo hidup, aturan terkait (`object.md`, `inheritance.md`, entri Technical Guide). Tabel dibaca dari
   kode lewat `App\Support\ObjectDoc` (refleksi konstruktor dan method, header REMARK, berkas kelas JS); arti singkat di
   `ObjectNotes` dicocokkan dengan kode oleh `ObjectDocTest`. Status Review (belum APPROVED); `x-dl::kanban` tidak diubah.
+- **Halaman `p5-override` kini punya tiga contoh object: Grid, Form, Kanban** (permintaan Jo 2026-10-21): pemilih di atas halaman
+  (`?object=grid|form|kanban`, tanpa parameter = Kanban), enam bagian yang sama untuk tiap object. Tabel properti Grid (28) dan Form
+  (34) dibaca dari konstruktor dan dikelompokkan; method PHP/JS dibaca dari kode dan dicocokkan dengan catatan di `ObjectNotes`.
+  Dua turunan contoh baru di `site/app/View/Components/Demo/`: `GridStockMovement` (properti ditimpa + method JS `fmtCell`) dan
+  `FormStockAdjustment` (properti ditimpa + method JS `act`). Bagian Kanban yang disetujui tidak berubah; `x-dl::grid`, `x-dl::form`
+  dan `x-dl::kanban` tidak diubah.
 - **Alur Approval (Grid and Form, `p5-flow-approval`) memakai Form Approval baku** (keputusan Jo 2026-10-21): grid
   awal tetap; klik baris membuka `x-dl::approval` untuk SATU dokumen (hanya-baca, Level n of N, Riwayat, Reject / Hold /
   Setujui), Back kembali ke grid. `x-dl::approval` mendapat prop opt-in `single` (tanpa daftar kiri; dokumen

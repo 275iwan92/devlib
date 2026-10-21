@@ -1,5 +1,5 @@
 {{-- Cerita object: isi dari ObjectNotes (cerita), header REMARK dan berkas kelas (dibaca dari kode). Object lain: kirim $objectDoc = ObjectDoc::... --}}
-@php($doc = $objectDoc ?? \App\Support\ObjectDoc::kanban())
+@php($doc = $objectDoc ?? \App\Support\ObjectDoc::current())
 @php($story = $doc->notes()['story'] ?? [])
 {{-- tiga butir pertama sejajar; butir terakhir ("does not do") selebar halaman --}}
 <x-dl::cols>

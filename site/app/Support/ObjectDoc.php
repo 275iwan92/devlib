@@ -15,10 +15,47 @@ final class ObjectDoc
 {
     public function __construct(public readonly string $class, public readonly ?string $child = null, public readonly ?string $childJs = null) {}
 
+    // Tiga object contoh halaman p5-override (urutan pemilih); ?object=grid|form|kanban memilih, tanpa parameter = Kanban (alamat lama tidak berubah).
+    public const OBJECTS = ['grid' => 'Grid', 'form' => 'Form', 'kanban' => 'Kanban'];
+
     // Object kerja halaman p5-override: Kanban, turunan contoh KanbanProduksi, JS turunannya ada di demo oo-override.
     public static function kanban(): self
     {
         return new self(\Devlib\Components\Kanban::class, \App\View\Components\Demo\KanbanProduksi::class, resource_path('views/demos/oo-override.blade.php'));
+    }
+
+    // Turunan contoh Grid: GridStockMovement, JS turunannya ada di demo oo-override-grid.
+    public static function grid(): self
+    {
+        return new self(\Devlib\Components\Grid::class, \App\View\Components\Demo\GridStockMovement::class, resource_path('views/demos/oo-override-grid.blade.php'));
+    }
+
+    // Turunan contoh Form: FormStockAdjustment, JS turunannya ada di demo oo-override-form.
+    public static function form(): self
+    {
+        return new self(\Devlib\Components\Form::class, \App\View\Components\Demo\FormStockAdjustment::class, resource_path('views/demos/oo-override-form.blade.php'));
+    }
+
+    // Kunci object yang dipilih alamat halaman (?object=); kunci tak dikenal = Kanban.
+    public static function key(): string
+    {
+        $key = (string) request()->query('object');
+
+        return array_key_exists($key, self::OBJECTS) ? $key : 'kanban';
+    }
+
+    public static function current(): self
+    {
+        return match (self::key()) {
+            'grid' => self::grid(),
+            'form' => self::form(),
+            default => self::kanban(),
+        };
+    }
+
+    public function name(): string
+    {
+        return (new ReflectionClass($this->class))->getShortName();
     }
 
     public function file(): string
@@ -59,7 +96,7 @@ final class ObjectDoc
         return trim(preg_replace('~^// ?~m', '', $m[1] ?? ''));
     }
 
-    /** @return list<array{name: string, attr: string, type: string, default: string, meaning: string, example: string, child: string}> */
+    /** @return list<array{name: string, attr: string, type: string, default: string, meaning: string, example: string, group: string, child: string}> */
     public function props(): array
     {
         $ref = new ReflectionClass($this->class);
@@ -76,6 +113,7 @@ final class ObjectDoc
                 'default' => self::short($default),
                 'meaning' => $notes[$p->getName()][0] ?? '',
                 'example' => $notes[$p->getName()][1] ?? '',
+                'group' => $notes[$p->getName()][2] ?? '',   // judul kelompok tabel (object dengan banyak properti); kosong = satu tabel
                 'child' => $child === null ? '' : ($value == $default ? 'inherited' : 'overridden: '.self::short($value)),
             ];
         }

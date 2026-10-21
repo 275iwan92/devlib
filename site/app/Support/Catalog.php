@@ -31,7 +31,7 @@ final class Catalog
         'p5-flow-document' => '2026-10-21', // Alur Dokumen Master-Detail (Grid -> Form MD) -- disetujui user (overall) 2026-10-21
         'p5-flow-single' => '2026-10-21',   // Alur Single transaksional (Grid -> Single Form) -- disetujui user (overall) 2026-10-21
         'p5-flow-approval' => '2026-10-21', // Alur Approval (grid sendiri -> Form Approval baku, hanya baca) -- disetujui user setelah melihat hasilnya 2026-10-21
-        'p5-override' => '2026-10-21',      // OO Methods and Properties (cerita object: Kanban) -- disetujui user 2026-10-21; Jo menambah contoh Grid dan Form
+        'p5-override' => '2026-10-21',      // OO Methods and Properties (cerita object: Grid, Form, Kanban) -- disetujui user 2026-10-21 (Kanban); Jo meminta Grid dan Form ditambahkan
         // Menu Dokumen disetujui user 2026-09-26. Menu Form (p5-form-single/-md/-special, form) DICABUT ke Review 2026-09-30:
         // user belum QC, "single form bukan seperti ini". p5-master / p5-master-detail (x-dl::master) dihapus 2026-10-20 atas keputusan user.
         'p5-print' => '2026-09-26',
@@ -236,14 +236,22 @@ final class Catalog
             ['code' => 'DR', 'short' => 'DR', 'label' => 'DEV Rules', 'icon' => 'fa-solid fa-code',
                 'pages' => RulesDocs::pages() + [
                     // Cerita satu object (contoh kerja: Kanban) dalam enam bagian; tabel properti dan method dibaca dari kode (App\Support\ObjectDoc), bukan salinan.
-                    'p5-override' => $page('OO Methods and Properties', 'fa-solid fa-code-branch', [
-                        'oo-story' => ['1 · The object: what Kanban is, what it is for, what it does not do', $c('Kanban')],
-                        'oo-properties' => ['2 · Properties: what you can set', []],
-                        'oo-methods' => ['3 · Methods: what you can override', []],
-                        'oo-inherit' => ['4 · Inheriting: how to make a subclass', []],
-                        'oo-override' => ['5 · Live demo: the KanbanProduksi subclass', ['App\\View\\Components\\Demo\\KanbanProduksi', ...$c('Kanban')]],
-                        'oo-rules' => ['6 · Related rules', []],
-                    ], null, $c('Kanban')),
+                    // Tiga object contoh (Grid, Form, Kanban) dipilih lewat ?object=; tanpa parameter = Kanban. Demo hidup tiap object = berkasnya sendiri (oo-override[-grid|-form]).
+                    'p5-override' => (function () use ($page, $c) {
+                        $o = ObjectDoc::current();
+                        $n = $o->name();
+                        $demo = ObjectDoc::key() === 'kanban' ? 'oo-override' : 'oo-override-'.ObjectDoc::key();
+
+                        return $page('OO Methods and Properties', 'fa-solid fa-code-branch', [
+                            'oo-pick' => ['Choose an object: Grid, Form or Kanban', []],
+                            'oo-story' => ["1 · The object: what $n is, what it is for, what it does not do", $c($n)],
+                            'oo-properties' => ['2 · Properties: what you can set', []],
+                            'oo-methods' => ['3 · Methods: what you can override', []],
+                            'oo-inherit' => ['4 · Inheriting: how to make a subclass', []],
+                            $demo => ['5 · Live demo: the '.class_basename($o->child).' subclass', [$o->child, ...$c($n)]],
+                            'oo-rules' => ['6 · Related rules', []],
+                        ], null, $c($n));
+                    })(),
                 ]],
             // Bagian Flow (user 2026-10-21): diagram alur dengan x-dl::flow; contoh fiktif, belum ditinjau user (bukan APPROVED).
             ['code' => 'FL', 'short' => 'FL', 'label' => 'Flow Diagrams', 'icon' => 'fa-solid fa-diagram-project',
