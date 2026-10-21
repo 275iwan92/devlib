@@ -16,7 +16,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Dihapus
 
-- **Merusak:** **Form Approval versi 2** dikubur (tag `history/form-approval-v2`): prop `approval` dan `otp-url` pada
+- **Merusak:** **Form Approval versi 2** (ditolak Jo, belum pernah disetujui) dihapus total, tanpa riwayat/tag: prop `approval` dan `otp-url` pada
   `x-dl::form` (cap status approval, tombol Approve/Hold/Reject/Duplicate menurut `approval`, dialog OTP `data-f-otp`),
   aturan lint **F110**, opsi `otp` pada `Devlib.confirm()`, teks `cf_otp`/`otp_required`/`f_ask_approve_otp`, dan di demo
   login simulasi Creator/Approver/Administrator + kode OTP. `:can-approve` dan `:approval-levels/-at` tetap. Prop yang

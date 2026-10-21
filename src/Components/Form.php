@@ -34,7 +34,7 @@ use Devlib\Locale;
 //   Delete + Edit + Print + Confirm (Edit membuka isian -> Save + Undo, Undo = terkunci lagi); confirmed = Cancel + Print; cancelled = Print.
 //   TANPA New / Email / Back to Draft. Master: new = Undo + Save; active = Edit + Deactivate (+ Delete bila :deletable = administrator & belum dipakai);
 //   inactive = Activate. Tidak ada Confirm/Cancel/Print pada master. Status tampil sebagai cap di pojok kanan atas (bukan bar tahapan).
-//   Keputusan approval TIDAK diputuskan di form ini: Form Approval baku = x-dl::approval (Jo 2026-10-21; bentuk lama :approval/:otp-url = history/form-approval-v2).
+//   Keputusan approval TIDAK diputuskan di form ini: Form Approval baku = x-dl::approval (Jo 2026-10-21; prop :approval/:otp-url sudah dihapus).
 // :print-url = alamat cetakan dokumen (x-dl::print-doc): tombol Print membukanya di tab baru, Email membuka dialog e-mail di halaman
 // itu (?ds_do=email). Form yang punya action tetapi tanpa :print-url tidak menampilkan Print / Email (tidak ada yang dicetak).
 // Print tersedia di SEMUA status dokumen termasuk Draft (cetakan membawa status; Draft diberi tanda air) (user 2026-10-05).

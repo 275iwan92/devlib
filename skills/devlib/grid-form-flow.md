@@ -95,7 +95,7 @@ Approval adalah cabang sendiri di Transactional (`/lib/p5-flow-approval`): **gri
 - **Reject** dan **Hold** wajib alasan (dialog); Setujui dan Reject = final; **Hold** sementara (dokumen tetap, hanya bisa diputuskan Setujui/Reject). Setiap keputusan = LOG (event `dl:approval`; aplikasi WAJIB menyimpannya). Dokumen yang sudah Approved/Rejected dibuka hanya-baca (`'readonly' => true` pada dokumen: tanpa tombol keputusan).
 - **REJECTED** tidak tampil di daftar biasa, hanya di tab **Rejected**.
 - Demo tanpa penyimpanan: keputusan disimulasikan (toast + keadaan), Setujui/Reject lalu kembali ke grid, Hold tetap di form.
-- Bentuk lama (x-dl::form dengan `:approval`, login simulasi Creator/Approver/Administrator, kode OTP untuk membalik Reject) **dikubur**: tag `history/form-approval-v2`.
+- Bentuk lama (x-dl::form dengan `:approval`, login simulasi Creator/Approver/Administrator, kode OTP untuk membalik Reject) **dihapus total** (ditolak Jo, belum pernah disetujui; tanpa tag riwayat).
 
 ## 6. Wizard (tanpa grid)
 
