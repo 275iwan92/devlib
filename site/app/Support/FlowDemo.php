@@ -25,8 +25,6 @@ final class FlowDemo
         'po' => ['po_date' => 'PO date', 'supplier' => 'Supplier'],
     ];
 
-    // Peran simulasi: administrator boleh menghapus master yang belum dipakai.
-    public const ADMIN = 'admin-app';
 
     // Save pada record baru: demo tanpa penyimpanan, jadi form pindah ke record contoh bernomor ini (…/form/999).
     public const CREATED_ID = '999';
@@ -194,9 +192,8 @@ final class FlowDemo
         $master = self::isMaster($slug);
         $status = $id === 'new' ? 'new' : (string) $r->input('status', self::status($slug, $doc, $row));
         $act = (string) $r->input('_action', 'save');
-        $as = (string) $r->input('as', '');
         $state = ['status' => $status];
-        $self = fn (array $q = [], ?string $newId = null) => redirect(self::formUrl($slug, $newId ?? $id, $doc, $back, $q + ($as !== '' ? ['as' => $as] : [])));
+        $self = fn (array $q = [], ?string $newId = null) => redirect(self::formUrl($slug, $newId ?? $id, $doc, $back, $q));
         $label = $row ? ($row['name'] ?? $row['co_no'] ?? $row['po_no'] ?? $row['cv_no']) : 'New record';
         $reason = trim((string) $r->input('_reason'));
         $deny = fn (string $text) => $self($state)->with('flow_flash', self::flash('danger', $text));
@@ -205,8 +202,8 @@ final class FlowDemo
         if (! in_array($act, self::allowed($master, $status), true)) {
             return $reject("Action {$act} does not apply to this record in its current state.");
         }
-        if ($master && $act === 'delete' && ($as !== self::ADMIN || (int) $row['id'] % 3 === 0)) {
-            return $deny($as !== self::ADMIN ? 'Only an administrator can delete master data.' : 'This record is used by transactions. Deactivate it instead.');
+        if ($master && $act === 'delete' && (int) $row['id'] % 3 === 0) {
+            return $deny('This record is used by transactions. Deactivate it instead.');
         }
 
         switch ($act) {

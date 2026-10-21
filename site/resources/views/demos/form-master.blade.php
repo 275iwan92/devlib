@@ -6,24 +6,16 @@
     $status = $id === 'new' ? 'new' : request('status', $flow['status'] ?? 'active');
     $isNew = $status === 'new';
     $r = $flow['row'] ?? null;
-    $roles = ['entry' => 'Data entry', 'admin-app' => 'Administrator'];
-    $as = array_key_exists(request('as'), $roles) ? request('as') : 'entry';
+    // Demo tampil sebagai Administrator (tanpa simulasi login, Jo 2026-10-21): Delete muncul bila data belum dipakai transaksi (id kelipatan 3 = dipakai).
     $used = $r && (int) $r['id'] % 3 === 0;
     $src = $r ? ['code' => $r['code'], 'full_name' => $r['name'], 'position' => $r['position'], 'join_date' => $r['join_date'], 'phone' => $r['phone'] ?? null, 'company' => 'Main Company', 'work_status' => $r['status']] : [];
     // Record baru: Active, isian bawaan terisi (tanggal hari ini, perusahaan), hanya nama yang harus diisi.
     $defaults = ['company' => 'Main Company', 'join_date' => now()->format('Y-m-d'), 'work_status' => 'KONTRAK'];
     $v = fn ($k) => $isNew ? ($defaults[$k] ?? null) : ($src[$k] ?? null);
 @endphp
-<div class="dl-row" style="margin-bottom:8px">
-    <span class="dl-note" style="margin:0">Simulate login as:</span>
-    @foreach ($roles as $rk => $rl)
-        <x-dl::button size="sm" :variant="$rk === $as ? 'primary' : 'secondary'" :label="$rl" :href="\App\Support\FlowDemo::formUrl('p5-flow-master', $flow['id'], '', $flow['back'], ['status' => $isNew ? null : $status, 'as' => $rk])" />
-    @endforeach
-    <span class="dl-note" style="margin:0">Delete shows only for an Administrator on data that is not used by transactions (employees whose id is a multiple of 3 are used).</span>
-</div>
 <x-dl::form :title="$isNew ? 'Employee · New' : 'Employee · '.$src['full_name']" :subtitle="$isNew ? null : $src['code']"
-    panel="top" kind="master" :status="$status" :strict="true" :deletable="$as === 'admin-app' && ! $isNew && ! $used"
-    :action="url()->current()" method="POST" :back="$flow['back']" :hidden="['status' => $status, 'from' => $flow['back'], 'as' => $as]"
+    panel="top" kind="master" :status="$status" :strict="true" :deletable="! $isNew && ! $used"
+    :action="url()->current()" method="POST" :back="$flow['back']" :hidden="['status' => $status, 'from' => $flow['back']]"
     :tabs="['general' => 'General', 'personal' => 'Personal']"
     :created-by="$isNew ? null : 'registrar'" :created-at="$isNew ? null : '2026-01-02 08:10:00'" :updated-by="$isNew ? null : 'registrar'" :updated-at="$isNew ? null : '2026-09-28 14:22:00'">
     <x-slot:general>

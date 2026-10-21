@@ -145,14 +145,16 @@ class GridFormFlowTest extends TestCase
     {
         $acts = fn (string $q) => $this->actsOf('/lib/p5-flow-master/form/1?from=/lib/p5-flow-master&'.$q);
 
-        $this->assertEqualsCanonicalizing(['deactivate', 'edit', 'undo', 'save', 'back'], $acts('status=active'));
+        $this->assertEqualsCanonicalizing(['deactivate', 'edit', 'delete', 'undo', 'save', 'back'], $acts('status=active'));
         $this->assertEqualsCanonicalizing(['activate', 'back'], $acts('status=inactive'));
         $this->assertEqualsCanonicalizing(['undo', 'save', 'back'], $this->actsOf('/lib/p5-flow-master/form/new'));
-        $this->assertContains('delete', $acts('status=active&as=admin-app'));
-        $used = $this->actsOf('/lib/p5-flow-master/form/3?status=active&as=admin-app');
+        // Demo tampil sebagai Administrator (tanpa simulasi login): Delete muncul hanya untuk data yang belum dipakai transaksi
+        $this->assertContains('delete', $acts('status=active'));
+        $used = $this->actsOf('/lib/p5-flow-master/form/3?status=active');
         $this->assertNotContains('delete', $used);
+        $this->assertStringNotContainsString('Simulate login', $this->get('/lib/p5-flow-master/form/1?from=/lib/p5-flow-master')->getContent());
         foreach (['confirm', 'cancel', 'print'] as $never) {
-            $this->assertNotContains($never, $acts('status=active&as=admin-app'));
+            $this->assertNotContains($never, $acts('status=active'));
         }
     }
 
@@ -240,9 +242,9 @@ class GridFormFlowTest extends TestCase
         $base = ['from' => '/lib/p5-flow-master'];
         $this->assertStringContainsString('status=inactive', $this->post('/lib/p5-flow-master/form/1', $base + ['_action' => 'deactivate', 'status' => 'active'])->headers->get('Location'));
         $this->assertStringContainsString('status=active', $this->post('/lib/p5-flow-master/form/1', $base + ['_action' => 'activate', 'status' => 'inactive'])->headers->get('Location'));
-        $this->post('/lib/p5-flow-master/form/1', $base + ['_action' => 'delete', 'status' => 'active', 'as' => 'admin-app'])->assertRedirect('/lib/p5-flow-master');
-        $this->post('/lib/p5-flow-master/form/1', $base + ['_action' => 'delete', 'status' => 'active'])->assertSessionHas('flow_flash.0', 'danger');
-        $this->post('/lib/p5-flow-master/form/3', $base + ['_action' => 'delete', 'status' => 'active', 'as' => 'admin-app'])->assertSessionHas('flow_flash.0', 'danger');
+        // Demo tampil sebagai Administrator: Delete berhasil untuk data yang belum dipakai, ditolak untuk yang dipakai transaksi
+        $this->post('/lib/p5-flow-master/form/1', $base + ['_action' => 'delete', 'status' => 'active'])->assertRedirect('/lib/p5-flow-master');
+        $this->post('/lib/p5-flow-master/form/3', $base + ['_action' => 'delete', 'status' => 'active'])->assertSessionHas('flow_flash.0', 'danger');
         $this->post('/lib/p5-flow-master/form/1', $base + ['_action' => 'confirm', 'status' => 'active'])->assertSessionHas('flow_flash.0', 'warn');
     }
 

@@ -35,10 +35,10 @@ class ProfilePageTest extends TestCase
         $this->assertStringContainsString('cannot be hidden', $html);
     }
 
-    public function test_page_sits_in_special_screen_and_is_not_approved(): void
+    public function test_page_sits_in_special_screen_and_is_approved(): void
     {
         $group = collect(Catalog::groups())->firstWhere('code', 'SP');
         $this->assertArrayHasKey('p7-profile', $group['pages']);
-        $this->assertArrayNotHasKey('p7-profile', Catalog::APPROVED);
+        $this->assertArrayHasKey('p7-profile', Catalog::APPROVED);   // disetujui Jo 2026-10-21
     }
 }
