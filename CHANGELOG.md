@@ -28,6 +28,11 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
   header REMARK, CSS token, manifest, tes kontrak, halaman katalog), aturan baku, cara mewariskan, uji layak jadi object, dan versi. Butir yang belum
   punya aturan tertulis ditandai **BELUM ADA ATURAN**. Ditautkan dari `SKILL.md`.
 
+- **Nested Grid** (opt-in, aturan pemilik 2026-10-21; `skills/devlib/grid.md`). Kolom teks / daftar `x-dl::grid` dengan `'url'` kini mengisi `{kolom}` (nilai kolom lain di baris itu), tidak hanya `{id}`,
+  dan `'ref' => true` memberi gaya tautan rujukan (aksen, garis bawah, panah ↗). Dengan itu grid bisa saling menaut tanpa form (grid ke grid, tingkat tidak dibatasi).
+  Situs acuan: halaman `p5-grid-nested` (Grid Report): Customer Order → Customer / Order → item → Product → Order …, jejak di breadcrumb dan `?t=`, Back naik satu tingkat
+  (`App\Support\NestedDemo`, tes `NestedGridTest`). Kolom tanpa `url` / `ref` tidak berubah.
+
 - **Export grid: CSV dan XLSX.** Tombol Export di toolbar `x-dl::grid` kini membuka menu dua pilihan (CSV, XLSX). XLSX dibuat di peramban tanpa pustaka
   (`Devlib.h.xlsxBlob` / `downloadXlsx`: satu lembar, ZIP tanpa kompresi, angka tetap angka). Berlaku untuk semua grid, termasuk halaman APPROVED
   (hanya tombolnya: bertambah panah dan menu). Isi export tidak berubah (kolom yang tampil, urutan dan saringan saat itu).

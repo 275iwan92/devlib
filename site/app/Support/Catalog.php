@@ -106,6 +106,10 @@ final class Catalog
                     'p5-grid-pivot' => $page('Grid Pivot', 'fa-solid fa-table-cells-large', [
                         'grid-pivot' => ['Grid Pivot (rows × columns × values)', $c('Pivot')],
                     ]) + ['folder' => 'Grid Report'],
+                    // Nested Grid (user 2026-10-21): grid ke grid saja, tanpa form; link di sel membuka grid lain, tingkat tidak dibatasi (NestedDemo).
+                    'p5-grid-nested' => $page('Nested Grid', 'fa-solid fa-share-nodes', [
+                        'grid-nested' => ['Nested Grid: Customer Orders; Order No., Customer and Product cells open other grids (grid to grid, many levels, never a form)', $c('Grid')],
+                    ]) + ['folder' => 'Grid Report'],
                     // Transactional: grid kerapatan rapat, tanpa kotak per baris; form = siklus ketat (Draft/Confirmed/Cancelled), Rupiah.
                     'p5-flow-document' => $page('Master-Detail', 'fa-solid fa-file-signature', [
                         'flow-document' => ['Master-Detail flow: Customer Order (#1) / Purchase Order (#2) grid → Form Master-Detail → Edit / Confirm / Cancel / Print → Back to the grid', $c('Grid', 'Form', 'Lines')],

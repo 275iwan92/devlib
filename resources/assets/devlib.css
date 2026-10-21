@@ -3995,3 +3995,7 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-grid__expmenu[hidden]{display:none}
 .dl-grid__expmenu button{padding:7px 12px;border:0;background:none;color:var(--dl-ink);font:inherit;text-align:left;border-radius:6px;cursor:pointer}
 .dl-grid__expmenu button:hover{background:var(--dl-accent-soft)}
+/* Nested Grid: sel yang membuka grid lain (kolom 'url' + 'ref') */
+.dl-grid__link--ref{display:inline-block;color:var(--dl-accent);text-decoration:underline;text-underline-offset:2px}
+.dl-grid__link--ref::after{content:"\f08e";font-family:"Font Awesome 6 Free";font-weight:900;margin-left:5px;font-size:.7em;opacity:.7}
+.dl-grid__link--ref:hover{color:var(--dl-accent-2)}

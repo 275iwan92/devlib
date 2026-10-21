@@ -34,6 +34,8 @@ use Devlib\Lang;
 // actions: master (Edit + Aktif/Nonaktif, Pilihan C) | worklist (Buka saja; Confirm/Approve TIDAK di grid, hanya di form) | none
 // link: nilai hasil transaksi (Grid Master, mis. 'Valued transactions'), hanya-baca; 'format' => money|number,
 //   'url' => alamat daftar transaksi baris itu ({id}); tanpa url -> event dl:grid-link.
+// Kolom teks / daftar dengan 'url' = isi sel jadi tautan; {id} = kunci baris, {kolom} = nilai kolom lain di baris itu; 'ref' => true = gaya tautan rujukan
+//   (aksen, garis bawah, panah) ke grid lain: dasar Nested Grid (grid ke grid, tanpa form, tingkat tidak dibatasi; skills/devlib/grid.md).
 // Tipe kolom tambahan: image (thumbnail + perbesar), progress (0-100), steps ('steps' => [tahap..], nilai = tahap sekarang),
 //   toggle (saklar, bisa diubah -> dl:grid-cell), rating, spark (array angka), button ('text', 'action' -> dl:grid-action).
 // detail: ['key' => kolom array baris anak, 'columns' => [[key,label,type,'strong' => true (tebal)]], 'title'] -> baris dibuka = tabel detail bersarang.

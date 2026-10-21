@@ -143,6 +143,20 @@ Route::middleware('devlib.auth')->group(function () {
         return view('flow-print', ['doc' => \App\Support\FlowPrintDoc::make($slug, $doc, $row, $status, $approval)]);
     })->where('id', '[A-Za-z0-9_-]+')->name('lib.flow.print');
 
+    // Nested Grid: satu tingkat = satu halaman (customer | order | product); jejak tingkat sebelumnya di query ?t=. Grid ke grid saja, tanpa form.
+    Route::get('/lib/p5-grid-nested/{type}/{key}', function (Request $r, string $type, string $key) use ($libData) {
+        $level = \App\Support\NestedDemo::level($type, $key, $r->query('t')) ?? abort(404);
+        $base = Catalog::page('p5-grid-nested');
+        $demo = 'grid-nested-level';
+        $page = [
+            'label' => $level['title'],
+            'members' => [$demo => ['Nested Grid level: '.$level['kind'].' (links open the next grid; Back goes up one level)', $base['classes']]],
+            'crumbs' => array_fill_keys($base['trail'], null) + [$base['label'] => \App\Support\NestedDemo::root()] + $level['crumbs'] + [$level['title'] => $level['self']],
+        ] + $base;
+
+        return view('lib-cat', ['page' => $page, 'code' => file_get_contents(resource_path("views/demos/{$demo}.blade.php")), 'data' => $libData() + ['nested' => $level]]);
+    })->where('type', 'customer|order|product')->where('key', '[A-Za-z0-9_.-]+')->name('lib.nested');
+
     Route::post('/lib/{slug}/form/{id}', function (Request $r, string $slug, string $id) {
         abort_unless(FlowDemo::has($slug), 404);
 

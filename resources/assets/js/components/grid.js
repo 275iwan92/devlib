@@ -283,8 +283,9 @@
         case 'button': return `<td><button type="button" class="dl-btn dl-btn--secondary dl-btn--sm" data-g-action="${esc(c.action || c.key)}">${esc(c.text || c.label)}</button></td>`;
         default: {
         // 'url' pada kolom teks / daftar: isi sel menjadi tautan ({id} = kunci baris); sel kosong tampil "+" supaya tetap bisa diklik.
-        const txt = esc(this.fmtCell(c, v)), href = c.url ? esc(c.url.replace('{id}', encodeURIComponent(r[this.cfg.rowKey]))) : null;
-        return `<td><div class="dl-grid__txt${c.list ? ' dl-grid__txt--list' : ''}">${href ? `<a class="dl-grid__link dl-grid__link--text" href="${href}" data-g-link="${esc(c.key)}">${txt || '+'}</a>` : txt}</div></td>`;
+        // {id} = kunci baris; {kolom} = nilai kolom lain di baris itu (Nested Grid). 'ref' => true: gaya tautan rujukan (aksen, garis bawah, panah) ke grid lain.
+        const txt = esc(this.fmtCell(c, v)), href = c.url ? esc(c.url.replace(/\{(\w+)\}/g, (m, k) => encodeURIComponent(k === 'id' ? r[this.cfg.rowKey] : (r[k] ?? '')))) : null;
+        return `<td><div class="dl-grid__txt${c.list ? ' dl-grid__txt--list' : ''}">${href ? `<a class="dl-grid__link dl-grid__link--text${c.ref ? ' dl-grid__link--ref' : ''}" href="${href}" data-g-link="${esc(c.key)}">${txt || '+'}</a>` : txt}</div></td>`;
       }
       }
     }

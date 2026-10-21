@@ -55,7 +55,7 @@ class GridFormFlowTest extends TestCase
         $menu = collect(Catalog::modules())->firstWhere('label', 'Grid and Form')['children'];
         $this->assertSame(['Grid Report', 'Grid Pre-Entry', 'Form Wizard'], array_column($menu, 'label'));
         $this->assertSame(['List' => false], ['List' => false]);
-        $this->assertSame(['Grid Report List', 'Grid Group By', 'Grid Summary → Details', 'Grid Pivot'], array_column($menu[0]['items'], 'label'));
+        $this->assertSame(['Grid Report List', 'Grid Group By', 'Grid Summary → Details', 'Grid Pivot', 'Nested Grid'], array_column($menu[0]['items'], 'label'));
         $pre = $menu[1]['items'];
         $this->assertSame(['Transactional', 'Master', 'Grid Lookup'], array_column($pre, 'label'));
         $this->assertSame(['Master-Detail', 'Single', 'Approval'], array_column($pre[0]['items'], 'label'));
