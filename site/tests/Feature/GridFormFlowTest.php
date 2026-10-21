@@ -49,7 +49,7 @@ class GridFormFlowTest extends TestCase
             $this->get('/lib/'.$slug)->assertOk();
         }
         foreach (['p5-flow-master', 'p5-flow-document', 'p5-flow-single', 'p5-flow-approval'] as $slug) {
-            $this->assertArrayNotHasKey($slug, Catalog::APPROVED);
+            $this->assertArrayHasKey($slug, Catalog::APPROVED);   // disetujui Jo (overall) 2026-10-21
         }
 
         $menu = collect(Catalog::modules())->firstWhere('label', 'Grid and Form')['children'];

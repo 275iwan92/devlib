@@ -26,6 +26,11 @@ final class Catalog
         'p5-grid-group' => '2026-09-26',     // Grid Report dipecah per varian 2026-09-30, isi tidak berubah
         'p5-grid-drilldown' => '2026-09-26',
         'p5-grid-pivot' => '2026-09-26',
+        'p5-grid-nested' => '2026-10-21',   // Nested Grid -- disetujui user (overall) 2026-10-21
+        'p5-flow-master' => '2026-10-21',   // Alur Master Data (Grid Master -> Master Form) -- disetujui user (overall) 2026-10-21
+        'p5-flow-document' => '2026-10-21', // Alur Dokumen Master-Detail (Grid -> Form MD) -- disetujui user (overall) 2026-10-21
+        'p5-flow-single' => '2026-10-21',   // Alur Single transaksional (Grid -> Single Form) -- disetujui user (overall) 2026-10-21
+        'p5-flow-approval' => '2026-10-21', // Alur Approval (Grid -> Form Approval) -- disetujui user (overall) 2026-10-21
         // Menu Dokumen disetujui user 2026-09-26. Menu Form (p5-form-single/-md/-special, form) DICABUT ke Review 2026-09-30:
         // user belum QC, "single form bukan seperti ini". p5-master / p5-master-detail (x-dl::master) dihapus 2026-10-20 atas keputusan user.
         'p5-print' => '2026-09-26',

@@ -14,10 +14,10 @@ class NestedGridTest extends TestCase
         return str_replace('\\/', '/', html_entity_decode($html));
     }
 
-    public function test_the_page_lives_in_grid_report_and_is_not_approved(): void
+    public function test_the_page_lives_in_grid_report_and_is_approved(): void
     {
         $this->assertSame('Grid Report', Catalog::page('p5-grid-nested')['folder']);
-        $this->assertArrayNotHasKey('p5-grid-nested', Catalog::APPROVED);
+        $this->assertArrayHasKey('p5-grid-nested', Catalog::APPROVED);   // disetujui Jo (overall) 2026-10-21
         $menu = collect(Catalog::modules())->firstWhere('label', 'Grid and Form')['children'];
         $this->assertContains('Nested Grid', array_column($menu[0]['items'], 'label'));
         $this->assertNull(Catalog::page('p5-grid-variant'));

@@ -1,16 +1,16 @@
 {
-    "generated": "2026-10-21 08:03",
+    "generated": "2026-10-21 09:03",
     "database": "devlib",
     "totals": {
         "objects": 83,
         "modules": 14,
-        "modules_done": 2,
+        "modules_done": 3,
         "screens": 161,
         "v2": 161,
         "v1": 0,
         "not_built": 0,
-        "waiting_qc": 36,
-        "locked": 47,
+        "waiting_qc": 31,
+        "locked": 52,
         "forms": 4,
         "grids": 8,
         "reports": 2,
@@ -18,7 +18,7 @@
         "engine_groups": 3,
         "migrations": 9,
         "tests": 19,
-        "commits": 356,
+        "commits": 365,
         "since": "2026-09-23"
     },
     "modules": [
@@ -100,8 +100,8 @@
             "v2": 16,
             "v1": 0,
             "not_built": 0,
-            "waiting_qc": 5,
-            "locked": 11,
+            "waiting_qc": 0,
+            "locked": 16,
             "form": 4,
             "grid": 8,
             "report": 1
@@ -647,10 +647,10 @@
             "key": "page:p5-grid-nested",
             "name": "Nested Grid",
             "module": "Grid and Form",
-            "qc": "READY_FOR_QC",
-            "built_at": null,
+            "qc": "LOCKED",
+            "built_at": "2026-10-21",
             "built_by": null,
-            "changed_at": null,
+            "changed_at": "2026-10-21",
             "changed_by": null
         },
         {
@@ -658,10 +658,10 @@
             "key": "page:p5-flow-document",
             "name": "Master-Detail",
             "module": "Grid and Form",
-            "qc": "READY_FOR_QC",
-            "built_at": null,
+            "qc": "LOCKED",
+            "built_at": "2026-10-21",
             "built_by": null,
-            "changed_at": null,
+            "changed_at": "2026-10-21",
             "changed_by": null
         },
         {
@@ -669,10 +669,10 @@
             "key": "page:p5-flow-single",
             "name": "Single",
             "module": "Grid and Form",
-            "qc": "READY_FOR_QC",
-            "built_at": null,
+            "qc": "LOCKED",
+            "built_at": "2026-10-21",
             "built_by": null,
-            "changed_at": null,
+            "changed_at": "2026-10-21",
             "changed_by": null
         },
         {
@@ -680,10 +680,10 @@
             "key": "page:p5-flow-approval",
             "name": "Approval",
             "module": "Grid and Form",
-            "qc": "READY_FOR_QC",
-            "built_at": null,
+            "qc": "LOCKED",
+            "built_at": "2026-10-21",
             "built_by": null,
-            "changed_at": null,
+            "changed_at": "2026-10-21",
             "changed_by": null
         },
         {
@@ -691,10 +691,10 @@
             "key": "page:p5-flow-master",
             "name": "Master",
             "module": "Grid and Form",
-            "qc": "READY_FOR_QC",
-            "built_at": null,
+            "qc": "LOCKED",
+            "built_at": "2026-10-21",
             "built_by": null,
-            "changed_at": null,
+            "changed_at": "2026-10-21",
             "changed_by": null
         },
         {
