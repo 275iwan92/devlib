@@ -61,3 +61,24 @@ class StockIssue extends Model implements \Devlib\Engine\Adjustable
 - Pembatalan dan pembalik berjalan dalam **satu transaksi**: pembalik ditolak (`Result::rejected`) atau melempar = pembatalan ikut batal.
 - Setelah berhasil, event `DocumentCancelled($document, $adjustment)` dikirim; aplikasi boleh mendengarkannya (notifikasi, log).
 - Dokumen yang bukan `Adjustable` tetap CANCELLED tanpa pembalik.
+
+## Engine siap pakai: LeadTime (lead time pengadaan)
+
+`Devlib\Engine\LeadTime` (hitungan murni, immutable, tanpa database) mencatat lama dari barang DIPESAN sampai MASUK dari data nyata dan memberi perkiraan tiba. `LeadTimeEngine` (key `lead-time`, mode Calc) hanya pembungkus untuk `EngineRegistry` / katalog; daftarkan bila perlu (opt-in).
+
+```php
+$lt = \Devlib\Engine\LeadTime::of($orders, ['samples' => 5, 'min_samples' => 3, 'fallback_days' => 7, 'late_tolerance_days' => 1]);
+// $orders = [['start' => '2026-10-01', 'end' => '2026-10-06', 'key' => 'PO-1'], ['start' => '2026-10-10', 'end' => null], ...]
+
+$lt->effective();                       // rata-rata `samples` catatan selesai terakhir (urut tanggal masuk), dibulatkan ke atas; < min_samples = fallback_days; null bila tak ada
+$lt->source(); $lt->basis();            // 'data' | 'manual' | 'none'; jumlah catatan yang dipakai
+$lt->count(); $lt->average(); $lt->min(); $lt->max(); $lt->median(); $lt->last();   // statistik catatan selesai
+$lt->expected('2026-10-10');            // '2026-10-15' (tanggal pesan + effective) atau null
+$lt->status('2026-10-10', $today);      // elapsed_days, typical_days, expected_at, state: on_time | late | unknown
+$lt->suggestReorderPoint(4.0, 10);      // SARAN: pemakaian harian x effective + stok pengaman (tidak mengubah apa pun)
+$lt->describe(); $lt->describeExpected($start); $lt->describeStatus($start, $today);   // kalimat Lang (kunci leadtime_*)
+```
+
+- Hari = selisih **tanggal kalender**; jam dan zona dibuang (`'2026-10-05 23:59'` ke `'2026-10-06 00:01'` = 1 hari). Tanggal boleh `Y-m-d`, `Y-m-d H:i:s`, ISO, atau `DateTimeInterface`.
+- Catatan belum selesai (`end` null), terbalik (`end < start`), atau bertanggal tak sah diabaikan tanpa galat.
+- Aplikasi memegang lead time manual dan keputusan memakainya; engine hanya menyarankan.

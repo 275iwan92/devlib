@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
         // Engine contoh situs ini (kontrak Devlib\Engine): sumber halaman Engine Catalog dan item QC.
         app(\Devlib\Engine\EngineRegistry::class)->register(
             new \App\Engines\VolumeDiscountEngine, new \App\Engines\ReorderSuggestionEngine,
-            new \App\Engines\StatusFlowEngine, new \App\Engines\DocumentNumberEngine,
+            new \App\Engines\StatusFlowEngine, new \App\Engines\DocumentNumberEngine, new \Devlib\Engine\LeadTimeEngine,
         );
 
         // Contoh Lookup remote (data besar dicari ke server): 300 lokasi fiktif, baris tidak ditanam di halaman.

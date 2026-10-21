@@ -559,6 +559,13 @@ final class Lang
         'idle_ended' => ['Sesi berakhir', 'Your session has ended'], 'idle_done' => ['Mengalihkan ke halaman masuk…', 'Redirecting to the sign-in page…'],
         'idle_preview' => ['Simulasi: pada titik ini Anda dikeluarkan dari aplikasi. Di sini tidak ada yang dikirim dan halaman tidak berpindah.', 'Simulation: at this point you would be signed out. Nothing is sent here and the page does not move.'],
         'idle_again' => ['Ulangi simulasi', 'Run the simulation again'],
+        // Lead time pengadaan (Devlib\Engine\LeadTime::describe*); {n} {k} {m} {date} diisi pemformat.
+        'leadtime_usual' => ['Biasanya tiba {n} hari (rata-rata {k} pemesanan)', 'Usually arrives in {n} days (average of {k} orders)'],
+        'leadtime_manual' => ['Biasanya tiba {n} hari (perkiraan manual)', 'Usually arrives in {n} days (manual estimate)'],
+        'leadtime_expected' => ['Perkiraan tiba {date}', 'Expected to arrive {date}'],
+        'leadtime_late' => ['Sudah {n} hari, biasanya {m}. Periksa pesanan.', '{n} days so far, usually {m}. Check the order.'],
+        'leadtime_ontime' => ['Sudah {n} hari, biasanya {m}.', '{n} days so far, usually {m}.'],
+        'leadtime_none' => ['Belum ada data lead time', 'No lead time data yet'],
         'lk_enter_pw' => ['Isi password.', 'Enter the password.'],
         'lk_wrong_pw' => ['Password salah.', 'Wrong password.'],
         'lu_new' => ['baru', 'new'],
