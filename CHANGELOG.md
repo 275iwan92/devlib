@@ -6,6 +6,7 @@ Selama `0.x`, kenaikan minor boleh merusak antarmuka; perubahan seperti itu
 ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
+- **`x-dl::alert` menerima `items`** (permintaan Jo 2026-10-21, portal karir tmerp): daftar butir di bawah pesan (`ul.dl-alert__list`), untuk semua galat validasi form panjang sekaligus. Tanpa `items` markup sama seperti sebelumnya. Panduan dan manifest diperbarui.
 - **Halaman tamu dari database** (permintaan Jo 2026-10-21, tmerp mewarisi): `x-dl::frame` menerima `image-list` dan `quote-list` (gambar latar dan kutipan dari aplikasi, bukan folder media); `x-dl::login-box` menerima `uat-accounts`; `x-dl::uat-accounts` menerima baris `label => ['login' =>, 'password' =>]` yang bisa diklik untuk mengisi kolom login dan password. Panduan dan manifest diperbarui.
 
 ### Ditambahkan

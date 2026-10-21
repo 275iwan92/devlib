@@ -27,6 +27,7 @@ Constructor of `Devlib\Components\Alert` (2 props, nothing inherited from `Devli
 |---|---|---|
 | `tone` | `string`, `'danger'` | Color family. Valid: `danger` (red), `info` (blue), `warn` (amber), `success` (green). Adds class `dl-alert--<tone>`. Not translated. Any other string (for example `warning`, `error`) is written as a class that has no CSS, so the box shows with a plain 1px border and no tint: use exactly `warn`, not `warning`. Also appears in the catalog tag: `x-dl::alert tone=<tone>`. |
 | `message` | `?string`, `null` | Plain text inside the box. Output with `{{ }}`, so HTML is escaped. Translated through the dictionary (`message` is in `TEXT_PROPS`); wrap data values in `raw()` (the helper, or `Lang::raw()`), for example `:message="raw($log)"`. A non-empty message (`'0'` counts as empty) turns `is-show` on. Can be combined with the slot: the message is printed first, then the slot. |
+| `items` | `array`, `[]` | List of points printed as a bulleted list (`ul.dl-alert__list`) under the message, for example every validation error of a long form. Each item is escaped plain text, not translated (pass final text or `raw()`). A non-empty list turns `is-show` on. Printed between the message and the slot. |
 
 Extra HTML attributes (`id`, `class`, `style`, `data-*`) are merged onto the root `div` (`class` is appended to the `dl-alert` classes). The attribute `can="module.action"` is supported (base class `DevlibComponent`): without the ability nothing is rendered at all, not even the empty box.
 

@@ -18,6 +18,7 @@ class Alert extends DevlibComponent
     public function __construct(
         public string $tone = 'danger', // danger | info | warn | success
         public ?string $message = null,
+        public array $items = [], // butir pesan (daftar poin di bawah message), mis. semua galat validasi form
     ) {}
 
     public function tag(): string
@@ -28,7 +29,7 @@ class Alert extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class(['dl-alert', 'dl-alert--'.$tone, 'is-show' => $message || trim($slot) !== '']) }} {!! $dl() !!} data-dl-alert>{{ $message }}{{ $slot }}</div>
+            <div {{ $attributes->class(['dl-alert', 'dl-alert--'.$tone, 'is-show' => $message || $items || trim($slot) !== '']) }} {!! $dl() !!} data-dl-alert>{{ $message }}@if ($items)<ul class="dl-alert__list">@foreach ($items as $item)<li>{{ $item }}</li>@endforeach</ul>@endif{{ $slot }}</div>
             BLADE;
     }
 }

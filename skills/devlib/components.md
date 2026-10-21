@@ -26,7 +26,7 @@ Form aksi kecil: pembungkus <form> TANPA judul / panel / tombol sendiri -- untuk
 ## `<x-dl::alert>`
 Kotak pesan sebaris. Kosong = tersembunyi (bisa diisi lewat JS). Slot = isi kaya (teks tebal + tombol aksi).
 - Berkas: `src/Components/Alert.php`
-- Prop: tone:string='danger', message:?string=NULL
+- Prop: tone:string='danger', message:?string=NULL, items:array=[]
 
 ## `<x-dl::announce>`
 Pengumuman bergantian (dari file teks lewat x-dl::frame announce="...").
