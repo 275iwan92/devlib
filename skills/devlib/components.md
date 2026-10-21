@@ -463,6 +463,11 @@ Tombol ikon persegi (kolom Aksi grid, toolbar). icon = arti baku (edit, delete, 
 - Berkas: `src/Components/IconButton.php`
 - Prop: icon:string='edit', title:string='', variant:string='default', href:?string=NULL, confirm:?string=NULL
 
+## `<x-dl::idle-logout>`
+Logout otomatis setelah tidak ada aktivitas: hitung mundur di browser, peringatan dengan tombol Tetap masuk, lalu logout dan pindah ke halaman login.
+- Berkas: `src/Components/IdleLogout.php`
+- Prop: minutes:float=30.0, warn:float=2.0, logoutUrl:string='', pingUrl:string='', pingEvery:float=5.0, loginUrl:string='', preview:bool=false
+
 ## `<x-dl::import>`
 Import data dari CSV (perilaku ImportAction Filament): 1 Upload (+ template) -> 2 Cocokkan kolom.
 - Berkas: `src/Components/Import.php`

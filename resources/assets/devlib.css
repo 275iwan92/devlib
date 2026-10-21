@@ -895,6 +895,15 @@ body.dl-page-wide .dl-cat{max-width:none;padding-left:6px;padding-right:6px}
 .dl-toast2--danger{border-left-color:var(--dl-danger)}.dl-toast2--danger > i{color:var(--dl-danger)}
 .dl-toast2--warn{border-left-color:var(--dl-amber-2)}.dl-toast2--warn > i{color:var(--dl-amber-2)}
 @keyframes dl-toast-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* idle-logout: peringatan non-modal di pojok kanan bawah (gaya toast2 + warn), di atas toast */
+.dl-idle{position:fixed;right:18px;bottom:18px;z-index:310;display:flex;align-items:flex-start;gap:12px;width:min(400px,92vw);box-sizing:border-box;background:var(--dl-surface);color:var(--dl-ink);border:1px solid var(--dl-border);border-left:4px solid var(--dl-amber-2);border-radius:var(--dl-radius);box-shadow:var(--dl-shadow-pop);padding:calc(12px * var(--dl-density)) 14px;font-size:calc(13px * var(--dl-font-scale));animation:dl-toast-in .2s ease}
+.dl-idle[hidden]{display:none}
+.dl-idle.is-out{border-left-color:var(--dl-danger)}
+.dl-idle__icon{margin-top:2px;color:var(--dl-amber-2);font-size:calc(16px * var(--dl-font-scale))}
+.dl-idle.is-out .dl-idle__icon{color:var(--dl-danger)}
+.dl-idle__body{flex:1;display:flex;flex-direction:column;gap:calc(4px * var(--dl-density))}
+.dl-idle__body b{color:var(--dl-ink-strong)}
+.dl-idle__act{display:flex;align-items:center;gap:14px;margin-top:calc(8px * var(--dl-density))}
 /* modal: ukuran & konfirmasi */
 .dl-modal--sm{max-width:400px}.dl-modal--md{max-width:520px}.dl-modal--lg{max-width:760px}.dl-modal--xl{max-width:1000px}
 .dl-modal__head h3 i{color:var(--dl-accent);margin-right:4px}

@@ -292,7 +292,7 @@ final class Catalog
             ],
             'Components' => [
                 ['code' => 'IN', 'label' => 'Inputs & Buttons', 'icon' => 'fa-solid fa-i-cursor', 'pages' => $in('p2-', ['inputs', 'numbers', 'datetime', 'choices', 'files', 'buttons'])],
-                ['code' => 'DF', 'label' => 'Display & Feedback', 'icon' => 'fa-solid fa-comment-dots', 'pages' => [...$in('p2-', ['display', 'containers', 'navigation']), ...$in('p3-', ['feedback', 'loading', 'notifications', 'errors'])]],
+                ['code' => 'DF', 'label' => 'Display & Feedback', 'icon' => 'fa-solid fa-comment-dots', 'pages' => [...$in('p2-', ['display', 'containers', 'navigation']), ...$in('p3-', ['feedback', 'loading', 'notifications', 'idle-logout', 'errors'])]],
                 ['code' => 'WU', 'label' => 'Widgets & Utilities', 'icon' => 'fa-solid fa-puzzle-piece', 'pages' => ['p6-greeting-card', 'p6-timer', 'p6-geo-clock', 'p6-codes']],
             ],
             'Screen' => [
@@ -418,6 +418,7 @@ final class Catalog
                 'skeleton' => ['Skeleton', $c('Skeleton')], 'spinner' => ['Spinner', $c('Spinner')], 'empty-state' => ['Empty State', $c('EmptyState')],
             ]],
             'p3-notifications' => ['Notifications', 'fa-solid fa-bell', ['notification-list' => ['Notification List', $c('NotificationList')]], 'mockup_notification.jpg'],
+            'p3-idle-logout' => ['Idle Logout', 'fa-solid fa-hourglass-half', ['idle-logout' => ['Idle Logout (warning, countdown, auto sign-out)', $c('IdleLogout')]]],
             'p3-errors' => ['Error Pages', 'fa-solid fa-triangle-exclamation', ['error-pages' => ['403 · 404 · 419 · 500 · 503 · Offline', $c('ErrorPage')]]],
         ];
         $out = [];
