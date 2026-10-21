@@ -112,6 +112,7 @@ final class Catalog
                     // Nested Grid (user 2026-10-21): grid ke grid saja, tanpa form; link di sel membuka grid lain, tingkat tidak dibatasi (NestedDemo).
                     'p5-grid-nested' => $page('Nested Grid', 'fa-solid fa-share-nodes', [
                         'grid-nested' => ['Nested Grid: Customer Orders; Order No., Customer and Product cells open other grids (grid to grid, many levels, never a form)', $c('Grid')],
+                        'grid-nested-purchase' => ['Nested Grid, second example: Purchase Orders; PO No., Supplier and Item cells open other grids (same rules, different data)', $c('Grid')],
                     ]) + ['folder' => 'Grid Report'],
                     // Transactional: grid kerapatan rapat, tanpa kotak per baris; form = siklus ketat (Draft/Confirmed/Cancelled), Rupiah.
                     'p5-flow-document' => $page('Master-Detail', 'fa-solid fa-file-signature', [

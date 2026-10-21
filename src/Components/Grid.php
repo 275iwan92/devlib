@@ -46,7 +46,7 @@ use Devlib\Lang;
 // cards: ['image','title','sub','badge','tones','meta' => [kolom..]] -> tombol Tabel/Kartu (CardView).
 // openUrl: alamat buka baris, {id} diganti nilai rowKey (klik 2x / tombol Buka / Edit langsung pindah layar);
 //   {kolom} lain diganti nilai kolom baris itu, mis. '{open_url}' bila tiap baris membawa alamatnya sendiri.
-// restore (opt-in, alur grid -> form: skills/devlib/grid-form-flow.md): grid mengingat cari, halaman, dan statistik saat membuka form lewat openUrl / newUrl dan memulihkannya
+// restore (opt-in, alur grid -> form: skills/devlib/grid-form-flow.md): grid mengingat cari, halaman, dan statistik (dan saringan kolom) saat membuka form lewat openUrl / newUrl atau saat tautan sel ('url') diikuti (Nested Grid), dan memulihkannya
 //   sekali saat kembali; ?hl=<id> pada alamat grid menyorot baris itu (halaman diloncati, saringan sisa dilepas bila menyembunyikannya). Tanpa restore = perilaku lama.
 // newUrl: alamat tombol + New Record (pindah ke form baru / pemilih sumber). newModal: id x-dl::modal yang dibuka (wizard).
 // toggleUrl: POST ke alamat ini ({id}) saat Aktif/Nonaktif (Grid Master) -> status dari jawaban server {active}; tanpa toggleUrl = pratinjau saja.

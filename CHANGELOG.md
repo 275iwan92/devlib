@@ -52,6 +52,14 @@ dan Mode Developer dihapus (tidak dipakai sstock maupun proyek ERP); layar Speci
   Situs acuan: halaman `p5-grid-nested` (Grid Report): Customer Order → Customer / Order → item → Product → Order …, jejak di breadcrumb dan `?t=`, Back naik satu tingkat
   (`App\Support\NestedDemo`, tes `NestedGridTest`). Kolom tanpa `url` / `ref` tidak berubah.
 
+- **Nested Grid: penyempurnaan dan tiga kemampuan baru** (opt-in, izin pemilik 2026-10-21; hanya `p5-grid-nested` dan `grid.js`, tanpa perubahan pada halaman APPROVED lain):
+  - *Jejak sejak tingkat pertama*: grid awal menaut dengan `?t=home:<daftar>`, sehingga breadcrumb, `?t=` dan Back konsisten dari tingkat pertama; Back dari tingkat dua kembali ke grid awal.
+  - *Grid `restore` memulihkan keadaan saat tautan sel diikuti* (bukan hanya saat membuka form): kata cari, halaman, kotak statistik, dan kini juga saringan per kolom (`colf`). Grid tanpa `restore` tidak berubah.
+  - *Jejak rusak dibakukan*: segmen tak sah dibuang, `t` bukan teks tidak lagi menjadi galat, alamat dialihkan ke bentuk baku.
+  - *Contoh kedua, data lain*: Supplier → Purchase Order → Item → semua PO berisi item itu → Supplier … pada halaman yang sama (`grid-nested-purchase`), bukti Nested Grid bersifat generik.
+  - *Back dan Start*: Back dengan pintasan Alt+↑ (`data-dl-key` baku), dan tombol Start (ke grid pertama) muncul bila jejak panjang.
+  - *Jejak panjang dan berulang*: breadcrumb dipendekkan menjadi pertama, "…", tiga terakhir; tingkat yang sama muncul lagi = kembali ke sana (jejak dipotong, tidak menumpuk).
+
 - **Export grid: CSV dan XLSX.** Tombol Export di toolbar `x-dl::grid` kini membuka menu dua pilihan (CSV, XLSX). XLSX dibuat di peramban tanpa pustaka
   (`Devlib.h.xlsxBlob` / `downloadXlsx`: satu lembar, ZIP tanpa kompresi, angka tetap angka). Berlaku untuk semua grid, termasuk halaman APPROVED
   (hanya tombolnya: bertambah panah dan menu). Isi export tidak berubah (kolom yang tampil, urutan dan saringan saat itu).

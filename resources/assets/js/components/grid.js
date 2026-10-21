@@ -36,7 +36,7 @@
       // restore (opt-in, grid-form-flow.md): kembali dari form -> cari/halaman/statistik seperti saat grid ditinggalkan; ?hl=<id> = baris yang baru disimpan disorot.
       this.retKey = 'dl-grid-ret-' + this.cfg.id; this.hl = null;
       if (this.cfg.restore) {
-        try { const r = JSON.parse(sessionStorage.getItem(this.retKey) || 'null'); sessionStorage.removeItem(this.retKey); if (r) { Object.assign(this.st, {search: r.search || '', page: r.page || 1, stat: r.stat ?? this.st.stat}); this.search.value = this.st.search; } } catch (e) {}
+        try { const r = JSON.parse(sessionStorage.getItem(this.retKey) || 'null'); sessionStorage.removeItem(this.retKey); if (r) { Object.assign(this.st, {search: r.search || '', page: r.page || 1, stat: r.stat ?? this.st.stat, colf: r.colf || {}}); this.search.value = this.st.search; } } catch (e) {}
         this.hl = new URLSearchParams(location.search).get('hl');
         if (this.hl) this.jumpHl();
       }
@@ -60,7 +60,7 @@
         const gr = x.closest('[data-g-grp]'); if (gr) { const g = gr.dataset.gGrp; this.st.collapsed = this.st.collapsed.includes(g) ? this.st.collapsed.filter(v => v !== g) : [...this.st.collapsed, g]; return this.drawBody(); }
         const vw = x.closest('[data-g-view] .dl-segment__opt'); if (vw) { this.st.view = vw.dataset.value; this.qq('[data-g-view] .dl-segment__opt').forEach(b => b.classList.toggle('is-active', b === vw)); return this.drawBody(); }
         const im = x.closest('[data-g-img]'); if (im) { const ov = document.createElement('div'); ov.className = 'dl-mov is-on dl-grid__lightbox'; ov.innerHTML = `<img src="${esc(im.dataset.gImg)}" alt=""><button type="button" class="dl-modal__x">&times;</button>`; ov.addEventListener('click', () => ov.remove()); document.body.appendChild(ov); return; }
-        const gl = x.closest('[data-g-link]'); if (gl && gl.getAttribute('href') === '#') { e.preventDefault(); const id = gl.closest('tr').dataset.id; if (this._emit('dl:grid-link', {id, key: gl.dataset.gLink})) toast(`${gl.closest('td') && this.cols.find(c => c.key === gl.dataset.gLink)?.label}: ${id} (${T('preview')})`); return; }
+        const gl = x.closest('[data-g-link]'); if (gl && gl.getAttribute('href') !== '#') this.keep(); if (gl && gl.getAttribute('href') === '#') { e.preventDefault(); const id = gl.closest('tr').dataset.id; if (this._emit('dl:grid-link', {id, key: gl.dataset.gLink})) toast(`${gl.closest('td') && this.cols.find(c => c.key === gl.dataset.gLink)?.label}: ${id} (${T('preview')})`); return; }
         const ga = x.closest('[data-g-action]'); if (ga) { const id = ga.closest('tr').dataset.id; if (this._emit('dl:grid-action', {id, action: ga.dataset.gAction})) toast(`${ga.textContent}: ${this.rows.find(v => String(v[this.cfg.rowKey]) === id)?.name || id} (${T('preview')})`); return; }
         if (x.closest('[data-g-qa-add]')) return this.quickAdd();
         const ex = x.closest('[data-g-exp]'); if (ex) { const id = ex.closest('tr').dataset.id; this.st.open = this.st.open.includes(id) ? this.st.open.filter(v => v !== id) : [...this.st.open, id]; return this.drawBody(); }
@@ -101,7 +101,7 @@
       this.redraw();
     }
     // Simpan keadaan grid sebelum pindah ke form (hanya grid restore), dibaca sekali oleh grid yang sama saat kembali.
-    keep() { if (this.cfg.restore) try { sessionStorage.setItem(this.retKey, JSON.stringify({search: this.st.search, page: this.st.page, stat: this.st.stat})); } catch (e) {} }
+    keep() { if (this.cfg.restore) try { sessionStorage.setItem(this.retKey, JSON.stringify({search: this.st.search, page: this.st.page, stat: this.st.stat, colf: this.st.colf})); } catch (e) {} }
 
     // Halaman yang memuat baris ?hl; bila baris tersaring keluar oleh cari / statistik sisa, saringan itu dilepas supaya baris tampak.
     jumpHl() {

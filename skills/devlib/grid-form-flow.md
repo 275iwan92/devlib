@@ -38,7 +38,7 @@ Grid and Form
 | `from` | grid → form | alamat grid asal (path + query, mis. `/lib/p5-flow-document?doc=po`) | hanya path lokal `/…` (bukan `//` atau `http`); tak sah/kosong → grid bawaan modul. Menjadi `:back` dan tujuan setelah Delete |
 | `copy` | form lama → form baru | `id` yang disalin (Duplicate, hanya dokumen REJECTED) | form baru tanpa nomor |
 | `status`, `approval`, `as` | form ↔ form | hanya demo: status/approval yang ditampilkan dan peran simulasi. Di aplikasi nyata dibaca dari record dan login | |
-| cari/halaman/statistik | grid → grid | disimpan grid ber-`restore` di `sessionStorage` saat form dibuka, dipulihkan SEKALI saat kembali | bukan parameter URL |
+| cari/halaman/statistik | grid → grid | disimpan grid ber-`restore` di `sessionStorage` saat form dibuka (atau tautan sel diikuti: Nested Grid), dipulihkan SEKALI saat kembali | bukan parameter URL |
 
 ## 3. Aksi form dan tujuannya (dokumen transaksional, Single dan Master-Detail)
 
