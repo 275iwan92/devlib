@@ -2,18 +2,22 @@
 (function (Devlib) {
   'use strict';
   const {$, T, Tf} = Devlib.h;
-  const KEY = 'dl-idle-last', KEY_OUT = 'dl-idle-out', CHANNEL = 'dl-idle';
+  const KEY = 'dl-idle-last', KEY_OUT = 'dl-idle-out', CHANNEL = 'dl-idle', MSG = 'dl:idle-activity';
   const ACTIVITY = ['mousemove', 'pointerdown', 'keydown', 'scroll', 'wheel', 'touchstart'];
   const mmss = ms => { const s = Math.max(0, Math.ceil(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
 
   /* ======================= IDLE LOGOUT ======================= */
+  // Di dalam frame (layar iframe same-origin) tidak ada pencacah, peringatan, ping, atau logout: frame hanya meneruskan aktivitas
+  // ke jendela paling atas (postMessage, hanya ke origin yang sama). Jendela atas yang tidak memasang komponen tidak mendengar apa-apa.
   // Satu instans per halaman. Waktu aktivitas terakhir dibagi antar tab (localStorage + BroadcastChannel; keduanya boleh gagal).
   // Peringatan terbuka = hanya tombol di dalamnya yang memperpanjang (gerakan tikus yang tak sengaja tidak). Form tidak disentuh.
   class IdleLogout extends Devlib.Component {
     static selector = "[data-dl-idle]";
     init() {
+      if (window !== window.top) return this.relay();
       if (window.dlIdleLogout) { this.el.remove(); return; }
       window.dlIdleLogout = this;
+      window.addEventListener('message', e => { if (e.origin === location.origin && e.source !== window && e.data && e.data.type === MSG) this.activity(); });
       const d = this.el.dataset;
       this.idleMs = (parseFloat(d.minutes) || 0) * 60000;
       this.warnMs = Math.min((parseFloat(d.warn) || 0) * 60000, this.idleMs);
@@ -34,6 +38,18 @@
       this.el.addEventListener('keydown', e => { if (e.key === 'Escape') this.keep(); });
       this.timer = setInterval(this.tick, 1000);
       this.tick();
+    }
+
+    // Dipakai di dalam frame: teruskan aktivitas ke jendela atas (dibatasi 1x per detik); elemen peringatan tidak dipakai.
+    relay() {
+      this.el.remove();
+      let at = 0;
+      const send = () => {
+        const now = Date.now(); if (now - at < 1000) return;
+        at = now;
+        try { window.top.postMessage({type: MSG}, location.origin); } catch (e) {}
+      };
+      ACTIVITY.forEach(n => document.addEventListener(n, send, {passive: true, capture: true}));
     }
 
     // Aktivitas lokal (dibatasi 1x per detik). Peringatan terbuka atau sudah habis: diabaikan.

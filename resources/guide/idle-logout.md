@@ -40,6 +40,7 @@ Script `IdleLogout` (`resources/assets/js/components/idle-logout.js`, selector `
 4. If that ping answers `401` or `419` the server session is already gone and the logout runs at once.
 5. At zero (or on **Sign out now**) it tells the other tabs, sends `POST logout-url` with `_token` and the `X-CSRF-TOKEN` header (token from `window.DL_CSRF`, then `<meta name="csrf-token">`, then an `input[name=_token]`), fires `dl:idle-logout`, and goes to `login-url`. A failed request does not stop the move.
 6. Only one instance works per page: a second tag is removed.
+7. Inside a frame (`window !== window.top`, for example a screen opened as a same-origin iframe by the application shell) the object shows nothing and never pings or logs out: it removes its element and only relays activity (same throttle) to the top window with `postMessage` (`{type: 'dl:idle-activity'}`, target origin = the page's own origin). The top window counts such a message as local activity only if its `origin` is the same, the sender is not itself, and the type matches; anything else is ignored. While the warning is open a relayed message does not extend, like any other activity: only **Stay signed in** does. The top window alone shows the warning, pings, and runs the logout, so the redirect loads the top window, not the frame.
 
 ## Data and events
 
@@ -51,6 +52,7 @@ Script `IdleLogout` (`resources/assets/js/components/idle-logout.js`, selector `
 
 ## Rules and pitfalls
 
+- With frames, the component must be in the TOP window (the shell). A frame that holds it while the top page does not has nobody to listen: the frame stays silent, so nothing counts the activity inside it and no warning or logout will ever happen. Put the tag in the shell layout; the same layout may also load it in the frames, where it is harmless.
 - Mount it once in the layout of the signed-in area only. Never on guest pages: there is nothing to sign out of.
 - Keep `minutes` equal to (or a little below) the real server session lifetime. If the server session is shorter, the person is signed out by the server before the warning.
 - `ping-url` must be a cheap authenticated route that returns `204`. It should not do work, and a route without the session middleware does not refresh anything.

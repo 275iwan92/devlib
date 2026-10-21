@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Devlib\Components\IdleLogout;
+use Devlib\DevlibServiceProvider;
 use Devlib\Lang;
 use Illuminate\Support\Facades\Blade;
 use Tests\TestCase;
@@ -51,5 +52,14 @@ class IdleLogoutTest extends TestCase
             $this->assertArrayHasKey($k, Lang::all());
         }
         $this->assertStringContainsString('{time}', Lang::all()['idle_msg'][0]);
+    }
+
+    // Layar iframe same-origin: frame hanya meneruskan aktivitas ke jendela atas; jendela atas memeriksa origin dan bentuk pesan.
+    public function test_bundle_relays_frame_activity_to_the_top_window_only_from_the_same_origin(): void
+    {
+        $js = $this->get(DevlibServiceProvider::asset('devlib.js'))->getContent();
+        foreach (["window !== window.top", "MSG = 'dl:idle-activity'", 'postMessage({type: MSG}, location.origin)', 'e.origin === location.origin'] as $needle) {
+            $this->assertStringContainsString($needle, $js, $needle);
+        }
     }
 }
