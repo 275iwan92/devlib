@@ -6,6 +6,7 @@ Selama `0.x`, kenaikan minor boleh merusak antarmuka; perubahan seperti itu
 ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
+- **Halaman tamu dari database** (permintaan Jo 2026-10-21, tmerp mewarisi): `x-dl::frame` menerima `image-list` dan `quote-list` (gambar latar dan kutipan dari aplikasi, bukan folder media); `x-dl::login-box` menerima `uat-accounts`; `x-dl::uat-accounts` menerima baris `label => ['login' =>, 'password' =>]` yang bisa diklik untuk mengisi kolom login dan password. Panduan dan manifest diperbarui.
 
 ### Ditambahkan
 

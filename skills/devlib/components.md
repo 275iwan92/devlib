@@ -406,7 +406,7 @@ Satu baris form: field berdampingan (default 2 sama lebar).
 ## `<x-dl::frame>`
 bingkai layar penuh (gambar latar + widget + kotak isi) untuk HP/tablet/laptop/desktop di resolusi apa pun.
 - Berkas: `src/Components/Frame.php`, tampilan `resources/views/components/frame.blade.php`
-- Prop: bg:string='devlib', bgOrder:string='random', bgInterval:int=0, overlay:string='dark', box:string='right', boxStyle:?string=NULL, color:string='light', boxWidth:?string=NULL, resizable:bool=false, widgets:string='', quotes:string='motivasi.txt', quoteOrder:string='random', quoteInterval:int=0, announce:string='pengumuman.txt', city:string='Surabaya', lat:float=-7.2575, lon:float=112.7521, brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL
+- Prop: bg:string='devlib', bgOrder:string='random', bgInterval:int=0, overlay:string='dark', box:string='right', boxStyle:?string=NULL, color:string='light', boxWidth:?string=NULL, resizable:bool=false, widgets:string='', quotes:string='motivasi.txt', quoteOrder:string='random', quoteInterval:int=0, announce:string='pengumuman.txt', city:string='Surabaya', lat:float=-7.2575, lon:float=112.7521, brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, imageList:?array=NULL, quoteList:?array=NULL
 
 ## `<x-dl::gantt>`
 Papan Gantt resource x waktu; mode linked = dropdown Process lalu Machine (hanya mesin mampu), sumbu dipas ke bar.
@@ -536,7 +536,7 @@ Layar kunci: menutup aplikasi setelah tidak ada aktivitas `idle` menit (0 = hany
 ## `<x-dl::login-box>`
 Isi kotak login. Cukup SEBUT bagian yang tampil, berurutan, dipisah koma:.
 - Berkas: `src/Components/LoginBox.php`, tampilan `resources/views/components/login-box.blade.php`
-- Prop: show:string='lang, title, username, p…', action:string='', button:string='Sign in', error:?string=NULL, username:string='', forgotUrl:string='#', registerUrl:string='#', brand:?string=NULL, tagline:?string=NULL
+- Prop: show:string='lang, title, username, p…', action:string='', button:string='Sign in', error:?string=NULL, username:string='', forgotUrl:string='#', registerUrl:string='#', brand:?string=NULL, tagline:?string=NULL, uatAccounts:?array=NULL
 
 ## `<x-dl::login-card>`
 Kartu login karyawan baru yang bisa dicetak: nama, kode, username, password awal. Dipakai di dalam x-dl::modal; tombol Print hanya mencetak kartunya.

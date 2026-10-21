@@ -30,6 +30,8 @@ class LoginBox extends DevlibComponent
         public string $registerUrl = '#',
         public ?string $brand = null,  // null = Brand::identity() (config devlib.brand.*)
         public ?string $tagline = null,
+        // Akun untuk ikon bantuan (part support): null = daftar contoh bawaan x-dl::uat-accounts; lihat x-dl::uat-accounts untuk bentuknya.
+        public ?array $uatAccounts = null,
     ) {}
 
     public function tag(): string

@@ -13,14 +13,18 @@
 namespace Devlib\Components;
 
 // Ikon support kecil; diklik -> popup daftar akun uji coba (UAT). HAPUS dari login sebelum rilis produksi.
+// accounts: label => login (satu password bersama) atau label => ['login' =>, 'password' =>]; baris yang punya password sendiri
+// bisa diklik dan mengisi kolom login + password kotak login di sekitarnya.
 class UatAccounts extends DevlibComponent
 {
+    public const SAMPLE = [
+        'Level 1 — Operator' => 'operator', 'Level 2 — Supervisor' => 'supervs', 'Level 3 — Manager Sales' => 'mgr-sal',
+        'Level 3 — Manager Purchasing' => 'mgr-pur', 'Level 3 — Manager Inventory' => 'mgr-inv',
+        'Level 3 — Manager Finance & Acc.' => 'mgr-acc', 'Level 4 — Direksi' => 'direksi',
+    ];
+
     public function __construct(
-        public array $accounts = [
-            'Level 1 — Operator' => 'operator', 'Level 2 — Supervisor' => 'supervs', 'Level 3 — Manager Sales' => 'mgr-sal',
-            'Level 3 — Manager Purchasing' => 'mgr-pur', 'Level 3 — Manager Inventory' => 'mgr-inv',
-            'Level 3 — Manager Finance & Acc.' => 'mgr-acc', 'Level 4 — Direksi' => 'direksi',
-        ],
+        public array $accounts = self::SAMPLE,
         public string $password = 'contoh!23',
     ) {}
 
@@ -41,10 +45,18 @@ class UatAccounts extends DevlibComponent
                 <button type="button" class="dl-uat__icon" data-dl-uat-toggle title="{{ \Devlib\Lang::text('Help: test accounts (UAT)') }}"><i class="fa-solid fa-headset"></i></button>
                 <div class="dl-uat__panel">
                     <div class="dl-uat__head">🧪 {{ \Devlib\Lang::text('Test Accounts (UAT)') }}</div>
-                    <p class="dl-uat__note">{{ \Devlib\Lang::text('All passwords are the same:') }} <code>{{ $password }}</code></p>
+                    @if (collect($accounts)->contains(fn ($a) => is_array($a)))
+                        <p class="dl-uat__note">{{ \Devlib\Lang::text('Click a row: the login and password are filled in, then press Sign in.') }}</p>
+                    @else
+                        <p class="dl-uat__note">{{ \Devlib\Lang::text('All passwords are the same:') }} <code>{{ $password }}</code></p>
+                    @endif
                     <table class="dl-uat__table"><tbody>
                         @foreach ($accounts as $label => $login)
-                            <tr><td>{{ $label }}</td><td><code>{{ $login }}</code></td></tr>
+                            @if (is_array($login))
+                                <tr data-dl-uat-fill data-login="{{ $login['login'] }}" data-password="{{ $login['password'] ?? '' }}"><td>{{ $label }}</td><td><code>{{ $login['login'] }}</code></td></tr>
+                            @else
+                                <tr><td>{{ $label }}</td><td><code>{{ $login }}</code></td></tr>
+                            @endif
                         @endforeach
                     </tbody></table>
                 </div>

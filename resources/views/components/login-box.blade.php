@@ -1,7 +1,7 @@
 <div class="dl-loginbox" {!! $dl() !!} data-dl-loginbox data-error="{{ $error }}">
     @if (array_intersect(['lang', 'support'], $parts()))
         <div class="dl-loginbox__top">
-            @if (in_array('support', $parts(), true))<x-dl::uat-accounts />@endif
+            @if (in_array('support', $parts(), true))<x-dl::uat-accounts :accounts="$uatAccounts ?? \Devlib\Components\UatAccounts::SAMPLE" />@endif
             @if (in_array('lang', $parts(), true))<x-dl::lang-switch />@endif
         </div>
     @endif

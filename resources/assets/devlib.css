@@ -205,6 +205,8 @@ body.dl-body{margin:0;font-family:var(--dl-font);background:var(--dl-bg);color:v
 .dl-uat__table{width:100%;border-collapse:collapse;font-size:calc(11.5px * var(--dl-font-scale))}
 .dl-uat__table td{padding:4px 0;border-bottom:1px solid var(--dl-border);color:var(--dl-muted)}
 .dl-uat__table td:last-child{text-align:right}
+.dl-uat__table tr[data-dl-uat-fill]{cursor:pointer}
+.dl-uat__table tr[data-dl-uat-fill]:hover td{color:var(--dl-ink)}
 
 /* ================= FIELD (induk semua input) ================= */
 .dl-field{position:relative;display:flex;flex-direction:column;min-width:0}

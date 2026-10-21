@@ -43,6 +43,7 @@ Constructor of `Devlib\Components\LoginBox` (9 props). Blade names are kebab-cas
 | `register-url` | `string`, `'#'` | `href` of the "Register" link (part `register`). Same default behaviour. |
 | `brand` | `?string`, `null` | Name given to the `x-dl::brand` of the `brand` part. `null` = the application identity (`Brand::identity()`, config `devlib.brand.*`, or the `devlib.brand` binding). |
 | `tagline` | `?string`, `null` | Tagline of the same brand badge; `null` = identity tagline. |
+| `uat-accounts` | `?array`, `null` | Accounts listed by the help icon (part `support`), in the shape `x-dl::uat-accounts` takes (`label => login`, or `label => ['login' =>, 'password' =>]` for click-to-fill rows). `null` = the built-in sample list. Not translated.
 
 ### The `show` parts
 

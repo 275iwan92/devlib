@@ -54,6 +54,9 @@ class Frame extends DevlibComponent
         public ?string $brand = null,
         public ?string $tagline = null,
         public ?string $logo = null,
+        // Aplikasi yang menyimpan gambar latar / kutipan di database mengirimnya langsung (menggantikan folder media): [['src' => url, 'portrait' => ?url], ...] dan [['t' => teks, 'a' => penulis], ...].
+        public ?array $imageList = null,
+        public ?array $quoteList = null,
     ) {
         $this->boxStyle ??= $box === 'center' ? 'card' : 'panel';
         $identity = Brand::identity();
@@ -85,6 +88,10 @@ class Frame extends DevlibComponent
     /** @return array<int, array{src: string, portrait: ?string}> */
     public function images(): array
     {
+        if ($this->imageList !== null) {
+            return array_values(array_map(fn ($i) => ['src' => $i['src'], 'portrait' => $i['portrait'] ?? null], $this->imageList));
+        }
+
         $path = self::mediaPath('bg'.DIRECTORY_SEPARATOR.$this->bg);
         $files = is_dir($path) ? glob($path.DIRECTORY_SEPARATOR.'*.{jpg,jpeg,JPG,JPEG}', GLOB_BRACE) : (is_file($path) ? [$path] : []);
         $files = array_values(array_filter($files, fn ($f) => ! str_contains(basename($f), '-portrait.')));

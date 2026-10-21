@@ -70,6 +70,8 @@ Constructor of `Devlib\Components\Frame` (20 props). Blade names are kebab-case;
 | `brand` | `?string`, `null` | Application name in the `brand` widget. `null` = the site identity: container binding `devlib.brand`, else `config('devlib.brand.name')`, else `DEVLIB`. Used only when `widgets` contains `brand`. Not translated. |
 | `tagline` | `?string`, `null` | Line under the name. `null` = identity tagline (`config('devlib.brand.tagline')`, else `developer library`). |
 | `logo` | `?string`, `null` | URL of the logo image (for example `/media/brand/logo.svg`). `null` = identity logo (`config('devlib.brand.logo')`); with no logo the badge shows the default gradient. |
+| `image-list` | `?array`, `null` | Background images supplied by the application instead of the folder `media/bg/<bg>`, for an application that keeps them in a database. A list of `['src' => url, 'portrait' => ?url]`. `null` = read the folder as before (`images()`). The order and the cross-fade still follow `bg-order` and `bg-interval`.
+| `quote-list` | `?array`, `null` | Quotes for the `quote` widget supplied by the application instead of the file `media/text/<quotes>`. A list of `['t' => text, 'a' => author]`. `null` = read the file as before (`textLines()`). Not translated: the text is data.
 
 ## Behavior
 
