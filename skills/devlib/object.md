@@ -65,3 +65,13 @@ Salah satu jawabannya "tidak" = bukan tempatnya di DevLib; letakkan di proyek pe
 ## 6. Versi dan rilis
 
 Versi dari tag git (`vX.Y.Z`), SemVer `0.y.z`: minor boleh merusak, patch hanya perbaikan. Merilis: pindahkan butir `[Belum dirilis]`, tes hijau, `php artisan devlib:manifest --check` bersih, commit, `git tag -a`. Tag lokal dulu; push hanya atas keputusan Jo. Rinci: `docs/versioning.md`.
+
+### Versi object dan default (aturan Jo, 2026-10-21)
+
+1. **Hanya satu default**, dan default = **versi terakhir**. Punya v1, v2, v3: yang default v3.
+2. Versi lama = **kode sejarah**: dikubur di riwayat git dengan tag `history/<nama>-vN`; tidak jadi kode aktif, tidak jadi default, dan **tanpa saklar atau pilihan antar versi**.
+3. Nama object tetap satu pada kode aktif (tanpa akhiran `V2`/`V3`); nomor versi dicatat di `CHANGELOG.md` dan tag.
+4. **Tidak ada "mundur".** Bila versi terakhir (vN) tidak disukai: ambil versi sebelumnya dari tag, **duplikasikan menjadi versi baru (vN+1)**, dan jadikan default. vN tetap riwayat.
+5. Membangunkan yang dikubur (hanya atas perintah Jo): `git show history/<nama>-vN:<jalur>` untuk melihat, atau `git checkout history/<nama>-vN -- <jalur>` untuk mengambilnya, lalu jadikan versi baru (butir 4).
+
+Tag riwayat yang ada: `history/menu-classic-v1` (Menu Classic: `x-dl::shell`), `history/dieline-v1` dan `history/dieline-v2` (Dieline lama; `Dieline` kini = versi terakhir, v3).

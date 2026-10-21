@@ -72,7 +72,7 @@ class PartDieline extends DevlibComponent
                             @endif
                         </div>
                     </x-dl::form.row>
-                    <x-mp::dieline-v3 :data-artwork="$p['artwork_url']" :data-artwork-inner="$p['artwork_inner_url']" :types="$p['types']" :type="$p['type_code']" :dims="$p['dims']" name="dieline" :picker="false" height="400px"
+                    <x-mp::dieline :data-artwork="$p['artwork_url']" :data-artwork-inner="$p['artwork_inner_url']" :types="$p['types']" :type="$p['type_code']" :dims="$p['dims']" name="dieline" :picker="false" height="400px"
                         :source="\MockupParts\Src::of('master.prod_type.dieline_spec', 'sales.iqp_part.dieline_spec', 'sales.iqp_part.flat_w', 'sales.iqp_part.flat_h', 'sales.iqp_part.flat_area', 'master.prod_part.dieline_spec')" />
                 </div>
             </form>

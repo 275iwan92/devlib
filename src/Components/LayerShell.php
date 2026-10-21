@@ -2,11 +2,11 @@
 
 /*
  * REMARK
- * Tujuan       : Kerangka aplikasi dengan navigasi x-dl::layer-menu di kiri dan TANPA top bar. Tab MDI, laci, modal.
+ * Tujuan       : Kerangka aplikasi setelah login: navigasi x-dl::layer-menu di kiri, TANPA top bar; tab MDI, Ctrl+K, laci, modal. Satu-satunya menu utama.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : modules, user, brand, tagline, logo, logoutAction, menuSource, chat, open, … (17 prop).
+ * Input        : modules, user, brand, tagline, logo, logoutAction, menuSource, chat, open, … (16 prop).
  * Output       : Markup dari resources/views/components/layer-shell.blade.php.
- * Dipakai oleh : layar proyek lewat x-dl::layer-shell.
+ * Dipakai oleh : layar home proyek (mengirim brand sendiri) dan devlib.test home / demo shell, lewat x-dl::layer-shell.
  * Status       : Aktif (DevLib).
  */
 
@@ -14,14 +14,73 @@ namespace Devlib\Components;
 
 use Devlib\Lang;
 
-// Kerangka aplikasi dengan navigasi x-dl::layer-menu di kiri dan TANPA top bar. Tab MDI, laci, modal
-// dan palet Ctrl+K diwarisi dari Shell (partial shell/work & shell/overlays). Semua isi menu avatar
-// Shell pindah ke roda gigi Layer Menu; chat tinggal di Layer Menu (tukar / dok kanan).
-class LayerShell extends Shell
+// Kerangka aplikasi setelah login (acuan mockup main_menu_v2.html): navigasi x-dl::layer-menu di kiri dan TANPA top bar,
+// tab MDI + Ctrl+K + laci + modal. Semua isi menu akun ada di roda gigi Layer Menu; chat tinggal di Layer Menu (tukar / dok kanan).
+// Menu lama (Classic: mega menu + sidebar + top bar) dikubur: tag history/menu-classic-v1.
+// Menu = data (baris setara sys_app_menu), bukan markup: layar pemakai cukup menyerahkan array $modules.
+//
+// $modules = [
+//   ['code' => 'SALES', 'section' => 'Operations' (opsional: judul kelompok modul di Layer Menu), 'label' => 'Sales', 'icon' => 'fa-solid fa-…', 'children' => [
+//       ['label' => 'Transactions', 'items' => [ITEM, …]],   // grup
+//       ITEM,                                              // item langsung
+//   ]],
+// ]
+// ITEM = ['code', 'label', 'url', 'type' => form|grid|report, 'icon'?, 'badge'?, 'badgeTone'?]
+// $chat = ['me', 'people', 'convos', 'api'] -> Chat (x-dl::chat, versi ringkas); 'api' kosong = pratinjau tanpa server.
+// $open = code item yang dibuka sebagai tab saat mulai (bila tidak ada tab yang dipulihkan dari sesi browser).
+class LayerShell extends DevlibComponent
 {
+    public function __construct(
+        public array $modules = [],
+        public array $user = ['name' => 'User', 'email' => '', 'role' => ''],
+        // brand / tagline / logo kosong = identitas bawaan situs (Brand::identity(), config devlib.brand.*).
+        public ?string $brand = null,
+        public ?string $tagline = null,
+        // Url gambar logo APLIKASI; kosong = lencana gradasi bawaan. Bukan logo perusahaan (itu untuk kop cetakan).
+        public ?string $logo = null,
+        public string $logoutAction = '',
+        public string $menuSource = 'sys_app_menu',
+        public array $chat = [],
+        public ?string $open = null,
+        // Halaman Bantuan & dukungan (dibuka sebagai tab); kosong = pesan "segera".
+        public ?string $helpUrl = null,
+        // Halaman profil Layer Menu yang dibuka saat mulai (mis. kembali ke Tiket Bantuan sesudah kirim tiket).
+        public ?string $profilePage = null,
+        // Asisten (laci "Asisten AI"): ['api' => ['ask', 'feedback', 'csrf'], 'hello', 'chips' => [contoh pertanyaan],
+        // 'history' => [['id', 'q', 'reply', 'feedback']], 'placeholder', 'thinking', 'failed']. Kosong = pratinjau tanpa server
+        // (mencocokkan kata dengan nama menu). Bentuk 'reply' dan jawaban api.ask {id, reply}: kind, title, text, big,
+        // rows [[label, nilai]], steps [..], note, actions [{label, url, code, icon} | {label, topic} | {label, page}].
+        public array $assistant = [],
+        // Menu akun (laci Notifikasi, modal Edit profil & Ubah password) tersambung server:
+        // ['csrf', 'profile' => ['url', 'phone', 'role'], 'password' => ['url'],
+        //  'notifications' => ['read' => url, 'items' => [['id', 'title', 'sub', 'tone', 'read', 'url']]]].
+        // Url menerima POST JSON dan membalas {message} (422 {message} bila ditolak); 'read' menerima {id} atau {} = semua
+        // dan membalas {unread}. Kosong = pratinjau tanpa server (isi contoh, Save hanya menutup).
+        public array $account = [],
+        // true tepat sesudah login: tab kerja lama dan posisi Layer Menu dibuang (boot.js) -> opening screen tampil.
+        public bool $fresh = false,
+        // Laci LEBAR dari kanan berisi layar penuh (iframe), dibuka oleh aksi akun berkunci sama (user 2026-10-03: Edit profile dan
+        // Help & support "banyak aspek, windownya harus besar"): ['edit' => ['label', 'icon' => 'fa-...', 'url'], 'help' => [...]].
+        // Tanpa laci: 'edit' = modal kecil nama / e-mail / telepon, 'help' = tab Bantuan.
+        public array $drawers = [],
+        // Fitur menu profil yang disembunyikan (aplikasi sederhana): 'chat' (aksi Chat + laci), 'ai' (aksi Asisten AI), 'help' (aksi Help & support), 'theme' (pilihan Tema;
+        // tanpa Tema, halaman Setup diganti langsung halaman Bahasa).
+        public array $without = [],
+    ) {
+        $identity = Brand::identity();
+        $this->brand ??= $identity['name'];
+        $this->tagline ??= $identity['tagline'];
+        $this->logo ??= $identity['logo'];
+    }
+
     public function tag(): string
     {
         return 'x-dl::layer-shell';
+    }
+
+    public function source(): string
+    {
+        return 'menu = '.$this->menuSource;
     }
 
     public function jsClass(): ?string
@@ -96,7 +155,6 @@ class LayerShell extends Shell
             ['key' => 'edit', 'label' => Lang::text('Edit profile'), 'icon' => 'fa-user-pen', 'sep' => true],
             in_array('help', $this->without) ? null : ['key' => 'help', 'label' => Lang::text('Help & support'), 'icon' => 'help'],
             ['key' => 'pass', 'label' => Lang::text('Change password'), 'icon' => 'password'],
-            $this->classic ? ['key' => 'menu-classic', 'label' => Lang::text('Classic Menu'), 'icon' => 'fa-table-columns'] : null,
             ['key' => 'logout', 'label' => Lang::text('Sign out'), 'icon' => 'logout', 'tone' => 'danger', 'confirm' => Lang::text('Sign out of the application?')],
         ]));
     }

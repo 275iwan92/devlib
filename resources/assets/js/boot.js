@@ -10,7 +10,7 @@
     Devlib.guideLinks();
     // Pesan satu kali dari server sesudah pindah layar (Simpan lalu kembali ke grid): <div hidden data-dl-flash="success|danger|warn|info">teks</div>; lihat skills/devlib/grid-form-flow.md.
     document.querySelectorAll('[data-dl-flash]').forEach(el => { Devlib.toast(el.textContent.trim(), el.dataset.dlFlash || 'info'); el.remove(); });
-    // data-dl-fresh="1" (Shell sesudah login baru): tab lama dan posisi Layer Menu dibuang sebelum komponen dipasang.
+    // data-dl-fresh="1" (LayerShell sesudah login baru): tab lama dan posisi Layer Menu dibuang sebelum komponen dipasang.
     if (document.querySelector('[data-dl-fresh="1"]')) Devlib.resetWorkspace();
     Devlib.mountOne("ThemePicker");
     Devlib.mountOne("Tokens");
@@ -83,6 +83,6 @@
       document.querySelectorAll('[data-dl-split].is-open').forEach(p => p.classList.remove('is-open'));
     });
     Devlib.mount(document);
-    Devlib.mountOne("Shell");
+    Devlib.mountOne("LayerShell");
   });
 })(window.Devlib);

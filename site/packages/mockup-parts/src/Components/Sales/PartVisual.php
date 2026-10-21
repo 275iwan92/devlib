@@ -52,7 +52,7 @@ class PartVisual extends DevlibComponent
         return <<<'BLADE'
             <div {{ $attributes->class('mp-partvis') }} {!! $dl() !!}>
                 @if ($typed())
-                    <x-mp::dieline-v3 :data-artwork="$part['artwork']" :data-artwork-inner="$part['artwork_inner']" :types="$types" :type="$part['type_code']" :dims="$part['dims']" :name="'pv'.$part['id']" :picker="false" :height="$height" :class="$readonly ? 'dl-dieline--ro' : ''" />
+                    <x-mp::dieline :data-artwork="$part['artwork']" :data-artwork-inner="$part['artwork_inner']" :types="$types" :type="$part['type_code']" :dims="$part['dims']" :name="'pv'.$part['id']" :picker="false" :height="$height" :class="$readonly ? 'dl-dieline--ro' : ''" />
                 @elseif ($sides())
                     <x-dl::tabs :tabs="$sides()">
                         <x-slot:out><img class="mp-partvis__img" src="{{ $part['artwork'] }}" alt="{{ strtr(\Devlib\Lang::text('Dieline :name outer side'), [':name' => $part['name']]) }}"></x-slot:out>

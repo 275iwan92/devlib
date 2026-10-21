@@ -54,6 +54,14 @@ Catatan penting: di `0.x`, konstrain caret `^0.1` hanya menerima `0.1.x`
 menaikkan konstrain secara sadar (`^0.2`) setelah membaca `CHANGELOG.md`.
 Tag baru hanya terlihat di proyek bila sudah di-push ke GitHub.
 
+## Versi object dan default
+
+Selain versi library (tag `vX.Y.Z`), sebuah object (komponen, menu, engine, layar, aturan) bisa punya versi sendiri.
+Aturan Jo (2026-10-21): **hanya satu default, yaitu versi terakhir**; versi lama dikubur sebagai kode sejarah di
+tag `history/<nama>-vN` dan tidak jadi default, acuan, atau pilihan; tidak ada "mundur" (bila versi terakhir tidak
+disukai, versi sebelumnya diduplikasi menjadi versi baru dan itu default). Rincian dan cara membangunkan:
+`skills/devlib/object.md` bagian 6. Menguburkan komponen publik = perubahan **Merusak** (naik minor selama 0.x).
+
 ## Cara merilis
 
 1. Pindahkan butir `[Belum dirilis]` di `CHANGELOG.md` ke bagian versi baru

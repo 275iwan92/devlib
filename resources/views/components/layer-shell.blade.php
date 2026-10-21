@@ -12,7 +12,7 @@
     </x-dl::layer-menu>
 
     <div class="dl-main">
-        @include('devlib::components.shell.work', ['intro' => 'Choose a module in the <b>left menu</b>; click a branch to go down one layer, <b>Back</b> to go up.', 'hint' => 'Ctrl+K quick search · the gear next to the name = Chat, Profile, Notifications, Classic Menu.'])
+        @include('devlib::components.shell.work', ['intro' => 'Choose a module in the <b>left menu</b>; click a branch to go down one layer, <b>Back</b> to go up.', 'hint' => 'Ctrl+K quick search · the gear next to the name = Chat, Profile, Notifications.'])
     </div>
 
     <aside class="dl-lm-dock dl-shell__dock" data-dl-lm-dock></aside>

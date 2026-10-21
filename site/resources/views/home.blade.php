@@ -1,6 +1,6 @@
 @extends('layout', ['title' => 'DevLib'])
 @section('body')
-    <x-dynamic-component :component="\Devlib\Components\Shell::preferred()" :modules="$modules" :user="$user" :logout-action="route('logout')" :chat="\App\Support\DemoData::chat()" :help-url="\Devlib\Guide::url()" menu-source="Catalog DevLib — tanpa database">
+    <x-dl::layer-shell :modules="$modules" :user="$user" :logout-action="route('logout')" :chat="\App\Support\DemoData::chat()" :help-url="\Devlib\Guide::url()" menu-source="Catalog DevLib — tanpa database">
         <x-slot:dashboard>
             {{-- Developer (user 2026-10-05): sambutan sama, bagian widget = papan Build Progress (pemantauan user + dua agen).
                  Akun lain tetap melihat dashboard contoh per jabatan. --}}
@@ -15,5 +15,5 @@
         </x-slot:dashboard>
         <p>Ini <b>DevLib</b>: library induk semua komponen. Tiap menu membuka satu komponen hidup. Arahkan mouse ke objek untuk melihat
             namanya; klik ikon <b>&lt;/&gt;</b> di pojok kanan bawah untuk melihat kode pemakaiannya.</p>
-    </x-dynamic-component>
+    </x-dl::layer-shell>
 @endsection

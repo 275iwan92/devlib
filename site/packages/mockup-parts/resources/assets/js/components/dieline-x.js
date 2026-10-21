@@ -2,9 +2,8 @@
 (function (Devlib) {
   'use strict';
   const {$, $$, esc, toast, T, val} = Devlib.h;
-  /* ===================== DIELINE v2 / v3 (salinan v1 + ukuran) ===================== */
-  // v1 (initDieline) SENGAJA tidak diubah. level 2 = garis ukuran + istilah internasional + mm/cm;
-  // level 3 = v2 + judul spesifikasi + panjang cutting/creasing/perforasi + jendela 3D (kotak bisa diputar).
+  /* ===================== DIELINE (garis ukuran + istilah internasional + mm/cm, judul spesifikasi, panjang cutting/creasing/perforasi, jendela 3D) ===================== */
+  // Versi lama (v1, v2) dikubur: tag history/dieline-v1, history/dieline-v2. Geometri tetap dari DevlibDieline (zona beku).
   // Hanya "lem" UI; semua geometri dihitung DevlibDieline (salinan utuh dari tmerp).
   // Ukuran produk (baris 1 panel Dimensions); param lain (flap, bleed, dst) masuk baris "Flaps & Allowances".
   const MAIN_DIMS = ['product_length', 'product_width', 'product_height', 'diameter', 'lid_height', 'top_length', 'top_width'];
@@ -17,7 +16,6 @@
       this.name = this.el.dataset.name;
       this.TERMS = JSON.parse(this.el.dataset.terms || '{}');
       this.uid = 'dld' + Math.random().toString(36).slice(2, 8);
-      this.v3 = this.el.dataset.level === '3';
       this.code = this.el.dataset.type;
       this.dims = JSON.parse(this.el.dataset.dims || '{}');
       // Lubang / jendela di panel depan: bukan param tipe (prod_type_param), disimpan bersama dims hanya bila dipakai.
@@ -411,11 +409,11 @@
 
     annotate() {
       const t0 = this.T[this.code], dimTxt = ['product_length', 'product_width', 'product_height'].map(k => this.dims[k]).filter(v => v !== '' && v != null);
-      if (this.v3) this.q('[data-d-title]').textContent = t0 ? `${t0.label.toUpperCase()}${dimTxt.length ? ' · ' + dimTxt.join(' × ') + ' MM' : ''}${this.dims.diameter ? ' · Ø ' + this.dims.diameter + ' MM' : ''}${this.side === 'in' ? ' · ' + Devlib.h.t('INNER SIDE') : ''}` : '';
-      if (this.v3) this.preview3d();
+      this.q('[data-d-title]').textContent = t0 ? `${t0.label.toUpperCase()}${dimTxt.length ? ' · ' + dimTxt.join(' × ') + ' MM' : ''}${this.dims.diameter ? ' · Ø ' + this.dims.diameter + ' MM' : ''}${this.side === 'in' ? ' · ' + Devlib.h.t('INNER SIDE') : ''}` : '';
+      this.preview3d();
       $$(this.el, '[data-d-unit] .dl-segment__opt').forEach(b => b.classList.toggle('is-active', b.dataset.value === this.unit));
       const svg = this.q('[data-d-preview] svg'), termsBox = this.q('[data-d-terms]');
-      if (svg && this.v3) this.lengths(svg);
+      if (svg) this.lengths(svg);
       if (!svg || !this.q('[data-d-dims-on]').checked) { if (termsBox) termsBox.innerHTML = ''; return; }
       const S = window.DevlibDieline.STROKE, crease = S.CREASE.toLowerCase(), bleed = S.BLEED.toLowerCase();
       let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;

@@ -6,7 +6,7 @@ komponen menjadi turunan objek DevLib (namespace `MockupParts\Components`, JS `D
 
 | Komponen | PHP | JS | Demo |
 |---|---|---|---|
-| Dieline v1 / v2 / v3 (DevlibDieline, zona beku: esensi tidak diubah; **v3 dipakai aplikasi**) | Dieline, DielineV2, DielineV3 | dieline.js, dieline-x.js, devlib-dieline.js | dieline*.blade.php |
+| Dieline (DevlibDieline, zona beku: esensi tidak diubah; versi terakhir = v3, v1 dan v2 dikubur di tag `history/dieline-v1`, `history/dieline-v2`) | Dieline | dieline-x.js, devlib-dieline.js | dieline.blade.php |
 | Imposition (penampil hasil ImpositionEngine) | Imposition | imposition.js | imposition.blade.php |
 | ProDev workbench (salinan v1; kulit terang `prodev-light.css`; panel atas = panel form standar, Print / Email berpilihan Master Card + ACC Digital) | Prodev\Workbench | prodev/workbench.js | — (layar v2 `prodev`) |
 | ProDev Part & Dieline (ProDev mengubah dieline + artwork part; simpan `iqp_part` + `prod_part`) | Prodev\PartDieline | prodev/part-dieline.js | — (layar v2 `prodev`, tab Part & Dieline) |

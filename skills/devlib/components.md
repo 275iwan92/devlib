@@ -519,9 +519,9 @@ Menu panel kiri berlapis (layer 1 modul -> layer 2 menu -> layer 3 sub -> layer 
 - Prop: items:array=[], title:?string=NULL, logo:?string=NULL, tagline:?string=NULL, id:string='layer', active:?string=NULL, user:?string=NULL, role:?string=NULL, login:?string=NULL, counts:bool=true, rootCaption:string='Modules', dock:?string=NULL, actions:array=[], views:array=[], initialView:?string=NULL, search:bool=false, collapsible:bool=true, home:bool=false, foldGroups:string=''
 
 ## `<x-dl::layer-shell>`
-Kerangka aplikasi dengan navigasi x-dl::layer-menu di kiri dan TANPA top bar. Tab MDI, laci, modal.
+Kerangka aplikasi setelah login: navigasi x-dl::layer-menu di kiri, TANPA top bar; tab MDI, Ctrl+K, laci, modal. Satu-satunya menu utama.
 - Berkas: `src/Components/LayerShell.php`, tampilan `resources/views/components/layer-shell.blade.php`
-- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, classic:bool=true, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[]
+- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[]
 
 ## `<x-dl::lines>`
 Tabel baris item dokumen (detail dari Master-Detail: PO, PR, CO, Stock In, ...).
@@ -697,11 +697,6 @@ Kotak pindai QR / barcode. Scanner USB / Bluetooth bekerja seperti keyboard: kod
 Grid sel mirip spreadsheet; mendukung links (sel terhitung), reasonOnSave, reorderUrl.
 - Berkas: `src/Components/Sheet.php`
 - Prop: columns:array=[], rows:array=[], rowKey:string='id', title:string='', source:?string=NULL, lookup:bool=false, saveUrl:?string=NULL, stats:array=[], addRows:bool=true, reorderUrl:?string=NULL, reasonOnSave:?string=NULL, links:array=[], autoSave:bool=false, addLabel:?string=NULL, deleteUrl:?string=NULL, searchable:bool=true, showCount:bool=true, deleteLabel:?string=NULL, resetUrl:?string=NULL, resetLabel:?string=NULL
-
-## `<x-dl::shell>`
-kerangka aplikasi setelah login (sidebar, mega menu modul, tab MDI, Ctrl+K, laci); induk LayerShell.
-- Berkas: `src/Components/Shell.php`, tampilan `resources/views/components/shell.blade.php`
-- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, classic:bool=true, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[]
 
 ## `<x-dl::side-menu>`
 Menu panel samping (kiri ATAU kanan). Mode lebar: akordeon bertingkat (grup -> sub -> item), cari (buka otomatis.

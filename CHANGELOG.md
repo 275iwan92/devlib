@@ -7,6 +7,17 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
 
+### Dihapus
+
+- **Merusak:** **Menu Classic** dikubur sebagai versi lama (tag `history/menu-classic-v1`): komponen `x-dl::shell`
+  (`Devlib\Components\Shell`, `Shell::preferred()`), `shell.js`, pilihan "tukar ke Menu Classic" di menu foto profil,
+  cookie `dl_menu`, dan prop `classic` pada `x-dl::layer-shell`. **Layer Menu (`x-dl::layer-shell`) satu-satunya menu
+  dan menjadi default.** Prop `classic` yang masih dikirim pemakai tidak menimbulkan galat (menjadi atribut HTML biasa).
+- **Dieline v1 dan v2** dikubur (tag `history/dieline-v1`, `history/dieline-v2`); `Dieline` kini = versi terakhir
+  (v3), tanpa kelas `DielineV2`/`DielineV3`.
+- Aturan baru: **satu default = versi terakhir; versi lama = kode sejarah bertag `history/…`**
+  (`skills/devlib/object.md` bagian 6, `docs/versioning.md`). Rilis berikutnya sebaiknya minor `0.3.0`.
+
 ## [0.2.0] - 2026-10-21
 
 Rilis kedua. Menu katalog 5 bagian dengan halaman Aturan yang membaca `skills/devlib/*.md`; menu "Grid and Form"

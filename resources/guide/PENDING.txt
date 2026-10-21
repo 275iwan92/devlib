@@ -104,7 +104,6 @@ x-dl::review-feed
 x-dl::ribbon
 x-dl::scan
 x-dl::sheet
-x-dl::shell
 x-dl::side-menu
 x-dl::side-screen
 x-dl::side-screen.foot
