@@ -55,6 +55,7 @@
       const d = this.docs.find(x => x.id === this.cur && !x.decided);
       $(this.el, '[data-a-detail]').classList.toggle('is-empty', !d);
       const hold = $(this.el, '[data-a-do=hold]'); if (hold) hold.hidden = !!(d && d.held);
+      $(this.el, '[data-a-action]').hidden = !!(d && d.readonly);
       if (!d) { $(this.el, '[data-a-body]').innerHTML = ''; return; }
       const steps = d.steps || [], at = steps.findIndex(s => s.status === 'current'), lv = this.level(d);
       const lines = d.lines || [], keys = Object.keys(this.cols);
@@ -95,6 +96,7 @@
           d.decided = action;
           toast(Tf(action === 'approve' ? 'a_done_approve' : 'a_done_reject', {no: d.no}), action === 'approve' ? 'success' : 'danger');
           const next = this.pending()[0]; this.cur = next ? next.id : null; this.list(); this.detail();
+          if (this.el.dataset.back) setTimeout(() => { location.href = this.el.dataset.back; }, 1500);
         }
         this.el.dispatchEvent(new CustomEvent('dl:approval', {bubbles: true, detail: log}));
       });

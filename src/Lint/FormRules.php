@@ -32,9 +32,6 @@ final class FormRules
         if (! in_array($f->status, self::STATUSES[$f->kind], true)) {
             $add('F108', "status \"{$f->status}\" tidak berlaku untuk kind {$f->kind}.", Finding::ERROR);
         }
-        if ($f->approval !== null && (! $f->strict || $f->kind !== 'document' || $f->status !== 'confirmed' || ! in_array($f->approval, ['waiting', 'approved', 'hold', 'rejected'], true))) {
-            $add('F110', 'approval (waiting|approved|hold|rejected) hanya berarti pada :strict, kind document, status confirmed (Draft dan Cancelled tidak punya approval).', Finding::ERROR);
-        }
         if ($f->kind === 'document' && ! $f->panel) {
             $add('F109', 'Form dokumen harus panel="top" supaya tombol baku mode datang dari status.', Finding::ERROR);
         }

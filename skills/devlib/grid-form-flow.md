@@ -27,7 +27,7 @@ Grid and Form
 3. **Back** adalah tombol sendiri, tidak berhubungan dengan Save: selalu kembali ke grid dengan **tab, filter, urutan, kolom, baris per halaman** (tersimpan per grid di peramban) dan, dengan `restore`, **kata cari, halaman, kotak statistik** dipulihkan. Tanpa sorot baris.
 4. **Save dan Confirm tetap di form** (toast, status baru). Hanya Back dan Delete yang pindah ke grid.
 5. Pesan hasil aksi muncul sebagai **toast di halaman tujuan** (dari server, satu kali).
-6. Tombol datang dari `x-dl::form` menurut `kind` + `status` (+ `approval`); layar tidak menyusun tombol sendiri.
+6. Tombol datang dari `x-dl::form` menurut `kind` + `status`; layar tidak menyusun tombol sendiri.
 7. **Record baru** = Draft (dokumen) atau Active (master), isian TIDAK kosong: nilai bawaan terisi (tanggal hari ini, pihak/lokasi/satuan bawaan); kosong hanya isian yang harus dipilih pengguna.
 
 ## 2. Parameter yang dibawa
@@ -36,8 +36,7 @@ Grid and Form
 |---|---|---|---|
 | `{id}` di path form | grid → form | nilai `rowKey` baris; `new` = record baru | `openUrl` = `…/form/{id}`; `newUrl` = `…/form/new` |
 | `from` | grid → form | alamat grid asal (path + query, mis. `/lib/p5-flow-document?doc=po`) | hanya path lokal `/…` (bukan `//` atau `http`); tak sah/kosong → grid bawaan modul. Menjadi `:back` dan tujuan setelah Delete |
-| `copy` | form lama → form baru | `id` yang disalin (Duplicate, hanya dokumen REJECTED) | form baru tanpa nomor |
-| `status`, `approval`, `as` | form ↔ form | hanya demo: status/approval yang ditampilkan dan peran simulasi. Di aplikasi nyata dibaca dari record dan login | |
+| `status`, `as` | form ↔ form | hanya demo: status yang ditampilkan dan peran simulasi (master). Di aplikasi nyata dibaca dari record dan login | |
 | cari/halaman/statistik | grid → grid | disimpan grid ber-`restore` di `sessionStorage` saat form dibuka (atau tautan sel diikuti: Nested Grid), dipulihkan SEKALI saat kembali | bukan parameter URL |
 
 ## 3. Aksi form dan tujuannya (dokumen transaksional, Single dan Master-Detail)
@@ -49,7 +48,7 @@ Toast dari server; galat = toast merah dan form TETAP terbuka. Isian terkunci = 
 | Baru (Draft, belum tersimpan) | Undo · Save · Back | Save: pindah ke `…/form/{id}` (status Draft), toast |
 | Draft tersimpan | Delete · Edit · Print · Confirm · Back | isian terkunci; **Edit** membuka isian (Save + Undo); **Undo** = isi tersimpan dan terkunci lagi |
 | Confirmed | Cancel · Print · Back | semua baca-saja, termasuk baris detail |
-| Cancelled | Print · Back | record tetap tersimpan; tidak punya approval |
+| Cancelled | Print · Back | record tetap tersimpan |
 
 | Tombol | Perilaku | Tujuan sesudahnya |
 |---|---|---|
@@ -58,8 +57,8 @@ Toast dari server; galat = toast merah dan form TETAP terbuka. Isian terkunci = 
 | **Undo** | baru: isian kembali ke nilai bawaan. Mode Edit: buang perubahan lalu terkunci lagi | tetap di form |
 | **Delete** | hanya Draft; dialog Yes/No; Yes = record hilang total | Grid, toast "dihapus" |
 | **Confirm** | dialog; hanya Confirm yang divalidasi penuh; Draft → Confirmed | tetap di form, toast |
-| **Cancel** | dialog WAJIB alasan (masuk History); Confirmed → Cancelled; bila perlu ADJUSTMENT otomatis (`engine.md`); approval ikut hilang | tetap di form |
-| **Print** | tab baru; cetakan SELALU memuat status dokumen (DRAFT/CONFIRMED/CANCELLED) dan, bila ada, status approval | tetap di form |
+| **Cancel** | dialog WAJIB alasan (masuk History); Confirmed → Cancelled; bila perlu ADJUSTMENT otomatis (`engine.md`) | tetap di form |
+| **Print** | tab baru; cetakan SELALU memuat status dokumen (DRAFT/CONFIRMED/CANCELLED) | tetap di form |
 
 Tidak ada **New**, **Email**, **Back to Draft** pada siklus ketat. Tidak ada **Export** di form: Export ada di **toolbar grid** (satu tempat dengan Cari, Filter, Kolom; format CSV dan XLSX).
 
@@ -87,21 +86,16 @@ Asal: grid `kind="master"` (`restore`, `openUrl`, `newUrl`). Master TIDAK punya 
 - **Delete** hanya untuk **administrator** DAN data yang **belum dipakai transaksi** (`:deletable`). Server memeriksa ulang; bila ternyata dipakai: toast kuning "Sudah dipakai, nonaktifkan saja". Selain itu tombol tidak tampil. Dialog Yes/No; Yes → grid.
 - Save tetap di form; record baru pindah ke `…/form/{id}` berstatus Active.
 
-## 5. Approval: field terpisah dari status dokumen
+## 5. Approval: grid sendiri + Form Approval baku
 
-Status dokumen (Draft/Confirmed/Cancelled) dan status approval (**APPROVED / HOLD / REJECTED**) adalah DUA field. Approval hanya ada saat dokumen **Confirmed** (`:approval="waiting|approved|hold|rejected"`; `waiting` = belum diputuskan, tampil sebagai cap putus-putus AWAITING, bukan status keempat). Draft dan Cancelled tidak punya approval. Dokumen masuk persetujuan selalu mulai dari Confirmed, jadi pasti baca-saja.
+Approval adalah cabang sendiri di Transactional (`/lib/p5-flow-approval`): **grid sendiri** dan **form sendiri**, terpisah dari form dokumen biasa. Form dokumen (§3) tidak punya tombol keputusan; keputusan hanya diambil di Form Approval.
 
-| Approval | Pembuat | Pemeriksa (`:can-approve`) |
-|---|---|---|
-| waiting | Cancel · Print · Back | Approve · Hold · Reject · Print · Back |
-| hold | Print · Back | Approve · Reject · Print · Back |
-| approved | Print · Back (tidak bisa Cancel) | Reject · Print · Back |
-| rejected | Duplicate · Print · Back | Approve (dengan OTP) · Print · Back |
-
-- **Hold** sementara; Reject dan Hold wajib alasan. APPROVED → REJECTED wajib alasan. Keputusan masuk log; setelah keputusan form tetap terbuka.
-- **REJECTED**: tidak tampil di daftar biasa (Semua, daftar tugas), hanya di tab **Rejected**. Pembuat boleh **Duplicate** (Draft baru tanpa nomor) lalu memperbaikinya.
-- **REJECTED → APPROVED** hanya oleh pemeriksa, dengan **OTP + alasan**. OTP diterbitkan **administrator** di luar sistem; administrator sendiri tidak bisa mengubahnya. DevLib hanya menyediakan dialog OTP (`x-dl::field.otp`) dan alamat verifikasi (`:otp-url`); penerbitan dan pemeriksaan kode adalah urusan proyek.
-- Grid Approval (cabang di Transactional): kolom **Status** dan **Approval** (dua lencana), tab All (tanpa Rejected) · Awaiting · Hold · Approved · **Rejected**.
+- **Grid** (daftar dokumen Confirmed yang menunggu): kolom **Status** dan **Approval** (dua lencana), tab All (tanpa Rejected) · Awaiting · Hold · Approved · **Rejected**. Klik 2x baris membuka form.
+- **Form = Form Approval baku** (Jo 2026-10-21; terkunci; lihat `form.md`): `<x-dl::approval single :docs="[$doc]" …>`. `single` = satu dokumen yang dibuka dari grid, tanpa daftar di kirinya (daftarnya = grid). Isi: detail dokumen **hanya-baca**, alur bertingkat **Level n of N**, Riwayat Dokumen, tombol **Reject · Hold · Setujui**. Tombol **Back** (`x-dl::back-button`) kembali ke grid asal (`from`).
+- **Reject** dan **Hold** wajib alasan (dialog); Setujui dan Reject = final; **Hold** sementara (dokumen tetap, hanya bisa diputuskan Setujui/Reject). Setiap keputusan = LOG (event `dl:approval`; aplikasi WAJIB menyimpannya). Dokumen yang sudah Approved/Rejected dibuka hanya-baca (`'readonly' => true` pada dokumen: tanpa tombol keputusan).
+- **REJECTED** tidak tampil di daftar biasa, hanya di tab **Rejected**.
+- Demo tanpa penyimpanan: keputusan disimulasikan (toast + keadaan), Setujui/Reject lalu kembali ke grid, Hold tetap di form.
+- Bentuk lama (x-dl::form dengan `:approval`, login simulasi Creator/Approver/Administrator, kode OTP untuk membalik Reject) **dikubur**: tag `history/form-approval-v2`.
 
 ## 6. Wizard (tanpa grid)
 
@@ -132,14 +126,14 @@ Wizard berdiri sendiri, tidak punya grid dan tidak punya Back.
 | `{id}` tidak ada | kembali ke grid asal, toast merah "Record not found" |
 | tidak punya hak | tombol tidak ditampilkan; permintaan langsung ditolak server: kembali ke form, toast merah |
 | aksi tak berlaku pada keadaan itu | ditolak server, toast kuning, status tidak berubah |
-| OTP salah / alasan kosong | toast merah, approval tidak berubah |
+| alasan Reject/Hold kosong | dialog tidak menutup; keputusan tidak diambil |
 | `from` tidak sah | diabaikan, grid bawaan modul dipakai |
 
 ## 9. `:back`, `back_history`, dan lint
 
 - Setiap form panel memakai `:back="<alamat grid asal>"` (di alur ini = `from` yang sudah divalidasi, bawaan = grid modul).
 - `config('devlib.back_history') = false`: tombol Back TIDAK memakai `history.back()`.
-- **F101** (form dokumen tanpa `:back`) dan **F102** (`back_history` harus `false`) terpenuhi. **F110**: `:approval` hanya sah pada `:strict`, `kind="document"`, status `confirmed`.
+- **F101** (form dokumen tanpa `:back`) dan **F102** (`back_history` harus `false`) terpenuhi.
 - Grid yang membuka form memasang `restore`, `:open-url`, `:new-url` (alamat berisi `from`).
 
 ## 10. Pemakaian di proyek
@@ -149,9 +143,12 @@ Wizard berdiri sendiri, tidak punya grid dan tidak punya Back.
     :open-url="route('po.form', ['id' => '{id}', 'from' => request()->getRequestUri()])"
     :new-url="route('po.form', ['id' => 'new', 'from' => request()->getRequestUri()])" />
 
-<x-dl::form kind="document" panel="top" :strict="true" :status="$po->status" :approval="$po->approval"
-    :can-approve="$canApprove" :otp-url="route('po.otp', $po)" :print-url="route('po.print', $po)"
-    :back="$back" :action="route('po.save', $po)" … />
+<x-dl::form kind="document" panel="top" :strict="true" :status="$po->status"
+    :print-url="route('po.print', $po)" :back="$back" :action="route('po.save', $po)" … />
+
+{{-- form Approval (halaman sendiri, dibuka dari grid Approval) --}}
+<x-dl::back-button :fallback="$from" />
+<x-dl::approval single :docs="[$doc]" :action="route('po.decide')" :line-columns="$cols" />
 ```
 
-Controller: `from` divalidasi lokal. Save/Confirm/Cancel/Approve/… → `redirect()->route('po.form', …)` dengan toast; Save record baru → form record itu; Delete → `redirect($from)`. Pesan ditampilkan dengan `<div hidden data-dl-flash="success">teks</div>` (toast sekali muncul).
+Controller: `from` divalidasi lokal. Save/Confirm/Cancel/… → `redirect()->route('po.form', …)` dengan toast; Save record baru → form record itu; Delete → `redirect($from)`. Pesan ditampilkan dengan `<div hidden data-dl-flash="success">teks</div>` (toast sekali muncul).

@@ -356,26 +356,25 @@ window.Devlib = window.Devlib || {};
   }
 
   // Modal konfirmasi library (pengganti window.confirm): Devlib.confirm({...}).then(ok => ...)
-  // reason: true = kotak alasan WAJIB diisi; hasil Promise = teks alasan (atau false bila batal). otp: true (bersama reason) = kotak kode OTP WAJIB; hasil = {why, otp}.
-  function confirmBox({title = T('cf_title'), message = T('cf_message'), tone = 'warn', ok = T('cf_ok'), cancel = null, reason = false, otp = false} = {}) {
+  // reason: true = kotak alasan WAJIB diisi; hasil Promise = teks alasan (atau false bila batal).
+  function confirmBox({title = T('cf_title'), message = T('cf_message'), tone = 'warn', ok = T('cf_ok'), cancel = null, reason = false} = {}) {
     return new Promise(resolve => {
       const cancelLabel = cancel || 'Cancel';
       const icon = {danger: 'fa-trash-can', warn: 'fa-triangle-exclamation', success: 'fa-circle-check', info: 'fa-circle-info'}[tone] || 'fa-circle-question';
       const ov = document.createElement('div'); ov.className = 'dl-mov is-on dl-confirm';
-      ov.innerHTML = `<div class="dl-modal dl-modal--sm" role="alertdialog" aria-modal="true"><div class="dl-confirm__body"><span class="dl-confirm__icon dl-confirm__icon--${tone}"><i class="fa-solid ${icon}"></i></span><div><h3>${esc(title)}</h3><p>${esc(message)}</p>${reason ? '<label class="dl-confirm__why"><span>' + esc(T('cf_reason')) + ' <b class="dl-field__req">*</b></span><textarea rows="2" data-why></textarea><em data-why-err></em></label>' : ''}${otp ? '<label class="dl-confirm__why"><span>' + esc(T('cf_otp')) + ' <b class="dl-field__req">*</b></span><input type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" data-otp><em data-otp-err></em></label>' : ''}</div></div>`
+      ov.innerHTML = `<div class="dl-modal dl-modal--sm" role="alertdialog" aria-modal="true"><div class="dl-confirm__body"><span class="dl-confirm__icon dl-confirm__icon--${tone}"><i class="fa-solid ${icon}"></i></span><div><h3>${esc(title)}</h3><p>${esc(message)}</p>${reason ? '<label class="dl-confirm__why"><span>' + esc(T('cf_reason')) + ' <b class="dl-field__req">*</b></span><textarea rows="2" data-why></textarea><em data-why-err></em></label>' : ''}</div></div>`
         + `<div class="dl-modal__foot"><button type="button" class="dl-btn dl-btn--secondary dl-btn--md" data-no>${esc(cancelLabel)}</button><button type="button" class="dl-btn dl-btn--${tone === 'danger' ? 'danger' : 'primary'} dl-btn--md" data-yes>${esc(ok)}</button></div></div>`;
       const done = v => { ov.remove(); document.removeEventListener('keydown', key); resolve(v); };
       const yes = () => {
         if (!reason) return done(true);
-        const w = $(ov, '[data-why]').value.trim(), o = otp ? $(ov, '[data-otp]').value.trim() : null;
-        if (otp && !o) { $(ov, '[data-otp-err]').textContent = T('otp_required'); return $(ov, '[data-otp]').focus(); }
+        const w = $(ov, '[data-why]').value.trim();
         if (!w) { $(ov, '[data-why-err]').textContent = T('reason_required'); return $(ov, '[data-why]').focus(); }
-        done(otp ? {why: w, otp: o} : w);
+        done(w);
       };
       const key = e => { if (e.key === 'Escape') done(false); else if (e.key === 'Enter' && !(reason && e.target.matches('textarea') && e.shiftKey)) { if (!reason || !e.target.matches('textarea')) { e.preventDefault(); yes(); } } };
       ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('[data-no]')) done(false); else if (e.target.closest('[data-yes]')) yes(); });
       document.addEventListener('keydown', key);
-      document.body.appendChild(ov); (otp ? $(ov, '[data-otp]') : reason ? $(ov, '[data-why]') : $(ov, '[data-yes]')).focus();
+      document.body.appendChild(ov); (reason ? $(ov, '[data-why]') : $(ov, '[data-yes]')).focus();
     });
   }
 

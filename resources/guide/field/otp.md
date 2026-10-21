@@ -121,5 +121,5 @@ Four digits, with a hint and a server error:
 - `x-dl::field.text`: full reference for the inherited props and the shared frame.
 - `x-dl::register-box`: uses this field for the WhatsApp code (`dl:send-otp`, `dl:verify-otp` events of that box).
 - `x-dl::field.phone`: the number the code is sent to.
-- `x-dl::form`: required-field validation; its Approve dialog for rejected documents has its own OTP box (`otp-url`).
+- `x-dl::form`: required-field validation.
 - `x-dl::field.password`: hidden secrets typed by a person.

@@ -7,8 +7,20 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
 
+### Diubah
+
+- **Alur Approval (Grid and Form, `p5-flow-approval`) memakai Form Approval baku** (keputusan Jo 2026-10-21): grid
+  awal tetap; klik baris membuka `x-dl::approval` untuk SATU dokumen (hanya-baca, Level n of N, Riwayat, Reject / Hold /
+  Setujui), Back kembali ke grid. `x-dl::approval` mendapat prop opt-in `single` (tanpa daftar kiri; dokumen
+  `'readonly' => true` = sudah diputuskan, tanpa tombol keputusan). Keluaran halaman terkunci `p5-form-approval` tidak berubah.
+
 ### Dihapus
 
+- **Merusak:** **Form Approval versi 2** dikubur (tag `history/form-approval-v2`): prop `approval` dan `otp-url` pada
+  `x-dl::form` (cap status approval, tombol Approve/Hold/Reject/Duplicate menurut `approval`, dialog OTP `data-f-otp`),
+  aturan lint **F110**, opsi `otp` pada `Devlib.confirm()`, teks `cf_otp`/`otp_required`/`f_ask_approve_otp`, dan di demo
+  login simulasi Creator/Approver/Administrator + kode OTP. `:can-approve` dan `:approval-levels/-at` tetap. Prop yang
+  masih dikirim pemakai menjadi atribut HTML biasa (tidak galat); tmerp dan sstock tidak memakainya.
 - **Merusak:** **Menu Classic** dikubur sebagai versi lama (tag `history/menu-classic-v1`): komponen `x-dl::shell`
   (`Devlib\Components\Shell`, `Shell::preferred()`), `shell.js`, pilihan "tukar ke Menu Classic" di menu foto profil,
   cookie `dl_menu`, dan prop `classic` pada `x-dl::layer-shell`. **Layer Menu (`x-dl::layer-shell`) satu-satunya menu

@@ -122,7 +122,7 @@ final class Catalog
                         'flow-single' => ['Single flow: Cash Voucher grid → Single Form (one record, no lines) → Edit / Confirm / Cancel / Print → Back to the grid', $c('Grid', 'Form')],
                     ], 'UIUX_components_part1.html') + ['folder' => 'Grid Pre-Entry', 'subfolder' => 'Transactional'],
                     'p5-flow-approval' => $page('Approval', 'fa-solid fa-stamp', [
-                        'flow-approval' => ['Approval flow: grid of confirmed orders awaiting a decision → Form with Approve / Hold / Reject (OTP to reverse a rejection) → Back to the grid', $c('Grid', 'Form', 'Lines')],
+                        'flow-approval' => ['Approval flow: grid of confirmed orders awaiting a decision → click a row → standard Approval form (read-only details, Level n of N, history, Reject / Hold / Setujui) → Back to the grid', $c('Grid', 'Approval')],
                     ], 'mockup_po_approval_center.html') + ['folder' => 'Grid Pre-Entry', 'subfolder' => 'Transactional'],
                     'p5-flow-master' => $page('Master', 'fa-solid fa-address-book', [
                         'flow-master' => ['Master flow: Employee grid → Master Form (Active / Inactive, no Confirm) → Edit / Deactivate → Back to the grid', $c('Grid', 'Form', 'Tabs')],

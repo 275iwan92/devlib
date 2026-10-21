@@ -29,9 +29,9 @@ class GridFormFlowTest extends TestCase
         return collect(DemoData::approvalOrders())->firstWhere('approval', $approval)['id'];
     }
 
-    private function approvalForm(int $id, string $approval, string $as = ''): string
+    private function approvalForm(int $id): string
     {
-        return '/lib/p5-flow-approval/form/'.$id.'?'.http_build_query(array_filter(['from' => '/lib/p5-flow-approval', 'status' => 'confirmed', 'approval' => $approval, 'as' => $as]));
+        return '/lib/p5-flow-approval/form/'.$id.'?'.http_build_query(['from' => '/lib/p5-flow-approval']);
     }
 
     public function test_menu_is_one_group_grid_and_form_with_two_level_folders_and_old_pages_stay_reachable(): void
@@ -156,23 +156,32 @@ class GridFormFlowTest extends TestCase
         }
     }
 
-    public function test_approval_is_a_separate_field_and_buttons_depend_on_role(): void
+    // Form alur Approval = Form Approval baku (Jo 2026-10-21): x-dl::approval hanya-baca untuk SATU dokumen, tanpa daftar; Back kembali ke grid.
+    public function test_approval_flow_opens_the_standard_read_only_approval_form_and_back_returns_to_the_grid(): void
     {
         $w = $this->approvalId('waiting');
-        $this->assertEqualsCanonicalizing(['print', 'approve', 'hold', 'reject', 'back'], $this->actsOf($this->approvalForm($w, 'waiting')));
-        $this->assertEqualsCanonicalizing(['print', 'approve', 'reject', 'back'], $this->actsOf($this->approvalForm($this->approvalId('hold'), 'hold')));
-        $this->assertEqualsCanonicalizing(['print', 'reject', 'back'], $this->actsOf($this->approvalForm($this->approvalId('approved'), 'approved')));
-        $rej = $this->approvalId('rejected');
-        $this->assertEqualsCanonicalizing(['print', 'approve', 'back'], $this->actsOf($this->approvalForm($rej, 'rejected')));
-        $this->assertStringContainsString('data-f-otp', $this->get($this->approvalForm($rej, 'rejected'))->getContent());
-        // pembuat (entry): Cancel hanya sebelum diputuskan; rejected = Duplicate; approved/hold = Print saja
-        $this->assertEqualsCanonicalizing(['cancel', 'print', 'back'], $this->actsOf($this->approvalForm($w, 'waiting', 'entry')));
-        $this->assertEqualsCanonicalizing(['duplicate', 'print', 'back'], $this->actsOf($this->approvalForm($rej, 'rejected', 'entry')));
-        $this->assertEqualsCanonicalizing(['print', 'back'], $this->actsOf($this->approvalForm($this->approvalId('approved'), 'approved', 'entry')));
-        $this->assertEqualsCanonicalizing(['print', 'back'], $this->actsOf($this->approvalForm($this->approvalId('hold'), 'hold', 'entry')));
-        $html = $this->get($this->approvalForm($w, 'waiting'))->getContent();
-        $this->assertStringContainsString('Confirmed', $html);
-        $this->assertStringContainsString('Awaiting', $html);
+        $html = $this->get($this->approvalForm($w))->assertOk()->getContent();
+        $data = html_entity_decode($html);
+        $this->assertStringContainsString('data-dl-approval', $html);
+        $this->assertStringContainsString('dl-appr--single', $html);
+        $this->assertStringContainsString('href="/lib/p5-flow-approval"', str_replace(url('/'), '', $html));
+        $this->assertStringContainsString('"steps"', $data);
+        $this->assertStringContainsString('"no":"'.collect(DemoData::approvalOrders())->firstWhere('id', $w)['co_no'].'"', $data);
+        $this->assertStringNotContainsString('"readonly":true', $data);
+        // bentuk yang ditolak Jo tidak ada lagi: login simulasi, OTP, form dokumen dengan tombol Approve/Hold/Reject di kepala
+        foreach (['Simulate login', 'data-f-otp', 'data-f-act="approve"'] as $gone) {
+            $this->assertStringNotContainsString($gone, $html);
+        }
+        // dokumen yang sudah diputuskan tampil hanya-baca (tanpa tombol keputusan)
+        foreach (['approved', 'rejected'] as $ap) {
+            $this->assertStringContainsString('"readonly":true', html_entity_decode($this->get($this->approvalForm($this->approvalId($ap)))->getContent()));
+        }
+        $this->assertStringContainsString('"held"', html_entity_decode($this->get($this->approvalForm($this->approvalId('hold')))->getContent()));
+        // halaman baku terkunci: tetap daftar + detail (bukan single), sama seperti sebelumnya
+        $std = $this->get('/lib/p5-form-approval')->assertOk()->getContent();
+        $this->assertStringContainsString('data-dl-approval', $std);
+        $this->assertStringNotContainsString('dl-appr--single', preg_replace('/<code.*$/s', '', $std));
+        $this->assertArrayHasKey('p5-form-approval', Catalog::APPROVED);
     }
 
     public function test_rejected_documents_only_show_in_the_rejected_tab(): void
@@ -219,36 +228,11 @@ class GridFormFlowTest extends TestCase
         $this->assertStringContainsString('status=cancelled', $cancel->headers->get('Location'));
 
         $this->post('/lib/p5-flow-document/form/6', $base + ['_action' => 'delete', 'status' => 'draft'])->assertRedirect('/lib/p5-flow-document?doc=po');
-        // Duplicate hanya untuk dokumen REJECTED (alur Approval); Cancelled tidak punya Duplicate
+        // Duplicate tidak ada lagi (bentuk Approval lama dikubur); keputusan approval bukan urusan form alur ini
         $this->post('/lib/p5-flow-document/form/6', $base + ['_action' => 'duplicate', 'status' => 'cancelled'])->assertSessionHas('flow_flash.0', 'warn');
-        $rej = $this->approvalId('rejected');
-        $dup = $this->post('/lib/p5-flow-approval/form/'.$rej, ['_action' => 'duplicate', 'status' => 'confirmed', 'approval' => 'rejected', 'as' => 'entry', 'from' => '/lib/p5-flow-approval']);
-        $this->assertStringContainsString('/form/new?', $dup->headers->get('Location'));
-        $this->assertStringContainsString('copy='.$rej, $dup->headers->get('Location'));
-    }
-
-    public function test_approval_decisions_cancel_rules_and_otp_to_reverse_a_rejection(): void
-    {
-        $post = fn (int $id, array $x) => $this->post('/lib/p5-flow-approval/form/'.$id, $x + ['status' => 'confirmed', 'from' => '/lib/p5-flow-approval']);
-        $w = $this->approvalId('waiting');
-
-        $this->assertStringContainsString('approval=approved', $post($w, ['_action' => 'approve', 'approval' => 'waiting', 'as' => 'manager'])->headers->get('Location'));
-        $post($w, ['_action' => 'hold', 'approval' => 'waiting', 'as' => 'manager'])->assertSessionHas('flow_flash.0', 'danger');
-        $this->assertStringContainsString('approval=hold', $post($w, ['_action' => 'hold', 'approval' => 'waiting', 'as' => 'manager', '_reason' => 'Check credit'])->headers->get('Location'));
-        $this->assertStringContainsString('approval=rejected', $post($this->approvalId('approved'), ['_action' => 'reject', 'approval' => 'approved', 'as' => 'manager', '_reason' => 'Price changed'])->headers->get('Location'));
-        $post($w, ['_action' => 'approve', 'approval' => 'waiting', 'as' => 'entry'])->assertSessionHas('flow_flash.0', 'danger');
-        $post($w, ['_action' => 'approve', 'approval' => 'waiting', 'as' => 'admin-app'])->assertSessionHas('flow_flash.0', 'danger');
-
-        $post($this->approvalId('approved'), ['_action' => 'cancel', 'approval' => 'approved', 'as' => 'entry', '_reason' => 'x'])->assertSessionHas('flow_flash.0', 'warn');
-        $post($this->approvalId('hold'), ['_action' => 'cancel', 'approval' => 'hold', 'as' => 'entry', '_reason' => 'x'])->assertSessionHas('flow_flash.0', 'warn');
-        $this->assertStringContainsString('status=cancelled', $post($w, ['_action' => 'cancel', 'approval' => 'waiting', 'as' => 'entry', '_reason' => 'Customer withdrew'])->headers->get('Location'));
-
-        $rej = $this->approvalId('rejected');
-        $post($rej, ['_action' => 'approve', 'approval' => 'rejected', 'as' => 'manager', '_reason' => 'Agreed', '_otp' => '000000'])->assertSessionHas('flow_flash.0', 'danger');
-        $post($rej, ['_action' => 'approve', 'approval' => 'rejected', 'as' => 'manager', '_otp' => FlowDemo::OTP_DEMO])->assertSessionHas('flow_flash.0', 'danger');
-        $ok = $post($rej, ['_action' => 'approve', 'approval' => 'rejected', 'as' => 'manager', '_reason' => 'Agreed', '_otp' => FlowDemo::OTP_DEMO]);
-        $this->assertStringContainsString('approval=approved', $ok->headers->get('Location'));
-        $post($rej, ['_action' => 'approve', 'approval' => 'rejected', 'as' => 'admin-app', '_reason' => 'Agreed', '_otp' => FlowDemo::OTP_DEMO])->assertSessionHas('flow_flash.0', 'danger');
+        foreach (['approve', 'hold', 'reject'] as $act) {
+            $this->post('/lib/p5-flow-approval/form/'.$this->approvalId('waiting'), ['_action' => $act, 'status' => 'confirmed', 'as' => 'manager', '_reason' => 'x', 'from' => '/lib/p5-flow-approval'])->assertSessionHas('flow_flash.0', 'warn');
+        }
     }
 
     public function test_master_actions_deactivate_activate_and_guarded_delete(): void

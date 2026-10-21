@@ -34,9 +34,7 @@ use Devlib\Locale;
 //   Delete + Edit + Print + Confirm (Edit membuka isian -> Save + Undo, Undo = terkunci lagi); confirmed = Cancel + Print; cancelled = Print.
 //   TANPA New / Email / Back to Draft. Master: new = Undo + Save; active = Edit + Deactivate (+ Delete bila :deletable = administrator & belum dipakai);
 //   inactive = Activate. Tidak ada Confirm/Cancel/Print pada master. Status tampil sebagai cap di pojok kanan atas (bukan bar tahapan).
-//   :approval = field TERPISAH dari status dokumen, hanya berarti bila status confirmed: waiting | approved | hold | rejected (null = tanpa approval).
-//   Pembuat: Cancel hanya saat waiting/null; rejected = Duplicate + Print; selain itu Print. Pemeriksa (:can-approve): waiting = Approve/Hold/Reject,
-//   hold = Approve/Reject, approved = Reject, rejected = Approve DENGAN OTP (:otp-url; kode dari administrator, urusan proyek). Cancelled tidak punya approval.
+//   Keputusan approval TIDAK diputuskan di form ini: Form Approval baku = x-dl::approval (Jo 2026-10-21; bentuk lama :approval/:otp-url = history/form-approval-v2).
 // :print-url = alamat cetakan dokumen (x-dl::print-doc): tombol Print membukanya di tab baru, Email membuka dialog e-mail di halaman
 // itu (?ds_do=email). Form yang punya action tetapi tanpa :print-url tidak menampilkan Print / Email (tidak ada yang dicetak).
 // Print tersedia di SEMUA status dokumen termasuk Draft (cetakan membawa status; Draft diberi tanda air) (user 2026-10-05).
@@ -80,9 +78,7 @@ class Form extends DevlibComponent
         public ?string $stage = null,
         public ?string $printUrl = null,
         public bool $strict = false,
-        public ?string $approval = null,
         public bool $deletable = false,
-        public ?string $otpUrl = null,
     ) {}
 
     public function lint(): array
@@ -170,30 +166,7 @@ class Form extends DevlibComponent
             'master.active' => array_values(array_filter([$view($b('deactivate', null, 'Deactivate', 'secondary', 'fa-toggle-off')), $this->deletable ? $view($b('delete', 'delete', 'Delete')) : null, $edit, ...$editing])),
             'master.inactive' => [$b('activate', null, 'Activate', 'secondary', 'fa-toggle-on')],
             'document.draft' => [$view($b('delete', 'delete', 'Delete')), $edit, $view($print), $view($b('confirm', 'confirm', 'Confirm')), ...$editing],
-            'document.confirmed' => $this->strictConfirmed($b, $print),
-            default => [$print],
-        };
-    }
-
-    // Dokumen confirmed + field approval terpisah.
-    private function strictConfirmed(\Closure $b, array $print): array
-    {
-        $ap = $this->approval;
-        if ($this->canApprove && $ap !== null) {
-            $approve = $b('approve', 'approve', 'Approve');
-            $reject = $b('reject', 'reject', 'Reject', 'danger');
-
-            return match ($ap) {
-                'waiting' => [$print, $reject, $b('hold', 'hold', 'Hold', 'secondary'), $approve],
-                'hold' => [$print, $reject, $approve],
-                'approved' => [$print, $reject],
-                default => [$print, $approve],  // rejected: Approve lewat OTP
-            };
-        }
-
-        return match ($ap) {
-            null, 'waiting' => [$b('cancel', 'cancel', 'Cancel', 'danger'), $print],
-            'rejected' => [$b('duplicate', null, 'Duplicate', 'secondary', 'fa-copy'), $print],
+            'document.confirmed' => [$b('cancel', 'cancel', 'Cancel', 'danger'), $print],
             default => [$print],
         };
     }
@@ -205,12 +178,8 @@ class Form extends DevlibComponent
             'new' => ['Draft · Unsaved', 'warn'], 'draft' => ['Draft', 'warn'], 'confirmed' => ['Confirmed', 'success'], 'cancelled' => ['Cancelled', 'danger'],
             'active' => ['Active', 'success'], 'inactive' => ['Inactive', 'muted'], default => [ucfirst($this->status), 'neutral'],
         };
-        $out = [$doc];
-        if ($this->kind === 'document' && $this->status === 'confirmed' && $this->approval !== null) {
-            $out[] = ['waiting' => ['Awaiting', 'wait'], 'approved' => ['Approved', 'success'], 'hold' => ['Hold', 'warn'], 'rejected' => ['Rejected', 'danger']][$this->approval] ?? [ucfirst($this->approval), 'neutral'];
-        }
 
-        return $out;
+        return [$doc];
     }
 
     // Warna isian terkunci (siklus ketat): hanya status akhir yang berwarna (Confirmed hijau, Cancelled merah, Inactive abu); Draft netral.
@@ -304,7 +273,7 @@ class Form extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <form {{ $attributes->class(['dl-form', 'dl-form--panel' => $panel, 'is-view' => $panel && $locked(), 'dl-form--strict' => $strict, 'dl-form--tone-'.$tone() => $strict && $tone() && $panel && $locked()]) }} {!! $dl() !!} method="{{ $method === 'GET' ? 'GET' : 'POST' }}" @if ($action) action="{{ $action }}" @endif data-dl-form data-mode="{{ $mode }}" data-action-field="{{ $actionField }}" @if ($guard) data-dl-guard @endif @if ($strict) data-f-strict @endif @if ($strict && $approval === 'rejected' && $canApprove && $otpUrl) data-f-otp data-f-otp-url="{{ $otpUrl }}" @endif novalidate>
+            <form {{ $attributes->class(['dl-form', 'dl-form--panel' => $panel, 'is-view' => $panel && $locked(), 'dl-form--strict' => $strict, 'dl-form--tone-'.$tone() => $strict && $tone() && $panel && $locked()]) }} {!! $dl() !!} method="{{ $method === 'GET' ? 'GET' : 'POST' }}" @if ($action) action="{{ $action }}" @endif data-dl-form data-mode="{{ $mode }}" data-action-field="{{ $actionField }}" @if ($guard) data-dl-guard @endif @if ($strict) data-f-strict @endif novalidate>
                 @if ($method !== 'GET')
                     @csrf
                 @endif

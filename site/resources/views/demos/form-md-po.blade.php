@@ -7,9 +7,6 @@
     // Siklus ketat (user 2026-10-21): hanya saat dibuka dari alur; halaman katalog lama (p5-form-md) tetap seperti semula.
     $fs = $flow['slug'] ?? 'p5-flow-document';
     $fdoc = $flow['doc'] ?? $me;
-    $roles = ['entry' => 'Creator', 'manager' => 'Approver', 'admin-app' => 'Administrator'];
-    $as = array_key_exists(request('as'), $roles) ? request('as') : ($fs === 'p5-flow-approval' ? 'manager' : 'entry');
-    $canApprove = $flow && $as === \App\Support\FlowDemo::APPROVER;
     $act = $flow ? null : (request('doc') === $me ? request('_action') : null);
     $status = match ($act) {
         'confirm' => 'confirmed', 'draft', 'save' => 'draft', 'cancel' => 'cancelled', 'delete', 'duplicate' => 'new',
@@ -17,8 +14,7 @@
     };
     $here = url()->current();
     $isNew = $status === 'new';
-    $apv = $flow && $status === 'confirmed' ? request('approval', $flow['approval'] ?? null) : null;
-    $dup = $flow ? request()->filled('copy') : $act === 'duplicate';
+    $dup = $act === 'duplicate';
     $blank = $isNew && ! $dup;
     // Log riwayat (History): contoh isi -- di aplikasi pemakai dari system.doc_state_log + audit perubahan. Terbaru di atas.
     $log = $isNew ? [] : array_values(array_filter([
@@ -50,27 +46,16 @@
     $defaults = ['currency' => 'IDR', 'rate' => 1, 'term' => 'NET30', 'warehouse' => 'GD-BB', 'supplier' => array_key_first($suppliers)];
     $v = fn ($k) => $blank ? ($flow ? ($defaults[$k] ?? null) : null) : ($po[$k] ?? null);
 @endphp
-@if ($flow && $fs === 'p5-flow-approval')
-    <div class="dl-row" style="margin-bottom:8px">
-        <span class="dl-note" style="margin:0">Simulate login as:</span>
-        @foreach ($roles as $rk => $rl)
-            <x-dl::button size="sm" :variant="$rk === $as ? 'primary' : 'secondary'" :label="$rl" :href="\App\Support\FlowDemo::formUrl($fs, $flow['id'], $fdoc, $flow['back'], ['status' => $status, 'approval' => $apv, 'as' => $rk])" />
-        @endforeach
-        <span class="dl-note" style="margin:0">Only the Approver decides. To reverse a REJECTED order the Approver needs an OTP code issued by an Administrator. @if ($as === 'admin-app' && $apv === 'rejected')Demo code for this order: <b>{{ \App\Support\FlowDemo::OTP_DEMO }}</b>@endif</span>
-    </div>
-@endif
-@unless ($flow && $fs === 'p5-flow-approval')
 <div class="dl-row" style="margin-bottom:8px">
     <span class="dl-note" style="margin:0">Lihat status:</span>
     @foreach (['draft' => 'Draft', 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled', 'closed' => 'Closed'] as $sk => $sl)
-        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="$flow ? \App\Support\FlowDemo::formUrl($fs, $flow['id'], $fdoc, $flow['back'], ['status' => $sk, 'as' => $as]) : $here.'?'.$me.'_status='.$sk.'#form-md-po'" />
+        <x-dl::button size="sm" :variant="$sk === $status ? 'primary' : 'secondary'" :label="$sl" :href="$flow ? \App\Support\FlowDemo::formUrl($fs, $flow['id'], $fdoc, $flow['back'], ['status' => $sk]) : $here.'?'.$me.'_status='.$sk.'#form-md-po'" />
     @endforeach
 </div>
-@endunless
 <x-dl::form :title="$isNew ? 'Purchase Order · New'.($dup ? ' (copy of '.$po['po_no'].')' : '') : 'Purchase Order · '.$po['po_no']" :subtitle="$blank ? null : $po['supplier']"
-    panel="top" kind="document" :status="$status" :pipeline="true" :can-reopen="true" :strict="(bool) $flow" :approval="$apv" :can-approve="$canApprove" :otp-url="$flow ? url()->current() : null" :print-url="$flow ? \App\Support\FlowDemo::printUrl($fs, $flow['id'], $fdoc, $status, $apv) : null" :log="$log"
+    panel="top" kind="document" :status="$status" :pipeline="true" :can-reopen="true" :strict="(bool) $flow" :print-url="$flow ? \App\Support\FlowDemo::printUrl($fs, $flow['id'], $fdoc, $status, null) : null" :log="$log"
     :action="$flow ? $here : $here.'#form-md-po'" :method="$flow ? 'POST' : 'GET'" :back="$flow['back'] ?? \App\Support\FlowDemo::gridUrl('p5-flow-document', $me)"
-    :new-url="$flow ? \App\Support\FlowDemo::formUrl($fs, 'new', $fdoc, $flow['back']) : $here.'?'.$me.'_new=1#form-md-po'" :hidden="['doc' => $fdoc] + ($flow ? ['status' => $status, 'from' => $flow['back'], 'as' => $as] + ($apv ? ['approval' => $apv] : []) : [])"
+    :new-url="$flow ? \App\Support\FlowDemo::formUrl($fs, 'new', $fdoc, $flow['back']) : $here.'?'.$me.'_new=1#form-md-po'" :hidden="['doc' => $fdoc] + ($flow ? ['status' => $status, 'from' => $flow['back']] : [])"
     :tabs="['general' => 'General', 'party' => 'Supplier', 'finance' => 'Finance', 'delivery' => 'Delivery', 'files' => 'Attachments & Notes']"
     :created-by="$isNew ? null : 'siti'" :created-at="$isNew ? null : '2026-09-02 08:12:00'"
     :updated-by="$isNew ? null : ($act ? 'budi' : 'siti')" :updated-at="$isNew ? null : ($act ? now()->format('Y-m-d H:i:s') : '2026-09-02 09:40:00')">

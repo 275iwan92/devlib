@@ -1,11 +1,11 @@
-{{-- Alur Approval: grid dokumen Confirmed yang menunggu keputusan -> Form (Approve / Hold / Reject) -> Back kembali ke grid. Aturan: skills/devlib/grid-form-flow.md --}}
+{{-- Alur Approval: grid dokumen Confirmed yang menunggu keputusan -> Form Approval baku (hanya-baca; Reject / Hold / Setujui) -> Back kembali ke grid. Aturan: skills/devlib/grid-form-flow.md --}}
 @php
     $slug = 'p5-flow-approval';
     $from = \App\Support\FlowDemo::gridUrl($slug);
     $label = ['waiting' => 'Awaiting', 'hold' => 'Hold', 'approved' => 'Approved', 'rejected' => 'Rejected'];
     $rows = array_map(fn ($r) => $r + ['approval_label' => $label[$r['approval']]], \App\Support\DemoData::approvalOrders());
 @endphp
-<p class="dl-note">Status dokumen dan status approval adalah <b>dua field terpisah</b>. Daftar ini memuat dokumen yang sudah <b>Confirmed</b>. Dokumen <b>Rejected</b> tidak tampil di tab biasa, hanya di tab <b>Rejected</b>. Klik 2x baris membuka form; masuk sebagai Approver (bawaan) untuk Approve / Hold / Reject.</p>
+<p class="dl-note">Status dokumen dan status approval adalah <b>dua field terpisah</b>. Daftar ini memuat dokumen yang sudah <b>Confirmed</b>. Dokumen <b>Rejected</b> tidak tampil di tab biasa, hanya di tab <b>Rejected</b>. Klik 2x baris membuka Form Approval baku (detail hanya-baca; Reject / Hold / Setujui).</p>
 <x-dl::grid id="flow-approval" kind="transactional" restore :rows="$rows" :new-record="null" search="Search order no., customer..."
     :open-url="\App\Support\FlowDemo::formUrl($slug, '{id}', '', $from)"
     :columns="[

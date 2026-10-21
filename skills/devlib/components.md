@@ -36,7 +36,7 @@ Pengumuman bergantian (dari file teks lewat x-dl::frame announce="...").
 ## `<x-dl::approval>`
 Approval Center (mockup pr/po_approval_center): daftar dokumen menunggu (kiri) + detail (kanan):.
 - Berkas: `src/Components/Approval.php`
-- Prop: docs:array=[], lineColumns:array=[], title:string='Waiting for My Approval', approveLabel:string='Approve', holdLabel:?string='Hold', rejectLabel:string='Reject', me:string='Me', source:?string=NULL, action:?string=NULL, log:array=[]
+- Prop: docs:array=[], lineColumns:array=[], title:string='Waiting for My Approval', approveLabel:string='Approve', holdLabel:?string='Hold', rejectLabel:string='Reject', me:string='Me', source:?string=NULL, action:?string=NULL, log:array=[], single:bool=false, back:?string=NULL
 
 ## `<x-dl::avatar>`
 Foto orang/objek; tanpa foto = inisial dengan warna tetap per nama.
@@ -391,7 +391,7 @@ Isi kotak Lupa Password. mode="email" (mockup forgot-password.html): isi email -
 ## `<x-dl::form>`
 Induk form (mockup UIUX_components_part1.html): judul + isi (kolom/baris field) + kaki berisi tombol tambahan opsional dan tombol split aksi.
 - Berkas: `src/Components/Form.php`
-- Prop: title:string='', action:?string=NULL, method:string='POST', actions:array=[…], extraAction:?string=NULL, extraIcon:string='📱', footer:bool=true, guard:bool=true, mode:string='edit', panel:?string=NULL, back:?string=NULL, newUrl:?string=NULL, kind:string='master', status:string='active', tabs:array=[], createdBy:?string=NULL, createdAt:?string=NULL, updatedBy:?string=NULL, updatedAt:?string=NULL, canReopen:bool=false, canInput:bool=true, subtitle:?string=NULL, pipeline:?bool=NULL, log:array=[], approvalLevels:int=0, approvalAt:int=0, canApprove:bool=false, actionField:string='_action', hide:array=[], hidden:array=[], stage:?string=NULL, printUrl:?string=NULL, strict:bool=false, approval:?string=NULL, deletable:bool=false, otpUrl:?string=NULL
+- Prop: title:string='', action:?string=NULL, method:string='POST', actions:array=[…], extraAction:?string=NULL, extraIcon:string='📱', footer:bool=true, guard:bool=true, mode:string='edit', panel:?string=NULL, back:?string=NULL, newUrl:?string=NULL, kind:string='master', status:string='active', tabs:array=[], createdBy:?string=NULL, createdAt:?string=NULL, updatedBy:?string=NULL, updatedAt:?string=NULL, canReopen:bool=false, canInput:bool=true, subtitle:?string=NULL, pipeline:?bool=NULL, log:array=[], approvalLevels:int=0, approvalAt:int=0, canApprove:bool=false, actionField:string='_action', hide:array=[], hidden:array=[], stage:?string=NULL, printUrl:?string=NULL, strict:bool=false, deletable:bool=false
 
 ## `<x-dl::form.col>`
 Satu kolom form: field disusun ke bawah.

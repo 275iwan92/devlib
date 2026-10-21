@@ -110,7 +110,7 @@
       // [pesan, nada, alasan wajib?] -- Cancel, Reject, Back to Draft wajib alasan (tercatat di History).
       const ask = {delete: [T('f_ask_delete'), 'danger'], confirm: [T('f_ask_confirm'), 'warn'], cancel: [T('f_ask_cancel'), 'danger', true], draft: [T('f_ask_draft'), 'warn', true],
         approve: [T('f_ask_approve'), 'success'], reject: [T('f_ask_reject'), 'danger', true], hold: [T('f_ask_hold'), 'warn', true], deactivate: [T('f_ask_deactivate'), 'warn'], activate: [T('f_ask_activate'), 'warn']}[a];
-      const go = (why, otp) => {
+      const go = why => {
         this.el.dispatchEvent(new CustomEvent('dl:form-action', {bubbles: true, detail: {action: a}}));
         // Print/Email tidak mengubah dokumen -> tidak kirim form (layar menangkap dl:form-action, mis. buka x-dl::doc-share).
         if (!this.el.getAttribute('action') || a === 'print' || a === 'email') return toast(Tf('f_action_preview2', {a}), 'success');
@@ -119,11 +119,9 @@
         h.value = a;
         let r = $(this.el, 'input[name=_reason]'); if (!r) { r = document.createElement('input'); r.type = 'hidden'; r.name = '_reason'; this.el.appendChild(r); }
         r.value = typeof why === 'string' ? why : '';
-        if (otp) { let o = $(this.el, 'input[name=_otp]'); if (!o) { o = document.createElement('input'); o.type = 'hidden'; o.name = '_otp'; this.el.appendChild(o); } o.value = otp; }
         if (a === 'confirm') this.el.requestSubmit(); else HTMLFormElement.prototype.submit.call(this.el);  // hanya Confirm yang divalidasi
       };
       if (!ask) return go();
-      if (a === 'approve' && this.el.hasAttribute('data-f-otp')) return confirmBox({message: T('f_ask_approve_otp'), tone: 'warn', reason: true, otp: true}).then(r => { if (r) go(r.why, r.otp); });
       confirmBox({message: ask[0], tone: ask[1], reason: !!ask[2]}).then(ok => { if (ok) go(ok); });
     }
 

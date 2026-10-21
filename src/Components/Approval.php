@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Approval Center (mockup pr/po_approval_center): daftar dokumen menunggu (kiri) + detail (kanan):.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : docs, lineColumns, title, approveLabel, holdLabel, rejectLabel, me, source, action, log.
+ * Input        : docs, lineColumns, title, approveLabel, holdLabel, rejectLabel, me, source, action, log, single, back.
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : approval-po (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -22,6 +22,8 @@ namespace Devlib\Components;
 // lineColumns: [kolom => label]; kolom berakhiran :money diformat Rupiah (mis. 'price:money').
 // :action = URL POST (id, action=approve|reject|hold, _reason) -> keputusan disimpan server lalu halaman dimuat ulang;
 // tanpa :action = simulasi di browser (demo DevLib). :log = Log Keputusan awal dari DB.
+// :single = satu dokumen saja (form yang dibuka dari grid): tanpa daftar kiri; doc 'readonly' => true (sudah diputuskan) tanpa tombol keputusan.
+// :back = alamat grid asal (mode single, simulasi): setelah keputusan final (Setujui/Reject) halaman kembali ke sana; Hold tetap di form.
 // Setiap keputusan = LOG (user 2026-09-30): siapa, kapan, aksi (APPROVED/REJECTED/HOLD), level & alasan. Tampil di
 // Riwayat Dokumen + panel Log Keputusan, dan dipancarkan sebagai event dl:approval
 // (detail: {id, no, action, status, by, at, level, role, note}) -- aplikasi WAJIB menyimpannya (mis. flow_log / doc_state_log).
@@ -38,6 +40,8 @@ class Approval extends DevlibComponent
         public ?string $source = null,
         public ?string $action = null,
         public array $log = [],
+        public bool $single = false,
+        public ?string $back = null,
     ) {}
 
     public function tag(): string
@@ -53,7 +57,7 @@ class Approval extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class('dl-appr') }} {!! $dl() !!} data-dl-approval data-docs="{{ json_encode($docs) }}" data-cols="{{ json_encode($lineColumns) }}" data-me="{{ $me === 'Me' ? \Devlib\Lang::text('Me') : $me }}" data-log="{{ json_encode($log) }}">
+            <div {{ $attributes->class(['dl-appr', 'dl-appr--single' => $single]) }} {!! $dl() !!} data-dl-approval data-docs="{{ json_encode($docs) }}" data-cols="{{ json_encode($lineColumns) }}" data-me="{{ $me === 'Me' ? \Devlib\Lang::text('Me') : $me }}" data-log="{{ json_encode($log) }}"@if ($back) data-back="{{ $back }}"@endif>
                 @if ($action)<form method="post" action="{{ $action }}" data-a-form hidden>@csrf<input type="hidden" name="id"><input type="hidden" name="action"><input type="hidden" name="_reason"></form>@endif
                 <div class="dl-appr__head"><h2>{{ $title }}</h2><span class="dl-badge dl-badge--pill dl-badge--warn" data-a-count></span></div>
                 <div class="dl-appr__grid">

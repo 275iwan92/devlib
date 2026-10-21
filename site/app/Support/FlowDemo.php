@@ -6,7 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 // Alur Grid -> Form -> kembali di katalog (aturan: skills/devlib/grid-form-flow.md). Tanpa basis data: baris dari DemoData, hasil aksi
-// hanya disimulasikan (toast + keadaan form dibawa di alamat: status, approval, from, doc, as). Siklus ketat (user 2026-10-21):
+// hanya disimulasikan (toast + keadaan form dibawa di alamat: status, from, doc, as). Siklus ketat (user 2026-10-21):
 // Save dan Confirm TETAP di form; hanya Back (dan Delete, karena barisnya hilang) kembali ke grid.
 final class FlowDemo
 {
@@ -14,7 +14,7 @@ final class FlowDemo
         'p5-flow-master' => ['title' => 'Employee', 'kind' => 'master', 'demos' => ['' => 'form-master']],
         'p5-flow-document' => ['title' => 'Document', 'kind' => 'document', 'demos' => ['co' => 'form-md', 'po' => 'form-md-po']],
         'p5-flow-single' => ['title' => 'Cash Voucher', 'kind' => 'document', 'demos' => ['' => 'form-cash-voucher']],
-        'p5-flow-approval' => ['title' => 'Customer Order', 'kind' => 'document', 'demos' => ['' => 'form-md']],
+        'p5-flow-approval' => ['title' => 'Customer Order', 'kind' => 'document', 'demos' => ['' => 'form-approval']],
     ];
 
     // Isian wajib per alur (kunci field => label); dicek server sebagai cadangan validasi klien.
@@ -25,13 +25,8 @@ final class FlowDemo
         'po' => ['po_date' => 'PO date', 'supplier' => 'Supplier'],
     ];
 
-    // Peran simulasi: pemeriksa (approver) memutuskan approval; administrator menerbitkan OTP dan boleh menghapus master yang belum dipakai.
-    public const APPROVER = 'manager';
-
+    // Peran simulasi: administrator boleh menghapus master yang belum dipakai.
     public const ADMIN = 'admin-app';
-
-    // Kode OTP contoh (demo): di aplikasi nyata diterbitkan administrator di luar sistem; pemeriksaan kode adalah urusan proyek.
-    public const OTP_DEMO = '482913';
 
     // Save pada record baru: demo tanpa penyimpanan, jadi form pindah ke record contoh bernomor ini (…/form/999).
     public const CREATED_ID = '999';
@@ -138,13 +133,42 @@ final class FlowDemo
         return $row ? strtolower($row['status']) : 'draft';
     }
 
+    // Baris grid Approval -> dokumen untuk x-dl::approval (Form Approval baku, hanya-baca). approval: waiting|hold|approved|rejected.
+    // Level 1 sudah selesai; Level 2 mengikuti status approval; Level 3 (Direksi) hanya untuk nilai > IDR 50 jt. Pihak fiktif.
+    public static function approvalDoc(array $r): array
+    {
+        $d = fn (string $date, string $t = '') => \Devlib\Locale::date($date).($t ? ' '.$t : '');
+        $ap = $r['approval'];
+        $lv2 = ['waiting' => 'current', 'hold' => 'current', 'approved' => 'done', 'rejected' => 'rejected'][$ap];
+        $steps = [['role' => 'Pembuat', 'by' => 'Rina Wijaya', 'at' => $d($r['co_date']), 'status' => 'done', 'submitter' => true],
+            ['role' => 'Kepala Penjualan', 'by' => 'Dewi Kusuma', 'at' => $d(date('Y-m-d', strtotime($r['co_date'].' +1 day'))), 'status' => 'done'],
+            ['role' => 'Operational Manager'] + ($lv2 === 'current' ? ['status' => 'current'] : ['by' => 'Operational Manager', 'at' => $d($r['ship_date']), 'status' => $lv2])];
+        if ($r['total'] > 50000000) {
+            $steps[] = ['role' => 'Direksi (> IDR 50 jt)', 'status' => 'pending'];
+        }
+        $history = [['action' => 'SUBMITTED', 'by' => 'Rina Wijaya', 'at' => $d($r['co_date'], '10:05')],
+            ['action' => 'APPROVED', 'by' => 'Dewi Kusuma', 'at' => $d(date('Y-m-d', strtotime($r['co_date'].' +1 day')), '15:40'), 'note' => 'Harga sesuai kesepakatan.']];
+        $last = ['approved' => ['APPROVED', 'Siap diproduksi.'], 'rejected' => ['REJECTED', 'Harga belum sesuai, mohon revisi.'], 'hold' => ['HOLD', 'Menunggu konfirmasi kredit customer.']][$ap] ?? null;
+        if ($last) {
+            $history[] = ['action' => $last[0], 'by' => 'Operational Manager', 'at' => $d($r['ship_date'], '09:15'), 'note' => $last[1]];
+        }
+
+        return [
+            'id' => $r['id'], 'no' => $r['co_no'], 'title' => 'Customer Order', 'amount' => $r['total'], 'party' => $r['customer'], 'date' => $r['co_date'],
+            'submitted_by' => 'Rina Wijaya (Sales)',
+            'summary' => ['Nilai' => 'IDR '.\Devlib\Locale::number($r['total'], 0), 'Termin' => 'Net 30', 'Estimasi Kirim' => $d($r['ship_date']), 'Jumlah Item' => count($r['lines'])],
+            'lines' => $r['lines'], 'steps' => $steps, 'history' => $history,
+        ] + ($ap === 'hold' ? ['held' => ['by' => 'Operational Manager', 'at' => $d($r['ship_date'], '09:15'), 'note' => $last[1]]] : [])
+          + (in_array($ap, ['approved', 'rejected'], true) ? ['readonly' => true] : []);
+    }
+
     public static function flash(string $tone, string $text): array
     {
         return [$tone, $text];
     }
 
     // Aksi yang sah per keadaan (siklus ketat); selain itu ditolak (toast kuning, status tetap).
-    private static function allowed(bool $master, string $status, ?string $ap): array
+    private static function allowed(bool $master, string $status): array
     {
         if ($master) {
             return ['new' => ['save'], 'active' => ['save', 'deactivate', 'delete'], 'inactive' => ['activate']][$status] ?? [];
@@ -153,7 +177,7 @@ final class FlowDemo
         return match ($status) {
             'new' => ['save'],
             'draft' => ['save', 'delete', 'confirm'],
-            'confirmed' => array_merge(in_array($ap, [null, 'waiting'], true) ? ['cancel'] : [], $ap === 'rejected' ? ['duplicate'] : [], $ap !== null ? ['approve', 'hold', 'reject'] : []),
+            'confirmed' => ['cancel'],
             default => [],
         };
     }
@@ -169,29 +193,20 @@ final class FlowDemo
         }
         $master = self::isMaster($slug);
         $status = $id === 'new' ? 'new' : (string) $r->input('status', self::status($slug, $doc, $row));
-        $ap = $r->filled('approval') ? (string) $r->input('approval') : ($row['approval'] ?? null);
         $act = (string) $r->input('_action', 'save');
         $as = (string) $r->input('as', '');
-        $state = array_filter(['status' => $status, 'approval' => $status === 'confirmed' ? $ap : null]);
+        $state = ['status' => $status];
         $self = fn (array $q = [], ?string $newId = null) => redirect(self::formUrl($slug, $newId ?? $id, $doc, $back, $q + ($as !== '' ? ['as' => $as] : [])));
         $label = $row ? ($row['name'] ?? $row['co_no'] ?? $row['po_no'] ?? $row['cv_no']) : 'New record';
         $reason = trim((string) $r->input('_reason'));
         $deny = fn (string $text) => $self($state)->with('flow_flash', self::flash('danger', $text));
         $reject = fn (string $text) => $self($state)->with('flow_flash', self::flash('warn', $text));
 
-        if (! in_array($act, self::allowed($master, $status, $ap), true)) {
+        if (! in_array($act, self::allowed($master, $status), true)) {
             return $reject("Action {$act} does not apply to this record in its current state.");
-        }
-        $decision = in_array($act, ['approve', 'hold', 'reject'], true);
-        if ($decision !== ($as === self::APPROVER)) {
-            return $deny('You do not have permission for this action.');
         }
         if ($master && $act === 'delete' && ($as !== self::ADMIN || (int) $row['id'] % 3 === 0)) {
             return $deny($as !== self::ADMIN ? 'Only an administrator can delete master data.' : 'This record is used by transactions. Deactivate it instead.');
-        }
-        $flows = ['approve' => ['waiting', 'hold', 'rejected'], 'hold' => ['waiting'], 'reject' => ['waiting', 'hold', 'approved']];
-        if ($decision && ! in_array($ap, $flows[$act], true)) {
-            return $reject("Action {$act} does not apply to approval status {$ap}.");
         }
 
         switch ($act) {
@@ -216,29 +231,10 @@ final class FlowDemo
                 }
 
                 return $self(['status' => 'cancelled'])->with('flow_flash', self::flash('success', $label.' cancelled.'));
-            case 'approve':
-            case 'hold':
-            case 'reject':
-                if ($act !== 'approve' && $reason === '') {
-                    return $deny('A reason is required.');
-                }
-                if ($ap === 'rejected') {
-                    if ($reason === '') {
-                        return $deny('A reason is required.');
-                    }
-                    if (trim((string) $r->input('_otp')) !== self::OTP_DEMO) {
-                        return $deny('The OTP code is not valid.');
-                    }
-                }
-                $new = ['approve' => 'approved', 'hold' => 'hold', 'reject' => 'rejected'][$act];
-
-                return $self(['status' => 'confirmed', 'approval' => $new])->with('flow_flash', self::flash('success', $label.' is now '.strtoupper($new).'.'));
             case 'deactivate':
                 return $self(['status' => 'inactive'])->with('flow_flash', self::flash('success', $label.' deactivated. It no longer appears in pick lists.'));
-            case 'activate':
+            default: // activate
                 return $self(['status' => 'active'])->with('flow_flash', self::flash('success', $label.' activated.'));
-            default: // duplicate
-                return $self(['copy' => $id], 'new')->with('flow_flash', self::flash('info', 'Copy created as a new Draft, without a number.'));
         }
     }
 }
