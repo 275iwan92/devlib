@@ -17,7 +17,10 @@ class ProfilePageTest extends TestCase
             ->assertSee('data-id="demo-profile"', false)
             ->assertSee('data-lm-ov="profile"', false)
             ->assertSee('data-lm-act="logout"', false)
-            ->assertSee('data-lm-page="setup"', false);
+            ->assertSee('data-lm-page="setup"', false)
+            ->assertSee('Host: HOST-01 / 10.0.0.10 · Client: 127.0.0.1', false)
+            ->assertDontSee('example.test · ', false);   // header panel = nama + e-mail, tanpa jabatan
+        $this->assertFalse(app()->bound('devlib.env_where'));   // binding peragaan dilepas lagi
     }
 
     public function test_table_rows_match_the_actions_of_layer_shell(): void

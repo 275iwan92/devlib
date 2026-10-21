@@ -37,7 +37,6 @@ return [
         'resources/views/demos/basic-locale.blade.php' => ['L001'],  // tabel mentah dl-kv = bagian yang didemokan
         // L002: skrip peragaan (simulasi balasan chat; subclass JS Kanban, Grid, Form) -- contoh cara menurunkan JS, bukan perilaku komponen.
         'resources/views/demos/layer-menu.blade.php' => ['L002'],
-        'resources/views/demos/profile.blade.php' => ['L002'],   // membuka panel Profile saat halaman siap (peragaan)
         'resources/views/demos/oo-override.blade.php' => ['L002'],
         'resources/views/demos/oo-override-grid.blade.php' => ['L002'],
         'resources/views/demos/oo-override-form.blade.php' => ['L002'],
