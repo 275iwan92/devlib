@@ -1,16 +1,16 @@
 {
-    "generated": "2026-10-21 10:40",
+    "generated": "2026-10-21 11:11",
     "database": "devlib",
     "totals": {
         "objects": 83,
         "modules": 14,
-        "modules_done": 3,
+        "modules_done": 4,
         "screens": 168,
         "v2": 168,
         "v1": 0,
         "not_built": 0,
-        "waiting_qc": 31,
-        "locked": 52,
+        "waiting_qc": 30,
+        "locked": 53,
         "forms": 4,
         "grids": 8,
         "reports": 2,
@@ -18,7 +18,7 @@
         "engine_groups": 3,
         "migrations": 9,
         "tests": 20,
-        "commits": 374,
+        "commits": 375,
         "since": "2026-09-23"
     },
     "modules": [
@@ -52,8 +52,8 @@
             "v2": 1,
             "v1": 0,
             "not_built": 0,
-            "waiting_qc": 1,
-            "locked": 0,
+            "waiting_qc": 0,
+            "locked": 1,
             "form": 0,
             "grid": 0,
             "report": 0
@@ -405,10 +405,10 @@
             "key": "page:p5-override",
             "name": "OO Methods and Properties",
             "module": "Rules",
-            "qc": "READY_FOR_QC",
-            "built_at": null,
+            "qc": "LOCKED",
+            "built_at": "2026-10-21",
             "built_by": null,
-            "changed_at": null,
+            "changed_at": "2026-10-21",
             "changed_by": null
         },
         {

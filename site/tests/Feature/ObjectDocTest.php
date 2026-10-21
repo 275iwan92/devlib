@@ -127,8 +127,8 @@ class ObjectDocTest extends TestCase
         }
     }
 
-    public function test_page_is_still_in_review_not_approved(): void
+    public function test_page_is_approved(): void
     {
-        $this->assertArrayNotHasKey('p5-override', \App\Support\Catalog::APPROVED);
+        $this->assertArrayHasKey('p5-override', \App\Support\Catalog::APPROVED);   // disetujui Jo 2026-10-21
     }
 }
