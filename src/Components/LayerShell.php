@@ -63,8 +63,9 @@ class LayerShell extends DevlibComponent
         // Help & support "banyak aspek, windownya harus besar"): ['edit' => ['label', 'icon' => 'fa-...', 'url'], 'help' => [...]].
         // Tanpa laci: 'edit' = modal kecil nama / e-mail / telepon, 'help' = tab Bantuan.
         public array $drawers = [],
-        // Fitur menu profil yang disembunyikan (aplikasi sederhana): 'chat' (aksi Chat + laci), 'ai' (aksi Asisten AI), 'help' (aksi Help & support), 'theme' (pilihan Tema;
-        // tanpa Tema, halaman Setup diganti langsung halaman Bahasa).
+        // Fitur menu profil yang disembunyikan (aplikasi sederhana, opt-in): 'notif' (aksi Notifikasi + laci), 'chat' (aksi Chat + laci), 'ai' (aksi Asisten AI),
+        // 'edit' (aksi Edit profile + modal / laci-nya), 'help' (aksi Help & support), 'setup' (halaman Setup dengan Tema dan Bahasa),
+        // 'theme' (pilihan Tema; tanpa Tema, halaman Setup diganti langsung halaman Bahasa). Ubah password dan Sign out tidak bisa disembunyikan.
         public array $without = [],
     ) {
         $identity = Brand::identity();
@@ -146,15 +147,25 @@ class LayerShell extends DevlibComponent
 
     public function actions(): array
     {
+        $has = fn (string $k) => ! in_array($k, $this->without);
+        // Garis pemisah hanya bila kelompok atas (Notifications, Chat, AI Assistant) masih berisi; jatuh pada item pertama kelompok bawah yang tampil.
+        $sep = $has('notif') || $has('chat') || $has('ai');
+        $mark = function () use (&$sep) {
+            $mine = $sep ? ['sep' => true] : [];
+            $sep = false;
+
+            return $mine;
+        };
+
         return array_values(array_filter([
             // Urutan panel Profile = keputusan user 2026-10-03: Notifications, Chat, AI Assistant | Edit profile, Help & support,
             // (Setup = halaman panel, disisipkan sesudah Help), Change password, Sign out.
-            ['key' => 'notif', 'label' => Lang::text('Notifications'), 'icon' => 'notification'],
-            in_array('chat', $this->without) ? null : ['key' => 'chat', 'label' => 'Chat', 'icon' => 'fa-comment-dots'],
-            in_array('ai', $this->without) ? null : ['key' => 'ai', 'label' => Lang::text('AI Assistant'), 'icon' => 'ai'],
-            ['key' => 'edit', 'label' => Lang::text('Edit profile'), 'icon' => 'fa-user-pen', 'sep' => true],
-            in_array('help', $this->without) ? null : ['key' => 'help', 'label' => Lang::text('Help & support'), 'icon' => 'help'],
-            ['key' => 'pass', 'label' => Lang::text('Change password'), 'icon' => 'password'],
+            $has('notif') ? ['key' => 'notif', 'label' => Lang::text('Notifications'), 'icon' => 'notification'] : null,
+            $has('chat') ? ['key' => 'chat', 'label' => 'Chat', 'icon' => 'fa-comment-dots'] : null,
+            $has('ai') ? ['key' => 'ai', 'label' => Lang::text('AI Assistant'), 'icon' => 'ai'] : null,
+            $has('edit') ? ['key' => 'edit', 'label' => Lang::text('Edit profile'), 'icon' => 'fa-user-pen'] + $mark() : null,
+            $has('help') ? ['key' => 'help', 'label' => Lang::text('Help & support'), 'icon' => 'help'] + $mark() : null,
+            ['key' => 'pass', 'label' => Lang::text('Change password'), 'icon' => 'password'] + $mark(),
             ['key' => 'logout', 'label' => Lang::text('Sign out'), 'icon' => 'logout', 'tone' => 'danger', 'confirm' => Lang::text('Sign out of the application?')],
         ]));
     }

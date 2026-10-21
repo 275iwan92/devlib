@@ -101,7 +101,7 @@
       this.backdrop.addEventListener('click', this.closeDrawers);
       $$(this.el, '[data-dl-close]').forEach(b => b.addEventListener('click', this.closeDrawers));
       this.initAccount();
-      $(this.el, '[data-dl-markread]').addEventListener('click', () => {
+      $(this.el, '[data-dl-markread]')?.addEventListener('click', () => {
         const done = () => { this.notifCount = 0; this.refreshCounts(); $$(this.el, '.dl-nz__dot').forEach(d => d.classList.add('is-read')); toast(T('n_all_read')); };
         this.account?.read ? this.accountPost(this.account.read, {}).then(r => { if (r.ok) done(); }).catch(() => {}) : done();
       });
@@ -124,8 +124,8 @@
       try { this.account = JSON.parse($(this.el, '[data-dl-account]')?.dataset.dlAccount || 'null'); } catch (e) { this.account = null; }
       if (!this.account) return;
       const list = $(this.el, '.dl-notif__list');
-      this.notifCount = $$(list, '.dl-nz__dot:not(.is-read)').length;
-      list.addEventListener('click', e => {
+      if (list) this.notifCount = $$(list, '.dl-nz__dot:not(.is-read)').length;
+      list?.addEventListener('click', e => {
         const n = e.target.closest('[data-dl-notif]'); if (!n) return;
         if (this.account.read && !$(n, '.dl-nz__dot').classList.contains('is-read')) {
           this.accountPost(this.account.read, {id: Number(n.dataset.dlNotif)}).then(r => {

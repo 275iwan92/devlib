@@ -32,6 +32,9 @@
         $notifLive = isset($account['notifications']);
         $profileLive = ! empty($account['profile']['url']);
         $passLive = ! empty($account['password']['url']);
+        // Pembawa data akun (csrf + url) = laci Notifikasi; tanpa laci itu, modal Ubah password membawanya supaya Save tetap tersambung.
+        $accountAttr = 'data-dl-account="'.e(json_encode(['csrf' => $account['csrf'] ?? '', 'read' => null, 'profile' => $account['profile']['url'] ?? null, 'password' => $account['password']['url'] ?? null])).'"';
+        $drawers = in_array('edit', $without) ? array_diff_key($drawers, ['edit' => 1]) : $drawers;
         $dot = ['danger' => '--dl-danger', 'warn' => '--dl-amber-2', 'success' => '--dl-green'];
     @endphp
     @foreach ($drawers as $key => $d)
@@ -39,7 +42,7 @@
              mengambang / dipindah / diubah ukurannya. Dibuka oleh aksi akun berkunci sama (Shell::command). --}}
         <x-dl::side-screen :id="$key" :title="$d['label']" :subtitle="$d['subtitle'] ?? null" :icon="$d['icon'] ?? null" :url="$d['url']" />
     @endforeach
-    <aside class="dl-drawer" data-dl-drawer="notif" data-dl="drawer notifikasi" data-dl-class="bagian Shell" data-dl-src="{{ $notifLive ? 'sys_notifications' : 'sys_notifications (rencana)' }}"
+    @unless (in_array('notif', $without))<aside class="dl-drawer" data-dl-drawer="notif" data-dl="drawer notifikasi" data-dl-class="bagian Shell" data-dl-src="{{ $notifLive ? 'sys_notifications' : 'sys_notifications (rencana)' }}"
         @if (! empty($account)) data-dl-account="{{ json_encode(['csrf' => $account['csrf'] ?? '', 'read' => $account['notifications']['read'] ?? null, 'profile' => $account['profile']['url'] ?? null, 'password' => $account['password']['url'] ?? null]) }}" @endif>
         <div class="dl-dr-head"><i class="fa-solid fa-bell dl-dr-ico"></i><span class="dl-dr-title">{{ \Devlib\Lang::text('Notifications') }}</span><button type="button" class="dl-dr-x dl-dr-max" data-dl-dr-max data-title-max="{{ \Devlib\Lang::text('Maximize') }}" data-title-restore="{{ \Devlib\Lang::text('Restore') }}" title="{{ \Devlib\Lang::text('Maximize') }}"><i class="fa-solid fa-expand"></i></button><button type="button" class="dl-dr-x" data-dl-close><i class="fa-solid fa-xmark"></i></button></div>
         <div class="dl-notif__bar"><a data-dl-markread>{{ \Devlib\Lang::text('Mark all as read') }}</a></div>
@@ -56,9 +59,10 @@
             <div class="dl-nz"><span class="dl-nz__dot" style="--dot:var(--dl-green)"></span><div><div class="dl-nz__t">Invoice #2600393 {{ \Devlib\Lang::text('paid') }}</div><div class="dl-nz__s">Finance · {{ \Devlib\Lang::text('yesterday') }}</div></div></div>
             @endif
         </div>
-    </aside>
+    </aside>@endunless
 
-    <div class="dl-mov" data-dl-modal="edit"><div class="dl-modal" data-dl="modal edit profil" data-dl-class="bagian Shell" data-dl-src="sec_user">
+
+    @unless (in_array('edit', $without))<div class="dl-mov" data-dl-modal="edit"><div class="dl-modal" data-dl="modal edit profil" data-dl-class="bagian Shell" data-dl-src="sec_user">
         <div class="dl-modal__head"><h3>{{ \Devlib\Lang::text('Edit profile') }}</h3><button type="button" class="dl-modal__x" data-dl-mclose>&times;</button></div>
         <div class="dl-modal__body">
             @unless ($profileLive)
@@ -71,9 +75,10 @@
             <div class="dl-mfield"><label>{{ \Devlib\Lang::text('Position') }}</label><input value="{{ $profileLive ? ($account['profile']['role'] ?? '') : $user['role'] }}" readonly></div>
         </div>
         <div class="dl-modal__foot"><button type="button" class="dl-mbtn dl-mbtn--c" data-dl-mclose>Cancel</button><button type="button" class="dl-mbtn dl-mbtn--p" @if ($profileLive) data-dl-account-save="profile" @else data-dl-mclose @endif>Save</button></div>
-    </div></div>
+    </div></div>@endunless
 
-    <div class="dl-mov" data-dl-modal="pass"><div class="dl-modal" data-dl="modal ubah password" data-dl-class="bagian Shell" data-dl-src="sec_user.pswd">
+
+    <div class="dl-mov" data-dl-modal="pass"@if (in_array('notif', $without) && ! empty($account)) {!! $accountAttr !!}@endif><div class="dl-modal" data-dl="modal ubah password" data-dl-class="bagian Shell" data-dl-src="sec_user.pswd">
         <div class="dl-modal__head"><h3>{{ \Devlib\Lang::text('Change password') }}</h3><button type="button" class="dl-modal__x" data-dl-mclose>&times;</button></div>
         <div class="dl-modal__body">
             <div class="dl-modal__msg" data-dl-account-msg hidden></div>

@@ -7,6 +7,13 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
 
+### Ditambahkan
+
+- **`x-dl::layer-shell :without` mengenali `notif`, `edit`, dan `setup`** (permintaan Jo 2026-10-21: menu profil aplikasi cukup Ubah password):
+  `notif` = aksi Notifikasi + laci-nya, `edit` = aksi Edit profile + modal / laci-nya, `setup` = halaman Setup (Tema, Bahasa) beserta entrinya.
+  Dengan `['notif','chat','ai','edit','help','setup']` menu profil tinggal header, Ubah password, dan Sign out. Opt-in: tanpa `without`
+  keluaran tidak berubah (dibuktikan perbandingan HTML); nilai `chat`, `ai`, `help`, `theme` tidak berubah. Tes `LayerShellWithoutTest`.
+
 ### Diubah
 
 - **Halaman katalog `p5-override` (OO Methods and Properties) kini menceritakan satu object, contoh kerja Kanban** (permintaan Jo

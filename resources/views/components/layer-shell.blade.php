@@ -2,11 +2,11 @@
     <x-dl::layer-menu class="dl-shell__lm" id="shell" :items="$views() ? [] : $layerTree()" :views="$views()" :initial-view="$startView()" :title="\Devlib\Lang::raw($brand)" :tagline="$tagline" :logo="$logo" search home :fold-groups="collect($modules)->contains(fn ($m) => ! empty($m['section'])) ? 'accordion' : ''" :user="$user['name']" :role="$user['role'] ?? null" :login="$user['email'] ?? null" dock="[data-dl-lm-dock]" :actions="$actions()">
         <x-slot:profile>
             {{-- Setup = rumah pengaturan tampilan yang akan bertambah (tema, bahasa, ...); Theme & Language anaknya (user 2026-10-03). --}}
-            @unless (in_array('theme', $without))
+            @unless (in_array('setup', $without) || in_array('theme', $without))
                 <section data-lm-page="setup" data-label="{{ \Devlib\Lang::text('Setup') }}" data-icon="fa-sliders" data-lm-children="theme,lang"></section>
                 <section data-lm-page="theme" data-label="{{ \Devlib\Lang::text('Theme') }}" data-icon="fa-palette"><x-dl::theme-picker /></section>
             @endunless
-            <section data-lm-page="lang" data-label="{{ \Devlib\Lang::text('Language') }}" data-icon="fa-globe"><x-dl::lang-switch /></section>
+            @unless (in_array('setup', $without))<section data-lm-page="lang" data-label="{{ \Devlib\Lang::text('Language') }}" data-icon="fa-globe"><x-dl::lang-switch /></section>@endunless
             {{ $profilePages ?? '' }}
         </x-slot:profile>
     </x-dl::layer-menu>
