@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Support\Catalog;
+use App\Support\ProfileVariants;
 use Devlib\Components\LayerShell;
 use Tests\TestCase;
 
@@ -40,5 +41,49 @@ class ProfilePageTest extends TestCase
         $group = collect(Catalog::groups())->firstWhere('code', 'SP');
         $this->assertArrayHasKey('p7-profile', $group['pages']);
         $this->assertArrayHasKey('p7-profile', Catalog::APPROVED);   // disetujui Jo 2026-10-21
+    }
+
+    // Aksi di panel hidup sebuah varian (kunci data-lm-act, tanpa duplikat).
+    private function acts(string $html): array
+    {
+        $panel = substr($html, (int) strpos($html, 'data-id="demo-profile"'));
+        preg_match_all('/data-lm-act="([a-z]+)"/', $panel, $m);
+
+        return array_values(array_unique($m[1]));
+    }
+
+    public function test_three_variants_are_offered_and_their_items_match_actions_minus_without(): void
+    {
+        $this->assertSame(['tmerp', 'sstock', 'devlib'], array_keys(ProfileVariants::ALL));
+        $expect = ['tmerp' => ['notif', 'chat', 'ai', 'edit', 'help', 'pass', 'logout'], 'sstock' => ['notif', 'edit', 'help', 'pass', 'logout'], 'devlib' => ['pass', 'logout']];
+        foreach (ProfileVariants::ALL as $key => $variant) {
+            $html = $this->get('/lib/p7-profile?variant='.$key)->assertOk()->assertSee('?variant='.$key, false)->getContent();
+            $keys = array_column((new LayerShell(without: $variant['without']))->actions(), 'key');
+            $this->assertSame($expect[$key], $keys);
+            $this->assertSame($keys, $this->acts($html), $key);
+            $this->assertStringContainsString('data-lm-act="logout"', $html);
+        }
+        $sstock = $this->get('/lib/p7-profile?variant=sstock')->getContent();
+        $this->assertStringContainsString('data-lm-page="lang"', $sstock);
+        $this->assertStringNotContainsString('data-lm-page="theme"', $sstock);
+        $this->assertStringNotContainsString('data-lm-page="setup"', $sstock);
+        $devlib = $this->get('/lib/p7-profile?variant=devlib')->getContent();
+        $this->assertStringNotContainsString('data-lm-page="lang"', $devlib);
+        $this->assertStringNotContainsString('data-dl-drawer', substr($devlib, (int) strpos($devlib, 'data-id="demo-profile"')));
+    }
+
+    public function test_default_and_explicit_tmerp_render_the_same_page(): void
+    {
+        $strip = fn (string $h) => preg_replace('/"[A-Za-z0-9]{40}"/', 'T', $h);
+        $default = $strip($this->get('/lib/p7-profile')->getContent());
+        $this->assertSame($default, $strip($this->get('/lib/p7-profile?variant=tmerp')->getContent()));
+        $this->assertSame($default, $strip($this->get('/lib/p7-profile?variant=unknown')->getContent()));   // kunci tak dikenal = bawaan
+    }
+
+    public function test_variants_carry_no_real_data(): void
+    {
+        foreach (array_keys(ProfileVariants::ALL) as $key) {
+            $this->get('/lib/p7-profile?variant='.$key)->assertOk()->assertSee('Budi Santoso', false)->assertDontSee('mockup.test', false)->assertDontSee('sstock/', false)->assertDontSee('tmerp/', false);
+        }
     }
 }

@@ -2,7 +2,11 @@
 @php
     // Bentuk seperti di aplikasi pewaris: header panel = nama + e-mail (tanpa jabatan), footer = nama + baris Host / Client (x-dl::env-badge, diisi lewat binding aplikasi).
     $user = ['name' => 'Budi Santoso', 'email' => 'budi@example.test', 'role' => ''];
-    $actions = (new \Devlib\Components\LayerShell(user: $user))->actions();
+    // Varian (?variant=): nilai without aplikasi asal; bawaan tmerp = tanpa without = isi halaman yang disetujui.
+    $variant = \App\Support\ProfileVariants::current();
+    $without = $variant['without'];
+    $custom = $variant['key'] !== \App\Support\ProfileVariants::DEFAULT;
+    $actions = (new \Devlib\Components\LayerShell(user: $user, without: $without))->actions();
     $chat = \App\Support\DemoData::chat();
     $chat['me']['name'] = $user['name'];
     $chat['convos'] = array_map(fn ($c) => array_merge($c, ['unread' => 0]), $chat['convos']);
@@ -27,7 +31,21 @@
     $names = ['notif' => 'Notifications', 'chat' => 'Chat', 'ai' => 'AI Assistant', 'edit' => 'Edit profile', 'help' => 'Help & support', 'pass' => 'Change password', 'logout' => 'Sign out'];
     $rows = array_map(fn ($a) => ['item' => $names[$a['key']], 'does' => $info[$a['key']][0], 'without' => $info[$a['key']][1], 'app' => $info[$a['key']][2]], $actions);
     array_splice($rows, 5, 0, [['item' => 'Setup (Theme, Language)', 'does' => 'Page inside the panel listing Theme and Language, inserted after Help & support.', 'without' => 'setup (all), theme (Theme only)', 'app' => 'Nothing: built in.']]);
-    $snippet = <<<'BLADE'
+    // Tabel varian lain: semua item, ada / tidak (dibaca dari without varian itu).
+    $info['setup'] = ['Page inside the panel listing Theme and Language, inserted after Help & support.', 'setup (all), theme (Theme only)', 'Nothing: built in.'];
+    $names['setup'] = 'Setup (Theme, Language)';
+    $shown = fn ($k) => ! in_array($k, $without) && ! ($k === 'setup' && in_array('theme', $without) && in_array('setup', $without));
+    $variantRows = [];
+    foreach (['notif', 'chat', 'ai', 'edit', 'help', 'setup', 'pass', 'logout'] as $k) {
+        $variantRows[] = ['item' => $names[$k].($k === 'setup' && in_array('theme', $without) && ! in_array('setup', $without) ? ' (Language only)' : ''), 'shown' => $shown($k) ? 'Yes' : 'No', 'without' => $info[$k][1], 'app' => $info[$k][2]];
+    }
+    $snippet = $custom ? "<x-dl::layer-shell
+    :without=\"['".implode("', '", $without)."']\"
+".($variant['key'] === 'sstock' ? "    help-url=\"/help\"
+" : '')."    :modules=\"\$modules\"
+    :user=\"['name' => 'Budi Santoso', 'email' => 'budi@example.test', 'role' => 'Operator']\"
+    logout-action=\"{{ route('logout') }}\"
+/>" : <<<'BLADE'
 <x-dl::layer-shell
     :modules="$modules"
     :user="['name' => 'Budi Santoso', 'email' => 'budi@example.test', 'role' => 'Operator']"
@@ -45,21 +63,30 @@ BLADE;
 @endphp
 <div class="dl-lm-demo">
     <x-dl::layer-menu id="demo-profile" search :views="$views" :user="$user['name']" :login="$user['email']" :actions="$actions">
-        <x-slot:chat><x-dl::chat compact :me="$chat['me']" :people="$chat['people']" :convos="$chat['convos']" /></x-slot:chat>
+        @unless (in_array('chat', $without))
+            <x-slot:chat><x-dl::chat compact :me="$chat['me']" :people="$chat['people']" :convos="$chat['convos']" /></x-slot:chat>
+        @endunless
         <x-slot:profile>
-            <section data-lm-page="setup" data-label="Setup" data-icon="fa-sliders" data-lm-children="theme,lang"></section>
-            <section data-lm-page="theme" data-label="Theme" data-icon="fa-palette"><x-dl::theme-picker /></section>
-            <section data-lm-page="lang" data-label="Language" data-icon="fa-globe"><x-dl::lang-switch /></section>
+            @unless (in_array('setup', $without) || in_array('theme', $without))
+                <section data-lm-page="setup" data-label="Setup" data-icon="fa-sliders" data-lm-children="theme,lang"></section>
+                <section data-lm-page="theme" data-label="Theme" data-icon="fa-palette"><x-dl::theme-picker /></section>
+            @endunless
+            @unless (in_array('setup', $without))<section data-lm-page="lang" data-label="Language" data-icon="fa-globe"><x-dl::lang-switch /></section>@endunless
         </x-slot:profile>
     </x-dl::layer-menu>
-    <div class="dl-sm-demo__page"><div><b>Profile panel</b><br>Click the avatar row at the bottom of the left menu: the panel slides up over the menu at the same width. Close it with the X, the avatar row again, or Back inside a page (Setup).<br>Header = name and email; below it the account actions of the Layer Shell with their default items (nothing hidden); the footer line (Host / Client) comes from <code>x-dl::env-badge</code>. Fictitious data.</div></div>
+    <div class="dl-sm-demo__page"><div><b>Profile panel</b><br>Click the avatar row at the bottom of the left menu: the panel slides up over the menu at the same width. Close it with the X, the avatar row again, or Back inside a page (Setup).<br>Header = name and email; below it the account actions of the Layer Shell {{ $custom ? 'of the '.$variant['label'].' variant (see the table below)' : 'with their default items (nothing hidden)' }}; the footer line (Host / Client) comes from <code>x-dl::env-badge</code>. Fictitious data.</div></div>
 </div>
 @php
     unset(app()['devlib.env_where']);
 @endphp
 <x-dl::card title="Items" description="Rows are read from LayerShell::actions() when this page opens; the Setup row is the extra page added by the shell">
+    @if ($custom)
+    <x-dl::table :columns="['item' => 'Item', 'shown' => 'Shown', 'without' => 'Hidden by without', 'app' => 'The application provides']" :rows="$variantRows" :striped="false" source="LayerShell::actions()" />
+    <p class="dl-note">Variant {{ $variant['label'] }}: <code>:without="['{{ implode("', '", $without) }}']"</code>. Change password and Sign out always stay.</p>
+    @else
     <x-dl::table :columns="['item' => 'Item', 'does' => 'What it does', 'without' => 'Hidden by without', 'app' => 'The application provides']" :rows="$rows" :striped="false" source="LayerShell::actions()" />
     <p class="dl-note">An application without these features hides them with <code>:without="['notif', 'chat', 'ai', 'edit', 'help', 'setup']"</code>; Change password and Sign out always stay. The separator line follows the first visible item of the lower group.</p>
+    @endif
 </x-dl::card>
 <x-dl::card title="Usage" description="The profile panel needs no markup of its own: x-dl::layer-shell builds it from the user and these props">
     <div class="dl-code__file">resources/views/home.blade.php</div>
