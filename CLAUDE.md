@@ -28,6 +28,11 @@ Aturan sumber ada di `skills/devlib/*.md` (mulai `SKILL.md`; membangun object: `
 4. **Tidak ada "mundur".** Bila Jo tidak suka versi terakhir (vN): ambil versi sebelumnya dari riwayat, **duplikasikan menjadi versi baru (vN+1)**, dan vN+1 menjadi default. vN tetap tercatat sebagai riwayat. Nomor versi selalu maju, dan default selalu yang terbaru.
 5. Berlaku untuk semua: menu, object, engine, layar, aturan.
 
+## 3b. Scope: hanya devlib (perintah Jo, 2026-10-21)
+- **Jangan menyentuh proyek lain**: tmerp (termasuk mockup.test, yang adalah aplikasi tmerp) dan sstock. Jangan mengubah berkasnya, menjalankan tes, artisan, atau perintah di sana, dan jangan membuka mockup.test.
+- Satu-satunya yang boleh: **membaca** berkas sumber proyek lain (`git grep`/grep) untuk memastikan perubahan di devlib tidak merusak pewaris. Ada satu hit pemakaian = jangan hapus/ubah yang dipakai itu, laporkan ke Jo.
+- Perubahan yang butuh penyesuaian di proyek lain: laporkan ke Jo, jangan dikerjakan.
+
 ## 4. Git dan penghapusan
 - **Jangan push, jangan menulis ulang riwayat, jangan menghapus berkas/folder/branch** sebelum Jo menyetujui secara eksplisit. Setelah disetujui, kerjakan sampai tuntas.
 - Banyak sesi menulis di folder yang sama: jalankan `git status` dulu; commit hanya jalur sendiri `git commit --only -m "..." -- <jalur>` (berkas baru: `git add -N` dulu); cek `git show --stat`. Pesan commit Indonesia, akhiri dengan trailer yang ditetapkan sesi.
