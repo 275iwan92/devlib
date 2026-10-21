@@ -68,7 +68,8 @@ Tag baru hanya terlihat di proyek bila sudah di-push ke GitHub.
 | Tag | Commit | Keterangan |
 | --- | --- | --- |
 | tag lama (satu-satunya sebelum ini) | `b9f127b` | penanda titik pemisahan dari proyek induk lama; bukan rilis, dibiarkan |
-| `v0.1.0` | commit yang memuat dokumen ini | keadaan repo mandiri pertama: komponen, engine, Assistant/Chat, PrintDoc, Lint, manifest, skill modular, situs acuan |
+| `v0.1.0` | `75773cc` (commit yang memuat dokumen ini) | keadaan repo mandiri pertama: komponen, engine, Assistant/Chat, PrintDoc, Lint, manifest, skill modular, situs acuan |
+| `v0.2.0` | commit rilis 2026-10-21 | menu katalog 5 bagian + Grid and Form, Technical Guide, kebijakan data dan pengindeks Assistant; **merusak:** `x-dl::master` dan Mode Developer dihapus |
 
 Tidak ada tag mundur di riwayat lama: sebelum `b095b3a` (repo mandiri) tidak
 ada tonggak yang jelas, hanya rangkaian kerja bersama proyek induk lama.

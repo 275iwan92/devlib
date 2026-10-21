@@ -7,6 +7,13 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
 
+## [0.2.0] - 2026-10-21
+
+Rilis kedua. Menu katalog 5 bagian dengan halaman Aturan yang membaca `skills/devlib/*.md`; menu "Grid and Form"
+(alur Grid -> Form, form siklus ketat, Nested Grid, Export CSV dan XLSX); Layer Menu accordion dan tema Soft;
+Technical Guide semua object; kebijakan data dan pengindeks Assistant. **Merusak:** komponen `x-dl::master`
+dan Mode Developer dihapus (tidak dipakai sstock maupun proyek ERP); layar Special Forms dipindah ke aplikasi pemakai.
+
 ### Ditambahkan
 
 - **Technical Guide semua object** (pengganti Mode Developer): `Devlib\Guide` menyusun satu halaman HTML English berisi SEMUA object `x-dl::*` (tag, kelas, berkas, prop + tipe + bawaan otomatis dari `Manifest`, ditambah rincian tulisan tangan `resources/guide/<tag>.md` dengan tujuh bagian baku dan semua prop dijelaskan). Halaman = route `devlib.guide` (`/_devlib-guide`, opt-in lewat `config('devlib.guide_middleware')`; `config('devlib.guide_url')` untuk halaman sendiri), dibuka dari menu Help. Judul form/kartu/wizard/flow dan lain-lain, ikon info di toolbar grid, serta nama object di halaman katalog menautkan entri object itu (`guide-link.js`, `window.DL_GUIDE` dari `x-dl::theme-boot`; tanpa URL = tanpa link, proyek lama tidak berubah). Rincian tahap 1: `grid` dan `form`; object lain tercatat di `resources/guide/PENDING.txt` (hanya boleh menyusut; `GuideContractTest` mewajibkan rincian untuk object baru).
