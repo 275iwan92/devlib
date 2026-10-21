@@ -25,7 +25,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | `label` | `string`, `''` | Label row (`<label for=uid>`). Empty = no row, no `*`, no tooltip. Translated. |
 | `tooltip` | `?string`, `null` | (i) bubble next to a non-empty label. Translated. |
 | `hint` | `?string`, `null` | Help line under the box (a good place for an example). Translated. |
-| `error` | `?string`, `null` | Server error text; non-empty adds `is-invalid`. Not translated. The first blur of the field clears it (see oddity). |
+| `error` | `?string`, `null` | Server error text; non-empty adds `is-invalid`. Not translated. It stays until the user types in the field. |
 | `value` | `mixed`, `null` | Initial text written to the input. It is NOT re-masked on load: `3578011505980001` is shown as typed in the markup until the user edits it. Pass the already formatted text (`357801.150598.0001`) if the unformatted form should not appear. |
 | `placeholder` | `?string`, `null` | Placeholder text. Translated. Show the pattern, for example `357801.150598...`. |
 | `required` | `bool`, `false` | Red `*` and `x-dl::form` "Required" check on an empty value. A partial value counts as filled for this check. Not the HTML `required`, no server check. |
@@ -92,13 +92,11 @@ Real `<label for>` to the input; `inputmode="numeric"` opens the numeric keypad 
 
 - Always re-validate and normalise on the server (digits only, exact length); the client check never blocks Save.
 - `required` passes with a partial value. Combine with a server rule such as `digits:16`.
-- Keep literals to punctuation and spaces. A digit inside the literal part is read back as a typed digit and breaks the pattern (see oddity).
+- Literals may contain digits (`+62 999-999`): they are kept out of the typed digits while the text still follows the pattern from its start. A first digit that equals the first literal digit is read as typed (`6` becomes `+62 6`), so prefer punctuation-only literals when the user may paste raw digits.
 - `maxlength` is generated from the pattern length; do not add your own.
 - A pre-existing value from the database appears unformatted: format it when you render (`:value="$fmt"`) if you want the separators from the start.
 - The mask does not know about `-` or spaces typed by the user: they are removed and re-inserted by the pattern.
-- A server `error` is removed by the first blur, even if the user changed nothing. Re-render the error, or add your own message in the hint, if it must stay visible.
-- Code oddity (not fixed): the blur handler (`resources/assets/js/components/field.js:114`) always rewrites the error line and the `is-invalid` class, so a message passed by the server in `error` disappears on the first blur of a masked field.
-- Code oddity (not fixed): the input handler (`resources/assets/js/components/field.js:106-113`) strips with `/\D/` and counts only the `9`s, so a mask with literal digits (for example `+62 999-999`) re-reads those digits as typed digits and the text turns into nonsense; and the initial `value` is never passed through the mask (no call on init).
+- Code oddity (not fixed): the initial `value` is never passed through the mask (no call on init); it is posted as stored. Masking it on load would change the posted value of an untouched field, so it waits for approval.
 
 ## Example
 

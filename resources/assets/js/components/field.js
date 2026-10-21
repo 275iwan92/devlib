@@ -1,7 +1,7 @@
 /* DevLib · Field */
 (function (Devlib) {
   'use strict';
-  const {$, $$, CASES, CASE_LABEL, applyCase, bindPanel, calcPanel, T, Tf, words, fmt, NUM, dow2, parseNum, DlDate, DlTime, DlDateTime} = Devlib.h;
+  const {$, $$, CASES, CASE_LABEL, applyCase, applyMask, bindPanel, calcPanel, fieldErr, watchServerErr, holdsServerErr, fillState, T, Tf, words, fmt, NUM, dow2, parseNum, DlDate, DlTime, DlDateTime} = Devlib.h;
 
   // Toggle "00" isian angka (user 2026-10-05, pengganti badge aa yang hanya cocok untuk huruf): klik berpindah
   // 0 desimal -> 2 desimal -> 4 desimal -> kalkulator mini, ikon badge berganti tiap keadaan. Dipakai Decimal dan Money.
@@ -30,6 +30,9 @@
     addEventListener('scroll', e => { if (panel && !panel.contains(e.target)) close(); }, true);
   }
 
+  // Tombol pembuka panel (kalender, jam) ikut mati bila kotak isiannya disabled / readonly; dipasang sebelum bindPanel supaya didahulukan.
+  const lockToggle = (root, input) => { const t = $(root, '[data-dl-dd-toggle]'); if (t) t.addEventListener('click', e => { if (input.disabled || input.readOnly) e.stopImmediatePropagation(); }, true); };
+
   class Field extends Devlib.Component {
     static selector = ".dl-field";
     init() {
@@ -40,8 +43,13 @@
         // setelah AA teks harus bisa kembali ke bentuk semula). Ketikan baru disisipkan ke raw lewat awalan / akhiran yang sama.
         let idx = 0, raw = this.input.value, shown = raw;
         const show = () => { shown = applyCase(raw, CASES[idx]); this.input.value = shown; this.input.dispatchEvent(new Event('dl:grow')); };
-        this.caseBtn.addEventListener('click', () => { if (this.input.value !== shown) raw = this.input.value; idx = (idx + 1) % 3; this.caseBtn.textContent = CASE_LABEL[CASES[idx]]; show(); });
+        let own = false;  // 'input' buatan badge ini (untuk dirty-guard) tidak dibaca ulang sebagai ketikan
+        this.caseBtn.addEventListener('click', () => {
+          if (this.input.value !== shown) raw = this.input.value; idx = (idx + 1) % 3; this.caseBtn.textContent = CASE_LABEL[CASES[idx]]; show();
+          own = true; this.input.dispatchEvent(new Event('input', {bubbles: true})); own = false;
+        });
         this.input.addEventListener('input', () => {
+          if (own) return;
           const v = this.input.value, p = this.input.selectionStart, max = Math.min(shown.length, v.length);
           let a = 0; while (a < max && shown[a] === v[a]) a++;
           let b = 0; while (b < max - a && shown[shown.length - 1 - b] === v[v.length - 1 - b]) b++;
@@ -53,7 +61,7 @@
       $$(this.el, '[data-dl-autogrow]').forEach(t => { const g = () => { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }; ['input', 'dl:grow'].forEach(e => t.addEventListener(e, g)); if (window.ResizeObserver) { let w = 0; new ResizeObserver(() => { if (t.clientWidth !== w) { w = t.clientWidth; g(); } }).observe(t); } g(); });
 
       this.eye = $(this.el, '[data-dl-eye]');
-      if (this.eye) this.eye.addEventListener('click', () => { const show = this.input.type === 'password'; this.input.type = show ? 'text' : 'password'; this.eye.innerHTML = `<i class="fa-solid fa-eye${show ? '-slash' : ''}"></i>`; });
+      if (this.eye) this.eye.addEventListener('click', () => { if (this.input.disabled) return; const show = this.input.type === 'password'; this.input.type = show ? 'text' : 'password'; this.eye.innerHTML = `<i class="fa-solid fa-eye${show ? '-slash' : ''}"></i>`; });
 
       this.sel = $(this.el, '[data-dl-select]');
       if (this.sel) {
@@ -82,11 +90,12 @@
       this.dr = $(this.el, '[data-dl-daterange]');
       if (this.dr) {
         const [a, b] = $$(this.dr, 'input'), hint = $(this.el, '[data-dl-duration]');
+        // yyyy-mm-dd dibandingkan sebagai teks dan dihitung dari bagian-bagiannya (new Date(iso) = tengah malam UTC, bergeser sehari di barat UTC).
         const u = () => {
-          if (!hint || !a.value || !b.value) return;
-          const d1 = new Date(a.value), d2 = new Date(b.value);
-          if (d2 < d1) { hint.textContent = T('fd_dur_invalid'); return; }
-          const m = (d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth());
+          if (!hint) return;
+          if (!a.value || !b.value) { hint.textContent = ''; return; }
+          if (b.value < a.value) { hint.textContent = T('fd_dur_invalid'); return; }
+          const [y1, m1] = a.value.split('-').map(Number), [y2, m2] = b.value.split('-').map(Number), m = (y2 - y1) * 12 + (m2 - m1);
           hint.textContent = Tf('fd_duration', {y: Math.floor(m / 12), m: m % 12});
         };
         a.addEventListener('change', u); b.addEventListener('change', u); u();
@@ -99,19 +108,30 @@
           bx.value = bx.value.replace(/\D/g, '');
           if (e.key >= '0' && e.key <= '9' && i < boxes.length - 1) boxes[i + 1].focus();
           else if (e.key === 'Backspace' && i > 0) boxes[i - 1].focus();
-          hidden.value = boxes.map(x => x.value).join('');
+          // Kotak digit tidak bernama; hidden yang melapor bila kodenya berubah (dirty-guard, pesan Required).
+          const code = boxes.map(x => x.value).join('');
+          if (code !== hidden.value) { hidden.value = code; hidden.dispatchEvent(new Event('input', {bubbles: true})); }
         }));
+        // Devlib.fill / Undo menulis hidden lalu menembak input: kotak digit ikut.
+        hidden.addEventListener('input', () => { const d = hidden.value.replace(/\D/g, ''); if (d !== boxes.map(x => x.value).join('')) boxes.forEach((bx, i) => { bx.value = d[i] || ''; }); });
       }
 
       this.mask = $(this.el, '[data-dl-mask]');
       if (this.mask) {
-        const pat = this.mask.dataset.dlMask, digits = (pat.match(/9/g) || []).length, err = $(this.el, '[data-dl-field-error]');
-        this.mask.addEventListener('input', () => {
-          const raw = this.mask.value.replace(/\D/g, '').slice(0, digits); let out = '', j = 0;
-          for (const ch of pat) { if (j >= raw.length) break; out += ch === '9' ? raw[j++] : ch; }
-          this.mask.value = out;
-        });
-        this.mask.addEventListener('blur', () => { const n = this.mask.value.replace(/\D/g, '').length; const bad = n > 0 && n < digits; this.el.classList.toggle('is-invalid', bad); err.textContent = bad ? this.mask.dataset.invalid : ''; });
+        const pat = this.mask.dataset.dlMask, digits = (pat.match(/9/g) || []).length;
+        // Digit yang diketik, tanpa digit literal pola (+62 999-999): literal dibuang hanya bila teks masih sejajar dengan pola dari awal.
+        const typed = s => {
+          let i = 0, aligned = true, out = '';
+          for (const ch of pat) {
+            if (ch === '9') { while (i < s.length && !/\d/.test(s[i])) i++; if (i < s.length) out += s[i++]; }
+            else if (s[i] === ch && (aligned || !/\d/.test(ch))) i++;
+            else aligned = false;
+          }
+          return out;
+        };
+        watchServerErr(this.mask);
+        this.mask.addEventListener('input', () => { this.mask.value = applyMask(pat, typed(this.mask.value)); });
+        this.mask.addEventListener('blur', () => { if (holdsServerErr(this.mask)) return; const n = typed(this.mask.value).length; fieldErr(this.mask, n > 0 && n < digits ? this.mask.dataset.invalid : ''); });
       }
 
       this.pre = $(this.el, '[data-dl-prefix]');
@@ -133,11 +153,15 @@
           $(this.pre, '[data-dl-prefix-value]').value = it.dataset.value;
           const a = $(this.pre, '[data-dl-prefix-a]'); if (a) a.textContent = it.dataset.a; $(this.pre, '[data-dl-prefix-b]').textContent = it.dataset.b;
           p.close(); if (money) updMoney();
+          // Pilihan awalan (mata uang, kode negara) = isian berubah; bukan saat fillForm yang memilihnya.
+          if (!fillState.on) { const pv = $(this.pre, '[data-dl-prefix-value]'); pv.dispatchEvent(new Event('input', {bubbles: true})); pv.dispatchEvent(new Event('change', {bubbles: true})); }
         }));
         if (money) {
           // Nilai mentah dari DB (1250000.00) dibulatkan dulu -- bukan dibuang titiknya (dulu jadi 125000000).
           if (/^-?\d+\.\d+$/.test(mi.value.trim()) && !(NUM.grp === '.' && /^\d{1,3}(\.\d{3})+$/.test(mi.value.trim()))) mi.value = md === 0 ? String(Math.round(+mi.value.trim())) : mfmt(+mi.value.trim());
           else if (md !== 0) { const v = parseNum(mi.value); if (mi.value.trim() !== '' && !isNaN(v)) mi.value = mfmt(v); }
+          // Devlib.fill / Undo menulis nilai kanonik (1250000.50): jadikan tampilan sebelum 'input' dibaca (mode bulat membuang non-digit).
+          mi.addEventListener('dl:set', () => { const t = mi.value.trim(); if (/^-?\d+(\.\d+)?$/.test(t)) mi.value = md === 0 ? String(Math.round(+t)) : mfmt(+t); });
           mi.addEventListener('input', () => { if (md !== 0) mi.value = mi.value.replace(/[^0-9.,-]/g, ''); updMoney(); });
           mi.addEventListener('focus', () => { if (md !== 0 && !mi.readOnly) { mi.value = numRaw(mi.value); mi.select(); } });
           mi.addEventListener('blur', () => { const v = parseNum(mi.value); if (md !== 0 && mi.value.trim() !== '' && !isNaN(v)) mi.value = mfmt(v); });
@@ -154,6 +178,8 @@
         const out = () => { const v = parseNum(this.dec.value); if (this.dec.value.trim() !== '' && !isNaN(v)) this.dec.value = n === null ? fmt.num(v, 4) : fmt.number(v, n); };
         this.dec.addEventListener('focus', () => { if (!this.dec.readOnly) { this.dec.value = numRaw(this.dec.value); this.dec.select(); } });
         this.dec.addEventListener('input', () => { this.dec.value = this.dec.value.replace(/[^0-9.,-]/g, ''); });
+        // Devlib.fill / Undo menulis nilai kanonik (1.250 = 1,25): jadikan tampilan, supaya tidak terbaca sebagai ribuan.
+        this.dec.addEventListener('dl:set', () => { const t = this.dec.value.trim(); if (/^-?\d+(\.\d+)?$/.test(t)) this.dec.value = n === null ? fmt.num(+t, 4) : fmt.number(+t, n); });
         this.dec.addEventListener('blur', out);
         numToggle(this.el, this.dec, n, d => { n = d; out(); });
         out();
@@ -163,8 +189,8 @@
       if (this.num) {
         const inp = $(this.num, 'input'), min = this.num.dataset.min === '' ? -Infinity : +this.num.dataset.min, max = this.num.dataset.max === '' ? Infinity : +this.num.dataset.max, step = +this.num.dataset.step || 1;
         const clamp = v => Math.min(max, Math.max(min, v));
-        $$(this.num, '[data-dl-spin]').forEach(b => b.addEventListener('click', () => { inp.value = clamp((parseInt(inp.value, 10) || 0) + step * b.dataset.dlSpin); }));
-        inp.addEventListener('input', () => { inp.value = inp.value.replace(/\D/g, ''); });
+        $$(this.num, '[data-dl-spin]').forEach(b => b.addEventListener('click', () => { if (inp.disabled || inp.readOnly) return; inp.value = clamp((parseInt(inp.value, 10) || 0) + step * b.dataset.dlSpin); }));
+        inp.addEventListener('input', () => { inp.value = inp.value.replace(min < 0 ? /(?!^-)\D/g : /\D/g, ''); });  // min negatif: "-" di depan boleh
         inp.addEventListener('blur', () => { inp.value = clamp(parseInt(inp.value, 10) || 0); });
       }
 
@@ -172,7 +198,8 @@
       if (this.dt) {
         const hidden = $(this.dt, '[data-dl-value]'), text = $(this.dt, '[data-dl-date-text]'), days = $(this.dt, '[data-dl-cal-days]'), title = $(this.dt, '[data-dl-cal-title]');
         const MON = NUM.months;
-        let view = hidden.value ? new Date(hidden.value) : new Date();
+        // yyyy-mm-dd dibaca sebagai tanggal lokal (new Date(iso) = tengah malam UTC: bulan sebelumnya di barat UTC).
+        let view = hidden.value ? new Date(...hidden.value.split('-').map((x, i) => i === 1 ? x - 1 : +x)) : new Date();
         const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         const setVal = (d, quiet) => { const v = DlDate.of(d); hidden.value = v ? v.iso() : ''; text.value = v ? v.display() : ''; this.el.classList.remove('is-invalid'); if (!quiet) hidden.dispatchEvent(new Event('change', {bubbles: true})); };
         // Boleh diketik (objek DlDate): 10-10-26 / 10 okt / 2026-10-10 -> tampil 10-Okt-2026, kirim ISO. Tidak sah -> ditandai, nilai lama tetap.
@@ -187,10 +214,12 @@
           for (let d = 1; d <= total; d++) { const v = iso(new Date(view.getFullYear(), view.getMonth(), d)); h += `<button type="button" data-d="${v}" class="${v === hidden.value ? 'is-sel' : ''}">${d}</button>`; }
           days.innerHTML = h;
         };
+        lockToggle(this.dt, text);
         const p = bindPanel(this.dt, draw);
         days.addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (b) { setVal(b.dataset.d); p.close(); } });
-        $(this.dt, '[data-dl-cal-prev]').addEventListener('click', () => { view.setMonth(view.getMonth() - 1); draw(); });
-        $(this.dt, '[data-dl-cal-next]').addEventListener('click', () => { view.setMonth(view.getMonth() + 1); draw(); });
+        // Pindah bulan dari tanggal 1: setMonth(±1) dari tanggal 29-31 melompat ke bulan berikutnya.
+        $(this.dt, '[data-dl-cal-prev]').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); draw(); });
+        $(this.dt, '[data-dl-cal-next]').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); draw(); });
         $(this.dt, '[data-dl-cal-clear]').addEventListener('click', () => { setVal(null); p.close(); });
         $(this.dt, '[data-dl-cal-today]').addEventListener('click', () => { setVal(new Date()); p.close(); });
         if (hidden.value) setVal(hidden.value, true);
@@ -234,9 +263,16 @@
       this.tm = $(this.el, '[data-dl-time]');
       if (this.tm) {
         const text = $(this.tm, '[data-dl-time-text]'), h = $(this.tm, '[data-dl-time-h]'), m = $(this.tm, '[data-dl-time-m]');
-        const p = bindPanel(this.tm, () => { const [hh, mm] = text.value.split(':'); if (hh) h.value = hh.padStart(2, '0'); if (mm) m.value = String(Math.round(+mm / 5) * 5 % 60).padStart(2, '0'); });
-        $(this.tm, '[data-dl-time-apply]').addEventListener('click', () => { text.value = `${h.value}:${m.value}`; p.close(); });
-        $(this.tm, '[data-dl-time-clear]').addEventListener('click', () => { text.value = ''; p.close(); });
+        lockToggle(this.tm, text);
+        // Menit dibulatkan ke kelipatan 5; 58 / 59 naik ke jam berikutnya (23:58 tertahan di 23:55).
+        const p = bindPanel(this.tm, () => {
+          const [hh, mm] = text.value.split(':'); if (hh) h.value = hh.padStart(2, '0');
+          if (mm) { let M = Math.round(+mm / 5) * 5; if (M > 55) { M = 0; if (+hh < 23) h.value = String(+hh + 1).padStart(2, '0'); else M = 55; } m.value = String(M).padStart(2, '0'); }
+        });
+        // Apply / Clear mengubah isian lewat skrip: kabari seperti ketikan (dirty-guard, pesan Required, rapikan 'change').
+        const told = () => { text.dispatchEvent(new Event('input', {bubbles: true})); text.dispatchEvent(new Event('change', {bubbles: true})); };
+        $(this.tm, '[data-dl-time-apply]').addEventListener('click', () => { text.value = `${h.value}:${m.value}`; p.close(); told(); });
+        $(this.tm, '[data-dl-time-clear]').addEventListener('click', () => { text.value = ''; p.close(); told(); });
         text.addEventListener('input', () => { const r = text.value.replace(/\D/g, '').slice(0, 4); text.value = r.length > 2 ? r.slice(0, 2) + ':' + r.slice(2) : r; });
         // Keluar isian: dirapikan objek jam DevLib (8 -> 08:00, 830 -> 08:30); tidak sah -> ditandai.
         text.addEventListener('change', () => { const t = DlTime.of(text.value.replace(':', '')) || DlTime.of(text.value); if (t) text.value = t.display(); this.el.classList.toggle('is-invalid', !!text.value && !t); });

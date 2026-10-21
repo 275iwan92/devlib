@@ -80,7 +80,7 @@ One field `name` with the text of the box: `HH:MM` when valid, otherwise whateve
 | `input` (bubbles) | the text box | Each keystroke (native). |
 | `change` (bubbles) | the text box | Native, when the user leaves the box; the script reformats after it. |
 
-`Apply` and `Clear` set the value without dispatching any event. No `dl:*` event. Because the box has a `name`, typing marks an `x-dl::form` as dirty and clears a "Required" error as soon as the box has a value. `el.dlComponent` on the root `.dl-field` is the shared `Field` instance with no public method for this control; set the value from script with `Devlib.h.setField(form, name, value)`.
+`Apply` and `Clear` set the value and dispatch `input` then `change` on the box, like typing. No `dl:*` event. Because the box has a `name`, typing, `Apply` and `Clear` mark an `x-dl::form` as dirty and clear a "Required" error as soon as the box has a value. `el.dlComponent` on the root `.dl-field` is the shared `Field` instance with no public method for this control; set the value from script with `Devlib.h.setField(form, name, value)`.
 
 ### Markup hooks
 
@@ -101,8 +101,6 @@ One field `name` with the text of the box: `HH:MM` when valid, otherwise whateve
 - Use the popover only as a helper: its minute step is 5; for other minutes the user types.
 - A time of day has no date or zone. For a point in time use `x-dl::field.date-time`.
 - Accessibility as implemented: the box is a normal labelled input; the ⏰ button, both selects and `Apply`/`Clear` are native controls reachable with Tab. There is no key to open the popover from the box, no Escape, no focus management and no ARIA state on the button.
-- Code oddity (not fixed): `Apply` and `Clear` change the value without `input`/`change` events (`field.js`), so they do not mark an `x-dl::form` as dirty and do not remove an existing `is-invalid` or "Required" mark.
-- Code oddity (not fixed): the popover rounds the minute to a multiple of 5 and wraps `58`/`59` to `00` without adding an hour; opening and applying `07:58` gives `07:00`.
 
 ## Example
 

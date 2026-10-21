@@ -108,7 +108,7 @@ Display and parsing follow the active language: `1.234,56` (Indonesian) or `1,23
 - No `dl:*` event and no public API. `el.dlComponent` on the root `.dl-field` is the shared `Field` instance (`dec` property = the input).
 - Native `input` while typing and `change` after typing + blur. The toggle and the calculator also dispatch `change` on the input. Blur formatting itself fires nothing.
 - Because the box is a named input, typing marks the `x-dl::form` dirty (dirty guard) and clears the "Required" mark.
-- `Devlib.fill()` / Undo write the canonical text into the box and dispatch `input`; the box is formatted only at its next focus/blur.
+- `Devlib.fill()` / Undo write the canonical text and fire `dl:set` on the box, which turns it into the display format (`1.25` becomes `1,25` or `1,250` per `decimals`) before `input` is dispatched; a value typed or filled as display text (`1.250,50`) is left as it is.
 
 ### Accessibility as implemented
 
@@ -124,7 +124,6 @@ The `<label for>` is tied to the input id; `inputmode="decimal"` opens the decim
 - There is no minimum or maximum. Negative numbers are accepted by the box.
 - `required` only checks that the box is not empty; `0,00` passes.
 - Do not wrap the label or unit in your own markup to show a currency; use `x-dl::field.money`.
-- Code oddity (not fixed): `resources/assets/js/core.js:663-677` (`setField`, used by Undo and `Devlib.fill`) writes the canonical string unformatted, and `numStr` then reads `1.250`-like strings as thousand groups in Indonesian. Example: `:decimals="3"` with the stored weight `1.250`, then the user edits and presses Undo: the box shows `1.250`, which is read as 1250 at the next focus or submit.
 
 ## Example
 

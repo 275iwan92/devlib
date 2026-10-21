@@ -93,7 +93,7 @@ window.Devlib = window.Devlib || {};
 
   /* ============================ FIELD ============================ */
   const CASES = ['none', 'capitalize', 'uppercase'], CASE_LABEL = {none: 'aa', capitalize: 'Aa', uppercase: 'AA'};
-  const applyCase = (t, m) => m === 'uppercase' ? t.toUpperCase() : m === 'capitalize' ? t.replace(/\b\w/g, c => c.toUpperCase()) : t;
+  const applyCase = (t, m) => m === 'uppercase' ? t.toUpperCase() : m === 'capitalize' ? t.replace(/(?<![\p{L}\p{N}_])[\p{L}\p{N}_]/gu, c => c.toUpperCase()) : t;
   // Angka ikut bahasa tampilan (LOCKED user 2026-10-01): id 1.234,56 · en 1,234.56; aturannya dari server (window.DL_NUM =
   // Devlib\Locale::jsSpec(), sumber sys_languages + kamus). Dibekukan saat halaman dimuat: ganti bendera bahasa tanpa muat ulang
   // TIDAK mengubah cara membaca isian yang sudah tampil. Server selalu menerima angka kanonik 1234.5 (lihat 'formdata' di bawah).
@@ -454,11 +454,12 @@ window.Devlib = window.Devlib || {};
   });
 
   // Dirty-guard: form (atau wadah isian non-form, mis. form JS) ber-atribut data-dl-guard yang sudah diubah -> tanya sebelum ditinggal.
-  // Hanya isian bernama yang dihitung (kotak cari dropdown/grid tidak membuat form "berubah").
+  // Hanya isian bernama yang dihitung (kotak cari dropdown/grid tidak membuat form "berubah"); komponen tanpa isian bernama
+  // sendiri (tags, key-value) menandai akarnya data-dl-reports dan menembak change di akar itu.
   const dirtyForms = new Set();
   const markDirty = e => {
     const f = e.target.closest && e.target.closest('[data-dl-guard]');
-    if (f && e.target.name) { dirtyForms.add(f); f.classList.add('is-dirty'); }
+    if (f && (e.target.name || e.target.hasAttribute?.('data-dl-reports'))) { dirtyForms.add(f); f.classList.add('is-dirty'); }
   };
   document.addEventListener('input', markDirty, true);
   document.addEventListener('change', markDirty, true);
@@ -611,6 +612,13 @@ window.Devlib = window.Devlib || {};
   /* ===================== SMALL COMPONENTS (lanjutan) ===================== */
   // Mask: 9 = digit, karakter lain disisipkan apa adanya.
   const applyMask = (pat, d) => { let out = '', j = 0; for (const ch of pat) { if (j >= d.length) break; out += ch === '9' ? d[j++] : ch; } return out; };
+  // Pesan dari server (error="...") bertahan sampai isian diubah: pemeriksaan blur komponen tidak menimpanya.
+  // watchServerErr dipanggil saat komponen dipasang; holdsServerErr ditanya sebelum pemeriksaan menulis pesan.
+  const watchServerErr = el => {
+    const f = el.closest('.dl-field'); if (!f || !f.classList.contains('is-invalid') || !$(f, '[data-dl-field-error]')?.textContent) return;
+    f.dlSrvErr = true; f.addEventListener('input', () => { f.dlSrvErr = false; }, {once: true});
+  };
+  const holdsServerErr = el => !!el.closest('.dl-field')?.dlSrvErr;
   const fieldErr = (el, msg) => { const f = el.closest('.dl-field'); if (!f) return; f.classList.toggle('is-invalid', !!msg); const e = $(f, '[data-dl-field-error]'); if (e) e.textContent = msg || ''; };
 
   // Accordion: satu kode untuk vertikal & horizontal; aturan buka/tutup dari grupnya.
@@ -659,11 +667,32 @@ window.Devlib = window.Devlib || {};
     $(sel, '[data-dl-dd-toggle]').disabled = disabled || !list.length;
   }
 
+  // fillState.on = fillForm sedang berjalan: komponen tidak menembak event "pengguna mengubah" (dirty, change) untuk isian yang diisi program.
+  const fillState = {on: false};
+  // Isi form -> {nama: nilai}: titik kembali Undo / mode view. Nama berakhiran [] (centang, multi-select, tags) terkumpul sebagai larik,
+  // isian file = '' (tidak ada berkas baru), key-value juga sebagai larik baris di bawah namanya.
+  function formValues(form) {
+    const v = {};
+    new FormData(form).forEach((x, k) => {
+      if (x instanceof File) { if (!k.endsWith('[]')) v[k] = ''; return; }
+      if (k.endsWith('[]')) (v[k] ||= []).push(x); else v[k] = x;
+    });
+    $$(form, 'input[type=checkbox][name]').forEach(c => { if (!c.name.endsWith('[]')) v[c.name] = c.checked; });
+    $$(form, '[name$="[]"]').forEach(e => { v[e.name] ||= []; });
+    $$(form, '[data-dl-tags]').forEach(t => { v[t.dataset.name + '[]'] ||= []; });
+    $$(form, '[data-dl-kv]').forEach(t => { v[t.dataset.name] = t.dlComponent ? t.dlComponent.rows() : []; });
+    return v;
+  }
+
   function setField(form, name, v) {
     const els = $$(form, `[name="${CSS.escape(name)}"]`); if (!els.length) return;
     const el = els[0], s = v == null ? '' : String(v);
+    if (el.type === 'file') { el.closest('[data-dl-upload]')?.dlComponent?.reset(); return; }
     if (el.type === 'radio') { els.forEach(r => { r.checked = r.value === s; }); return; }
     if (el.type === 'checkbox') { el.checked = v === true || s === '1' || s === 'true'; el.dispatchEvent(new Event('change', {bubbles: true})); return; }
+    // Pilihan awalan (kode negara telepon, mata uang money): klik butirnya supaya label, nilai dan hitungan terkait ikut; tak dikenal = diabaikan.
+    const pf = el.matches('[data-dl-prefix-value]') && el.closest('[data-dl-prefix]');
+    if (pf) { $$(pf, '.dl-dd__item').find(i => i.dataset.value === s)?.click(); return; }
     el.value = s;
     const sel = el.closest('[data-dl-select]');
     if (sel) { const it = $(sel, `.dl-dd__item[data-value="${CSS.escape(s)}"]`); $(sel, '[data-dl-dd-text]').textContent = it ? it.textContent : sel.dataset.empty; return; }
@@ -673,19 +702,55 @@ window.Devlib = window.Devlib || {};
     if (dt) { $(dt, '[data-dl-date-text]').value = DlDate.of(s)?.display() ?? ''; return; }
     const pb = el.closest('[data-dl-phonebox]');
     if (pb) { const i = $(pb, '[data-dl-phone]'); i.value = s; i.dispatchEvent(new Event('input', {bubbles: true})); return; }
+    // dl:set = nilai kanonik baru ditulis program: isian angka mengubahnya ke tampilan sebelum 'input' dibaca.
+    el.dispatchEvent(new CustomEvent('dl:set'));
     el.dispatchEvent(new Event('input', {bubbles: true}));
+  }
+  // Nama berkurung: x[] (centang, multi-select, chip tags, upload banyak berkas) dan x[i][key|value] (key-value).
+  // data boleh memakai x[] atau x untuk larik, dan x atau x[i][key] untuk baris key-value.
+  function fillGroups(form, els, data, clear) {
+    const arr = new Set(), kv = new Set();
+    els.forEach(e => { let m; if ((m = /^(.+)\[\]$/.exec(e.name))) arr.add(m[1]); else if ((m = /^(.+)\[\d+\]\[(?:key|value)\]$/.exec(e.name))) kv.add(m[1]); });
+    $$(form, '[data-dl-tags]').forEach(t => arr.add(t.dataset.name));
+    $$(form, '[data-dl-kv]').forEach(t => kv.add(t.dataset.name));
+    arr.forEach(b => {
+      let v = (b + '[]') in data ? data[b + '[]'] : b in data ? data[b] : undefined;
+      if (v === undefined) { if (!clear) return; v = []; }
+      v = Array.isArray(v) ? v.map(String) : v === '' || v == null ? [] : [String(v)];
+      const g = els.filter(e => e.name === b + '[]'), root = g[0]?.closest('[data-dl-tags]') || $(form, `[data-dl-tags][data-name="${CSS.escape(b)}"]`);
+      if (root?.dlComponent) return root.dlComponent.set(v);
+      if (g[0]?.type === 'file') return g[0].closest('[data-dl-upload]')?.dlComponent?.reset();
+      g.forEach(e => { if (e.type === 'checkbox') e.checked = v.includes(e.value); });
+      g.forEach(e => e.dispatchEvent(new Event('change', {bubbles: true})));
+    });
+    kv.forEach(b => {
+      let rows = data[b];
+      if (Array.isArray(rows)) rows = rows.map(r => Array.isArray(r) ? {key: r[0], value: r[1]} : r);
+      else {
+        rows = []; for (let i = 0; `${b}[${i}][key]` in data || `${b}[${i}][value]` in data; i++) rows.push({key: data[`${b}[${i}][key]`], value: data[`${b}[${i}][value]`]});
+        if (!rows.length) { if (!clear) return; }
+      }
+      $(form, `[data-dl-kv][data-name="${CSS.escape(b)}"]`)?.dlComponent?.set(rows);
+    });
   }
   // clear=true: field yang tidak ada di data dikosongkan (untuk data baru).
   function fillForm(form, data, clear = false) {
-    const names = new Set($$(form, '[name]').filter(e => !e.closest('[data-l-inputs]')).map(e => e.name).filter(n => n && n !== '_token' && !n.includes('[') && !n.endsWith('_country') && !n.endsWith('_dial')));
-    names.forEach(n => { if (n in data) setField(form, n, data[n]); else if (clear) setField(form, n, n.endsWith('_ppn') ? true : n.endsWith('_discount') ? '0' : ''); });
-    $$(form, '[data-dl-lines]').forEach(l => { if (l.dlLines && (clear || l.dataset.name in data)) l.dlLines.set(data[l.dataset.name] || []); });
-    $$(form, '[data-dl-members]').forEach(m => m.dlMembers?.reset());
-    $$(form, '.dl-field.is-invalid').forEach(f => { f.classList.remove('is-invalid'); const e = $(f, '[data-dl-field-error]'); if (e) e.textContent = ''; });
-    dirtyForms.delete(form); form.classList.remove('is-dirty');
+    fillState.on = true;
+    try {
+      const els = $$(form, '[name]').filter(e => !e.closest('[data-l-inputs]'));
+      // Awalan (kode negara, mata uang) lebih dulu: nomor / jumlah dibaca menurut pilihan itu.
+      const pre = n => els.find(e => e.name === n).matches('[data-dl-prefix-value]') ? 1 : 0;
+      const names = [...new Set(els.map(e => e.name))].filter(n => n && n !== '_token' && !n.includes('[') && !n.endsWith('_dial')).sort((a, b) => pre(b) - pre(a));
+      names.forEach(n => { if (n in data) setField(form, n, data[n]); else if (clear) setField(form, n, n.endsWith('_ppn') ? true : n.endsWith('_discount') ? '0' : ''); });
+      fillGroups(form, els, data, clear);
+      $$(form, '[data-dl-lines]').forEach(l => { if (l.dlLines && (clear || l.dataset.name in data)) l.dlLines.set(data[l.dataset.name] || []); });
+      $$(form, '[data-dl-members]').forEach(m => m.dlMembers?.reset());
+      $$(form, '.dl-field.is-invalid').forEach(f => { f.classList.remove('is-invalid'); const e = $(f, '[data-dl-field-error]'); if (e) e.textContent = ''; });
+      dirtyForms.delete(form); form.classList.remove('is-dirty');
+    } finally { fillState.on = false; }
   }
-  // Input pendamping (mata uang / kode negara) selalu terisi, jadi tidak dihitung sebagai nilai.
-  const hasValue = f => $$(f, '[name]:not([data-dl-prefix-value])').some(i => (i.type === 'checkbox' || i.type === 'radio') ? i.checked : i.value.trim() !== '');
+  // Input pendamping (mata uang / kode negara / merek kartu) selalu terisi, jadi tidak dihitung sebagai nilai.
+  const hasValue = f => $$(f, '[name]:not([data-dl-prefix-value]):not([data-dl-cc-brand])').some(i => (i.type === 'checkbox' || i.type === 'radio') ? i.checked : i.value.trim() !== '');
 
 
 
@@ -869,6 +934,6 @@ window.Devlib = window.Devlib || {};
 
   // Asal data kolom (grid/lines): {src: 'sales.iqp_inquiry.qty'} -> data-dl* di header kolom.
   const srcAttr = (c, kind = 'kolom') => c && c.src ? ` data-dl="${kind} ${esc(c.label || c.key)}" data-dl-class="kolom" data-dl-src="${esc(c.src)}"` : '';
-  Devlib.h = {srcAttr, $, $$, esc, showQr, CASES, CASE_LABEL, applyCase, idNum, bindPanel, calcPanel, pickIndex, dayOfYear, WMO, LOGIN_T, typeIcon, HOME, PRESET_T, toast, confirmBox, layer, openLayer, closeLayer, T, Tf, t, dirtyForms, markDirty, askDirty, submitForm, resetWorkspace, keyName, visible, BUILTIN, showShortcuts, TZ, fmt, applyMask, fieldErr, CC, luhn, setField, setOptions, fillForm, hasValue, fieldText, W_ID, W_EN, W_EN_T, W_SC_ID, W_SC_EN, wScale, wId, wEn, words, parseCsv, csvCell, downloadCsv, xlsxBlob, downloadXlsx, parseNum, numStr, numIn, numFmt, NUM, MON_EN, dow2, DlDate, DlNumber, DlTime, DlDateTime, DlText, parseDate, CH_TONES, chNum, niceMax, libOnce, loadLib, AUTH_T, at, authLang, fieldMsg, fld, val, passCheck, emit};
+  Devlib.h = {srcAttr, $, $$, esc, showQr, CASES, CASE_LABEL, applyCase, idNum, bindPanel, calcPanel, pickIndex, dayOfYear, WMO, LOGIN_T, typeIcon, HOME, PRESET_T, toast, confirmBox, layer, openLayer, closeLayer, T, Tf, t, dirtyForms, markDirty, askDirty, submitForm, resetWorkspace, keyName, visible, BUILTIN, showShortcuts, TZ, fmt, applyMask, fieldErr, watchServerErr, holdsServerErr, fillState, formValues, CC, luhn, setField, setOptions, fillForm, hasValue, fieldText, W_ID, W_EN, W_EN_T, W_SC_ID, W_SC_EN, wScale, wId, wEn, words, parseCsv, csvCell, downloadCsv, xlsxBlob, downloadXlsx, parseNum, numStr, numIn, numFmt, NUM, MON_EN, dow2, DlDate, DlNumber, DlTime, DlDateTime, DlText, parseDate, CH_TONES, chNum, niceMax, libOnce, loadLib, AUTH_T, at, authLang, fieldMsg, fld, val, passCheck, emit};
   Object.assign(Devlib, {toast, fmt, confirm: confirmBox, open: openLayer, close: id => closeLayer(layer(id)), fill: fillForm, setField, words, resetWorkspace});
 })();

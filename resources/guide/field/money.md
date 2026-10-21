@@ -118,7 +118,7 @@ The amount is not tied to the currency on the server: store both, and round to t
 
 - No `dl:*` event and no public API. `el.dlComponent` on the root `.dl-field` is the shared `Field` instance (`pre` = the `[data-dl-prefix]` wrapper).
 - Native `input` while typing, `change` after typing + blur; the toggle and the calculator also dispatch `change` on the amount input. Choosing a currency dispatches nothing.
-- Typing in the amount marks an `x-dl::form` dirty and clears the "Required" mark; a currency change alone does not mark it dirty.
+- Typing in the amount marks an `x-dl::form` dirty and clears the "Required" mark; choosing a currency dispatches `input` and `change` on the hidden `<name>_currency`, so it marks the form dirty too (not when `Devlib.fill` / Undo choose it).
 
 ### Accessibility as implemented
 
@@ -135,7 +135,7 @@ The `<label for>` is tied to the amount input; `inputmode="decimal"` opens the d
 - `required` ignores the currency, so an amount of `0,00` is accepted; check "greater than zero" on the server.
 - Custom `currencies` rows must have the `code` key: the view reads `$c['code']` and a row without it fails with an undefined-key error.
 - Precision: more than about 15 significant digits lose precision on blur, because the value passes through a JavaScript number.
-- Code oddity (not fixed): (1) `resources/assets/js/components/field.js:132-136` fires no event when a currency is chosen, so a change of currency alone does not mark the form dirty and no `change` reaches listeners on the amount. (2) With `words`, an empty amount leaves the empty tinted `.dl-words__text` bar visible (`field.js:130` never toggles `is-empty`, unlike `number-words.js`). (3) `Devlib.fill()` / `setField` (`core.js:663-677`) writes the text and dispatches `input`; on an integer-mode amount the input handler keeps digits only, so filling `1250000.50` gives `125000050`. The mount path guards against this case, the input path does not. In spreadsheet mode the filled canonical text is shown unformatted until the next focus/blur.
+- Code oddity (not fixed): With `words`, an empty amount leaves the empty tinted `.dl-words__text` bar visible (`field.js` never toggles `is-empty`, unlike `number-words.js`; hiding it changes the look, so it waits for approval).
 
 ## Example
 

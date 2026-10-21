@@ -89,7 +89,7 @@ None. The box shows plain digits in every display language: no thousand separato
 
 ### What the server receives
 
-`name` = the digits as text, for example `2`. No `name` attribute, no post. The value can only be a non-negative integer when it was typed; a clamped spin result with a negative `min` could be negative (see the oddity). Validate again on the server: type, `min`, `max`, and that the field is present.
+`name` = the digits as text, for example `2`. No `name` attribute, no post. With a negative `min` a leading `-` is kept while typing, so negative integers can be typed; with `min` of 0 or more the box holds digits only. The ▲ ▼ buttons do nothing while the box is `disabled` or `readonly`. Validate again on the server: type, `min`, `max`, and that the field is present.
 
 ### Markup hooks
 
@@ -120,7 +120,6 @@ The `<label for>` is tied to the input id; `inputmode="numeric"` opens the numer
 - `step` is only the spin increment; it does not reject typed values that are off-step.
 - Use `x-dl::field.decimal` for fractions and `x-dl::field.money` for amounts; the digits-only rule makes a `.` or `,` impossible here.
 - Do not add your own `<input type="number">` next to it; the object already covers the case, and its look follows the field theme.
-- Code oddity (not fixed): (1) `field.js:167` removes `-` on every keystroke, so a negative `min` is reachable only by the spin buttons and the sign disappears at the next keystroke; the `int $min` type suggests negatives are meant to work.
 
 ## Example
 

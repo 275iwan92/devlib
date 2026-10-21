@@ -80,7 +80,7 @@ Plain `<button>` elements: Tab goes through each one, Enter and Space activate i
 | Posted | `name=<option value>` always; empty string when no option is chosen. |
 | Read on the server | `$request->input('name')`; validate with `'name' => ['required', Rule::in([...])]` (the value is whatever the browser sends). |
 | DOM events | `change` (bubbles) from the hidden input `[data-dl-value]`, dispatched by the click handler. No `input` event. `x-dl::form` uses `change` for the dirty guard. |
-| Fill from code | `Devlib.fill` / `Devlib.h.setField` set the hidden value only; the highlighted button does not follow (see oddity). Set the choice by clicking the button (`btn.click()`) when the display must follow. |
+| Fill from code | `Devlib.fill` / `Devlib.h.setField` write the hidden value and dispatch `input`; the script listens to it and moves `is-active` to the matching button. |
 | Listen from a screen | `form.addEventListener('change', e => { if (e.target.name === 'periode') console.log(e.target.value); })`. |
 | Hooks | `data-dl-segment` (root of `Segment`, `el.dlComponent`), `data-dl-value` (hidden input), `.dl-segment__opt` with `data-value`, `.is-active`. JS: `resources/assets/js/components/segment.js`. |
 
@@ -93,8 +93,6 @@ Plain `<button>` elements: Tab goes through each one, Enter and Space activate i
 - Option labels are not translated and are not in the dictionary; translate them before passing them in.
 - Restoring after a failed validation: `old('periode', $m->periode)` works as usual, because the hidden input always posts.
 - `required` only works with a non-empty `label`: the `*` marker the form looks for lives in the label row.
-- Code oddity (not fixed): `resources/assets/js/components/segment.js:7-14` only listens to button clicks, so `Devlib.fill`, `setField` and form Undo change the hidden value but not the `is-active` button.
-- Code oddity (not fixed): `resources/assets/js/components/form.js:23` clears `is-invalid` only on `input`, while `segment.js:12` dispatches only `change`, so the "Required" message stays after the user picks an option (form validation only adds marks, never removes them; the wizard listens to `change` too and is not affected).
 - Code oddity (not fixed): `resources/assets/devlib.css:831-835` has no `:disabled` style for `.dl-segment__opt`, so a disabled or read-only bar looks active.
 
 ## Example

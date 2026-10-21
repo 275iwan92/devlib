@@ -77,7 +77,7 @@ Native checkboxes, native keyboard (Tab to each box, Space to tick). The boxes s
 | Posted | `name[]=<value>` per ticked box; key absent when none. |
 | Read on the server | `$request->input('name', [])`; validate with `'name' => 'array'` and `'name.*' => Rule::in([...])`, `'required'`/`'min:1'` if at least one is needed. |
 | DOM events | `input` and `change` on each box (bubble). `x-dl::form` uses them for the dirty guard and to clear a "Required" mark on `input`. |
-| Fill from code | Not supported through `Devlib.fill` / Form Undo: `fillForm` skips every name containing `[` (see oddity). |
+| Fill from code | `Devlib.fill` / Form Undo restore the boxes: the key `<name>[]` (or `<name>`) takes an array of the values to tick (`clear=true` unticks all when absent). |
 | Wizard review | `fieldText()` joins the label texts of the ticked boxes with commas. |
 | Hooks | `data-dl-field="<name>"`, `.dl-choices`, `.dl-choice`. No `data-dl-*` hook of its own and no script branch in `field.js`. |
 
@@ -89,7 +89,6 @@ Native checkboxes, native keyboard (Tab to each box, Space to tick). The boxes s
 - Restoring after a failed validation: when nothing is ticked the key is absent, so `old('hobi', $m->hobi)` re-ticks the model values the user had cleared. Use `session()->hasOldInput() ? (array) old('hobi', []) : $m->hobi`.
 - `required` only works with a non-empty `label`: the `*` marker the form looks for lives in the label row.
 - Option labels are not translated and are not in the dictionary; translate them before passing them in.
-- Code oddity (not fixed): `resources/assets/js/core.js:681` (`fillForm`) ignores field names containing `[`, so Form Undo and `Devlib.fill` never restore or clear the boxes of this control after the user changed them.
 
 ## Example
 

@@ -97,10 +97,10 @@ No number formatting; the posted score is always `.`-decimal (`3.5`). The `3,5 /
 
 ### Events and JavaScript
 
-- No `dl:*` event. A bubbling native `change` is dispatched on the hidden input at each click; hover and mount fire nothing. There is no `input` event, so the "Required"/server error mark of the form is not cleared by a click.
+- No `dl:*` event. A bubbling native `change` is dispatched on the hidden input at each click (the form clears a "Required" mark on `change` too); hover and mount fire nothing.
 - `el.dlComponent` on the `[data-dl-rating]` element is the `Rating` instance (`stars`, `hidden`, `max`, `half`; methods `paint(v)`, `text(v)`, `at(star, event)`); on the outer `.dl-field` it is the shared `Field` instance. There is no supported setter: to change the score from script, set the hidden value and call `paint(v)` and `text(v)`.
 - The hidden input is named, so a click marks an `x-dl::form` dirty (leave warning, Undo enabled).
-- `Devlib.fill()` / Undo write the hidden input only; the stars and text are not repainted (see the oddity).
+- `Devlib.fill()` / Undo write the hidden input and dispatch `input`; the script repaints the stars and the text from it.
 
 ### Accessibility as implemented
 
@@ -114,7 +114,7 @@ The root has `role="slider"` with `aria-valuemin="0"`, `aria-valuemax` and `aria
 - Use `half` only when the data can hold halves (a `DECIMAL(2,1)` column or similar); without it, store an integer.
 - For a stored rating shown in a list or on a read-only page, pass `readonly` (and `size="lg"` when it is the main content), not `disabled`.
 - Do not rely on the label click or the keyboard; if keyboard entry is a requirement, offer `x-dl::field.number` (0..max) or `x-dl::field.select` as the accessible alternative.
-- Code oddity (not fixed): (1) The root is `role="slider"` without `tabindex`/keys: a mouse-only control that declares itself a slider. (2) `rating.js:22` formats the text with a fixed comma (`3,5 / 5`) instead of `NUM.dec`. (3) In a disabled fieldset the stars stay clickable (`rating.js` has no check on the fieldset). (4) `Devlib.fill()` / Undo (`core.js:663-677`) set the hidden input only, so the stars and the text keep showing the old score while the restored value is posted.
+- Code oddity (not fixed): (1) The root is `role="slider"` without `tabindex`/keys: a mouse-only control that declares itself a slider. (2) In a disabled fieldset the stars stay clickable (`rating.js` has no check on the fieldset).
 
 ## Example
 

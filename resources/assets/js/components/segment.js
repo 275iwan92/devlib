@@ -7,10 +7,13 @@
     static selector = "[data-dl-segment]";
     init() {
       this.hidden = $(this.el, '[data-dl-value]');
+      const mark = v => $$(this.el, '.dl-segment__opt').forEach(x => x.classList.toggle('is-active', x.dataset.value === v));
       $$(this.el, '.dl-segment__opt').forEach(b => b.addEventListener('click', () => {
-        $$(this.el, '.dl-segment__opt').forEach(x => x.classList.toggle('is-active', x === b));
+        mark(b.dataset.value);
         this.hidden.value = b.dataset.value; this.hidden.dispatchEvent(new Event('change', {bubbles: true}));
       }));
+      // Devlib.fill / Undo menulis nilainya lalu menembak input: tombol yang menyala ikut.
+      this.hidden.addEventListener('input', () => mark(this.hidden.value));
     }
   }
   Devlib.define("Segment", Segment);

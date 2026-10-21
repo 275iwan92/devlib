@@ -10,6 +10,7 @@
       this.list = $(this.el, '[data-dl-upload-list]');
       this.preview = this.el.hasAttribute('data-preview');
       this.files = [];
+      this.initial = this.list.innerHTML;  // daftar berkas tersimpan dari server: kembali ke sini saat reset
       this.el.classList.toggle('has-file', !!this.list.children.length);
       // Terkunci (disabled/readonly, atau dimatikan layar lewat input.disabled) = klik & drop ditolak.
       this.el.addEventListener('click', e => { if (!this.file.disabled && !e.target.closest('button') && !e.target.closest('.dl-upload__file')) this.file.click(); });
@@ -34,7 +35,12 @@
       const dt = new DataTransfer(); this.files.forEach(f => dt.items.add(f)); this.file.files = dt.files;
       // Satu kabar untuk pilih / tarik-lepas / hapus (input.files diisi program tidak memicu 'change').
       this.el.dispatchEvent(new CustomEvent('dl:upload', {bubbles: true, detail: {files: [...this.files]}}));
+      // input (bukan change: change membaca input.files dan memanggil take() lagi) supaya dirty-guard dan pesan Required ikut.
+      this.file.dispatchEvent(new Event('input', {bubbles: true}));
     }
+
+    // Undo / Devlib.fill: buang berkas yang dipilih sesudah form dibuka, daftar tersimpan kembali.
+    reset() { this.files = []; this.draw(); this.list.innerHTML = this.initial; this.el.classList.toggle('has-file', !!this.list.children.length); }
 
     take(incoming) { this.files = this.file.multiple ? this.files.concat([...incoming]) : [...incoming].slice(0, 1); this.draw(); }
   }

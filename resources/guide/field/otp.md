@@ -93,12 +93,10 @@ One field: `<name>` = the digits in order, for example `123456`; shorter if not 
 - Do not rely on `required` for a complete code: check `strlen($otp) === 6` (or your length) on the server.
 - Pasting a whole code into a box does not spread over the boxes: `maxlength="1"` keeps only the first character, and there is no paste handler. Ask users to type it; if pasting matters, add a project script that fills the boxes and then dispatches a `keyup`.
 - A script that sets a box value (autofill, test tools, IME input that sends no `keyup`) does not update the hidden value until a `keyup` happens on that box.
-- The "Required" error is cleared one keystroke late: the form removes it on `input` when the hidden value is not empty, but the hidden value is only written on the following `keyup`.
-- Typing in the boxes does not mark an `x-dl::form` as dirty and a leave warning will not appear.
+- The "Required" error is cleared as soon as the hidden value is written on `keyup` (the same keyup dispatches `input` on it).
+- Typing in the boxes dispatches a bubbling `input` on the named hidden input whenever the code changes, so it marks an `x-dl::form` dirty and clears a "Required" error; `Devlib.fill()` / Undo write the hidden input and the boxes follow.
 - The boxes are plain `type="text"` inputs: the code is always visible on screen.
 - Do not use this field for a password or PIN that must stay hidden.
-- Code oddity (not fixed): Undo / `Devlib.fill` (`setField` in `resources/assets/js/core.js:663`) clear or restore only the hidden input, not the digit boxes, so after Undo the boxes still show the old digits while the posted code is empty.
-- Code oddity (not fixed): the boxes have no `name`, so `markDirty` (`resources/assets/js/core.js:460`) ignores them; typing a code never sets `is-dirty` on the form.
 
 ## Example
 

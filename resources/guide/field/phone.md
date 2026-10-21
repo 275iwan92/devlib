@@ -40,7 +40,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | `label` | `string`, `''` | Label row; `<label for>` points at the visible number input. Empty = no row, no `*`, no tooltip. Translated. |
 | `tooltip` | `?string`, `null` | (i) bubble next to a non-empty label. Translated. |
 | `hint` | `?string`, `null` | Help line under the control (good for "you may type 0812..."). Translated. |
-| `error` | `?string`, `null` | Server error text; non-empty adds `is-invalid`. Not translated. The first blur with a valid or empty number clears it (see oddity). |
+| `error` | `?string`, `null` | Server error text; non-empty adds `is-invalid`. Not translated. It stays until the user types in the number box (the blur check does not overwrite it). |
 | `value` | `mixed`, `null` | The stored number, written to the hidden input and copied into the visible one. Best: international `+62812...` of the SAME country as `country`. National digits (`0812...`) are accepted too. It is normalised on load and posted back normalised (see Behavior). |
 | `placeholder` | `?string`, `null` | Rendered but overwritten at once by the script with the example number of the selected country and `kind` (for example `812-3456-7890`). Effectively unused. |
 | `required` | `bool`, `false` | Red `*` and `x-dl::form` "Required" check: passes when the hidden number is not empty (the country input is excluded from this test). Not the HTML `required`, no server check. |
@@ -109,10 +109,10 @@ The visible number box is not posted. Store `<name>` as it comes (it is already 
 
 ### Events and hooks
 
-- No `dl:*` event and no `change` on the hidden inputs: they are written by script. Listen to `input` / `blur` on `[data-dl-phone]` (they bubble) or read `[data-dl-phone-value]`.
+- No `dl:*` event. When the number changes by typing or by choosing a country, the script dispatches a bubbling `input` on the hidden `<name>` (not while `Devlib.fill` / Undo fill it); a country choice also fires `input` and `change` on the hidden `<name>_country`. Listen to `input` / `blur` on `[data-dl-phone]` (they bubble) or read `[data-dl-phone-value]`.
 - Hooks: `data-dl-phonebox` (root of the control), `data-dl-phone` (visible input), `data-dl-phone-value` (number), `data-dl-prefix-value` (country), `data-dl-phone-read` (read-out line), `data-kind`, `data-countries`.
 - `el.dlComponent` on the `[data-dl-phonebox]` element is the `Phone` instance (`inp`, `hid`, `cc`, `C`, `kind`, methods `upd()`, `check()`, `clean()`, `pick()`); on the root `.dl-field` it is the `Field` instance, which runs the country list.
-- `Devlib.h.setField` / `fillForm` (Undo, `Devlib.fill`) write the number into the visible input and dispatch `input`.
+- `Devlib.h.setField` / `fillForm` (Undo, `Devlib.fill`) choose the country first (key `<name>_country`, unknown codes are ignored), then write the number into the visible input and dispatch `input`.
 
 ## Rules and pitfalls
 
@@ -123,11 +123,7 @@ The visible number box is not posted. Store `<name>` as it comes (it is already 
 - Pattern and length errors do not stop Save. Re-check on the server (for example with a phone library), and decide whether an unusual number is allowed.
 - The input needs no custom `maxlength`; the script already limits the digits.
 - Changing the country cuts the typed digits to the new country's length; tell users to pick the country first.
-- Typing in the number box or changing the country does NOT mark an `x-dl::form` as changed (the visible input has no `name` and the hidden values are set by script); the dirty guard and Undo/Save state react only when another field changes (see oddities).
-- Code oddity (not fixed): the dirty guard (`markDirty`, `resources/assets/js/core.js:460`) ignores elements without a `name`, so editing only a phone number does not set `is-dirty` on the form.
-- Code oddity (not fixed): `fillForm` (`resources/assets/js/core.js:681`) skips names ending in `_country`, so Undo restores the number but not the country; with a changed country the restored `+62...` number is re-read under the wrong dial code (for example `+6562812345` after choosing Singapore).
-- Code oddity (not fixed): the blur check (`resources/assets/js/components/phone.js:54`, `fieldErr`) always rewrites the error line, so a server `error` disappears on the first blur of a valid or empty phone.
-- Code oddity (not fixed): the `placeholder` prop is overwritten by `resources/assets/js/components/phone.js:47`, so it can never be shown.
+- Typing in the number box or changing the country marks an `x-dl::form` as changed through the hidden `<name>` (the visible input has no `name`), so the dirty guard, Undo and the "Required" clearing react.
 
 ## Example
 

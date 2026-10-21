@@ -105,7 +105,7 @@ $request->validate(['languages' => ['array'], 'languages.*' => [Rule::in(array_k
 
 - The Save/Confirm check marks the field "Required" when no checkbox is ticked; ticking a box clears the error again (the checkbox fires `input`).
 - A change marks a guarded form dirty.
-- `Devlib.fill`, `Devlib.setField` and the form's Undo / Cancel-in-view-mode (`fillForm`) skip every name that contains `[`, so a multi-select is **not** restored or filled by them; set the checkboxes yourself and call the `change` event so the summary updates.
+- `Devlib.fill`, `Devlib.setField` and the form's Undo / Cancel-in-view-mode (`fillForm`) restore the checkboxes: the key `<name>[]` (or `<name>`) takes an array of the values to tick; the summary follows through the `change` event the restore dispatches. `clear=true` unticks all when the key is absent.
 - The extra QR button of a plain `x-dl::form` merges the repeated `name[]` values into one array.
 
 ## Rules and pitfalls
@@ -119,7 +119,6 @@ $request->validate(['languages' => ['array'], 'languages.*' => [Rule::in(array_k
 - All options are in the DOM; thousands of options make the page slow.
 - Option labels are data and not translated; `empty-text` and `noun` are.
 - Keyboard: the button is reachable with `Tab` and opens with `Enter`/`Space`; after opening, `Tab` moves into the search box and then through the checkboxes, and `Space` ticks one. There is no `aria-expanded` and no `Esc` to close; the panel closes on an outside click.
-- Code oddity (not fixed): `resources/assets/js/core.js:680-683` (`fillForm`) excludes names containing `[`, so the form's Undo and view-mode Cancel do not restore a multi-select (nor `x-dl::field.tags` / `x-dl::field.key-value`).
 
 ## Example
 

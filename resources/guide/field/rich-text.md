@@ -103,7 +103,7 @@ No `enctype` is needed.
 - Required check (`x-dl::form`, Save/Confirm): the textarea value must be non-blank after `trim()`. A leftover `<br>` or `<div><br></div>` counts as a value, so "empty" rich text can pass `required`.
 - Undo snapshot, QR extra button and `dl:form-submit` payload: the HTML string is a normal value in them.
 - Wizard Review summary shows the raw HTML string.
-- Dirty guard: it listens to `input`/`change` events whose target has a `name`; typing happens in the unnamed area, so see the oddity note.
+- Dirty guard: `sync()` dispatches a bubbling `input` on the named textarea after it copies the area, so typing and the toolbar mark the form dirty and clear a "Required" error at once. The area also follows the textarea: `Devlib.fill()` / Undo write the textarea and dispatch `input`, and the area takes the HTML.
 
 ### Markup hooks
 
@@ -139,7 +139,7 @@ r.area.innerHTML = sanitisedHtml; r.sync();
 - `execCommand` is deprecated; it still works in current browsers, but DevLib depends on the browser for the markup.
 - `disabled` keeps the value out of the request (like a disabled `x-dl::field.text`), `readonly` still posts it; a locked form's area stays typable but is not posted.
 - Not for large documents or collaborative editing.
-- Code oddity (not fixed): (1) `resources/assets/js/components/rich.js` `sync()` writes the textarea without an event, and typing fires `input` on the unnamed `div`, so the dirty guard (`core.js` `markDirty`, needs `e.target.name`) never sees edits: editing only this field does not mark the form dirty (no leave warning, the form's Undo stays disabled). (2) The form's own "clear the error on input" handler (`form.js` line 23) runs in the capture phase before `sync()`, so it reads the old textarea value; a rich field marked "Required" is cleared one keystroke late. (3) A disabled fieldset leaves the editing area editable. (4) The form's Undo and `Devlib.fill()` set the textarea only, so the visible area keeps the edited text while the posted value is the restored one. (5) `value` is output with `{!! !!}` (line 7).
+- Code oddity (not fixed): (1) A disabled fieldset leaves the editing area editable. (2) `value` is output with `{!! !!}` (line 7).
 
 ## Example
 

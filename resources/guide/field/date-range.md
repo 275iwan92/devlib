@@ -57,7 +57,7 @@ Everything about the boxes is the browser's: the picker, the display format and 
 
 On load and on every `change` of either box:
 
-- If one box is empty, the line is **not updated** (it keeps its last text, or stays empty on load).
+- If one box is empty, the line is emptied.
 - If end < start: `Duration: the end date is not valid.`
 - Otherwise it counts whole calendar months: `(end year - start year) * 12 + (end month - start month)`, shown as `Duration: {y} Years {m} Months`. Days are ignored (`2026-01-31` to `2026-02-01` is 1 month, `2026-01-01` to `2026-01-31` is 0 years 0 months). Same day is `0 Years 0 Months`.
 
@@ -98,8 +98,6 @@ No `dl:*` event and no hidden input. Both boxes are named, so `x-dl::form` marks
 - The error and hint are shared by both boxes; show one message for the pair.
 - If you need `dd-Mmm-yyyy`, typing shorthand or the same look as the rest of the form, use two `x-dl::field.date`; you then lose the duration line.
 - Accessibility as implemented: the label is bound to the start box only; the end box has no label, `aria-label` or visible caption, so assistive technology announces it without a name. The native date inputs are fully keyboard operable by the browser.
-- Code oddity (not fixed): when one of the two dates is cleared after both were set, the duration line (`field.js`, `data-dl-daterange`) is not cleared and keeps showing the old duration.
-- Code oddity (not fixed): the duration is computed with `new Date('yyyy-mm-dd')` (UTC midnight) and local `getMonth()`; in browsers west of UTC both dates move to the previous day, so a start on the 1st counts as the previous month and the number of months can be off by one.
 
 ## Example
 

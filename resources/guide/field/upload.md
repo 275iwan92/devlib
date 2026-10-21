@@ -107,8 +107,8 @@ Method must be POST (a GET form cannot carry files). Form buttons that submit wi
 ### Interaction with the form object
 
 - Required check (`x-dl::form`, Save/Confirm): uses the value of the named input. A file input has a value only when a file is in `input.files` (the JS assigns it), so a new file satisfies `required`.
-- `Form.values()` (Undo snapshot), the QR extra button and `dl:form-submit` skip `File` entries. So a form without `action` (preview) will not report files.
-- Dirty guard: the guard listens to `input`/`change` events on named controls. A file picked through the dialog fires `change` and marks the form dirty; a drop and a removal set the files from script and fire no `change`, so they do not (see the oddity note).
+- The QR extra button and `dl:form-submit` skip `File` entries. So a form without `action` (preview) will not report files. The Undo snapshot (`formValues()`) stores `''` for a single file input, meaning "no new file".
+- Dirty guard: `draw()` dispatches a bubbling `input` on the file input after every pick, drop and removal (not `change`: `change` makes the script read the files again), so all three mark the form dirty and clear a "Required" error. `Upload.reset()` (used by `Devlib.fill` / Undo through the file input's name) drops the files chosen after the form was opened and brings back the saved-file list.
 
 ### Markup hooks
 
@@ -146,7 +146,7 @@ The native `change` of the input also fires (and bubbles) after a dialog selecti
 - Single mode: a new selection replaces the list; multiple mode: selections accumulate, with no duplicate check.
 - A disabled / read-only box posts nothing, unlike other read-only fields which post their value.
 - A locked form posts no files either (fieldset disabled); a server action on a locked document must work from the stored record.
-- Code oddity (not fixed): (1) `resources/assets/js/components/upload.js` `draw()` (line 34-36) writes `input.files` and dispatches only `dl:upload`; the dirty guard (`core.js` `markDirty`) listens to `input`/`change`, so dropping or removing a file does not mark the form dirty (no leave warning, Undo stays disabled), while the dialog path does. (2) `Devlib.fill()` / Undo (`fillForm`, `core.js` `setField`) never redraw the list: a file chosen after the form opened stays in the box after Undo, and `fill(form, data, true)` empties `input.files` while the list still shows the rows. (3) `required` ignores the saved file (see above). (4) `accept` is not applied to dropped files.
+- Code oddity (not fixed): (1) `required` ignores the saved file (see above). (2) `accept` is not applied to dropped files.
 
 ## Example
 

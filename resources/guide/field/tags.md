@@ -101,8 +101,8 @@ The text input and the datalist are not posted. Text that is typed but not yet c
 ### Form integration
 
 - The Save/Confirm check marks the field "Required" when there is no chip (the hidden inputs count as values; the typed text does not).
-- Because no event follows an add/remove, the dirty guard of `x-dl::form` is **not** triggered by the chips alone, Undo stays disabled for a form that was only changed through tags, and a "Required" error stays red after the first chip is added until the next `input` event that finds a chip.
-- `Devlib.fill`, `Devlib.setField` and the form's Undo / Cancel-in-view-mode skip names containing `[`, so the chips are neither filled nor restored by them.
+- Adding or removing a chip dispatches a bubbling `change` on the root `[data-dl-tags]` (it carries `data-dl-reports`, which the dirty guard accepts in place of a field name), so the form becomes dirty, Undo is enabled and a "Required" error disappears when a chip exists. Setting chips from script (`Devlib.fill`, Undo) fires nothing.
+- `Devlib.fill`, `Devlib.setField` and the form's Undo / Cancel-in-view-mode restore the chips: the key `<name>[]` (or `<name>`) takes an array of strings, `Tags.set(values)` replaces the chips; `clear=true` removes them when the key is absent.
 
 ## Rules and pitfalls
 
@@ -113,8 +113,6 @@ The text input and the datalist are not posted. Text that is typed but not yet c
 - Typed-but-uncommitted text is lost on a scripted submit that does not blur the input; commit it with `Enter` or by leaving the field first. Submitting with the Save button works because the click blurs the input first.
 - Tags are not translated; the placeholder is.
 - Keyboard: the text input is a normal input (`Tab`, typing, `Enter`/`,` to add, `Backspace` to delete the last chip); each chip's `x` is a `<button>` that can be reached with `Tab` and pressed with `Enter`/`Space`, but it has no accessible name (only the "x" glyph) and the chip list is not announced. The native datalist supports the arrow keys.
-- Code oddity (not fixed): `resources/assets/js/components/tags.js:12-18` - adding or removing a chip dispatches no event, so the dirty guard, Undo and the "Required" error clearing of `x-dl::form` do not react to tag changes.
-- Code oddity (not fixed): `resources/assets/js/core.js:680-683` (`fillForm`) skips names containing `[`, so Undo and view-mode Cancel do not restore tag changes.
 
 ## Example
 

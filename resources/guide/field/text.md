@@ -79,7 +79,7 @@ The parts `icon`, `prefix`, `suffix`, the badge and the counter exist only when 
 
 - The mode lives only in the browser; it is not a prop and is not posted. What is posted is the text as it is shown: after clicking `AA` the input value IS upper case.
 - The script keeps the text as typed (`raw`) so `aa` always restores the original. New typing is merged into `raw` by comparing prefix and suffix with the shown text, so editing in the middle while `AA` is active is kept (and the caret is restored).
-- `Aa` uppercases the first letter of each word and leaves the other letters as they are (it does not lower-case them). The word test is ASCII only, see the oddity below.
+- `Aa` uppercases the first letter of each word and leaves the other letters as they are (it does not lower-case them). A word starts after anything that is not a letter, digit or `_` (Unicode aware): `étienne` becomes `Étienne`, `o'neil` becomes `O'Neil`.
 - Clicking the badge does not fire `input` or `change` (see Data and events).
 - The initial mode is always `aa` (no change); `value` is never transformed on load.
 
@@ -123,7 +123,7 @@ DevLib does not trim the text. In a default Laravel app the `TrimStrings` and `C
 
 ### Events
 
-- Native `input` bubbles on every keystroke (the dirty guard of `x-dl::form` and the counter listen to it). Native `change` fires on blur after an edit. The case badge changes the value by script and fires neither; DevLib dispatches only a non-bubbling `dl:grow` event on the input to resize the textarea.
+- Native `input` bubbles on every keystroke (the dirty guard of `x-dl::form` and the counter listen to it). Native `change` fires on blur after an edit. The case badge dispatches a bubbling `input` after it rewrites the value (so the dirty guard sees it) and no `change`; DevLib also dispatches a non-bubbling `dl:grow` event on the input to resize the textarea.
 - No `dl:*` custom event is emitted by this field. Screens listen to `input` / `change` on the input (bubbles to the form) or read `form.dlComponent.values()`.
 - `Devlib.h.fillForm` / `setField` (used by Undo, `Devlib.fill`) set `input.value` and dispatch `input`, so the case state, counter and textarea height follow.
 
@@ -155,8 +155,6 @@ DevLib does not trim the text. In a default Laravel app the `TrimStrings` and `C
 - Do not put numbers with thousand separators into a text field expecting canonical numbers: the number fields post canonical `1234.5`, this one posts what the user typed.
 - `prefix` / `suffix` text is not part of the value: do not expect `IDR` or `%` to arrive on the server.
 - An `old()` / `$model` value that starts with a line break loses it inside a textarea (HTML parser rule).
-- Code oddity (not fixed): the `Aa` mode uses `t.replace(/\b\w/g, ...)` in `resources/assets/js/core.js:96`, an ASCII-only word test, so a letter after an accented letter is also upper-cased (`étienne` becomes `éTienne`) while `o'neil` becomes `O'Neil`.
-- Code oddity (not fixed): clicking the case badge (`resources/assets/js/components/field.js:43`) changes the value without dispatching `input` or `change`, so the dirty guard of `x-dl::form` is not marked and listeners are not told; only typing marks the form dirty.
 
 ## Example
 

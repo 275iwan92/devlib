@@ -1,7 +1,7 @@
 /* DevLib · CreditCard */
 (function (Devlib) {
   'use strict';
-  const {$, CASES, CASE_LABEL, applyCase, TZ, fieldErr, CC, luhn, T, Tf} = Devlib.h;
+  const {$, CASES, CASE_LABEL, applyCase, TZ, fieldErr, watchServerErr, holdsServerErr, CC, luhn, T, Tf} = Devlib.h;
 
   class CreditCard extends Devlib.Component {
     static selector = "[data-dl-cc]";
@@ -24,10 +24,15 @@
       this.cvv.addEventListener('input', () => { this.cvv.value = this.cvv.value.replace(/\D/g, '').slice(0, this.cvv.maxLength); });
       if (this.hol) {
         const cb = this.q('[data-dl-cc-case]');
-        cb.addEventListener('click', () => { this.caseIdx = (this.caseIdx + 1) % 3; cb.textContent = CASE_LABEL[CASES[this.caseIdx]]; this.hol.value = applyCase(this.hol.value, CASES[this.caseIdx]); this.upd(); });
+        cb.addEventListener('click', () => {
+          if (this.hol.disabled || this.hol.readOnly) return;
+          this.caseIdx = (this.caseIdx + 1) % 3; cb.textContent = CASE_LABEL[CASES[this.caseIdx]]; this.hol.value = applyCase(this.hol.value, CASES[this.caseIdx]); this.upd();
+          this.hol.dispatchEvent(new Event('input', {bubbles: true}));  // dirty-guard dan pesan Required
+        });
         this.hol.addEventListener('input', () => { const p = this.hol.selectionStart; this.hol.value = applyCase(this.hol.value, CASES[this.caseIdx]); try { this.hol.setSelectionRange(p, p); } catch (e) {} this.upd(); });
       }
       [this.num, this.exp, this.cvv].forEach(i => i.addEventListener('blur', this.check));
+      watchServerErr(this.el);
       this.upd();
     }
 
@@ -54,6 +59,7 @@
     }
 
     check() {
+      if (holdsServerErr(this.el)) return;  // pesan dari server bertahan sampai isian diubah
       const d = this.num.value.replace(/\D/g, ''), msgs = [];
       if (d) {
         if (!this.brand) msgs.push(T('cc_unknown'));

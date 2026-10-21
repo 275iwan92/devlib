@@ -8,7 +8,7 @@
  */
 (function (Devlib) {
   'use strict';
-  const {$, $$, showQr, toast, confirmBox, layer, closeLayer, dirtyForms, fillForm, hasValue, T, Tf, esc} = Devlib.h;
+  const {$, $$, showQr, toast, confirmBox, layer, closeLayer, dirtyForms, fillForm, formValues, hasValue, T, Tf, esc} = Devlib.h;
   // Tombol tambahan form (mockup: "Generate QR Code Data") -> QR berisi semua isian form.
   class Form extends Devlib.Component {
     static selector = "[data-dl-form]";
@@ -20,7 +20,8 @@
       this.saved = this.values();  // titik kembali Undo = isi saat form dibuka
       requestAnimationFrame(() => { this.linesSaved = this.snapLines(); });  // baris detail diinisialisasi sesudah form
       if (this.viewMode) this.setView(true);
-      this.el.addEventListener('input', e => { const f = e.target.closest('.dl-field.is-invalid'); if (f && hasValue(f)) { f.classList.remove('is-invalid'); const x = $(f, '[data-dl-field-error]'); if (x) x.textContent = ''; } }, true);
+      // "Required" hilang begitu isian terisi: lewat input (mengetik) atau change (pilihan, centang, tags, tanda tangan).
+      ['input', 'change'].forEach(ev => this.el.addEventListener(ev, e => { const f = e.target.closest('.dl-field.is-invalid'); if (f && hasValue(f)) { f.classList.remove('is-invalid'); const x = $(f, '[data-dl-field-error]'); if (x) x.textContent = ''; } }, true));
       this.el.addEventListener('submit', e => {
         const af = this.el.dataset.actionField || '_action';
         if (e.submitter?.name === af) $(this.el, `input[type=hidden][name="${af}"]`)?.remove();  // Save menang atas sisa aksi panel
@@ -39,7 +40,7 @@
       this.el.addEventListener('click', e => {
         // Siklus ketat: aksi baris detail (Edit/Delete/Add) membuka dokumen untuk diubah, supaya Save + Undo muncul.
         if (this.strict && this.el.classList.contains('is-view') && e.target.closest('[data-dl-lines] [data-l-edit], [data-dl-lines] [data-l-del], [data-dl-lines] [data-l-add]')) this.startEdit();
-        if (e.target.closest('[data-f-edit]')) { this.fs.forEach(f => { f.disabled = false; }); this.snapshot = {}; new FormData(this.el).forEach((v, k) => { this.snapshot[k] = v; }); $$(this.el, 'input[type=checkbox][name]').forEach(c => { this.snapshot[c.name] = c.checked; }); this.setView(false); $(this.el, '.dl-form__body input:not([type=hidden]),.dl-form__body textarea')?.focus(); return; }
+        if (e.target.closest('[data-f-edit]')) { this.fs.forEach(f => { f.disabled = false; }); this.snapshot = formValues(this.el); this.setView(false); $(this.el, '.dl-form__body input:not([type=hidden]),.dl-form__body textarea')?.focus(); return; }
         const act = e.target.closest('[data-f-act]')?.dataset.fAct;
         if (act === 'back' && !e.target.closest('a[href]')) return history.back();
         if (['new', 'print', 'email'].includes(act) && e.target.closest('a[href]')) return;
@@ -68,11 +69,7 @@
         showQr(JSON.stringify(data, null, 2));
       });
     }
-    values() {
-      const v = {}; new FormData(this.el).forEach((x, k) => { if (!(x instanceof File)) v[k] = x; });
-      $$(this.el, 'input[type=checkbox][name]').forEach(c => { v[c.name] = c.checked; });
-      return v;
-    }
+    values() { return formValues(this.el); }
 
     // Undo = buang perubahan yang belum disimpan, kembali ke isi saat form dibuka (tanpa kirim ke server).
     undo() {

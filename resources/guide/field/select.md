@@ -118,7 +118,7 @@ Devlib.setField(form, 'city', 'mlg');   // Devlib.fill(form, {city: 'mlg'}) does
 
 ### Form integration
 
-- The form's Save/Confirm check marks the field "Required" when the hidden input is empty; the error is cleared only on an `input` event, which this control never fires (see the oddity below).
+- The form's Save/Confirm check marks the field "Required" when the hidden input is empty; the error is cleared on `input` or `change`, and a choice fires `change`.
 - A change marks the guarded form dirty (the hidden input has a name). Undo and Cancel-in-view-mode restore the select through `fillForm`.
 - Lint F201 (warning): in a `kind="document"` form a `field.select` without `value`, `readonly` or `options-default` is reported ("input without an initial value"); a new record should carry sensible defaults.
 
@@ -134,7 +134,6 @@ Devlib.setField(form, 'city', 'mlg');   // Devlib.fill(form, {city: 'mlg'}) does
 - Keyboard: the button can be reached with `Tab` and opened with `Enter`/`Space`, and the search box receives focus, so typing filters. The options are plain `<div>` elements without `tabindex`, roles or arrow-key handling, so the choice itself needs a pointer or touch. The button has no `aria-expanded`/`aria-haspopup`.
 - The server must re-check rights and the allowed values; hiding or disabling the field in the browser is not a security measure.
 - Code oddity (not fixed): `resources/views/components/field/select.blade.php:6` and `:7` - `disabled` (and `readonly`) only disable the button; the hidden input stays enabled, so a standalone `disabled` select is still submitted. Only a disabled fieldset (locked form) keeps the value out of the request.
-- Code oddity (not fixed): `resources/assets/js/components/form.js:23` clears the "Required" error only on an `input` event, but the select dispatches only `change`, so the red error stays on a field that was just filled until the form is reloaded or Undone.
 - Code oddity (not fixed): `resources/assets/js/core.js:220-250` (`bindPanel`) - option items are not focusable and there is no arrow/Enter/Esc handling, so a select cannot be completed from the keyboard.
 
 ## Example

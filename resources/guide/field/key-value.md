@@ -109,8 +109,8 @@ $spec = collect($request->input('spec', []))
 ### Form integration
 
 - The Save/Confirm check marks the field "Required" when every cell is empty; typing in a cell clears the error.
-- Typing in a cell marks a guarded form dirty. Adding or deleting a row alone does not (no event), so a form changed only by deleting a row keeps Undo disabled and shows no leave warning until something else changes.
-- `Devlib.fill`, `Devlib.setField` and the form's Undo / Cancel-in-view-mode skip names containing `[`, so the rows are neither filled nor restored by them.
+- Typing in a cell marks a guarded form dirty. Adding or deleting a row dispatches a bubbling `change` on the root `[data-dl-kv]` (it carries `data-dl-reports`, which the dirty guard accepts in place of a field name), so these changes mark the form dirty and enable Undo too.
+- `Devlib.fill`, `Devlib.setField` and the form's Undo / Cancel-in-view-mode restore the rows: the key `<name>` takes an array of `{key, value}` (or `[key, value]`) rows, or the flat keys `<name>[0][key]` / `<name>[0][value]`; `KeyValue` has `rows()` and `set(rows)`. `clear=true` empties the rows when the key is absent.
 
 ## Rules and pitfalls
 
@@ -123,7 +123,6 @@ $spec = collect($request->input('spec', []))
 - Deleting a row has no confirmation and no undo inside the field.
 - Keyboard: the cells are normal inputs and the add/delete controls are `<button>` elements, so everything is reachable with `Tab`, `Enter` and `Space`. The cells have no `aria-label` (the column headings are `<th>` only), the delete button has only a `title`, and the label is linked to the group through `aria-labelledby`, not to a single control.
 - Texts of the headings are translated; the values are data and not.
-- Code oddity (not fixed): `resources/assets/js/components/kv.js:11-16` - adding or deleting a row dispatches no event, so the dirty guard and Undo of `x-dl::form` miss these changes; and `resources/assets/js/core.js:680-683` (`fillForm`) skips names containing `[`, so Undo does not restore the rows.
 
 ## Example
 

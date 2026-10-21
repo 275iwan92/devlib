@@ -25,7 +25,7 @@ Full reference: `x-dl::field.text`. What they mean for this control:
 | `label` | `string`, `''` | Label row; `<label for>` points at the card NUMBER input. Empty = no row, no `*`, no tooltip. Translated. The boxes inside have their own fixed captions (Card number, Valid thru (MM/YY), CVV, Name on card). |
 | `tooltip` | `?string`, `null` | (i) bubble next to a non-empty label. Translated. |
 | `hint` | `?string`, `null` | Help line under the control (the demo lists test card numbers there). Translated. |
-| `error` | `?string`, `null` | Server error text under the control; non-empty adds `is-invalid`. Not translated. Blurring the number, expiry or CVV rewrites the error line (see oddity). |
+| `error` | `?string`, `null` | Server error text under the control; non-empty adds `is-invalid`. Not translated. It stays until the user types in the control (blur checks do not overwrite it). |
 | `value` | `mixed`, `null` | Not used: the view does not write it into any input. Pre-filling card data is deliberately not supported. |
 | `placeholder` | `?string`, `null` | Not used: the boxes have fixed placeholders (`1234 5678 9012 3456`, `MM/YY`, `•••`). |
 | `required` | `bool`, `false` | Red `*` and `x-dl::form` "Required" check. The check looks at all named inputs of the field (number, expiry, CVV, holder AND the brand hidden): ANY of them filled counts as "has a value" (see pitfalls). Not the HTML `required`, no server check. |
@@ -131,13 +131,10 @@ Strip the spaces on the server and validate length, Luhn and expiry again. Disab
 - Posting the number and the CVV to your own server puts that server in the payment-card security scope. Do not log, store or echo the CVV, and do not put a card into the database without a provider's tokenization.
 - `required` is satisfied as soon as ANY part (even only the holder or the CVV) has text. Combine it with a server rule that all parts are present.
 - `value` and `placeholder` do nothing; do not use `old()` to refill a card after an error (the CVV should never be sent back).
-- The holder case mode defaults to UPPER and is not a prop. `Aa` uses the same ASCII-only word test as `x-dl::field.text` (see its oddity).
+- The holder case mode defaults to UPPER and is not a prop. `Aa` uses the same word test as `x-dl::field.text` (Unicode aware).
 - With `:holder="false"` the preview still shows the text "CARD HOLDER"; also set `:preview="false"` if there is no holder to show.
 - A card that expires this month is still valid; do not apply an extra "next month" rule without saying so.
 - The time zone for the expiry comes from the page, not from the user's device.
-- Code oddity (not fixed): the case button rewrites the holder value without firing `input`/`change` (`resources/assets/js/components/credit-card.js:27`), so it does not mark the form dirty.
-- Code oddity (not fixed): `check()` (`resources/assets/js/components/credit-card.js:71`) always rewrites the error line, so a server `error` disappears on the first blur of the number, expiry or CVV.
-- Code oddity (not fixed): `hasValue` (`resources/assets/js/core.js:689`) counts every named input, including `<name>_brand`, so the form-level required check passes with a single sub-input filled.
 
 ## Example
 

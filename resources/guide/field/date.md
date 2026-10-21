@@ -112,8 +112,6 @@ Because the hidden input has a `name`, these events mark an `x-dl::form` as dirt
 - For a two-field period use `x-dl::field.date-range` (native pickers) or two `x-dl::field.date`; there is no link between two date fields (no "end must be after start").
 - An invalid typed entry leaves the **old** value in the hidden input while the box shows the bad text. Only a red border is shown. A user who ignores it submits the old value; add a server error.
 - Accessibility as implemented: the text box is a normal input with a `<label for>`, the 📅 button and every day are real `<button>` elements (reachable with Tab, activated with Enter/Space), and Enter in the text box commits the typing. There are no arrow-key moves between days, no Escape, no focus management into the popover, no `aria-expanded` and no `aria-label` on the button (its accessible name is the emoji/title).
-- Code oddity (not fixed): month navigation in `field.js` (`view.setMonth(view.getMonth() ± 1)`) overflows when the day of the view is 29-31: from `31 Oct`, "previous" goes to `Sep 31` = `1 Oct` (the calendar does not move); from `31 Jan`, "next" jumps to March. The view starts at today or at the current value, so it happens on those days.
-- Code oddity (not fixed): the initial calendar view uses `new Date(hidden.value)`, which reads `yyyy-mm-dd` as UTC midnight; in browsers west of UTC the calendar can open on the previous month when the value is the 1st.
 
 ## Example
 

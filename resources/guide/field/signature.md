@@ -106,7 +106,7 @@ No `enctype` is needed (it is not a file). Read it as `$request->input('ttd')`; 
 - Required check (`x-dl::form`, Save/Confirm): the hidden input must be non-empty.
 - Undo snapshot, QR extra button, `dl:form-submit` payload: the data URL is a normal string value in them (it can make a QR very large).
 - Wizard Review summary shows "✓ Signed" or nothing.
-- Dirty guard: `sync()` dispatches a bubbling `change` on the hidden input (named), which the guard counts. See the oddity note.
+- Dirty guard: `sync()` dispatches a bubbling `change` on the hidden input (named) after each stroke, Undo and Clear; start-up and a stored value being drawn fire nothing.
 
 ### Markup hooks
 
@@ -120,7 +120,7 @@ No `enctype` is needed (it is not a file). Read it as `$request->input('ttd')`; 
 
 ### Events
 
-No `dl:*` event. After each end of stroke, Undo, Clear and at start-up the hidden input fires a native `change` (bubbles; `e.target` is the hidden input, `e.target.value` the data URL).
+No `dl:*` event. After each end of stroke, Undo and Clear the hidden input fires a native `change` (bubbles; `e.target` is the hidden input, `e.target.value` the data URL). Start-up fires none.
 
 ```js
 document.addEventListener('change', e => { if (e.target.matches('[data-dl-sign] [data-dl-value]')) console.log(e.target.value.length); });
@@ -140,8 +140,8 @@ document.addEventListener('change', e => { if (e.target.matches('[data-dl-sign] 
 - A locked form (fieldset disabled) posts no signature; a server action on a locked document must work from the stored record.
 - A wide pad is scaled by the screen: a PNG saved on a phone has different pixel dimensions from one saved on a desktop. Store the image as-is; do not assume a size.
 - Drawing needs a pointer (no keyboard path). Offer another way to confirm for users who cannot draw.
-- The Undo button of the signature is not the form's Undo: it removes one stroke. The form's Undo/`Devlib.fill()` restore only the hidden value (next note).
-- Code oddity (not fixed): (1) `resources/assets/js/components/signature.js` `sync()` (line 46) dispatches a bubbling `change` also on start-up (line 28, empty pad) and after a stored value is drawn (line 27), so by code reading a form with `data-dl-guard` is marked `is-dirty` as soon as the page loads (leave warning, Undo enabled); not tested in a browser. (2) If the field is mounted while hidden (inactive form tab, `display:none` panel), the canvas is 0x0 when the stored image finishes loading, and `toDataURL` of a 0x0 canvas is `data:,`, which `sync()` writes over the stored value; the next Save would post `data:,`; not tested in a browser. (3) The form's Undo and `Devlib.fill()` (`fillForm` / `setField`) set the hidden input and fire `input`, but `Signature` does not listen to it, so the pad keeps showing the old drawing while the posted value is the restored one. (4) The download name `tanda-tangan.png` (line 26) is fixed and Indonesian.
+- The Undo button of the signature is not the form's Undo: it removes one stroke. The form's Undo/`Devlib.fill()` write the hidden value and dispatch `input`; the pad redraws that value (empty value clears the pad).
+- Code oddity (not fixed): the download name `tanda-tangan.png` (`signature.js`) is fixed and Indonesian.
 
 ## Example
 
