@@ -87,6 +87,7 @@ Constructor of `Devlib\Components\PrintOut`: **23 props**. Use `:prop="expr"` fo
 | `sum` | `true` = the column is summed in the grand-total row (and in group subtotals). Without any `sum` column there are no total / subtotal rows. |
 | `signed`, `plus` | `signed` colours positive green and negative red and prints negatives with a true minus sign; `plus` adds `+` to positive values (needs `signed`). |
 | `bold` | `true` = bold values. |
+| `wrap` | `true` = the header text of this column may break over several lines (default: one line). Use it on long labels when the table is wider than the sheet; ignored when any visible column has `group`. |
 | `rowTones` | `value => tone` map; a row whose value in this column matches is highlighted (`danger` or `warn` have styles). |
 | `running`, `prev` | `running` = formula over the other column keys, for example `'in - out + adj'`, accumulated row by row from `opening` and stored in this column; `prev` = key that receives the balance before each row. Only identifiers, numbers, spaces and `+ - * / ( )` are accepted, otherwise an error is thrown. |
 

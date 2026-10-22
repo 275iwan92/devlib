@@ -82,7 +82,7 @@
 
     thead() {
       const v = this.vis(), grouped = v.some(c => c.group);
-      if (!grouped) return `<tr><th class="dl-print__no">${esc(T('pr_no'))}</th>${v.map(c => `<th class="${c.type === 'text' ? '' : 'num'}" ${c.width ? `style="width:${esc(c.width)}"` : ''}>${esc(c.label)}</th>`).join('')}</tr>`;
+      if (!grouped) return `<tr><th class="dl-print__no">${esc(T('pr_no'))}</th>${v.map(c => `<th class="${[c.type === 'text' ? '' : 'num', c.wrap ? 'is-wrap' : ''].filter(Boolean).join(' ')}" ${c.width ? `style="width:${esc(c.width)}"` : ''}>${esc(c.label)}</th>`).join('')}</tr>`;
       let top = '<tr><th rowspan="2" class="dl-print__no">No</th>', bottom = '<tr>';
       v.forEach((c, i) => {
         if (!c.group) { top += `<th rowspan="2">${esc(c.label)}</th>`; return; }
@@ -136,6 +136,8 @@
         if (carry.length) { const nt = table(); carry.forEach(tr => nt.appendChild(tr)); }
         body.insertAdjacentHTML('beforeend', `<div class="dl-print__tail">${tail}</div>`);
       }
+      // Tabel yang lebih lebar dari lembar diperkecil (zoom) supaya kolom kanan tidak terpotong; halaman tidak dihitung ulang, lembar jadi agak longgar.
+      $$(this.pages, '.dl-print__table').forEach(t => { const w = t.parentElement.clientWidth, tw = Math.max(t.offsetWidth, t.scrollWidth); if (tw > w + 1) t.style.zoom = (w / tw * 0.97).toFixed(3); });
       const all = $$(this.pages, '.dl-print__sheet');
       all.forEach((sh, i) => $$(sh, '[data-p-pg]').forEach(x => { x.textContent = `${i + 1}/${all.length}`; }));
       let st = document.getElementById('dl-print-page'); if (!st) { st = document.createElement('style'); st.id = 'dl-print-page'; document.head.appendChild(st); }

@@ -7,6 +7,15 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
 
+### Ditambahkan
+
+- **`x-dl::print-out` / `x-dl::report` kolom `wrap`** (permintaan Jo 2026-10-22, Ringkasan Stok sstock terpotong di kanan): `'wrap' => true` pada definisi kolom membolehkan judul kolom turun baris (bawaan satu baris). Opt-in; tanpa `wrap` HTML identik. Guide `print-out.md`.
+
+### Diperbaiki
+
+- **Tabel `x-dl::print-out` / `x-dl::report` yang lebih lebar dari lembar terpotong di kanan** (permintaan Jo 2026-10-22: "ALWAYS FIX IT"): `print.js` kini memperkecil tabel (CSS `zoom`) sampai muat lebar lembar; tabel yang sudah muat tidak berubah. Halaman tidak dihitung ulang, jadi lembar sedikit longgar.
+- **Halaman cetak/laporan yang menjadi anak langsung `body` tidak bisa digulir** (`body.dl-body` mengunci `overflow:hidden`): `body.dl-body:has(> .dl-print){overflow-y:auto}`. Halaman yang membungkus `.dl-print` di wadah gulir sendiri (situs acuan) tidak terpengaruh.
+
 ## [0.5.0] - 2026-10-22
 
 Rilis kelima. Dropdown dengan tombol plus (Add New, `x-dl::field.select` prop `add`), gaya kop dan nama badan hukum pada semua cetakan (proporsional di A4), dan perbaikan baris NPWP pada kop PPN. Semua opt-in: tanpa prop/kunci baru, HTML lama identik. Tidak ada tag komponen atau prop yang dihapus atau diganti nama; tidak ada perilaku lama yang berubah selain perbaikan NPWP (kop PPN `x-dl::print-out` / `x-dl::report` kini mencetak baris NPWP).

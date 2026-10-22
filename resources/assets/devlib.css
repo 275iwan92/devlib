@@ -61,6 +61,7 @@
 [data-dl-density="compact"]{--dl-density:.7}
 [data-dl-density="comfortable"]{--dl-density:1.35}
 body.dl-body{margin:0;font-family:var(--dl-font);background:var(--dl-bg);color:var(--dl-ink);height:100vh;overflow:hidden}
+body.dl-body:has(> .dl-print){overflow-y:auto}
 .dl-logo-badge{width:42px;height:42px;border-radius:12px;background:var(--dl-logo);flex-shrink:0;display:inline-block}
 .dl-logo-badge--sm{width:34px;height:34px;border-radius:9px}
 
@@ -1729,6 +1730,7 @@ form.is-dirty .dl-form__title::after{content:" • belum disimpan";color:var(--d
 .dl-print__table td{border:1px solid var(--dl-pr-line);padding:3px 5px;vertical-align:top}
 .dl-print__table td.num{text-align:right;white-space:nowrap}
 .dl-print__table th{white-space:nowrap}
+.dl-print__table th.is-wrap{white-space:normal}
 .dl-print__table td small{display:block;color:var(--dl-pr-muted);font-size:8.5px;font-family:var(--dl-font-mono)}
 .dl-print__no{width:26px;text-align:center}
 td.dl-print__no{text-align:center}
