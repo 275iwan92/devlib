@@ -7,6 +7,10 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
 
+## [0.5.0] - 2026-10-22
+
+Rilis kelima. Dropdown dengan tombol plus (Add New, `x-dl::field.select` prop `add`), gaya kop dan nama badan hukum pada semua cetakan (proporsional di A4), dan perbaikan baris NPWP pada kop PPN. Semua opt-in: tanpa prop/kunci baru, HTML lama identik. Tidak ada tag komponen atau prop yang dihapus atau diganti nama; tidak ada perilaku lama yang berubah selain perbaikan NPWP (kop PPN `x-dl::print-out` / `x-dl::report` kini mencetak baris NPWP).
+
 ### Ditambahkan
 
 - **`x-dl::field.select` prop `add` (Add New)** (permintaan Jo 2026-10-22; untuk pewaris sstock dan tmerp): dropdown dengan tombol plus di kanannya; klik membuka popup `x-dl::modal` berisi `fields`, simpan lewat POST JSON ke `add.url` (same-origin, CSRF), lalu item baru disisipkan ke daftar dan langsung terpilih (event `change`, tanpa duplikat). 422 Laravel ditampilkan di bawah isian; galat lain = pesan umum. Opt-in: tanpa `add` markup identik dengan sebelumnya; select `readonly`/`disabled` tanpa tombol. Kunci `add`: `url`, `fields`, `title`, `icon`, `label`, `note`, `value-key`, `label-key`. Halaman peraga `p2-select-add` (Review), rute demo `/demo/select-add/*`, kunci Lang `sa_add`/`sa_saving`/`sa_failed`, Technical Guide `field/select.md`.
