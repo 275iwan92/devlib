@@ -34,7 +34,7 @@
                     <div>@if ($k['logo'] && ! $k['side']){!! $img() !!}@endif @if ($k['name'])<b>{{ $k['nameText'] }}</b>@if ($k['tagline'])<small>{{ $k['tagline'] }}</small>@endif @endif
                         @if ($k['legal'])<small class="dl-print__legal">{{ $k['legalText'] }}</small>@endif
                         @if ($k['addr'])@foreach ($adr as $line)<span>{{ $line }}</span>@endforeach @endif
-                        @if ($isPpn === '1' && $k['npwp'])<span class="dl-print__npwp">NPWP {{ $k['npwp'] }}</span>@endif</div>
+                        @if ((int) $isPpn === 1 && $k['npwp'])<span class="dl-print__npwp">NPWP {{ $k['npwp'] }}</span>@endif</div>
                 </div>
             @endforeach
             <div class="dl-print__titlebox"><b class="dl-print__title">{{ $title }}</b>@if ($subtitle)<small>{{ $subtitle }}</small>@endif

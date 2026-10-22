@@ -160,4 +160,51 @@ class CompanyKopStyleTest extends TestCase
         }
         $this->assertStringContainsString('class Report extends PrintOut', file_get_contents("{$root}/src/Components/Report.php"));
     }
+
+    public function test_vat_header_prints_the_npwp_line_on_print_out_and_report(): void
+    {
+        $non = ['name' => 'Toko Maju', 'address' => 'Jl. Melati 5', 'npwp' => '11.111'];
+        $ppn = ['name' => 'Toko Maju', 'address' => 'Jl. Pajak 1', 'npwp' => '99.999.999'];
+
+        foreach (['print-out', 'report'] as $tag) {
+            $html = $this->kopNormalize(Blade::render("<x-dl::{$tag} title=\"T\" :company=\"\$a\" :company-ppn=\"\$b\" :columns=\"[['key' => 'n', 'label' => 'N']]\" :rows=\"[['n' => 'x']]\" />", ['a' => $non, 'b' => $ppn]));
+            preg_match_all('/data-p-kop="(\d)">(.*?)<\/div><\/div>/s', $html, $m, PREG_SET_ORDER);
+            $kop = array_column($m, 2, 1);
+
+            $this->assertStringContainsString('<span class="dl-print__npwp">NPWP 99.999.999</span>', $kop['1'], "{$tag}: kop PPN harus memuat NPWP");
+            $this->assertStringNotContainsString('NPWP', $kop['0'], "{$tag}: kop Non PPN tetap tanpa NPWP");
+        }
+    }
+
+    // Ukuran kop bergaya ikut kertas lewat variabel CSS: bawaan = A4, .is-a5 = rapat. Tes ini menjaga rasio dan batas pagination.
+    public function test_styled_kop_is_proportional_on_a4_and_a5(): void
+    {
+        $css = file_get_contents(dirname(base_path()).'/resources/assets/devlib.css');
+        $vars = function (string $selector) use ($css): array {
+            preg_match('/'.preg_quote($selector, '/').'\{([^}]*)\}/', $css, $m);
+            preg_match_all('/--co-([a-z-]+):([\d.]+)(pt|mm)?/', $m[1] ?? '', $v, PREG_SET_ORDER);
+
+            return array_column(array_map(fn ($x) => [$x[1], (float) $x[2]], $v), 1, 0);
+        };
+        $a4 = $vars('.dl-pdoc__co.is-styled');
+        $a5 = $vars('.is-a5 .dl-pdoc__co.is-styled') + $a4;
+
+        foreach (['name', 'sub', 'logo-h', 'logo-w', 'badge', 'max'] as $k) {
+            $this->assertGreaterThan($a5[$k], $a4[$k], "A4 harus lebih besar dari A5 untuk {$k}");
+        }
+        foreach ([$a4, $a5] as $label => $v) {
+            $this->assertEqualsWithDelta(1.6, $v['name'] / $v['sub'], 0.1, 'rasio nama : baris lain di kertas '.($label ? 'A5' : 'A4'));
+        }
+        $this->assertGreaterThanOrEqual(12, $a4['name']);
+        $this->assertGreaterThanOrEqual(7.5, $a4['sub']);
+        $this->assertGreaterThanOrEqual(16, $a4['logo-h']);
+        $this->assertSame([10.0, 6.0, 12.0, 18.0], [$a5['name'], $a5['sub'], $a5['logo-h'], $a5['logo-w']], 'A5 tetap rapat seperti semula');
+        $this->assertStringContainsString('.dl-pdoc__kop{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:4mm;height:14.5mm', $css, 'kop tanpa style (dan A5) tetap 14,5 mm');
+
+        // Pagination A4: kop 20 mm (+5,5) dibayar 2 mm margin atas = +3,5 mm; sisa ruang A4 terkecil (infoRows 7) 5,3 mm.
+        preg_match('/\.is-a4 \.dl-pdoc__kop:has\(\.dl-pdoc__co\.is-styled\)\{height:([\d.]+)mm/', $css, $kop);
+        preg_match('/\.dl-pdoc__sheet\.is-a4:has\(\.dl-pdoc__co\.is-styled\)\{padding-top:([\d.]+)mm/', $css, $pad);
+        $this->assertLessThanOrEqual(5.2, ((float) $kop[1] - 14.5) - (10 - (float) $pad[1]), 'kop A4 bergaya melebihi sisa ruang lembar');
+        $this->assertGreaterThanOrEqual(17.5, (float) $kop[1] - 1.5, 'baris di kop A4 harus muat tanpa terpotong');
+    }
 }

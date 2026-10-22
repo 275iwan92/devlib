@@ -195,7 +195,7 @@ Everything travels in `data-config` (JSON from `PrintOut::config()`): `columns` 
 
 ### Notes on inconsistencies found while writing this entry (not fixed)
 
-- The `NPWP <number>` line of the VAT header (`company-ppn.npwp`) is never printed: the loop compares `$isPpn === '1'` while PHP makes the key an integer. Unchanged by the `style` / `legal_name` work (HTML identical before and after); ask before fixing because the printouts are approved.
+- Fixed 2026-10-22: the `NPWP <number>` line of the VAT header (`company-ppn.npwp`) is now printed (the loop compared `$isPpn === '1'` while PHP makes the key an integer). See `x-dl::print-out`.
 - `resources/assets/devlib.css` (the `@media print{ body *{visibility:hidden} ...}` block right after `.dl-print.is-bw`) is not scoped: browser printing of any page that loads the stylesheet hides everything outside `.dl-print__pages`. The label sheet and the login card scope the same trick with `body:has(...)`.
 - The header comment of `src/Components/PrintOut.php` lists the summary keys as `sum` / `value` (+ `signed`), but `print.js` also supports `last` and `plus`; the column keys `bold` and `plus` are not listed there either.
 - `Report` is placed in the `grid` message group in `DevlibComponent::GROUP_OF` although its texts are print texts (`PrintOut` is in `print`).

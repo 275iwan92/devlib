@@ -2846,14 +2846,20 @@ a.dl-ycal__d:hover{background:var(--dl-hover);outline:1px solid var(--dl-accent)
 .dl-pdoc__brand{display:block;height:5.6mm;width:auto;margin-bottom:.7mm}
 .dl-pdoc__co b{display:block;font-size:10.5pt;font-weight:700;letter-spacing:.02em;white-space:nowrap;text-transform:uppercase}
 .dl-pdoc__co small{display:block;font-size:6.6pt;color:#333;white-space:nowrap;line-height:1.2}
-.dl-pdoc__co.is-side .dl-pdoc__brand{height:auto;max-height:12mm;max-width:18mm;margin:0;flex:none}
+.dl-pdoc__co.is-side .dl-pdoc__brand{height:auto;max-height:var(--co-logo-h);max-width:var(--co-logo-w);margin:0;flex:none}
 .dl-pdoc__co small.dl-pdoc__legal{font-weight:700}
-/* Kop bergaya: tinggi kop lembar tetap 14.5 mm, jadi baris dirapatkan (nama + nama PT + 2 baris alamat + NPWP muat) dan kelebihannya dipotong, tidak menimpa garis kop */
-.dl-pdoc__co.is-styled{max-height:13.4mm;overflow:hidden}
-.dl-pdoc__co.is-styled b{font-size:10pt;line-height:1.1}
-.dl-pdoc__co.is-styled small{font-size:6pt;line-height:1.05}
+/* Kop bergaya: ukuran ikut kertas lewat variabel. Bawaan = A4 (juga lembar print-sheet); A5 rapat. Rasio nama : baris lain = 1,6 di keduanya.
+   Kelebihan baris dipotong (titik-titik), tidak menimpa judul atau garis kop. Kop tanpa style tidak memakai variabel ini. */
+.dl-pdoc__co.is-styled{--co-name:12pt;--co-sub:7.5pt;--co-lh:1.05;--co-logo-h:16mm;--co-logo-w:26mm;--co-badge:14mm;--co-max:18.5mm;gap:3.5mm;max-height:var(--co-max);overflow:hidden;min-width:0}
+.is-a5 .dl-pdoc__co.is-styled{--co-name:10pt;--co-sub:6pt;--co-logo-h:12mm;--co-logo-w:18mm;--co-badge:11mm;--co-max:13.4mm;gap:2.5mm}
+.dl-pdoc__co.is-styled b{font-size:var(--co-name);line-height:1.1}
+.dl-pdoc__co.is-styled small{font-size:var(--co-sub);line-height:var(--co-lh)}
+.dl-pdoc__co.is-styled .dl-pdoc__logo{width:var(--co-badge);height:var(--co-badge)}
 .dl-pdoc__co.is-styled > div{min-width:0}
 .dl-pdoc__co.is-styled b,.dl-pdoc__co.is-styled small{overflow:hidden;text-overflow:ellipsis}
+/* A4 + kop bergaya: kop 20 mm (+5,5) dibayar 2 mm dari margin atas, jadi lembar tumbuh 3,5 mm; sisa ruang A4 terkecil (infoRows 7, 22 baris) 5,3 mm */
+.dl-pdoc__sheet.is-a4:has(.dl-pdoc__co.is-styled){padding-top:8mm}
+.is-a4 .dl-pdoc__kop:has(.dl-pdoc__co.is-styled){height:20mm;grid-template-columns:minmax(0,1fr) auto auto} /* kolom perusahaan mengambil sisa lebar, QR sebesar isinya */
 .dl-pdoc__kop h1{font-size:15pt;font-weight:700;letter-spacing:.06em;text-align:center;line-height:1;white-space:nowrap;text-transform:uppercase;color:#111}
 .dl-pdoc__kop h1 small{display:block;font-size:7.5pt;font-weight:400;letter-spacing:.18em;color:#444;margin-top:1.2mm}
 .dl-pdoc__kop h1.is-compact{font-size:12pt;letter-spacing:.04em}

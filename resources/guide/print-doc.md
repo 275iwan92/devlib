@@ -111,9 +111,19 @@ One helper, `Devlib\PrintDoc\Kop::of()`, decides what the company header shows f
 | `style` | **New.** `logo_name_address` (logo + name + legal-name line + address lines), `logo_name` (logo + name + legal-name line, no address), `name` (name + legal-name line only: no logo, no address). Anything else, or the key absent = the old behaviour. |
 | `legal_name` | **New.** Name of the legal entity (PT / CV), printed as a small line under the name **only when it differs from `name`** (compared ignoring case and spaces). |
 
-With `style`: a logo style but an empty `logo` falls back to the `name` style (name only; the initials badge appears only when there is no name at all). With a logo and a name, the logo sits at the left and the text block at the right (logo at most 12 mm high and 18 mm wide in `x-dl::print-doc`). Without `style` nothing changes: the logo replaces the badge and the name, otherwise badge + name; `legal_name` alone just adds the small legal-name line.
+With `style`: a logo style but an empty `logo` falls back to the `name` style (name only; the initials badge appears only when there is no name at all). With a logo and a name, the logo sits at the left and the text block at the right (logo at most 16 mm high and 26 mm wide on A4 and on `x-dl::print-sheet`, 12 x 18 mm on A5, in `x-dl::print-doc`). Without `style` nothing changes: the logo replaces the badge and the name, otherwise badge + name; `legal_name` alone just adds the small legal-name line.
 
-The header height of `x-dl::print-doc` is fixed (14.5 mm, so sheet capacity and pagination are untouched): with a `style` the text is set slightly smaller (name 10 pt, other lines 6 pt) so name + legal name + two address lines + NPWP fit; anything longer is cut, and a line wider than the left third of the header ends in an ellipsis. Keep address lines short.
+Header size follows the paper (CSS variables `--co-*` on `.dl-pdoc__co.is-styled`; the default is A4, `.is-a5` overrides; the ratio name : other lines is 1.6 on both):
+
+| | A5 (as before) | A4 and `x-dl::print-sheet` |
+|---|---|---|
+| Header height | 14.5 mm, company block at most 13.4 mm | 20 mm, company block at most 18.5 mm |
+| Name | 10 pt | 12 pt |
+| Legal name, address, NPWP | 6 pt | 7.5 pt |
+| Logo (max) | 12 x 18 mm | 16 x 26 mm |
+| Initials badge (no name) | 11 mm | 14 mm |
+
+On A4 the company block takes the width left between the title and the QR (the title sits between them, not on the page centre). The taller A4 header is paid for with 2 mm of the top margin (10 to 8 mm), so the sheet grows by 3.5 mm: the 22-row capacity and `--pd-info-rows` / `--pd-rh` / `--pd-tail` stay valid (measured spare room of an A4 sheet: 6.4 mm with 6 info rows, 1.8 mm with 7). A header without `style` is untouched (14.5 mm, old sizes). Anything longer than the block (more than name + legal name + 3 address lines + NPWP on A4, or 2 address lines + NPWP on A5) is cut at the bottom, and a line wider than the block ends in an ellipsis: keep address lines short.
 
 ## Behavior
 
