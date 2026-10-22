@@ -91,7 +91,7 @@ class RateList extends DevlibComponent
                                     <td>{{ $i['built_at'] ? \Devlib\Locale::date($i['built_at']) : '-' }}</td>
                                     <td>{{ $i['changed_at'] ? \Devlib\Locale::date($i['changed_at']) : '-' }}@if ($i['changed_by'] && $i['changed_by'] !== $i['built_by']) <small>· {{ $agents[$i['changed_by']] ?? $i['changed_by'] }}</small>@endif</td>
                                     <td><x-dl::badge :label="$qc[$i['qc_status']][0] ?? $i['qc_status']" :tone="$qc[$i['qc_status']][1] ?? 'neutral'" /></td>
-                                    <td class="dl-rl__stars">@include('devlib::components.field.rating', ['size' => 'sm', 'readonly' => ! $canRate, 'disabled' => false, 'max' => 5, 'half' => false, 'name' => 'rating', 'value' => (int) ($i['rating'] ?? 0)])</td>
+                                    <td class="dl-rl__stars">@include('devlib::components.field.rating', ['size' => 'sm', 'readonly' => ! $canRate, 'disabled' => false, 'max' => 5, 'half' => false, 'name' => 'rating', 'label' => '', 'value' => (int) ($i['rating'] ?? 0)])</td>
                                     <td class="dl-rl__note">
                                         @if ($canRate)<input type="text" class="dl-input" data-rl-note maxlength="500" value="{{ $i['note'] }}" placeholder="{{ $T::text('note (optional)') }}">@else{{ $i['note'] }}@endif
                                         <small data-rl-meta>@if ($i['rated_by']){{ $i['rated_by'] }} · {{ \Devlib\Locale::date($i['rated_at']) }}@if ($i['ratings'] > 1) · {{ $i['ratings'] }}x @endif @endif</small>
