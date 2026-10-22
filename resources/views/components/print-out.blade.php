@@ -25,11 +25,16 @@
     <template data-p-head>
         <header class="dl-print__kop">
             @foreach (['0' => $company, '1' => $companyPpn ?: $company] as $isPpn => $c)
-                <div class="dl-print__co" data-p-kop="{{ $isPpn }}">
-                    @if (empty($c['logo']))<span class="dl-print__logo">{{ $c['initials'] ?? mb_substr($c['name'] ?? 'TM', 0, 2) }}</span>@endif
-                    <div>@if (! empty($c['logo']))<img class="dl-print__brand" src="{{ $c['logo'] }}" alt="{{ $c['name'] ?? '' }}"><img class="dl-print__brand is-bw" src="{{ $c['logoBw'] ?? $c['logo'] }}" alt="{{ $c['name'] ?? '' }}">@else<b>{{ $c['name'] ?? '' }}</b>@if (! empty($c['tagline']))<small>{{ $c['tagline'] }}</small>@endif @endif
-                        @if (! empty($c['address']))<span>{{ $c['address'] }}</span>@endif @if (! empty($c['contact']))<span>{{ $c['contact'] }}</span>@endif
-                        @if ($isPpn === '1' && ! empty($c['npwp']))<span class="dl-print__npwp">NPWP {{ $c['npwp'] }}</span>@endif</div>
+                @php($k = \Devlib\PrintDoc\Kop::of($c))
+                @php($adr = array_values(array_filter([$c['address'] ?? null, $c['contact'] ?? null])) ?: ($k['styled'] ? (array) ($c['lines'] ?? []) : []))
+                @php($img = fn () => '<img class="dl-print__brand" src="'.e($k['logoUrl']).'" alt="'.e($k['nameText']).'"><img class="dl-print__brand is-bw" src="'.e($k['logoBw']).'" alt="'.e($k['nameText']).'">')
+                <div @class(['dl-print__co', 'is-side' => $k['side']]) data-p-kop="{{ $isPpn }}">
+                    @if ($k['badge'])<span class="dl-print__logo">{{ $k['initials'] }}</span>@endif
+                    @if ($k['side']){!! $img() !!}@endif
+                    <div>@if ($k['logo'] && ! $k['side']){!! $img() !!}@endif @if ($k['name'])<b>{{ $k['nameText'] }}</b>@if ($k['tagline'])<small>{{ $k['tagline'] }}</small>@endif @endif
+                        @if ($k['legal'])<small class="dl-print__legal">{{ $k['legalText'] }}</small>@endif
+                        @if ($k['addr'])@foreach ($adr as $line)<span>{{ $line }}</span>@endforeach @endif
+                        @if ($isPpn === '1' && $k['npwp'])<span class="dl-print__npwp">NPWP {{ $k['npwp'] }}</span>@endif</div>
                 </div>
             @endforeach
             <div class="dl-print__titlebox"><b class="dl-print__title">{{ $title }}</b>@if ($subtitle)<small>{{ $subtitle }}</small>@endif

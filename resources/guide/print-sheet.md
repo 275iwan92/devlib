@@ -74,6 +74,8 @@ Cell value in a table row: a plain string or number, or an array `['text', 'sub'
 
 `company()` returns `Document::companyOf()`: `name`, `initials`, `lines`, `logo`, `npwp`. With `logo` the image replaces the initials box and the name; otherwise an initials box + the name. Each entry of `lines` is a small line. The non-VAT variant is always used; `npwp` is not printed by this object.
 
+The header is built by `Devlib\PrintDoc\Kop::of()`, the same helper as `x-dl::print-doc`. Optional keys `style` (`logo_name_address` | `logo_name` | `name`) and `legal_name` (small line under the name, only when it differs from `name`) are read from the same array: `logo_name_address` = logo + name + legal name + `lines`; `logo_name` = logo + name + legal name; `name` = name + legal name; a logo style with no `logo` = name only. Without `style` the header is unchanged. `npwp` is still not printed here. Full key list and registration example: `x-dl::print-doc`.
+
 ### Translation
 
 `title`, section `title`, party `label`, column `label`, `empty` and signature `role` go through `Document::t()` (print dictionary in Indonesian, application dictionary otherwise; follows the print language). `info`, `heading`, `note`, `text`, cell values, `code`, `footer` and `lines` are data and are never translated.
@@ -99,6 +101,7 @@ Real `h1` / `h2` / `h3`, `table` / `thead` / `tbody`, no ARIA, no interactive el
 
 ## Rules and pitfalls
 
+- `style` and `legal_name` come from `Document::companyUsing()` (see `x-dl::print-doc`), not from a prop of this object; in the `style` modes a long `lines` entry is cut with an ellipsis in the header, not wrapped.
 - Pass display-ready text: the sheet does not format numbers or dates. Format them with `Devlib\Locale` (print language) before building the arrays.
 - A `table` block without `columns` (and a `parties` block without `items`) raises an "Undefined array key" error: the view indexes them directly. The block type defaults to `table`.
 - Cells covered by a `rowspan` must be `false` in the following rows; a missing key or `''` still prints an empty `td` and shifts the row.

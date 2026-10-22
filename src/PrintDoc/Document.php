@@ -111,6 +111,7 @@ abstract class Document
 
     // Kop perusahaan diambil aplikasi pemakai: fn (bool $ppn) => ['name', 'initials', 'lines' => [..], 'npwp' => ?string, 'logo' => ?url].
     // 'logo' diisi = gambar logo (sudah memuat nama perusahaan) menggantikan kotak inisial + nama.
+    // Kunci opsional (diputuskan Devlib\PrintDoc\Kop): 'style' = logo_name_address | logo_name | name, 'legal_name' = nama PT (baris kecil bila beda dari name).
     public static function companyUsing(?Closure $fn): void
     {
         self::$companyResolver = $fn;

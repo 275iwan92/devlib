@@ -60,7 +60,7 @@ Constructor of `Devlib\Components\PrintOut` (inherited by `Report`): 23 props. B
 | `number` | `?string` | `null` | Report number: bold under the title and `title · number` in the preview bar. Data, not translated. |
 | `date` | `?string` | `null` | Printed through `Locale::date()` (short style `dd-Mmm-yyyy`, month in the display language), followed by `Page n/N`. A value that cannot be parsed is printed as given. Without `date` only the page number is shown. |
 | `status` | `?string` | `null` | Text in the bordered badge at the right of the header box (for example `CONFIRMED`). Printed as given: not translated, not normalised. Reports usually leave it empty; a printout of a document must set it (project rule: every printout carries the record status, `skills/devlib/transaction-lifecycle.md`). |
-| `company` | `array` | `[]` | Company header (non-VAT). Keys: `name`, `tagline`, `address`, `contact`, `initials`, `logo` (URL), `logoBw` (URL, black and white). With `logo` the image replaces the initials box, name and tagline (address and contact stay); `logoBw` (or `logo` when missing) shows in ink-saver mode. Without `initials` the first two letters of `name` are used. Usually `config('devlib.company')`. |
+| `company` | `array` | `[]` | Company header (non-VAT). Keys: `name`, `tagline`, `address`, `contact`, `initials`, `logo` (URL), `logoBw` (URL, black and white). With `logo` the image replaces the initials box, name and tagline (address and contact stay); `logoBw` (or `logo` when missing) shows in ink-saver mode. Optional `style` (`logo_name_address` | `logo_name` | `name`) and `legal_name` (small line under the name when different from `name`) are the same as in `x-dl::print-out`; a logo style with empty `logo` = name only; without `style` nothing changes. Without `initials` the first two letters of `name` are used. Usually `config('devlib.company')`. |
 | `company-ppn` | `array` | `[]` | Header of the VAT variant, same keys plus `npwp` (printed as `NPWP <number>`, only in this header). When not empty a **Non VAT / VAT** switch appears and the header changes with it; when empty `company` serves both and there is no switch. Rarely needed for a report. |
 | `ppn` | `bool` | `false` | Initial state of the VAT switch (`data-ppn`). Meaningful only together with `company-ppn`. |
 | `printed-by` | `?string` | `null` | Name added to the footer of every sheet (`Printed from DevLib · <name>`). Data, not translated. |
@@ -195,6 +195,7 @@ Everything travels in `data-config` (JSON from `PrintOut::config()`): `columns` 
 
 ### Notes on inconsistencies found while writing this entry (not fixed)
 
+- The `NPWP <number>` line of the VAT header (`company-ppn.npwp`) is never printed: the loop compares `$isPpn === '1'` while PHP makes the key an integer. Unchanged by the `style` / `legal_name` work (HTML identical before and after); ask before fixing because the printouts are approved.
 - `resources/assets/devlib.css` (the `@media print{ body *{visibility:hidden} ...}` block right after `.dl-print.is-bw`) is not scoped: browser printing of any page that loads the stylesheet hides everything outside `.dl-print__pages`. The label sheet and the login card scope the same trick with `body:has(...)`.
 - The header comment of `src/Components/PrintOut.php` lists the summary keys as `sum` / `value` (+ `signed`), but `print.js` also supports `last` and `plus`; the column keys `bold` and `plus` are not listed there either.
 - `Report` is placed in the `grid` message group in `DevlibComponent::GROUP_OF` although its texts are print texts (`PrintOut` is in `print`).
@@ -266,6 +267,16 @@ Stock card with a running balance, A4 landscape and signatures (shape of the dem
     <x-slot:notes><b>Note:</b> Balances are calculated in the order of the rows.</x-slot:notes>
 </x-dl::report>
 ```
+
+Header style per variant (Non VAT with logo, address and legal name; VAT with the name only):
+
+```blade
+<x-dl::report title="Stock Report" :columns="$columns" :rows="$rows"
+    :company="['name' => 'Toko Maju', 'legal_name' => 'PT Maju Jaya Abadi', 'style' => 'logo_name_address', 'address' => 'Jl. Melati 5', 'contact' => 'Telp 021-777', 'logo' => asset('logo.svg'), 'logoBw' => asset('logo-bw.svg')]"
+    :company-ppn="['name' => 'Toko Maju', 'legal_name' => 'PT Maju Jaya Abadi', 'style' => 'name', 'npwp' => '01.234.567.8-901.000']" />
+```
+
+Full key list and how an application fills the header from its settings table: `x-dl::print-doc`.
 
 ## Related
 

@@ -78,7 +78,7 @@ Static hooks, registered once by the application (service provider):
 
 | Hook | Purpose |
 |---|---|
-| `Document::companyUsing(fn (bool $ppn) => ['name', 'initials', 'lines' => [...], 'npwp' => ?string, 'logo' => ?url])` | Company header. `$ppn` is true when `data['ppn'] > 0` (the legal-entity header with tax id). `logo` set = the image replaces the initials box and the name. |
+| `Document::companyUsing(fn (bool $ppn) => ['name', 'initials', 'lines' => [...], 'npwp' => ?string, 'logo' => ?url])` | Company header. `$ppn` is true when `data['ppn'] > 0` (the legal-entity header with tax id). `logo` set = the image replaces the initials box and the name, unless `style` is given. New optional keys `style` and `legal_name`: see **Company header: keys, styles and legal name** below. |
 | `Document::signersUsing(fn (string $type) => ['approve' => ?string, 'know' => ?string])` | Fixed signer names per document type (used when `data['approvedBy']` / `knownBy` are absent). |
 | `Document::labels([English => Indonesian])` | Extra print terms for the application (merged with `Devlib\PrintDoc\Labels::ID`). |
 
@@ -97,6 +97,23 @@ Static hooks, registered once by the application (service provider):
 | value of every `key` in `refs` / `side` | The field values. |
 
 Row: `name`, `sub`, `sub2` (second and third small lines under the name), `qty`, `unit`, `cls` (class on the `<tr>`; `is-split` marks a split row), `price`, `subtotal`, and one value per `extra` column key. Column `type`: `text` (default), `date`, `money` (2 decimals), `int` (0 decimals), `html` (printed unescaped). `hand: true` = when empty, a dotted line to write on (header fields) or dotted side borders (columns). `wrap: true` = the cell may wrap onto two lines.
+
+### Company header: keys, styles and legal name
+
+One helper, `Devlib\PrintDoc\Kop::of()`, decides what the company header shows for **every** printout (`x-dl::print-doc` and its appendix sheets, `x-dl::print-sheet`, `x-dl::print-out`, `x-dl::report`). Keys of the company array (all optional):
+
+| Key | Meaning |
+|---|---|
+| `name`, `initials` | Company (trade) name, and the letters of the initials badge (default: first two letters of `name`). |
+| `logo`, `logoBw` | Logo image URL / path; `logoBw` is the black-and-white version shown by Ink Saver in `x-dl::print-out` / `x-dl::report` (falls back to `logo`). |
+| `lines` | Address / contact lines (`x-dl::print-doc`, `x-dl::print-sheet`). `x-dl::print-out` / `x-dl::report` read `address` and `contact` instead (with a `style` set and no `address` / `contact`, `lines` is used too); `tagline` is read only by those two. |
+| `npwp` | Tax id, printed where it was printed before (see the notes of each object); not touched by `style`. |
+| `style` | **New.** `logo_name_address` (logo + name + legal-name line + address lines), `logo_name` (logo + name + legal-name line, no address), `name` (name + legal-name line only: no logo, no address). Anything else, or the key absent = the old behaviour. |
+| `legal_name` | **New.** Name of the legal entity (PT / CV), printed as a small line under the name **only when it differs from `name`** (compared ignoring case and spaces). |
+
+With `style`: a logo style but an empty `logo` falls back to the `name` style (name only; the initials badge appears only when there is no name at all). With a logo and a name, the logo sits at the left and the text block at the right (logo at most 12 mm high and 18 mm wide in `x-dl::print-doc`). Without `style` nothing changes: the logo replaces the badge and the name, otherwise badge + name; `legal_name` alone just adds the small legal-name line.
+
+The header height of `x-dl::print-doc` is fixed (14.5 mm, so sheet capacity and pagination are untouched): with a `style` the text is set slightly smaller (name 10 pt, other lines 6 pt) so name + legal name + two address lines + NPWP fit; anything longer is cut, and a line wider than the left third of the header ends in an ellipsis. Keep address lines short.
 
 ## Behavior
 
@@ -172,6 +189,7 @@ No rule is specific to this object. General screen rules apply to the Blade file
 - `refs` beyond 5 entries and `party.lines` beyond 3 lines are silently dropped (the block has `infoRows` fixed rows). Do not exceed them; change `infoRows` only with the matching design.
 - Variant columns must total the zone width (84 mm incl. Price / Subtotal): wrong widths throw at construction time.
 - The company header comes only from `Document::companyUsing()`; register it before the first render, otherwise the header box is empty. `data['ppn'] > 0` selects the second (legal-entity) header.
+- Company header: `style` and `legal_name` (see above) are opt-in; without them the header is exactly as before. This object is APPROVED: its look with the old keys is locked, the new keys only add rules for the new styles. A logo style with an empty `logo` shows the name only, so check the stored logo path, not the style, when a logo does not appear.
 - The QR box stays an empty dashed square unless `x-dl::doc-share` has an endpoint; do not remove the box, the layout reserves it.
 - A5 documents with appendices: the appendix sheet is A4 but the browser "Printer" route of `x-dl::doc-share` uses the first sheet's size for all pages; make such documents A4 (`paper()`).
 - Do not print this object with the browser's own Ctrl+P: use `x-dl::doc-share` (PDF / JPEG / Printer), which rasterises each sheet at its exact paper size. See the stylesheet oddity below.
@@ -227,6 +245,29 @@ Printout page: the document, plus the share button pointed at it. For sheets of 
 ```
 
 A status other than CONFIRMED shows the watermark, for example `'status' => 'DRAFT'` puts a large slanted `DRAFT` on the sheet. A priced document (more than 5 rows, `public bool $priced = true;`, `extra` widths summing to 38 mm, `'ppn' => 11`) gets Price / Subtotal columns, the totals box and the amount in words.
+
+Registering the header once from the application settings (here a key / value table; `Setting` is the application's own model):
+
+```php
+use Devlib\PrintDoc\Document;
+
+// AppServiceProvider::boot(): one source for every printout.
+Document::companyUsing(function (bool $ppn): array {
+    $s = Setting::pluck('value', 'key');          // company.name, company.legal_name, company.address, company.logo, company.print_style ...
+
+    return [
+        'name' => $s['company.name'],
+        'legal_name' => $s['company.legal_name'],  // PT name; no extra line when equal to name
+        'initials' => $s['company.initials'] ?? null,
+        'lines' => array_filter([$s['company.address'], $s['company.phone']]),
+        'npwp' => $ppn ? $s['company.npwp'] : null,
+        'logo' => $s['company.logo'] ? asset('storage/'.$s['company.logo']) : null,
+        'style' => $s['company.print_style'],      // logo_name_address | logo_name | name
+    ];
+});
+```
+
+For `x-dl::print-out` / `x-dl::report` pass the same values as the prop (`address` and `contact` instead of `lines`): `:company="['name' => ..., 'legal_name' => ..., 'style' => 'logo_name', 'address' => ..., 'logo' => ..., 'logoBw' => ...]"`.
 
 ## Related
 

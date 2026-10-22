@@ -1710,6 +1710,9 @@ form.is-dirty .dl-form__title::after{content:" • belum disimpan";color:var(--d
 .dl-print__co b{display:block;font-size:14px;color:var(--dl-pr-brand)}
 .dl-print__co > div small,.dl-print__co > div span{display:block;color:var(--dl-pr-muted);font-size:9.5px}
 .dl-print__npwp{color:var(--dl-pr-brand)!important;font-weight:700}
+.dl-print__co.is-side{align-items:center}
+.dl-print__co.is-side .dl-print__brand{height:auto;max-height:44px;max-width:120px;margin:0;flex:none}
+.dl-print__co > div small.dl-print__legal{font-weight:600}
 .dl-print__titlebox{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:1px}
 .dl-print__title{font-size:14px;color:var(--dl-pr-brand);text-transform:uppercase;letter-spacing:.02em}
 .dl-print__titlebox small{color:var(--dl-pr-muted);font-size:9.5px}
@@ -2843,6 +2846,14 @@ a.dl-ycal__d:hover{background:var(--dl-hover);outline:1px solid var(--dl-accent)
 .dl-pdoc__brand{display:block;height:5.6mm;width:auto;margin-bottom:.7mm}
 .dl-pdoc__co b{display:block;font-size:10.5pt;font-weight:700;letter-spacing:.02em;white-space:nowrap;text-transform:uppercase}
 .dl-pdoc__co small{display:block;font-size:6.6pt;color:#333;white-space:nowrap;line-height:1.2}
+.dl-pdoc__co.is-side .dl-pdoc__brand{height:auto;max-height:12mm;max-width:18mm;margin:0;flex:none}
+.dl-pdoc__co small.dl-pdoc__legal{font-weight:700}
+/* Kop bergaya: tinggi kop lembar tetap 14.5 mm, jadi baris dirapatkan (nama + nama PT + 2 baris alamat + NPWP muat) dan kelebihannya dipotong, tidak menimpa garis kop */
+.dl-pdoc__co.is-styled{max-height:13.4mm;overflow:hidden}
+.dl-pdoc__co.is-styled b{font-size:10pt;line-height:1.1}
+.dl-pdoc__co.is-styled small{font-size:6pt;line-height:1.05}
+.dl-pdoc__co.is-styled > div{min-width:0}
+.dl-pdoc__co.is-styled b,.dl-pdoc__co.is-styled small{overflow:hidden;text-overflow:ellipsis}
 .dl-pdoc__kop h1{font-size:15pt;font-weight:700;letter-spacing:.06em;text-align:center;line-height:1;white-space:nowrap;text-transform:uppercase;color:#111}
 .dl-pdoc__kop h1 small{display:block;font-size:7.5pt;font-weight:400;letter-spacing:.18em;color:#444;margin-top:1.2mm}
 .dl-pdoc__kop h1.is-compact{font-size:12pt;letter-spacing:.04em}

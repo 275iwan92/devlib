@@ -5,10 +5,7 @@
 <div {{ $attributes->class(['dl-psheet', 'is-landscape' => $landscape]) }} {!! $dl() !!} data-dl-pdoc data-paper="a4" data-orientation="{{ $landscape ? 'landscape' : 'portrait' }}">
     <section class="dl-psheet__page">
         <header class="dl-psheet__kop">
-            <div class="dl-pdoc__co">
-                @if (! $co['logo'])<span class="dl-pdoc__logo">{{ $co['initials'] }}</span>@endif
-                <div>@if ($co['logo'])<img class="dl-pdoc__brand" src="{{ $co['logo'] }}" alt="{{ $co['name'] }}">@else<b>{{ $co['name'] }}</b>@endif @foreach ($co['lines'] as $line)<small>{{ $line }}</small>@endforeach</div>
-            </div>
+            @include('devlib::partials.print-doc-co', ['co' => $co, 'npwp' => false])
             <div class="dl-psheet__title"><h1>{{ $t($title) }}</h1>@if ($code)<b>{{ $code }}</b>@endif</div>
         </header>
         @if ($info)
