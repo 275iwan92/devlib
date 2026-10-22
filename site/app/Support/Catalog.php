@@ -291,7 +291,7 @@ final class Catalog
                     'folders' => ['p5-override' => ['Develop & Coding']]],
             ],
             'Components' => [
-                ['code' => 'IN', 'label' => 'Inputs & Buttons', 'icon' => 'fa-solid fa-i-cursor', 'pages' => $in('p2-', ['inputs', 'numbers', 'datetime', 'choices', 'files', 'buttons'])],
+                ['code' => 'IN', 'label' => 'Inputs & Buttons', 'icon' => 'fa-solid fa-i-cursor', 'pages' => $in('p2-', ['inputs', 'numbers', 'datetime', 'choices', 'select-add', 'files', 'buttons'])],
                 ['code' => 'DF', 'label' => 'Display & Feedback', 'icon' => 'fa-solid fa-comment-dots', 'pages' => [...$in('p2-', ['display', 'containers', 'navigation']), ...$in('p3-', ['feedback', 'loading', 'notifications', 'idle-logout', 'errors'])]],
                 ['code' => 'WU', 'label' => 'Widgets & Utilities', 'icon' => 'fa-solid fa-puzzle-piece', 'pages' => ['p6-greeting-card', 'p6-timer', 'p6-geo-clock', 'p6-codes']],
             ],
@@ -378,6 +378,7 @@ final class Catalog
                 'code-chain' => ['Code Chain (linked dropdowns that build a code)', $c('CodeChain'), 'wide'], 'pick-matrix' => ['Pick Matrix (pilih pemenang per baris)', $c('PickMatrix'), 'wide'],
                 'member-list' => ['Member List (people + role, Add / Remove, limited rows)', $c('MemberList'), 'rw'],
             ]],
+            'p2-select-add' => ['Select · Add New', 'fa-solid fa-circle-plus', ['select-add' => ['Select with Add New button (popup, save by JSON, new item selected)', $f('Select')]]],
             'p2-files' => ['Files', 'fa-solid fa-paperclip', ['field-upload' => ['Upload', $f('Upload')], 'field-signature' => ['Signature', $f('Signature')]]],
             'p2-buttons' => ['Button', 'fa-solid fa-hand-pointer', [
                 'button' => ['Button · Preset · Split', $c('Button', 'SplitButton', 'BackButton'), 'rw'], 'icon-button' => ['Icon Button', $c('IconButton'), 'rw'],

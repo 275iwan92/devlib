@@ -272,6 +272,18 @@ textarea.dl-input{resize:none;min-height:28px;line-height:1.3;overflow:hidden;di
 .dl-dd__item:hover{background:var(--dl-f-bg-soft)}
 .dl-dd__item--split{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .dl-dd__item input{accent-color:var(--dl-accent);cursor:pointer}
+/* Select + tombol Add New (x-dl::field.select :add): tombol persegi di kanan, sejajar tinggi kotak; popup tambah dipindah ke <body> */
+.dl-selectadd{display:flex;align-items:stretch;gap:6px}
+.dl-selectadd > .dl-dd{flex:1;min-width:0}
+.dl-selectadd__btn{flex:none;aspect-ratio:1;display:inline-flex;align-items:center;justify-content:center;padding:0 8px;font-size:calc(12.5px * var(--dl-font-scale));background:var(--dl-surface);color:var(--dl-accent);border:1px solid var(--dl-f-line);border-radius:var(--dl-radius-sm);cursor:pointer;font-family:inherit}
+.dl-selectadd__btn:hover{background:var(--dl-f-bg-soft)}
+.dl-selectadd__btn:focus-visible{outline:2px solid var(--dl-accent);outline-offset:1px}
+.dl-selectadd__btn:disabled{opacity:.45;cursor:not-allowed}
+fieldset:disabled .dl-selectadd__btn,.dl-form.is-view .dl-selectadd__btn{display:none}
+[data-dl-sa-modal] .dl-field{margin-top:10px}
+[data-dl-sa-modal] .dl-note{margin:0 0 2px}
+.dl-selectadd__err{color:var(--dl-danger);font-size:calc(11.5px * var(--dl-font-scale));margin-top:6px}
+.dl-selectadd__err:empty{display:none}
 .dl-prefix{display:flex}
 .dl-prefix__btn{display:flex;align-items:center;gap:4px;padding:0 6px;background:var(--dl-f-bg-soft);border:1px solid var(--dl-f-line);border-right:none;border-radius:var(--dl-radius-sm) 0 0 var(--dl-radius-sm);font-size:calc(12px * var(--dl-font-scale));font-weight:600;color:var(--dl-f-label);cursor:pointer;white-space:nowrap;font-family:inherit}
 .dl-input--prefixed{border-radius:0 var(--dl-radius-sm) var(--dl-radius-sm) 0}

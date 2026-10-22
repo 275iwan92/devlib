@@ -66,6 +66,15 @@ Route::middleware('devlib.auth')->group(function () {
     Route::post('/demo/gantt/impact', fn (Request $r) => response()->json(GanttDemo::impact($r->all())));
     Route::post('/demo/gantt/move', fn (Request $r) => response()->json(GanttDemo::impact($r->all()) + ['draft' => 'DRAFT '.$r->session()->increment('gantt_demo_draft').' change']));
 
+    // Select · Add New (halaman p2-select-add): balasan palsu, tidak menyimpan apa pun. 422 bila nama kosong atau 'dup', 500 bila 'fail'.
+    Route::post('/demo/select-add/supplier', function (Request $r) {
+        abort_if($r->input('name') === 'fail', 500);
+        $d = $r->validate(['name' => ['required', 'string', 'max:60', 'not_in:dup'], 'phone' => ['nullable', 'string', 'max:20'], 'contact' => ['nullable', 'string', 'max:60']], ['name.not_in' => 'This name already exists.']);
+
+        return response()->json(['id' => 'NEW'.random_int(100, 999), 'name' => $d['name']], 201);
+    });
+    Route::post('/demo/select-add/document', fn (Request $r) => response('Demo: yang terkirim hanya '.implode(', ', array_keys($r->except('_token'))).' (tidak disimpan). Isian popup tidak ikut.'));
+
     Route::get('/', fn () => view('home', ['modules' => Catalog::modules(), 'user' => session('devlib_user')]))->name('home');
 
     // Data bersama semua demo halaman katalog.

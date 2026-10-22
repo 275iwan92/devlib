@@ -336,7 +336,7 @@ Catatan berformat (tebal, miring, garis bawah, daftar). Disimpan sebagai HTML --
 ## `<x-dl::field.select>`
 Pilihan tunggal dengan kotak cari (mis. lokasi Kota, Provinsi, Negara).
 - Berkas: `src/Components/Field/Select.php`, tampilan `resources/views/components/field/select.blade.php`
-- Prop: options:array=[], searchPlaceholder:string='Type to search...', name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
+- Prop: options:array=[], searchPlaceholder:string='Type to search...', name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL, add:array=[]
 
 ## `<x-dl::field.signature>`
 Tanda tangan: kanvas mouse / pena / jari. Nilai = gambar PNG (data URL) di input tersembunyi.

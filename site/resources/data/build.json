@@ -1,24 +1,24 @@
 {
-    "generated": "2026-10-21 17:47",
+    "generated": "2026-10-22 11:05",
     "database": "devlib",
     "totals": {
-        "objects": 85,
+        "objects": 86,
         "modules": 14,
         "modules_done": 4,
-        "screens": 174,
-        "v2": 174,
+        "screens": 175,
+        "v2": 175,
         "v1": 0,
         "not_built": 0,
-        "waiting_qc": 31,
+        "waiting_qc": 32,
         "locked": 54,
         "forms": 4,
         "grids": 8,
         "reports": 2,
-        "engines": 4,
-        "engine_groups": 3,
+        "engines": 5,
+        "engine_groups": 4,
         "migrations": 10,
-        "tests": 27,
-        "commits": 399,
+        "tests": 29,
+        "commits": 403,
         "since": "2026-09-23"
     },
     "modules": [
@@ -60,11 +60,11 @@
         },
         {
             "label": "Inputs & Buttons",
-            "total": 6,
-            "v2": 6,
+            "total": 7,
+            "v2": 7,
             "v1": 0,
             "not_built": 0,
-            "waiting_qc": 6,
+            "waiting_qc": 7,
             "locked": 0,
             "form": 0,
             "grid": 0,
@@ -234,6 +234,19 @@
                     "name": "Document Number",
                     "purpose": "Gives the next document number (PREFIX-YYMM-0001), restarting at 0001 every month.",
                     "mode": "auto",
+                    "used": 0,
+                    "tests": 0
+                }
+            ]
+        },
+        {
+            "group": "Procurement",
+            "items": [
+                {
+                    "key": "lead-time",
+                    "name": "Lead Time",
+                    "purpose": "Turns order-to-receipt records into the usual lead time and an expected arrival date; only a suggestion.",
+                    "mode": "calc",
                     "used": 0,
                     "tests": 0
                 }
@@ -448,6 +461,17 @@
             "type": "OBJECT",
             "key": "page:p2-choices",
             "name": "Choice & Lookup",
+            "module": "Inputs & Buttons",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p2-select-add",
+            "name": "Select · Add New",
             "module": "Inputs & Buttons",
             "qc": "READY_FOR_QC",
             "built_at": null,
@@ -1240,6 +1264,17 @@
             "type": "ENGINE",
             "key": "engine:document-number",
             "name": "Document Number",
+            "module": "Engines",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
+            "changed_by": null
+        },
+        {
+            "type": "ENGINE",
+            "key": "engine:lead-time",
+            "name": "Lead Time",
             "module": "Engines",
             "qc": "READY_FOR_QC",
             "built_at": null,

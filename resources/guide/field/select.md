@@ -12,7 +12,7 @@ Like every field it is wrapped by the shared field frame (`Devlib\Components\Fie
 
 ## Props
 
-Constructor of `Devlib\Components\Field\Select` (16 props). Blade names are kebab-case; use `:prop="expr"` for arrays and anything that is not a plain string.
+Constructor of `Devlib\Components\Field\Select` (17 props). Blade names are kebab-case; use `:prop="expr"` for arrays and anything that is not a plain string.
 
 ### Own props
 
@@ -20,6 +20,7 @@ Constructor of `Devlib\Components\Field\Select` (16 props). Blade names are keba
 |---|---|---|
 | `options` | `array`, `[]` | The choices. A **list** (`['Surabaya', 'Malang']`, `array_is_list`) is turned into `value = label = the item`. An **associative array** is `value => label` (`['ID' => 'Indonesia']`). The value is what is posted, the label is what is shown and searched. Order is kept. Each option becomes `<div class="dl-dd__item" data-value="...">label</div>`. Labels are **not** translated by the dictionary and are HTML-escaped. Items must be scalars: a nested array (an "option group") is not supported and breaks the view with an "Array to string" error. |
 | `search-placeholder` | `string`, `'Type to search...'` | Placeholder of the search input inside the panel. Translated through the dictionary (`Lang::text`). |
+| `add` | `array`, `[]` | Switches on the **Add New** feature (opt-in): a square plus button to the right of the dropdown that opens a small popup to create a new item; after Save the item is added to the list and selected. Empty (default) = the markup is exactly the one without this prop. Keys: `url` (required, POST endpoint, same origin only: `/path` or an absolute URL on the current host; anything else switches the feature off), `fields` (required, list of `['name' => 'name', 'label' => 'Name', 'required' => true, 'type' => 'text' or 'tel' or 'textarea', 'maxlength' => 60, 'placeholder' => '...']`; `name` must be letters, digits and `_`, `type` defaults to `text`), `title` (popup title, translated), `icon` (optional Font Awesome name shown in the popup header, e.g. `fa-truck`), `label` (tooltip and `aria-label` of the plus button, default the dictionary word "Add New"), `note` (optional small help text at the top of the popup, translated), `value-key` (JSON key of the new value in the reply, default `id`), `label-key` (JSON key of the new label, default `name`). Texts are HTML-escaped. Not shown (no button, no popup) when the select is `disabled` or `readonly`, or when `Field::$readonlyAll` is on. |
 
 ### Inherited props
 
@@ -49,8 +50,8 @@ Defined once in `Field` and shared by every field; the full reference is in `x-d
 ```
 div.dl-field.dl-field--select[data-dl-field=name]
   label[for=uid] ...
-  div.dl-dd[data-dl-select][data-empty=<placeholder>]
-    input[type=hidden][name=name][data-dl-value]
+  div.dl-dd[data-dl-select][data-empty=<placeholder>]               (with `add`: wrapped in div.dl-selectadd[data-dl-select-add][data-url][data-value-key][data-label-key],
+    input[type=hidden][name=name][data-dl-value]                     followed by button.dl-selectadd__btn[data-dl-sa-btn] and the popup x-dl::modal[data-dl-sa-modal])
     button#uid.dl-dd__btn[data-dl-dd-toggle]  > span[data-dl-dd-text] + ▼
     div.dl-dd__panel[data-dl-dd-panel]
       div.dl-dd__search > input[data-dl-dd-search]        (no name, never posted)
@@ -77,6 +78,16 @@ The shared panel helper `Devlib.h.bindPanel` handles the dropdown:
 
 `disabled` and `readonly` only disable the button (CSS: opacity 0.45, no pointer events; `is-readonly` adds the grey background). Inside a locked `x-dl::form` (fieldset disabled, or `mode="view"`) the button also loses its border and arrow and reads as plain text, and the hidden input is excluded from the submit by the browser.
 
+### Add New (prop `add`)
+
+With `add` the select is wrapped in a flex row and a square button with a plus icon sits to the right of the dropdown, same height (theme and density through the tokens). The button is a real `<button>`: reachable with `Tab`, `aria-label` and tooltip = `add.label`. Inside a locked `x-dl::form` (fieldset disabled, or `mode="view"`) it is hidden.
+
+- Click opens a small `x-dl::modal` titled `add.title` with the `fields` (built from `x-dl::field.text`), an error area and **Save** / **Cancel**. At page start the script moves the popup to `<body>`, so its inputs are never part of the document `<form>` (not validated, not submitted, not counted by the dirty guard). Each select has its own popup id (`<uid>-add`), so several selects with `add` can live on one page. In an iframe the popup is moved to that frame's own body.
+- `Enter` in a field (not in a textarea) saves; `Esc`, the X, **Cancel** or a click outside closes. Whatever closes it, the focus returns to the select button.
+- Save checks the `required` fields (message "Required" under the field, no request), then sends `POST` JSON to `add.url`. While the request runs the button is disabled and reads "Saving..." (a double click or Enter+click sends one request).
+- Success (HTTP 2xx with the JSON below): the item is appended to the list (if its value is already in the list, that item is selected and its label refreshed, so no duplicate), the hidden input and button text are set, a bubbling `change` is dispatched on the hidden input exactly like a normal choice (dirty guard and dependent logic work), the popup closes, its fields are cleared and the focus goes back to the select. `Devlib.fill`, Undo and `setField` find the new item because it is a normal `.dl-dd__item`; `Devlib.h.setOptions` replaces the whole list, so it also drops added items.
+- HTTP 422 with a Laravel `errors` object: the first message of each field is shown under that field, messages for unknown keys go to the error area, the popup stays open. Any other failure (other status, body that is not JSON, network error, cross-origin URL) shows the generic message "Could not save. Try again." and keeps the popup open and the typed values.
+
 ### Dependent dropdowns
 
 `Devlib.h.setOptions(form, name, opts, {disabled})` replaces the options of a select that is already on the page (see Data and events). It clears the current value, resets the button text to `data-empty` and disables the button when `disabled` is true or the list is empty. Combine it with a `change` listener on the parent field.
@@ -91,11 +102,22 @@ One request field `name` with the **option key as a string** (`''` when nothing 
 $request->validate(['city' => ['required', Rule::in(array_keys($cities))]]);
 ```
 
+### Add New: request and reply contract
+
+Request: `POST <add.url>`, headers `Accept: application/json`, `Content-Type: application/json`, `X-Requested-With: XMLHttpRequest` and `X-CSRF-TOKEN` (from `window.DL_CSRF`, else the `<meta name="csrf-token">`); body = one JSON object with every `fields` name (values trimmed, `''` when empty), e.g. `{"name": "CV Sumber Rejeki", "phone": "", "contact": ""}`. The session cookie is sent (`credentials: same-origin`).
+
+| Reply | Meaning |
+|---|---|
+| `200` / `201` + `{"id": "S9", "name": "CV Sumber Rejeki"}` | Success. The keys are `add.value-key` and `add.label-key`; the pair `{"value": ..., "label": ...}` is accepted as well. The value is turned into a string; a reply without a value or label counts as a failure. |
+| `422` + `{"message": "...", "errors": {"name": ["The name has already been taken."]}}` | Validation failed (the standard Laravel reply for a JSON request). Shown under the matching field; the popup stays open. |
+| anything else | Generic error text in the popup. |
+
 ### DOM events and hooks
 
 | Hook | Detail |
 |---|---|
 | `change` | Dispatched (bubbles) on the hidden input `[data-dl-value]` after a click on an option. `e.target.name` is the field name, `e.target.value` the key. Not fired by `setOptions`, `Devlib.setField` or `Devlib.fill`. There are no `dl:*` events. |
+| `data-dl-select-add`, `data-dl-sa-btn`, `data-dl-sa-modal`, `data-dl-sa-err`, `data-dl-sa-save` | Add New only: wrapper (with `data-url`, `data-value-key`, `data-label-key`), plus button, popup (a `[data-dl-modal-id]`), error area, Save button. `el.dlComponent` of the wrapper is the `SelectAdd` instance. |
 | `data-dl-select` | The `.dl-dd` element; present on the select control only (a lookup uses `data-dl-lookup`). |
 | `data-dl-value`, `data-dl-dd-text`, `data-dl-dd-toggle`, `data-dl-dd-panel`, `data-dl-dd-search`, `data-dl-dd-list` | Hidden input, button text, button, panel, search input, option list. |
 | `.dl-dd__item[data-value]` | One option. |
@@ -132,6 +154,11 @@ Devlib.setField(form, 'city', 'mlg');   // Devlib.fill(form, {city: 'mlg'}) does
 - Option labels are data: they are not translated. Translate them yourself (`Lang::text`) when needed. Remember `placeholder`, `label`, `hint` and `tooltip` **are** translated, so wrap data values in `raw()`.
 - Every option is in the DOM: a few hundred is fine, thousands slow the page. Use `x-dl::field.lookup` with a server `search` instead.
 - Keyboard: the button can be reached with `Tab` and opened with `Enter`/`Space`, and the search box receives focus, so typing filters. The options are plain `<div>` elements without `tabindex`, roles or arrow-key handling, so the choice itself needs a pointer or touch. The button has no `aria-expanded`/`aria-haspopup`.
+- Add New is only a convenience in the browser: the endpoint must authenticate, authorise and validate like any other write route, and the document that uses the new value must check on Save that the value exists. The popup can be bypassed by anyone, so never rely on it.
+- `add.url` must be same origin (a relative `/path` is simplest); a cross-origin URL is ignored at render time and refused again by the script.
+- The endpoint is hit when the popup is saved, **not** when the document is saved: a created item stays even if the user later cancels the document. Say so in the popup `note` or make the endpoint idempotent.
+- Return the same key names as `value-key` / `label-key` (or `value` / `label`). Typical mistake: returning the whole model under a wrapper key (`{"data": {...}}`); the script reads top-level keys only (use `response()->json([...])` or `JsonResource::withoutWrapping()`).
+- The names in `add.fields` are the JSON keys your endpoint validates. They cannot clash with the document fields, because the popup is moved out of the form.
 - The server must re-check rights and the allowed values; hiding or disabling the field in the browser is not a security measure.
 - Code oddity (not fixed): `resources/views/components/field/select.blade.php:6` and `:7` - `disabled` (and `readonly`) only disable the button; the hidden input stays enabled, so a standalone `disabled` select is still submitted. Only a disabled fieldset (locked form) keeps the value out of the request.
 - Code oddity (not fixed): `resources/assets/js/core.js:220-250` (`bindPanel`) - option items are not focusable and there is no arrow/Enter/Esc handling, so a select cannot be completed from the keyboard.
@@ -168,10 +195,45 @@ Dependent dropdown (the child starts empty and disabled):
 </script>
 ```
 
+Add New (supplier field with a popup: Name required, Phone, Contact):
+
+```blade
+<x-dl::field.select name="supplier_id" label="Supplier" placeholder="Choose supplier..."
+    :options="$suppliers->pluck('name', 'id')->all()" :value="old('supplier_id', $doc->supplier_id)" required
+    :add="[
+        'url' => route('suppliers.quick', [], false),
+        'title' => 'Add Supplier', 'icon' => 'fa-truck',
+        'fields' => [
+            ['name' => 'name', 'label' => 'Name', 'required' => true, 'maxlength' => 80],
+            ['name' => 'phone', 'label' => 'Phone', 'type' => 'tel', 'maxlength' => 30],
+            ['name' => 'contact', 'label' => 'Contact name', 'maxlength' => 80],
+        ],
+    ]" />
+```
+
+The endpoint (`Route::post('/suppliers/quick', [SupplierController::class, 'quick'])->name('suppliers.quick');` inside the `web` + `auth` group, so CSRF applies):
+
+```php
+public function quick(Request $request)
+{
+    $this->authorize('create', Supplier::class);
+    $data = $request->validate([                       // a failure becomes the 422 JSON the popup understands
+        'name' => ['required', 'string', 'max:80', Rule::unique('suppliers', 'name')],
+        'phone' => ['nullable', 'string', 'max:30'],
+        'contact' => ['nullable', 'string', 'max:80'],
+    ]);
+
+    $supplier = Supplier::create($data);
+
+    return response()->json(['id' => $supplier->id, 'name' => $supplier->name], 201);
+}
+```
+
 ## Related
 
 - `x-dl::field.text`: the full reference of the 14 inherited props and the shared field frame.
 - `x-dl::field.multi-select`: the same dropdown with checkboxes (several values).
+- `x-dl::modal`: the popup of Add New is an `x-dl::modal` (size `sm`).
 - `x-dl::field.lookup`: choose a master row from a table, with auto-fill of other fields and a remote search for large data.
 - `x-dl::field.radio` and `x-dl::field.toggle-group`: visible single choice for very short lists.
 - `x-dl::form`: required-field check, dirty guard, Undo and the `kind="document"` default-value lint (F201).
