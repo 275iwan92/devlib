@@ -35,7 +35,8 @@ Aturan sumber ada di `skills/devlib/*.md` (mulai `SKILL.md`; membangun object: `
 - Perubahan yang butuh penyesuaian di proyek lain: laporkan ke Jo, jangan dikerjakan.
 
 ## 4. Git dan penghapusan
-- **Jangan push, jangan menulis ulang riwayat, jangan menghapus berkas/folder/branch** sebelum Jo menyetujui secara eksplisit. Setelah disetujui, kerjakan sampai tuntas.
+- **Commit dan push ke `origin/main` OTOMATIS sebagai cadangan** (izin berdiri Jo, 2026-10-22: "push always as backup, don't ask again"): setelah satu pekerjaan selesai dan tesnya hijau, commit lalu push tanpa bertanya. **Jangan force-push, jangan menulis ulang riwayat, jangan menghapus berkas/folder/branch** tanpa persetujuan eksplisit Jo.
+- **Cacat yang ditemukan SELALU diperbaiki** (izin berdiri Jo, 2026-10-22: "always fix it"): kode salah, tes merah, dokumen usang: perbaiki lalu laporkan, jangan bertanya dulu. Perubahan desain/tampilan BARU atau alur baru tetap lewat preview dan persetujuan (bagian 2).
 - Banyak sesi menulis di folder yang sama: jalankan `git status` dulu; commit hanya jalur sendiri `git commit --only -m "..." -- <jalur>` (berkas baru: `git add -N` dulu); cek `git show --stat`. Pesan commit Indonesia, akhiri dengan trailer yang ditetapkan sesi.
 - Tag rilis hanya atas keputusan Jo (lihat `docs/versioning.md`).
 
