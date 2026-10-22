@@ -115,6 +115,12 @@
     // kaki halaman dan margin bawah jauh sebelum lembarnya sendiri dianggap penuh.
     fits(s) { const body = $(s, '[data-p-body]'); return body.scrollHeight <= body.clientHeight + 1; }
 
+    // Tabel yang lebih lebar dari lembar diperkecil (zoom) supaya kolom kanan tidak terpotong; diulang setelah huruf selesai dimuat.
+    // Halaman tidak dihitung ulang, jadi lembar jadi agak longgar.
+    fit() {
+      $$(this.pages, '.dl-print__table').forEach(t => { t.style.zoom = ''; const w = t.parentElement.clientWidth, tw = Math.max(t.offsetWidth, t.scrollWidth); if (tw > w + 1) t.style.zoom = (w / tw * 0.97).toFixed(3); });
+    }
+
     build() {
       this.pages.innerHTML = '';
       this.el.dataset.paperNow = this.el.dataset.paper;
@@ -136,8 +142,7 @@
         if (carry.length) { const nt = table(); carry.forEach(tr => nt.appendChild(tr)); }
         body.insertAdjacentHTML('beforeend', `<div class="dl-print__tail">${tail}</div>`);
       }
-      // Tabel yang lebih lebar dari lembar diperkecil (zoom) supaya kolom kanan tidak terpotong; halaman tidak dihitung ulang, lembar jadi agak longgar.
-      $$(this.pages, '.dl-print__table').forEach(t => { const w = t.parentElement.clientWidth, tw = Math.max(t.offsetWidth, t.scrollWidth); if (tw > w + 1) t.style.zoom = (w / tw * 0.97).toFixed(3); });
+      this.fit(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.fit());
       const all = $$(this.pages, '.dl-print__sheet');
       all.forEach((sh, i) => $$(sh, '[data-p-pg]').forEach(x => { x.textContent = `${i + 1}/${all.length}`; }));
       let st = document.getElementById('dl-print-page'); if (!st) { st = document.createElement('style'); st.id = 'dl-print-page'; document.head.appendChild(st); }
