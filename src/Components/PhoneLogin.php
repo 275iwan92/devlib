@@ -12,7 +12,7 @@
 
 namespace Devlib\Components;
 
-// Login untuk ponsel: membungkus x-dl::login-box tanpa bingkai latar. Proyek memilih halaman ini bila Device::fromRequest = hp, dan login desktop (x-dl::frame + login-box + x-dl::phone-offer) bila desktop.
+// Login untuk ponsel: membungkus x-dl::login-box tanpa bingkai latar. Proyek memilih halaman ini bila Device::view = phone, dan login desktop (x-dl::frame + login-box + x-dl::phone-offer) bila desktop.
 // Slot = pesan di atas kotak (mis. x-dl::alert status). deviceAction = alamat POST yang menyimpan ui=desktop (tautan "Desktop view").
 class PhoneLogin extends DevlibComponent
 {

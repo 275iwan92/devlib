@@ -41,6 +41,7 @@ Urutan kerja; tiap langkah ada penegaknya bila disebut.
 | Nilai warna/ukuran hanya di `devlib.css` (token `--dl-*`) | kepala `devlib.css` |
 | Satu kelas satu tanggung jawab, method pendek, kegagalan = exception bernama, tanpa `catch` kosong, tanpa magic string | `inheritance.md` bagian Kode proyek; `engine.md` butir 5 dan 6 |
 | Model non-UI: tidak terdaftar otomatis; data/hak/penyimpanan lewat kontrak yang diikat proyek | `assistant.md`, `chat.md`, `engine.md` |
+| Multi view: setiap layar / object menyatakan dukungan view (phone, desktop, atau keduanya; tanpa pernyataan = desktop) dan object baru diuji di dua view (`Device::PHONE` dan `DESKTOP`); aturan khusus HP hanya di konteks phone | `views.md`; `DeviceViewTest`. Penegak lint untuk pernyataan view **BELUM ADA** |
 | Aksesibilitas | **BELUM ADA ATURAN** tertulis; ikuti praktik komponen terdekat (mis. `aria-label` berterjemah di `layer-menu`) |
 | Tanpa nama client/proyek atau nama orang sungguhan di kode, contoh, dan demo | `assistant.md` bagian Jangan; contoh baku fiktif |
 

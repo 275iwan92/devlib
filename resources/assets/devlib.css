@@ -378,6 +378,21 @@ fieldset:disabled .dl-selectadd__btn,.dl-form.is-view .dl-selectadd__btn{display
 .dl-device__view.is-tablet{width:768px}
 .dl-device__view.is-mobile{width:390px}
 .dl-device__view.is-mobile .dl-form__body{grid-template-columns:1fr}
+.dl-device--src .dl-device__stage{overflow:hidden;align-items:center}
+.dl-device--src .dl-device__btn small{opacity:.7;font-weight:500}
+.dl-device__close{margin-left:auto;text-decoration:none}
+.dl-device__dev{flex:none;border-radius:14px;overflow:hidden;background:var(--dl-surface);box-shadow:0 20px 25px -5px rgba(0,0,0,.5);transform-origin:center center;transition:width .25s,height .25s}
+.dl-device__frame{display:block;width:100%;height:100%;border:0;background:var(--dl-surface)}
+/* x-dl::view-as: pil melayang di samping tombol kode; menu perangkat membuka ke atas. */
+.dl-viewas{position:fixed;right:60px;bottom:14px;z-index:190}
+.dl-viewas__btn{list-style:none;width:38px;height:38px;border-radius:50%;background:var(--dl-dev-bg);color:var(--dl-dev-ink);box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:calc(14px * var(--dl-font-scale))}
+.dl-viewas__btn::-webkit-details-marker{display:none}
+.dl-viewas__menu{position:absolute;right:0;bottom:46px;min-width:230px;padding:6px;background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius);box-shadow:0 12px 30px var(--dl-overlay-soft);display:flex;flex-direction:column}
+.dl-viewas__t{padding:6px 10px 4px;font-size:calc(11px * var(--dl-font-scale));font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--dl-muted)}
+.dl-viewas__menu a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--dl-radius-sm);color:var(--dl-ink);text-decoration:none;font-size:calc(13px * var(--dl-font-scale))}
+.dl-viewas__menu a:hover{background:var(--dl-hover)}
+.dl-viewas__menu a i{width:18px;text-align:center;color:var(--dl-accent)}
+.dl-viewas__menu a small{margin-left:auto;color:var(--dl-muted)}
 @media(max-width:700px){.dl-form__body{grid-template-columns:1fr}}
 
 /* ================= SHELL ================= */
@@ -4099,6 +4114,16 @@ button.dl-phone__row:disabled{color:var(--dl-disabled)}
 :is(body.dl-on-phone,.dl-phone) .dl-form__col{min-width:0}
 :is(body.dl-on-phone,.dl-phone) .dl-form__panel{position:static;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:4px 0 8px}
 :is(body.dl-on-phone,.dl-phone) .dl-form__panel .dl-print__spacer,
+/* ==== Multi view: aturan per OS pada view phone (skills/devlib/views.md). Semua dibatasi body.dl-on-phone (Device::bodyClass); view desktop tidak mendapat satu pun aturan ini.
+   iOS (dl-os-ios): isi sampai tepi layar (viewport-fit=cover) lalu env(safe-area-inset-*) menjaga notch / Dynamic Island / home indicator; teks tidak diperbesar otomatis saat landscape; isian >= 16px (iOS zoom bila lebih kecil).
+   Android (dl-os-android): Chrome menaruh viewport di atas bilah navigasi sistem (3 tombol / gestur), jadi jarak bawah cukup env(safe-area-inset-bottom) (0 di browser, terisi pada PWA edge-to-edge); overscroll-behavior-y:contain mematikan pull-to-refresh Chrome agar geser-turun tidak membuang form yang belum disimpan. */
+html:has(body.dl-on-phone){-webkit-text-size-adjust:100%;text-size-adjust:100%;overscroll-behavior-y:contain}
+body.dl-on-phone:not(:has(.dl-phone,.dl-plogin)){padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+body.dl-on-phone :is(input:not([type=checkbox],[type=radio],[type=range],[type=file],[type=color]),select,textarea){font-size:max(16px,1em)}
+body.dl-on-phone :is(.dl-btn,summary){min-height:44px}
+/* Layar sentuh yang bukan phone (tablet, laptop sentuh): opt-in lewat class dl-touch di <body>; hanya memperbesar sasaran ketuk, tata letak desktop tidak berubah. */
+@media (pointer:coarse){body.dl-touch :is(.dl-btn,summary){min-height:44px}}
+/* ==== /Multi view */
 :is(body.dl-on-phone,.dl-phone) .dl-form__panel .dl-form__sep{display:none}
 :is(body.dl-on-phone,.dl-phone) .dl-form__panel .dl-form__title{font-size:calc(20px * var(--dl-font-scale))}
 :is(body.dl-on-phone,.dl-phone) .dl-field__label{font-size:calc(15px * var(--dl-font-scale));white-space:normal;line-height:1.3}

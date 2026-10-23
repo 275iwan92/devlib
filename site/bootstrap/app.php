@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias(['devlib.auth' => \App\Http\Middleware\DevlibAuth::class]);
+        $middleware->appendToGroup('web', \Devlib\ViewOverride::class);  // pratinjau "Lihat sebagai" (?dl-view=)
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

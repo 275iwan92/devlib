@@ -19,10 +19,10 @@ class PhoneShellTest extends TestCase
 
     private const WINDOWS = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36';
 
-    public function test_only_phones_are_guessed_as_hp(): void
+    public function test_only_phones_are_guessed_as_phone(): void
     {
-        $this->assertSame('hp', Device::detect(self::CHROME_PHONE));
-        $this->assertSame('hp', Device::detect(self::IPHONE));
+        $this->assertSame('phone', Device::detect(self::CHROME_PHONE));
+        $this->assertSame('phone', Device::detect(self::IPHONE));
         $this->assertSame('desktop', Device::detect(self::CHROME_TABLET));
         $this->assertSame('desktop', Device::detect(self::IPAD));
         $this->assertSame('desktop', Device::detect(self::WINDOWS));
@@ -31,17 +31,17 @@ class PhoneShellTest extends TestCase
 
     public function test_client_hint_wins_over_user_agent_and_a_valid_cookie_wins_over_both(): void
     {
-        $this->assertSame('hp', Device::detect(self::WINDOWS, '?1'));
+        $this->assertSame('phone', Device::detect(self::WINDOWS, '?1'));
         $this->assertSame('desktop', Device::detect(self::CHROME_PHONE, '?0'));
         $this->assertSame('desktop', Device::resolve('desktop', self::CHROME_PHONE, '?1'));
-        $this->assertSame('hp', Device::resolve('hp', self::WINDOWS, '?0'));
-        $this->assertSame('hp', Device::resolve('rubbish', self::CHROME_PHONE), 'cookie tak sah = tebakan');
+        $this->assertSame('phone', Device::resolve('hp', self::WINDOWS, '?0'));
+        $this->assertSame('phone', Device::resolve('rubbish', self::CHROME_PHONE), 'cookie tak sah = tebakan');
     }
 
     public function test_device_pick_preselects_the_given_value_and_posts_ui(): void
     {
         $html = Blade::render('<x-dl::device-pick value="hp" />');
-        $this->assertMatchesRegularExpression('/name="ui" value="hp" checked/', $html);
+        $this->assertMatchesRegularExpression('/name="ui" value="phone" checked/', $html);
         $this->assertDoesNotMatchRegularExpression('/value="desktop" checked/', $html);
     }
 
@@ -97,7 +97,7 @@ class PhoneShellTest extends TestCase
 
             return Blade::render($tag);
         };
-        $this->assertStringContainsString('name="ui" value="hp"', $render([], self::WINDOWS));
+        $this->assertStringContainsString('name="ui" value="phone"', $render([], self::WINDOWS));
         $this->assertStringContainsString('name="ui" value="desktop"', $render([], self::WINDOWS));
         $this->assertStringNotContainsString('dl-phoneoffer', $render([], self::CHROME_PHONE), 'ponsel = tampilan HP langsung');
         $this->assertStringNotContainsString('dl-phoneoffer', $render(['ui' => 'desktop'], self::WINDOWS), 'pilihan sudah dibuat');
@@ -145,7 +145,7 @@ class PhoneShellTest extends TestCase
     public function test_body_class_marks_only_the_phone_device(): void
     {
         $req = fn (string $ua, array $cookies = []) => \Illuminate\Http\Request::create('/', 'GET', [], $cookies, [], ['HTTP_USER_AGENT' => $ua]);
-        $this->assertSame('dl-on-phone', Device::bodyClass($req(self::CHROME_PHONE)));
+        $this->assertSame('dl-on-phone dl-os-android', Device::bodyClass($req(self::CHROME_PHONE)));
         $this->assertSame('', Device::bodyClass($req(self::WINDOWS)));
         $this->assertSame('', Device::bodyClass($req(self::CHROME_PHONE, ['ui' => 'desktop'])));
         $this->assertSame('dl-on-phone', Device::bodyClass($req(self::WINDOWS, ['ui' => 'hp'])));

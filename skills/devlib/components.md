@@ -164,9 +164,9 @@ Jejak pengiriman skematis (SVG, tanpa peta): gudang -> pelanggan, truk bergerak 
 - Prop: stage:string='draft', from:string='Warehouse', to:string='Customer', position:?float=NULL, times:array=[], title:string='', subtitle:string=''
 
 ## `<x-dl::device-frame>`
-Bingkai pratinjau Laptop / Tablet (768px) / Smartphone (390px) dari mockup form.
+Bingkai pratinjau multi view. Mode slot: Laptop / Tablet (768px) / Smartphone (390px) dari mockup form. Mode `src`: halaman nyata di <iframe> berukuran perangkat (Android phone, iPhone, Tablet, Laptop, Desktop) dengan view phone / desktop yang sungguh dirender server.
 - Berkas: `src/Components/DeviceFrame.php`
-- Prop: mode:string='laptop'
+- Prop: mode:string='laptop', src:?string=NULL, preset:string='android', back:?string=NULL
 
 ## `<x-dl::device-pick>`
 Pilihan tampilan perangkat (Phone view / Desktop view): dua pilihan radio besar bernama `ui`, terpilih awal menurut cookie atau tebakan perangkat.
@@ -867,6 +867,11 @@ Ikon support kecil; diklik -> popup daftar akun uji coba (UAT). HAPUS dari login
 Form khusus Warehouse Map (user 2026-10-02, docs/warehouselayout_tier1.md): pemilih gedung + pintasan ke Buildings / Storage.
 - Berkas: `src/Components/WarehouseDesk.php`, tampilan `resources/views/components/warehouse-desk.blade.php`
 - Prop: desk:array=[]
+
+## `<x-dl::view-as>`
+Saklar "Lihat sebagai": pil melayang dengan menu perangkat (Android phone, iPhone, Tablet, Laptop, Desktop); memilih satu membuka halaman pratinjau berisi x-dl::device-frame mode `src`.
+- Berkas: `src/Components/ViewAs.php`
+- Prop: href:string=(wajib), label:string='View as'
 
 ## `<x-dl::weather>`
 Cuaca terkini dari internet (Open-Meteo, gratis tanpa kunci API), diambil oleh browser.

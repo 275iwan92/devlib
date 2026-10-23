@@ -24,13 +24,35 @@ Extra HTML attributes (`id`, `class`, `style`, `data-*`) are merged into the roo
 
 ## Props
 
-Constructor of `Devlib\Components\DeviceFrame` (1 prop).
+Constructor of `Devlib\Components\DeviceFrame` (4 props).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
 | `mode` | `string`, `'laptop'` | The mode that is active when the page loads: `laptop`, `tablet` or `mobile`. It sets `is-active` on the matching toolbar button and the class `is-<mode>` on the view (`dl-device__view`). It is the initial state only: clicking a button changes the browser state, not the prop, and nothing is remembered after a reload. Any other string is not validated: no button is active and the view gets a class (`is-xxx`) that has no width rule in the CSS, so the stage shows the content at its natural size. |
 
 The default slot is the content to preview (usually a whole `x-dl::form`).
+
+### Source mode (`src`): a real page at a real device size
+
+With `src` the frame is an `<iframe>` of that page, sized in CSS pixels to one device preset, and the toolbar becomes the device list. Because the page runs inside a real iframe of that size, its `@media` queries and `dvh` follow the device (the slot mode above cannot do that). The frame also appends `?dl-view=phone|desktop&dl-os=android|ios|other` to the address, and `Devlib\ViewOverride` (opt-in, in the project's `web` middleware group) turns that into `Device::override`, so the server really renders the phone or the desktop view.
+
+| Preset (`preset`) | Button | Size (CSS px) | Rendered view, OS |
+|---|---|---|---|
+| `android` | Android phone | 360 x 790 | `phone`, `android` |
+| `ios` | iPhone | 393 x 852 | `phone`, `ios` |
+| `tablet` | Tablet | 820 x 1180 | `desktop` (a tablet uses the desktop view) |
+| `laptop` | Laptop | 1366 x 768 | `desktop` |
+| `desktop` | Desktop | 1920 x 1080 | `desktop` |
+
+Extra props (all optional, `null` / default = slot mode):
+
+| Prop | Type, default | Meaning and effect |
+|---|---|---|
+| `src` | `?string`, `null` | Address of the page to show (without `dl-view` / `dl-os`; an existing query string is kept). Not `null` = source mode; `mode` is ignored. |
+| `preset` | `string`, `'android'` | The device selected on load. An unknown value = `android`. |
+| `back` | `?string`, `null` | Address of the "Close" link at the end of the toolbar (back to the original page). |
+
+The stage scales the device box down (`transform: scale`) to fit the window; the page inside still has the real device size. A click on a device button resizes the box and reloads the iframe with that device's `dl-view` / `dl-os`, without reloading the frame page. Links followed inside the iframe do not keep `dl-view`; preview one page, and start a multi page flow from its first page on the chosen device. The catalog uses it for the "View as" switch (`x-dl::view-as` links to `/lib/{page}/as?as={preset}`); rules in `skills/devlib/views.md`.
 
 ## Behavior
 
@@ -48,7 +70,7 @@ The view is a rounded white box (`--dl-surface`) with a shadow, centred in the s
 
 `Device` (`resources/assets/js/components/device.js`, selector `[data-dl-device]`): on a click on a `.dl-device__btn` it toggles `is-active` on the buttons and rewrites the view class to `dl-device__view is-<data-mode>`. It sets no attributes, fires no event, and does not persist anything. The root has no `data-dl-js` attribute (the PHP class has no `jsClass()`), so the script is bound by its selector only.
 
-### What the frame does NOT emulate
+### What the frame does NOT emulate (slot mode; source mode above does)
 
 The frame is a `div` that is resized; it is not an `<iframe>`. CSS `@media` queries and `100vh`/`vw` units inside the slot still follow the real browser window, not the frame width. The only rule that reacts to the mode is `.dl-device__view.is-mobile .dl-form__body { grid-template-columns: 1fr }`, which makes the body of an `x-dl::form` single-column in mobile mode. Anything else that depends on the width of the window will not change.
 

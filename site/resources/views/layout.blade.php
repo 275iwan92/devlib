@@ -9,14 +9,14 @@ Status: aktif.
 <html lang="{{ \Devlib\Locale::lang() }}" data-dl-tz="{{ config('devlib.timezone') }}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="{{ \Devlib\Device::viewport(request()) }}">
     <title>{{ $title ?? 'DevLib' }} — {{ config('devlib.brand.name', 'DevLib') }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="{{ \Devlib\DevlibServiceProvider::asset('devlib.css') }}">
     <x-dl::theme-boot />
     <script src="{{ \Devlib\DevlibServiceProvider::asset('devlib.js') }}" defer></script>
 </head>
-<body class="dl-body {{ $bodyClass ?? '' }}">
+<body class="dl-body {{ $bodyClass ?? '' }}{{ ($dc = \Devlib\Device::bodyClass(request())) ? ' '.$dc : '' }}">
     @yield('body')
 </body>
 </html>

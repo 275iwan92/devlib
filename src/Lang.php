@@ -818,6 +818,8 @@ final class Lang
         'lbl.315' => ['Bagian', 'Sections'],
         'lbl.316' => ['Perbesar satu layar', 'Maximize'],
         'lbl.317' => ['Kembalikan', 'Restore'],
+        'lbl.318' => ['Lihat sebagai', 'View as'],
+        'lbl.319' => ['HP Android', 'Android phone'],
         // Production Output (layar entry hasil produksi di mesin), 2026-10-13.
         'od.perhour' => ['TARGET PER JAM', 'TARGET PER HOUR'], 'od.qty' => ['TARGET QTY', 'TARGET QTY'], 'od.duration' => ['TARGET DURASI', 'TARGET DURATION'],
         'od.unit_h' => ['/jam', '/hour'], 'od.hours' => ['jam', 'h'], 'od.minutes' => ['mnt', 'min'],

@@ -1,6 +1,6 @@
 # DevLib: tampilan HP (smartphone potret)
 
-Panduan memasang tampilan HP di proyek baru atau lama. Tampilan HP dan desktop adalah dua varian PERANGKAT (bukan versi lama / baru: aturan "satu default, tanpa saklar versi" di `object.md` tidak berlaku di sini). Semua bagian umum ada di DevLib dan **opt-in**: proyek yang tidak memakainya tidak berubah. Proyek hanya membuat isi layar HP-nya sendiri.
+Panduan memasang tampilan HP di proyek baru atau lama. Tampilan HP dan desktop adalah dua varian PERANGKAT (bukan versi lama / baru: aturan "satu default, tanpa saklar versi" di `object.md` tidak berlaku di sini). Semua bagian umum ada di DevLib dan **opt-in**: proyek yang tidak memakainya tidak berubah. Proyek hanya membuat isi layar HP-nya sendiri. Model view (`phone` / `desktop`, Android / iOS), aturan wajib, dan pratinjau "Lihat sebagai": `views.md`.
 
 Uji acuan: Chrome Android potret **360 x 790 px CSS** (OPPO A6 Pro). Tata letak mengalir dari **320 sampai sekitar 440 px** tanpa titik patah di dalam rentang itu; tinggi memakai `dvh` (bilah alamat Chrome mengubah tinggi nyata, jangan bergantung pada tinggi pasti). Batas "layar sempit" untuk popup tawaran: `<= 760 px`.
 
@@ -25,9 +25,9 @@ Pola layar kerja satu-barang-per-kartu (progress, cari/pindai, simpan per barang
    Route::post('ui', fn (Request $r) => redirect()->route('home')->withCookie(cookie(Device::COOKIE, $r->validate(['ui' => ['required', Rule::in(Device::CHOICES)]])['ui'], 60 * 24 * 365)))->name('ui.set');
    ```
    (`home` bagi tamu akan dialihkan ke login oleh middleware `auth`.)
-2. **Memilih view.** `Device::fromRequest($request)` = `hp` | `desktop`: cookie `ui` yang sah menang; selain itu `Sec-CH-UA-Mobile`, lalu User-Agent (ponsel saja; tablet dan "situs desktop" = desktop).
+2. **Memilih view.** `Device::view($request)` = `phone` | `desktop` (nama lama `fromRequest`): cookie `ui` yang sah menang; selain itu `Sec-CH-UA-Mobile`, lalu User-Agent (ponsel saja; tablet dan "situs desktop" = desktop).
    ```php
-   return view(Device::fromRequest($request) === Device::HP ? 'login-hp' : 'login', [...]);
+   return view(Device::view($request) === Device::PHONE ? 'login-hp' : 'login', [...]);
    ```
 3. **Login HP.** View `login-hp`: `@extends` layout proyek, lalu
    ```blade
@@ -38,14 +38,14 @@ Pola layar kerja satu-barang-per-kartu (progress, cari/pindai, simpan per barang
 4. **Login desktop.** Tambahkan di bawah `x-dl::frame`: `<x-dl::phone-offer :action="route('ui.set')" />` (hanya tertulis bila belum ada pilihan dan perangkat desktop; CSS menampilkannya hanya pada lebar <= 760 px).
 5. **Kerangka HP.** Satu layout `hp/layout.blade.php` berisi `<x-dl::phone-shell :title :back :active :tabs :modules :user :logout-action :device-action :frame>@yield('content')</x-dl::phone-shell>`. `tabs` = empat MENU UTAMA (`key`, `label`, `icon`, `url`: Beranda, Stok, Transaksi, Opname; tombol kelima 'Menu' = semua modul ditambah komponen) yang tampil di bilah keadaan C, `modules` = bentuk sama dengan `x-dl::layer-shell` (saring menurut hak akses di server). Layar yang belum punya tampilan HP: `:frame="url-halaman-desktop"` (iframe di dalam kerangka).
 6. **Isi layar HP** dengan `x-dl::phone-tiles` + `x-dl::phone-tile`, `x-dl::phone-link`, `x-dl::phone-bar`, `x-dl::alert`, `x-dl::button`; isian standar (`type=text inputmode=decimal`, 16 px) supaya keyboard HP, pen, dan pemindai barcode Bluetooth/USB (bertingkah seperti keyboard + Enter) bekerja. Tanpa fungsi yang hanya muncul saat hover.
-7. **Beranda.** Controller Beranda: bila `hp`, kembalikan view HP (data sama, tampilan lain). Desktop tidak disentuh.
+7. **Beranda.** Controller Beranda: bila view `phone`, kembalikan view HP (data sama, tampilan lain). Desktop tidak disentuh.
 8. **Saklar di desktop (opsional).** `x-dl::layer-shell :device-action="route('ui.set')"` menambah aksi "Phone view" di menu profil.
 9. **Tes.** Cek: login ponsel = login HP; komputer tanpa cookie = login desktop + popup; cookie menang atas tebakan di dua arah; POST `ui` menolak nilai lain; menu HP hanya berisi modul yang boleh dibuka; desktop identik (tidak ada `dl-phone`). Acuan: `PhoneViewTest` di proyek pertama dan `site/tests/Feature/PhoneShellTest.php`.
 10. **Kamus.** Teks komponen ada di kamus DevLib (`phone_offer*`) atau memakai teks English yang diterjemahkan kamus proyek (`Phone view`, `Desktop view`, `Display`, `Apply`, `Menu`, `Sign out`).
 
 ### Form dan layar desktop di dalam kerangka HP
 
-Layar desktop yang dibuka lewat `:frame` (iframe) tidak tahu bahwa ia ada di HP. Tambahkan `Devlib\Device::bodyClass(request())` ke `<body class="...">` layout proyek: hasilnya `dl-on-phone` bila perangkat `hp` (kosong di desktop). Dengan kelas itu CSS DevLib memadatkan `x-dl::form` menjadi satu kolom (label di atas, isian 16 px / >= 44 px, plus tambah-cepat sebaris, panel statistik dua kolom; tombol Simpan / Urungkan / Kembali tampil sebagai bilah aksi di atas saat tombol melayang diketuk, tidak ada yang menempel di bawah). Tanpa kelas itu (desktop) tidak ada aturan yang cocok, dan pembungkus tombol `dl-form__acts` adalah `display: contents` sehingga tata letak desktop identik.
+Layar desktop yang dibuka lewat `:frame` (iframe) tidak tahu bahwa ia ada di HP. Tambahkan `Devlib\Device::bodyClass(request())` ke `<body class="...">` layout proyek: hasilnya `dl-on-phone` (+ `dl-os-android` | `dl-os-ios`) bila view `phone` (kosong di desktop). Dengan kelas itu CSS DevLib memadatkan `x-dl::form` menjadi satu kolom (label di atas, isian 16 px / >= 44 px, plus tambah-cepat sebaris, panel statistik dua kolom; tombol Simpan / Urungkan / Kembali tampil sebagai bilah aksi di atas saat tombol melayang diketuk, tidak ada yang menempel di bawah). Tanpa kelas itu (desktop) tidak ada aturan yang cocok, dan pembungkus tombol `dl-form__acts` adalah `display: contents` sehingga tata letak desktop identik.
 
 ### Daftar (grid) sebagai kartu di HP
 

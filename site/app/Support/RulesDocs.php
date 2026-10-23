@@ -10,7 +10,7 @@ final class RulesDocs
 {
     // folder menu => berkas (tanpa .md), mengikuti pembagian SKILL.md.
     public const FOLDERS = [
-        'Develop & Coding' => ['SKILL', 'inheritance', 'object', 'install', 'phone'],
+        'Develop & Coding' => ['SKILL', 'inheritance', 'object', 'install', 'phone', 'views'],
         'Screens' => ['grid', 'form', 'grid-form-flow', 'transaction-lifecycle', 'help'],
         'Models' => ['engine', 'assistant', 'chat'],
         'Reference' => ['components'],

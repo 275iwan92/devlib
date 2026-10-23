@@ -2,7 +2,7 @@
 
 `<x-dl::phone-login>` is the sign-in page for a phone held upright. It wraps `x-dl::login-box` (fields, error message, button) in one fluid column from 320 to about 440 px wide: fields 52 px high with 16 px text, a large Sign in button, safe-area padding, and a small "Desktop view" link that saves the choice `ui=desktop` and goes back to the desktop sign-in.
 
-The project chooses this page when `Devlib\Device::fromRequest` says `hp`, and the desktop sign-in (`x-dl::frame` + `x-dl::login-box` + `x-dl::phone-offer`) otherwise.
+The project chooses this page when `Devlib\Device::view` says `phone`, and the desktop sign-in (`x-dl::frame` + `x-dl::login-box` + `x-dl::phone-offer`) otherwise.
 
 ### Generated markup
 

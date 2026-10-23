@@ -67,7 +67,7 @@ class LayerShell extends DevlibComponent
         // 'edit' (aksi Edit profile + modal / laci-nya), 'help' (aksi Help & support), 'setup' (halaman Setup dengan Tema dan Bahasa),
         // 'theme' (pilihan Tema; tanpa Tema, halaman Setup diganti langsung halaman Bahasa). Ubah password dan Sign out tidak bisa disembunyikan.
         public array $without = [],
-        // Alamat POST yang menyimpan pilihan tampilan (field ui = hp): menambah aksi "Phone view" di menu profil (opt-in; null = tanpa aksi, markup lama).
+        // Alamat POST yang menyimpan pilihan tampilan (field ui = phone): menambah aksi "Phone view" di menu profil (opt-in; null = tanpa aksi, markup lama).
         public ?string $deviceAction = null,
     ) {
         $identity = Brand::identity();

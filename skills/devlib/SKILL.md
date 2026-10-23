@@ -34,6 +34,7 @@ Cek `composer.json` proyek: bila `jo/devlib` sudah ada, lewati. Bila belum, muat
 - **Data transaksional** (DRAFT > CONFIRMED > CANCELLED, SAVE/DELETE/NEW/PRINT, readonly, ADJUSTMENT, authority, baris detail 2 state, MODE di print): `transaction-lifecycle.md`.
 - **Membangun object baru** (kelas PHP + JS berpasangan, header REMARK, manifest, tes kontrak, halaman katalog, mewariskan, kapan layak): `object.md`.
 - **Tampilan HP (smartphone potret)**: `Devlib\Device` (deteksi + cookie `ui`), `x-dl::device-pick`, `x-dl::phone-offer`, `x-dl::phone-login`, `x-dl::phone-shell`, kartu/tautan/bilah HP; opt-in. Langkah memasang di proyek: `phone.md`.
+- **Multi view (phone dan desktop; Android dan iOS)**: setiap layar / object menyatakan dukungan view-nya dan object baru diuji di dua view; model `Device::view()` / `os()`, tabel padanan, aturan per OS, pratinjau "Lihat sebagai" di katalog: `views.md`.
 - **Help** proyek selalu dua bagian, UG (Indonesia) dan TG (English), flow = SVG: `help.md`.
 - **Penegak aturan:** `php artisan devlib:lint` memeriksa view terhadap aturan di atas (grid tanpa kind, form dokumen tanpa back, HTML mentah, hex, script inline, isian tanpa nilai awal); temuannya hanya tampil di keluaran perintah itu. Jalankan sebelum menyerahkan layar. Pengecualian opt-in per berkas: `config('devlib.lint_except') = ['resources/views/x.blade.php' => ['L003']]` (kosong = semua aturan berlaku; alasan ditulis di komentar config).
 

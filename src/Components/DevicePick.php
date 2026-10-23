@@ -14,19 +14,19 @@ namespace Devlib\Components;
 
 use Devlib\Device;
 
-// Pilihan tampilan perangkat: dua radio `ui` = hp | desktop, terpilih awal menurut Device::fromRequest (cookie menang atas tebakan).
+// Pilihan tampilan perangkat: dua radio `ui` = phone | desktop, terpilih awal menurut Device::view (cookie menang atas tebakan).
 // Komponen ini hanya MENAMPILKAN pilihan di dalam form milik pemakai; yang menyimpan cookie adalah proyek (satu rute yang membaca `ui`).
 class DevicePick extends DevlibComponent
 {
     public function __construct(
         public string $name = 'ui',
-        // null = menurut cookie / tebakan permintaan ini; 'hp' | 'desktop' memaksa pilihan awal.
+        // null = menurut cookie / tebakan permintaan ini; 'phone' | 'desktop' memaksa pilihan awal.
         public ?string $value = null,
         public string $label = 'Display',
     ) {
         // Urutan: nilai yang diberikan, isian lama (form ditolak lalu ditampilkan ulang), lalu cookie / tebakan.
         $old = old($name);
-        $this->value = in_array($value, Device::CHOICES, true) ? $value : (in_array($old, Device::CHOICES, true) ? $old : Device::fromRequest(request()));
+        $this->value = Device::normalize($value) ?? Device::normalize($old) ?? Device::view(request());
     }
 
     public function tag(): string

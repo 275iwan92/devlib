@@ -115,6 +115,13 @@ Route::middleware('devlib.auth')->group(function () {
     // Alur Grid -> Form -> kembali (skills/devlib/grid-form-flow.md): form = halaman sendiri, dibuka dari grid alur, Back/Simpan kembali ke grid asal (?from=).
     Route::get('/lib/{slug}/form/{id}', function (Request $r, string $slug, string $id) use ($libData) {
         abort_unless(FlowDemo::has($slug), 404);
+    // "Lihat sebagai" (skills/devlib/views.md): halaman katalog yang sama di x-dl::device-frame berukuran perangkat; ?as= android | ios | tablet | laptop | desktop.
+    Route::get('/lib/{slug}/as', function (Request $r, string $slug) {
+        $page = Catalog::page($slug) ?? abort(404);
+
+        return view('view-as', ['page' => $page, 'slug' => $slug, 'preset' => (string) $r->query('as', 'android')]);
+    })->name('lib.as');
+
         $doc = FlowDemo::doc($slug, $r->query('doc'));
         $back = FlowDemo::back($slug, $doc, $r->query('from'));
         $row = $id === 'new' ? null : FlowDemo::row($slug, $doc, $id);

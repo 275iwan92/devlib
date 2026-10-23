@@ -73,7 +73,7 @@ Constructor of `Devlib\Components\PhoneShell` (12 props).
 
 ### Device choice
 
-`Devlib\Device::fromRequest` gives `hp` or `desktop` (cookie first, then `Sec-CH-UA-Mobile`, then `User-Agent`). The project decides which view/shell to render from it. The shell itself never redirects.
+`Devlib\Device::view` gives `phone` or `desktop` (`Device::os` gives `android`, `ios` or `other`) (cookie first, then `Sec-CH-UA-Mobile`, then `User-Agent`). The project decides which view/shell to render from it. The shell itself never redirects.
 
 ## Data and events
 
