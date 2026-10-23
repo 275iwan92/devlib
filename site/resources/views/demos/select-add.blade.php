@@ -13,7 +13,7 @@
     <x-dl::field.select name="supplier_a" label="Supplier" placeholder="Pilih supplier..." :options="$suppliers" :add="$add" />
 
     <p class="dl-note" style="margin-top:20px"><b>2. Di dalam form dengan Save dokumen.</b> Isian popup tidak ikut form: Save dokumen hanya mengirim <code>supplier_b</code>.</p>
-    <x-dl::form title="Penerimaan Barang" action="/demo/select-add/document" :actions="['Save' => 'fa-floppy-disk']" style="height:auto">
+    <x-dl::form title="Penerimaan Barang" action="{{ url('/demo/select-add/document') }}" :actions="['Save' => 'fa-floppy-disk']" style="height:auto">
         <x-dl::form.col>
             <x-dl::field.select name="supplier_b" label="Supplier" placeholder="Pilih supplier..." :options="$suppliers" :add="$add" required />
         </x-dl::form.col>
