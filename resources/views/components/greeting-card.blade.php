@@ -41,12 +41,6 @@
         @if (! empty($d['weather']))
             <x-dl::weather :city="$d['weather']['city']" :lat="$d['weather']['lat']" :lon="$d['weather']['lon']" />
         @endif
-        @if (! empty($d['network']))
-            @php($n = $d['network'])
-            <div class="dl-dash__net" data-dl-network>
-                {{ collect([$n['client_host'] ?? null, $n['client_ip'] ?? null])->filter()->implode(' / ') }}@if (! empty($n['server_ip'])) - Server: {{ $n['server_ip'] }}@endif
-            </div>
-        @endif
     </div>
 </section>
 

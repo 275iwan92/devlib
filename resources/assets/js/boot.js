@@ -26,6 +26,7 @@
     Devlib.mountOne("Split");
     Devlib.mountOne("Device");
     Devlib.mountOne("ScreenInfo");
+    Devlib.mountOne("NetLine");
     Devlib.mountOne("SelectAdd");  // sebelum Form: popup Add New dipindah ke <body> dulu, isiannya tidak ikut daftar isian form
     Devlib.mountOne("Form");
     Devlib.mountOne("Field");

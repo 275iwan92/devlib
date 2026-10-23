@@ -6,12 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 /* REMARK
- * Tujuan       : Info jaringan permintaan untuk baris kecil di kepala dashboard (x-dl::greeting-card, kunci `network`): IP client, nama host client, IP server.
+ * Tujuan       : Info jaringan permintaan untuk baris kecil di bawah nama pengguna (x-dl::net-line lewat binding `devlib.net`): IP client, nama host client, IP server.
  *                Hanya data milik permintaan ini; tidak disimpan. IP client = $request->ip() (ikut pengaturan proxy tepercaya aplikasi).
  *                Nama host client: browser tidak bisa menyebut nama komputer, jadi dicari server lewat DNS balik (gethostbyaddr) HANYA untuk IP pribadi/loopback (LAN), di-cache; hasil tidak ada = null.
  *                Client di mesin yang sama dengan server (127.0.0.1 / ::1) memakai nama mesin sendiri.
  * Output       : of($request) = ['client_ip', 'client_host', 'server_ip', 'server_host'] (nilai bisa null).
- * Dipakai oleh : aplikasi pewaris yang mengisi $board['network'] (opt-in; aplikasi yang memutuskan siapa boleh melihat).
+ * Dipakai oleh : aplikasi pewaris yang mengikat `devlib.net` (opt-in; aplikasi yang memutuskan siapa boleh melihat).
  * Status       : Aktif.
  */
 final class NetworkInfo

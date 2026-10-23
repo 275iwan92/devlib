@@ -5,11 +5,10 @@ namespace Tests\Feature;
 use Devlib\NetworkInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Blade;
 use Tests\TestCase;
 
 /* REMARK
- * Tujuan       : Menjaga info jaringan kepala dashboard: NetworkInfo (IP client, host client hanya untuk IP pribadi / loopback, IP server) dan baris kecil opt-in di x-dl::greeting-card (tanpa kunci `network` HTML sama seperti sebelumnya).
+ * Tujuan       : Menjaga NetworkInfo (IP client, host client hanya untuk IP pribadi / loopback, IP server) yang dipakai x-dl::net-line.
  * Dipakai oleh : php artisan test.
  * Status       : Aktif.
  */
@@ -56,17 +55,5 @@ class NetworkInfoTest extends TestCase
         $this->assertSame('10.0.0.5', NetworkInfo::serverIp('10.0.0.5', 'PC'));
         $this->assertSame('127.0.0.1', NetworkInfo::serverIp('127.0.0.1', ''));   // tidak ada yang lain: apa adanya
         $this->assertNull(NetworkInfo::serverIp('', ''));
-    }
-
-    public function test_the_hero_draws_the_lines_only_when_the_board_has_a_network_key(): void
-    {
-        $board = ['user' => ['first' => 'Yuna'], 'profile_label' => 'Dashboard'];
-        $without = Blade::render('<x-dl::greeting-card :board="$b" />', ['b' => $board]);
-        $with = Blade::render('<x-dl::greeting-card :board="$b" />', ['b' => $board + ['network' => ['client_ip' => '10.0.0.21', 'client_host' => 'PC-GUDANG', 'server_ip' => '10.0.0.5', 'server_host' => 'SRV-1']]]);
-
-        $this->assertStringNotContainsString('data-dl-network', $without);
-        $this->assertStringContainsString('data-dl-network', $with);
-        $this->assertStringContainsString('PC-GUDANG / 10.0.0.21 - Server: 10.0.0.5', $with);
-                $this->assertStringNotContainsString('👋', $with);
     }
 }

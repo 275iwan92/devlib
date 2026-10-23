@@ -503,7 +503,7 @@ final class Lang
         'gt_check_failed' => ['Pengecekan jadwal gagal.', 'The schedule check failed.'],
         'gt_over_min' => ['+{n} mnt', '+{n} min'],
         'gt_over_h' => ['+{n} jam', '+{n} h'],
-        'net_client' => ['IP client', 'Client IP'], 'net_host' => ['Host client', 'Client host'], 'net_server' => ['IP server', 'Server IP'],
+        'net_server_down' => ['Server tidak terjangkau', 'Server unreachable'], 'net_offline' => ['Perangkat offline', 'Device offline'], 'net_simulate' => ['Simulasi', 'Simulate'],
         'gr_morning' => ['Selamat pagi', 'Good morning'],
         'gr_afternoon' => ['Selamat siang', 'Good afternoon'],
         'gr_evening' => ['Selamat sore', 'Good evening'],

@@ -593,6 +593,11 @@ Jendela modal. Dibuka tombol ber-atribut data-dl-open="<id>" atau Devlib.modal.o
 - Berkas: `src/Components/Modal.php`
 - Prop: id:string='modal', title:?string=NULL, size:string='md', open:bool=false, icon:?string=NULL, tone:?string=NULL
 
+## `<x-dl::net-line>`
+Satu baris sangat kecil dan pudar "IP client → IP server" (di bawah nama pengguna) dengan status koneksi ke server: IP server berkedip bila server tidak terjangkau, IP client berkedip bila perangkat offline; nama host lewat tooltip.
+- Berkas: `src/Components/NetLine.php`
+- Prop: clientIp:?string=NULL, serverIp:?string=NULL, clientHost:?string=NULL, serverHost:?string=NULL, pingUrl:?string=NULL, interval:int=10
+
 ## `<x-dl::notification-list>`
 Daftar notifikasi (mockup_notification): ikon berwarna, judul, titik belum dibaca, keterangan, waktu relatif.
 - Berkas: `src/Components/NotificationList.php`

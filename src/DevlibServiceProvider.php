@@ -38,6 +38,9 @@ class DevlibServiceProvider extends ServiceProvider
             return response()->file($path, ['Content-Type' => $type, 'Cache-Control' => self::cacheControl()]);
         })->where('file', '[A-Za-z0-9._-]+')->name('devlib.asset');
 
+        // Alamat ping bawaan untuk x-dl::net-line: 204 tanpa isi, tanpa sesi/login/cookie (tidak ada grup middleware web), hanya dibatasi lajunya.
+        Route::middleware('throttle:120,1')->get('/devlib/ping', fn () => response()->noContent(204, ['Cache-Control' => 'no-store']))->name('devlib.ping');
+
         // Lookup remote: cari ke server (data besar). Middleware diatur aplikasi pemakai (config devlib.lookup_middleware).
         Route::middleware(config('devlib.lookup_middleware', ['web']))
             ->get('/_devlib-lookup/{name}', fn (Request $r, string $name) => response()->json(

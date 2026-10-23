@@ -69,7 +69,7 @@ final class Theme
             // Sidebar terang: teks sidebar gelap; kartu "navy" (hero, bilah atas) tetap gelap supaya teks putihnya terbaca.
             $t = [
                 'side-ink' => "color-mix(in srgb, $primary 15%, #0f1d16)", 'side-leaf' => "color-mix(in srgb, $primary 15%, #0f1d16)", 'side-hot' => '#0b1a12',
-                'side-muted' => "color-mix(in srgb, $primary 40%, #2a3a31)",
+                'side-muted' => "color-mix(in srgb, $primary 40%, #2a3a31)", 'net-bad' => '#b3261e', 'net-warn' => '#8a5a00',
                 'side-2' => "color-mix(in srgb, $sidebar 88%, $primary)", 'side-hover' => "color-mix(in srgb, $sidebar 75%, $primary)", 'side-scroll' => "color-mix(in srgb, $sidebar 70%, $primary)",
                 'tabbar' => "color-mix(in srgb, $sidebar 85%, #fff)", 'tab' => "color-mix(in srgb, $sidebar 90%, $primary)", 'tab-hover' => "color-mix(in srgb, $sidebar 80%, $primary)",
                 'navy' => "color-mix(in srgb, $primary 55%, #0b1a12)", 'navy-2' => "color-mix(in srgb, $primary 45%, #0b1a12)", 'topbar' => "color-mix(in srgb, $primary 60%, #0b1a12)",

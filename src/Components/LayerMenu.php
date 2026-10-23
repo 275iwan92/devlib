@@ -161,7 +161,7 @@ class LayerMenu extends DevlibComponent
                         {{-- Avatar + nama = satu-satunya pintu Profile: klik = buka, klik lagi = tutup (user 2026-10-03). --}}
                         <button type="button" class="dl-lm__userbtn" data-lm-user title="{{ \Devlib\Lang::text('Profile') }}" aria-label="{{ \Devlib\Lang::text('Profile') }}" aria-expanded="false">
                             <span class="dl-lm__avatar">{{ $initials() }}<em class="dl-lm__dot-badge" data-lm-unread="avatar" hidden></em></span>
-                            <span class="dl-lm__user"><b>{{ $user }}</b>@if ($role)<small>{{ $role }}</small>@endif<x-dl::env-badge part="where" /></span>
+                            <span class="dl-lm__user"><b>{{ $user }}</b>@if ($role)<small>{{ $role }}</small>@endif @if (app()->bound('devlib.net')) <x-dl::net-line /> @else <x-dl::env-badge part="where" /> @endif</span>
                         </button>
                     </div>
                 @endif
