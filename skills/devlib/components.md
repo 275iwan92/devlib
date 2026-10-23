@@ -473,6 +473,11 @@ Logout otomatis setelah tidak ada aktivitas: hitung mundur di browser, peringata
 - Berkas: `src/Components/IdleLogout.php`
 - Prop: minutes:float=30.0, warn:float=2.0, logoutUrl:string='', pingUrl:string='', pingEvery:float=5.0, loginUrl:string='', preview:bool=false
 
+## `<x-dl::image-gallery>`
+Galeri gambar acuan: kisi gambar kecil dengan keterangan dan catatan ukuran; ketuk gambar = buka ukuran penuh di tab baru. Untuk tangkapan layar acuan visual sebuah object.
+- Berkas: `src/Components/ImageGallery.php`
+- Prop: items:array=[], title:string='', note:string='', columns:int=150
+
 ## `<x-dl::import>`
 Import data dari CSV (perilaku ImportAction Filament): 1 Upload (+ template) -> 2 Cocokkan kolom.
 - Berkas: `src/Components/Import.php`
@@ -863,15 +868,15 @@ Ikon support kecil; diklik -> popup daftar akun uji coba (UAT). HAPUS dari login
 - Berkas: `src/Components/UatAccounts.php`
 - Prop: accounts:array=[…], password:string='contoh!23'
 
-## `<x-dl::warehouse-desk>`
-Form khusus Warehouse Map (user 2026-10-02, docs/warehouselayout_tier1.md): pemilih gedung + pintasan ke Buildings / Storage.
-- Berkas: `src/Components/WarehouseDesk.php`, tampilan `resources/views/components/warehouse-desk.blade.php`
-- Prop: desk:array=[]
-
 ## `<x-dl::view-as>`
 Saklar "Lihat sebagai": pil melayang dengan menu perangkat (Android phone, iPhone, Tablet, Laptop, Desktop); memilih satu membuka halaman pratinjau berisi x-dl::device-frame mode `src`.
 - Berkas: `src/Components/ViewAs.php`
 - Prop: href:string=(wajib), label:string='View as'
+
+## `<x-dl::warehouse-desk>`
+Form khusus Warehouse Map (user 2026-10-02, docs/warehouselayout_tier1.md): pemilih gedung + pintasan ke Buildings / Storage.
+- Berkas: `src/Components/WarehouseDesk.php`, tampilan `resources/views/components/warehouse-desk.blade.php`
+- Prop: desk:array=[]
 
 ## `<x-dl::weather>`
 Cuaca terkini dari internet (Open-Meteo, gratis tanpa kunci API), diambil oleh browser.

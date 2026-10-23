@@ -23,17 +23,23 @@
       this.list = $(this.el, '[data-dl-phone-list]');
       this.other = $(this.el, '[data-dl-phone-other]');
       this.more = $(this.el, '[data-dl-phone-more]');
+      this.panel = $(this.el, '[data-dl-phone-panel]');
+      this.sheet = $(this.el, '[data-dl-phone-sheet]');
       this.live = $(this.el, '[data-dl-phone-live]');
       this.frame = $(this.el, '.dl-phone__frame');
       this.content = $(this.el, '.dl-phone__main');
       const d = this.el.dataset;
-      this.L = {A: d.lA, B: d.lB, C: d.lC, dirty: d.lDirty, leave: d.lLeave, menu: d.lMenu, search: d.lSearch, options: d.lOptions};
+      this.L = {A: d.lA, B: d.lB, C: d.lC, dirty: d.lDirty, leave: d.lLeave, menu: d.lMenu, search: d.lSearch, ui: JSON.parse(d.lUi || '{}')};
       this.state = 'A';
       this.overflow = [];
       this.btn.addEventListener('click', () => this.set(this.next(), true));
       this.more.addEventListener('click', () => this.toggleList());
       $$(this.el, '[data-dl-phone-close]').forEach(x => x.addEventListener('click', () => this.set('A', true)));
-      this.el.addEventListener('keydown', e => { if (e.key === 'Escape' && this.state !== 'A') this.set('A', true); this.arm(); });
+      $(this.el, '[data-dl-phone-close-panel]').addEventListener('click', () => this.closePanel());
+      this.el.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && this.panelFn) this.closePanel(); else if (e.key === 'Escape' && this.state !== 'A') this.set('A', true);
+        this.arm();
+      });
       this.el.addEventListener('pointerdown', () => this.arm());
       this.list.addEventListener('scroll', () => this.arm(), {passive: true});
       // Pindah layar dari menu: bila form kotor, tanya dulu (Simpan tidak boleh hilang tanpa disadari).
@@ -71,28 +77,136 @@
       const d = this.doc();
       if (!d) return [];
       const q = s => [...d.querySelectorAll(s)];
+      // Layar sendiri (bukan form / grid / report): tombol dengan [data-phone-act] ("primary" = item utama berwarna aksen) menjadi aksi bilah B.
+      const own = q('[data-phone-act]').filter(b => !b.hidden && !b.closest('[hidden]'));
+      if (own.length) return own.map(b => this.item(b, {primary: b.dataset.phoneAct === 'primary'}));
       const form = q('.dl-form__acts .dl-btn').filter(b => !b.hidden && !b.closest('[hidden]'));
       if (form.length) {
-        const list = form.map(b => this.item(b, {primary: b.dataset.fAct === 'save'}));
-        return [...list.filter(i => i.primary), ...list.filter(i => !i.primary)];
+        // Urutan bilah: Simpan, Urungkan, Kembali, Baru; aksi lain (Nonaktifkan, Hapus ...) menyusul dan, di atas empat, masuk "Aksi lain".
+        const rank = i => { const k = ['save', 'undo', 'back', 'new'].indexOf(i.act); return k < 0 ? 9 : k; };
+        return form.map(b => this.item(b, {act: b.dataset.fAct, primary: b.dataset.fAct === 'save'})).sort((x, y) => rank(x) - rank(y));
       }
       const grid = d.querySelector('.dl-grid__toolbar');
       if (grid) {
-        const g = s => d.querySelector(s);
+        const g = s => d.querySelector(s), U = this.L.ui;
         return [
           g('[data-g-search]') && {label: this.L.search, icon: 'fa-solid fa-magnifying-glass', run: () => this.openSearch(d)},
           g('[data-g-new]') && this.item(g('[data-g-new]'), {label: this.label(g('[data-g-new]')).replace(/^\+\s*/, ''), icon: 'fa-solid fa-plus', primary: true}),
-          g('[data-g-toggle="filters"]') && this.item(g('[data-g-toggle="filters"]')),
-          g('[data-g-toggle="columns"]') && this.item(g('[data-g-toggle="columns"]')),
-          g('[data-g-export]') && this.item(g('[data-g-export]')),
+          g('[data-g-fopen]') ? this.item(g('[data-g-fopen]'), {label: U.filter}) : {label: U.filter, icon: 'fa-solid fa-sliders', panel: () => this.filterPanel(d)},
+          g('[data-g-expmenu]') && {label: U.export, icon: 'fa-solid fa-file-export', panel: () => this.exportPanel(d)},
         ].filter(Boolean);
       }
       const bar = d.querySelector('.dl-print__bar');
       if (bar) {
-        const print = [...bar.querySelectorAll('button, a')].find(b => b.querySelector('.fa-print'));
-        return [print && this.item(print, {primary: true}), {label: this.L.options, icon: 'fa-solid fa-sliders', run: () => d.body.classList.add('dl-phone-print')}].filter(Boolean);
+        const g = s => bar.querySelector(s), U = this.L.ui;
+        const print = g('[data-p-print]'), ink = g('[data-p-bw]'), root = bar.closest('.dl-print');
+        return [
+          print && this.item(print, {primary: true}),
+          g('[data-p-paper]') && {label: U.paper, icon: 'fa-regular fa-file', panel: () => this.paperPanel(d)},
+          g('[data-p-group]') && {label: U.group, icon: 'fa-solid fa-layer-group', panel: () => this.groupPanel(d)},
+          ink && this.item(ink, {label: U.ink, toggle: true, on: root.classList.contains('is-bw')}),
+        ].filter(Boolean);
       }
       return [];
+    }
+
+    // ---- panel dari atas: isinya dicerminkan dari kontrol halaman (halaman yang menggambar ulang dibaca lagi setelah tiap perubahan) --------------------
+    seg(d, sel, h) {
+      const o = [...d.querySelectorAll(sel + ' .dl-segment__opt')];
+      return o.length ? {h, seg: o.map(b => ({label: b.title || b.textContent.trim(), on: b.classList.contains('is-active'), run: () => b.click()}))} : null;
+    }
+
+    filterPanel(d) {
+      return () => {
+        const U = this.L.ui, q = s => [...d.querySelectorAll(s)];
+        const sel = q('[data-g-filter-fields] [data-g-filter]').map(s => ({
+          h: s.closest('label')?.querySelector('span')?.textContent || s.dataset.gFilter,
+          sel: {value: s.value, opts: [...s.options].map(o => ({v: o.value, t: o.textContent})), set: v => { s.value = v; s.dispatchEvent(new Event('change', {bubbles: true})); }},
+        }));
+        const cols = q('[data-g-col]');
+        return {title: U.filter, apply: true, sections: [this.seg(d, '[data-g-view]', U.view), ...sel, cols.length && {cols: {label: U.cols, items: cols.map(c => ({label: c.parentElement.textContent.trim(), on: c.checked, run: () => c.click()}))}}].filter(Boolean)};
+      };
+    }
+
+    exportPanel(d) {
+      return () => ({title: this.L.ui.export, sections: [{list: [...d.querySelectorAll('[data-g-fmt]')].map(b => ({label: b.textContent.trim(), icon: 'fa-solid fa-file-arrow-down', run: () => b.click()}))}]});
+    }
+
+    paperPanel(d) {
+      return () => ({title: this.L.ui.paper, sections: [this.seg(d, '[data-p-paper]'), this.seg(d, '[data-p-prices]'), this.seg(d, '[data-p-ppn]')].filter(Boolean)});
+    }
+
+    groupPanel(d) {
+      return () => ({title: this.L.ui.group, sections: [this.seg(d, '[data-p-group]')].filter(Boolean)});
+    }
+
+    openPanel(fn) {
+      this.panelFn = fn; this.colsOpen = false;
+      this.drawPanel();
+      this.panel.hidden = false;
+      $(this.sheet, 'button, select, input')?.focus({preventScroll: true});
+      this.arm();
+    }
+
+    closePanel() {
+      this.panelFn = null;
+      this.panel.hidden = true;
+      this.arm();
+    }
+
+    drawPanel() {
+      const spec = this.panelFn?.();
+      if (!spec) return;
+      const U = this.L.ui, box = this.sheet;
+      const el = (t, c, txt) => { const e = document.createElement(t); if (c) e.className = c; if (txt != null) e.textContent = txt; return e; };
+      const act = fn => () => { fn(); setTimeout(() => { if (this.panelFn) this.drawPanel(); }, 0); };   // halaman menggambar ulang dulu, lalu dibaca lagi
+      box.replaceChildren(el('h2', 'dl-phone__gh', spec.title));
+      spec.sections.forEach(s => {
+        if (s.h) box.append(el('h3', 'dl-phone__ph', s.h));
+        if (s.seg) {
+          const g = el('div', 'dl-phone__seg');
+          s.seg.forEach(o => { const b = el('button', 'dl-phone__opt' + (o.on ? ' is-on' : ''), o.label); b.type = 'button'; b.setAttribute('aria-pressed', String(!!o.on)); b.addEventListener('click', act(o.run)); g.append(b); });
+          box.append(g);
+        }
+        if (s.sel) {
+          const f = el('select', 'dl-phone__sel');
+          s.sel.opts.forEach(o => { const x = el('option', '', o.t); x.value = o.v; f.append(x); });
+          f.value = s.sel.value;
+          f.addEventListener('change', act(() => s.sel.set(f.value)));
+          box.append(f);
+        }
+        if (s.list) s.list.forEach(o => {
+          const b = el('button', 'dl-phone__row'); b.type = 'button';
+          const i = el('i', o.icon); i.setAttribute('aria-hidden', 'true');
+          b.append(i, el('span', '', o.label));
+          b.addEventListener('click', () => { o.run(); this.set('A'); });
+          box.append(b);
+        });
+        if (s.cols) {
+          const t = el('button', 'dl-phone__row'); t.type = 'button'; t.setAttribute('aria-expanded', String(!!this.colsOpen));
+          const i = el('i', 'fa-solid fa-table-columns'); i.setAttribute('aria-hidden', 'true');
+          t.append(i, el('span', '', s.cols.label));
+          t.addEventListener('click', () => { this.colsOpen = !this.colsOpen; this.drawPanel(); });
+          box.append(t);
+          if (this.colsOpen) s.cols.items.forEach(c => {
+            const l = el('label', 'dl-phone__chk'), x = el('input'); x.type = 'checkbox'; x.checked = c.on;
+            x.addEventListener('change', act(c.run));
+            l.append(x, el('span', '', c.label));
+            box.append(l);
+          });
+        }
+      });
+      if (spec.apply) { const a = el('button', 'dl-phone__apply', U.apply); a.type = 'button'; a.addEventListener('click', () => this.set('A')); box.append(a); }
+    }
+
+    // Lembar cetak selebar kertas diperkecil (variabel CSS, hanya di layar) supaya pas lebar layar; hasil cetak tidak ikut mengecil.
+    fitSheets(d) {
+      const s = d.querySelector('.dl-print__sheet');
+      if (!s) return;
+      const root = d.documentElement;
+      root.style.removeProperty('--dl-phone-fit');
+      const w = root.clientWidth - 24;
+      if (s.offsetWidth > w) root.style.setProperty('--dl-phone-fit', (w / s.offsetWidth).toFixed(3));
     }
 
     hasActions() { return this.items().length > 0; }
@@ -107,15 +221,22 @@
     attach() {
       const d = this.doc();
       this.obs?.disconnect();
+      this.pobs?.disconnect();
       if (d && this.frame) {
         d.body.classList.add('dl-phone-shelled');
         d.addEventListener('scroll', () => this.scrolled(), true);
         d.addEventListener('pointerdown', e => {
-          if (!e.target.closest('.dl-print__bar')) d.body.classList.remove('dl-phone-print');
           if (!e.target.closest('.dl-grid__search')) { const s = d.querySelector('[data-g-search]'); if (s && !s.value) d.body.classList.remove('dl-phone-search'); }
           if (!e.target.closest('.dl-pop2__panel, .dl-grid__expmenu')) this.outside();
         }, true);
         d.addEventListener('focusout', e => { if (e.target.matches?.('[data-g-search]') && !e.target.value) d.body.classList.remove('dl-phone-search'); });
+      }
+      const pages = d && d.querySelector('.dl-print__pages');
+      if (pages && this.frame) {
+        this.fitSheets(d);
+        this.pobs = new MutationObserver(() => this.fitSheets(d));
+        this.pobs.observe(pages, {childList: true});
+        d.defaultView.addEventListener('resize', () => this.fitSheets(d));
       }
       if (d) {
         this.obs = new MutationObserver(() => this.mark());
@@ -124,7 +245,7 @@
       this.set('A');
     }
 
-    outside() { if (this.state !== 'A' && !(this.state === 'B' && this.dirty())) this.set('A'); }
+    outside() { if (this.panelFn) return this.closePanel(); if (this.state !== 'A' && !(this.state === 'B' && this.dirty())) this.set('A'); }
 
     mark() {
       const dirty = this.dirty();
@@ -152,11 +273,16 @@
 
     btnFor(it, cls) {
       const b = document.createElement('button');
-      b.type = 'button'; b.className = cls; b.disabled = !!it.disabled;
+      b.type = 'button'; b.className = cls + (it.on ? ' is-on' : ''); b.disabled = !!it.disabled;
+      if (it.toggle) b.setAttribute('aria-pressed', String(!!it.on));
       const i = document.createElement('i'); i.className = it.icon; i.setAttribute('aria-hidden', 'true');
       const s = document.createElement('span'); s.textContent = it.label;
       b.append(i, s);
-      b.addEventListener('click', () => { it.run(); this.set('A'); });
+      b.addEventListener('click', () => {
+        if (it.panel) return this.openPanel(it.panel());
+        it.run();
+        if (it.toggle) setTimeout(() => this.renderActs(), 0); else this.set('A');
+      });
       return b;
     }
 
@@ -165,6 +291,7 @@
     set(s, user) {
       this.state = s;
       this.shown = Date.now();
+      this.panelFn = null; this.panel.hidden = true;
       this.el.dataset.state = s;
       this.bar.hidden = s === 'A';
       this.acts.hidden = s !== 'B';
@@ -199,7 +326,7 @@
     // Tutup sendiri setelah diam; bilah aksi form TIDAK tertutup sendiri saat form kotor (Simpan tidak boleh lenyap).
     arm() {
       clearTimeout(this.timer);
-      if (this.state === 'A' || (this.state === 'B' && this.dirty())) return;
+      if (this.panelFn || this.state === 'A' || (this.state === 'B' && this.dirty())) return;
       this.timer = setTimeout(() => { if (this.busy()) this.arm(); else this.set('A'); }, HIDE_MS);
     }
 

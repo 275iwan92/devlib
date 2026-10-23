@@ -49,7 +49,29 @@ Layar desktop yang dibuka lewat `:frame` (iframe) tidak tahu bahwa ia ada di HP.
 
 ### Daftar (grid) sebagai kartu di HP
 
-`x-dl::grid` prop `:phone-cards="['title' => 'name', 'sub' => 'code', 'badge' => 'level', 'tones' => [...], 'meta' => ['stock', 'unit', ...]]"` (opt-in; desktop tidak berubah dan tidak mendapat tombol Tabel/Kartu). Di konteks HP grid tampil sebagai kartu, ketuk kartu = buka (`open-url`), cari selebar layar, Filters / Columns / Export sebagai lembar dari bawah, `row-tone` mewarnai kartu.
+`x-dl::grid` prop `:phone-cards="['title' => 'name', 'sub' => 'code', 'badge' => 'level', 'tones' => [...], 'meta' => ['stock', 'unit', ...]]"` (opt-in; desktop tidak berubah dan tidak mendapat tombol Tabel/Kartu). Di konteks HP grid tampil sebagai kartu, ketuk kartu = buka (`open-url`), cari selebar layar, `row-tone` mewarnai kartu. Di dalam `x-dl::phone-shell` toolbar grid disembunyikan; aksinya tampil di bilah keadaan B (Cari, Baru, Saring, Ekspor) dan Saring / Ekspor membuka PANEL dari atas (tidak ada lembar dari bawah).
+
+### Bilah aksi per jenis layar (keadaan B)
+
+Shell membaca aksi dari halaman yang dibingkainya; proyek tidak menyalin kode:
+
+| Layar | Isi bilah B (item utama berwarna aksen, `Menu` paling kanan) | Panel dari atas |
+|---|---|---|
+| Form (`x-dl::form`) | Simpan, Urungkan, Kembali, Baru (sisanya ke "Aksi lain") | - |
+| Grid (`x-dl::grid`) | Cari, Baru, Saring, Ekspor | Saring: Tampilan (bila ada `cards`), saring grid, Atur kolom, Terapkan; Ekspor: daftar format |
+| Report (`x-dl::report`, `x-dl::print-out`) | Cetak, Kertas, Grup, Hemat tinta | Kertas, Grup; lembar cetak diperkecil agar pas lebar layar |
+| Layar sendiri | tombol bertanda `data-phone-act` (`primary` = utama) | - |
+
+Contoh minimal layar sendiri di dalam shell (tombol disembunyikan di halaman, tampil di bilah):
+
+```blade
+<x-dl::phone-shell title="Count" :tabs="$tabs" :modules="$modules" :user="$user">
+    <x-dl::button label="Save" data-phone-act="primary" />
+    <x-dl::button label="Cancel" variant="secondary" data-phone-act />
+</x-dl::phone-shell>
+```
+
+Referensi visual hidup dan tangkapan layar tiap keadaan: halaman katalog `p7-phone` (`/lib/p7-phone`, alamat pendek `/ref/phone-shell`); berkas gambar di `site/public/ref/phone/`.
 
 ## 3. Yang opt-in dan yang tidak berubah
 
@@ -66,4 +88,4 @@ Layar desktop yang dibuka lewat `:frame` (iframe) tidak tahu bahwa ia ada di HP.
 
 ## 5. Daftar komponen HP
 
-`x-dl::phone-shell` (kerangka), `x-dl::phone-login`, `x-dl::phone-offer`, `x-dl::device-pick`, `x-dl::phone-tiles` + `x-dl::phone-tile`, `x-dl::phone-link`, `x-dl::phone-bar`; kelas `Devlib\Device`. Rincian prop: `components.md` dan Technical Guide (`resources/guide/phone-*.md`). Halaman peraga katalog: `p7-phone` (status Review).
+`x-dl::phone-shell` (kerangka), `x-dl::phone-login`, `x-dl::phone-offer`, `x-dl::device-pick`, `x-dl::phone-tiles` + `x-dl::phone-tile`, `x-dl::phone-link`, `x-dl::phone-bar`, `x-dl::image-gallery` (galeri tangkapan layar acuan); kelas `Devlib\Device`. Rincian prop: `components.md` dan Technical Guide (`resources/guide/phone-*.md`). Halaman peraga katalog: `p7-phone` (status Review).

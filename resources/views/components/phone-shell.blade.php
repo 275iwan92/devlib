@@ -1,6 +1,6 @@
 <div {{ $attributes->class(['dl-phone', 'dl-phone--contained' => $contained]) }} {!! $dl() !!} data-dl-phone data-state="A"
      data-l-a="{{ \Devlib\Lang::t('phone_menu') }}" data-l-b="{{ \Devlib\Lang::t('phone_acts') }}" data-l-c="{{ \Devlib\Lang::t('phone_main') }}" data-l-dirty="{{ \Devlib\Lang::t('phone_dirty') }}" data-l-leave="{{ \Devlib\Lang::t('phone_leave') }}"
-     data-l-menu="{{ \Devlib\Lang::t('phone_menu') }}" data-l-search="{{ \Devlib\Lang::t('phone_search') }}" data-l-options="{{ \Devlib\Lang::t('phone_options') }}" data-l-other="{{ \Devlib\Lang::t('phone_other') }}">
+     data-l-menu="{{ \Devlib\Lang::t('phone_menu') }}" data-l-search="{{ \Devlib\Lang::t('phone_search') }}" data-l-ui="{{ json_encode(collect(['filter', 'export', 'paper', 'group', 'ink', 'view', 'cols', 'apply'])->mapWithKeys(fn ($k) => [$k => \Devlib\Lang::t('phone_'.$k)])) }}" data-l-other="{{ \Devlib\Lang::t('phone_other') }}">
     <button type="button" class="dl-phone__burger" data-dl-phone-menu aria-label="{{ \Devlib\Lang::t('phone_menu') }}" aria-expanded="false" aria-controls="dl-phone-bar"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
     <span class="dl-phone__live" role="status" aria-live="polite" data-dl-phone-live></span>
     @if ($frame)
@@ -58,6 +58,11 @@
             @endif
         </div>
         <div class="dl-phone__veil" data-dl-phone-close></div>
+    </div>
+    {{-- Panel dari atas (di bawah bilah): isinya digambar JS dari kontrol halaman (saring, ekspor, kertas, grup). --}}
+    <div class="dl-phone__drop" data-dl-phone-panel hidden>
+        <div class="dl-phone__list" data-dl-phone-sheet></div>
+        <div class="dl-phone__veil" data-dl-phone-close-panel></div>
     </div>
     <main class="dl-phone__main{{ $frame ? ' dl-phone__main--frame' : '' }}">
         @if ($frame)
