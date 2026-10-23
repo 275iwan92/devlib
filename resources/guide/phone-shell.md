@@ -26,7 +26,7 @@ The slot named `actions` (`<x-slot:actions>`) puts buttons at the right end of t
 
 ## Props
 
-Constructor of `Devlib\Components\PhoneShell` (13 props).
+Constructor of `Devlib\Components\PhoneShell` (12 props).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -42,14 +42,12 @@ Constructor of `Devlib\Components\PhoneShell` (13 props).
 | `links` | `array`, `[]` | Extra links at the end of the module list: `[['label', 'icon', 'url'], …]` (for example Help). |
 | `frame` | `?string`, `null` | Address of a desktop screen shown in an `iframe` as the content (replaces the slot). The desktop page keeps its own behaviour inside; wide tables scroll inside the frame. |
 | `contained` | `bool`, `false` | `false` = the shell is as tall as the screen (`100dvh`). `true` = as tall as its parent (catalog demo). |
-| `burger` | `bool`, `true` | Draws a hamburger button (three bars, 44 px) at the top left of the top bar when the screen has no `back` link, i.e. on a top-level screen. It opens the same Menu sheet as the Menu tab (there is only one sheet). Screens with `back` show the back button instead: the simplest rule, one button at the left, and a child screen always has an obvious way up. `false` = no hamburger (the Menu tab is the only way to open the sheet). |
 
 ## Behavior
 
 ### Menu sheet
 
 - The Menu tab (a button) opens the sheet from the bottom, above the tab bar; the tab stays visible and closes the sheet again. A tap on the dimmed area or the Escape key also closes it. `aria-expanded` follows the state.
-- The hamburger and the Menu tab are two buttons for the same sheet. Opening moves keyboard focus into the sheet (`tabindex="-1"`), the close button (X, 44 px, `aria-label`) at its top right, the dimmed area and Escape close it and focus returns to the button that opened it. Choosing a screen in the sheet loads that screen, so the sheet closes by itself.
 - Links in the sheet and in the tabs are ordinary links (full page load). The sheet is rendered closed (`hidden`), so without JavaScript the Menu tab does nothing but nothing else breaks.
 
 ### Layout
