@@ -609,7 +609,7 @@ Hak akses grup per objek (mockup security.html "Hak Akses Grup"): pilih grup -> 
 - Prop: objects:array=[], groups:array=[], perms:array=[], levels:array=[…], default:int=1, source:?string=NULL, saveUrl:?string=NULL
 
 ## `<x-dl::phone-bar>`
-Bilah tombol yang menempel di bawah area isi layar HP (di atas bilah tab): dua atau tiga tombol besar sebaris, selalu terlihat saat isi digulir.
+Bilah tombol besar sebaris di dalam isi layar HP (mis. Sebelumnya / Berikutnya): dua atau tiga tombol, ikut alur halaman.
 - Berkas: `src/Components/PhoneBar.php`
 - Prop: columns:string=''
 
@@ -629,7 +629,7 @@ Popup kecil di layar desktop yang sempit: "Ingin tampilan yang lebih nyaman di s
 - Prop: action:string='', force:bool=false
 
 ## `<x-dl::phone-shell>`
-Kerangka aplikasi untuk smartphone potret: bilah atas kecil (satu tombol hamburger, tombol kembali, judul), isi selebar layar penuh, dan panel Menu dari atas (menu utama besar + semua modul).
+Kerangka aplikasi untuk smartphone potret: SATU ikon hamburger melayang (tanpa bilah permanen), baris judul + tombol kembali di isi halaman, dan deret aksi layar / lima menu utama yang muncul di atas lalu tertutup sendiri.
 - Berkas: `src/Components/PhoneShell.php`, tampilan `resources/views/components/phone-shell.blade.php`
 - Prop: title:string='', back:?string=NULL, tabs:array=[], active:string='', modules:array=[], user:array=[…], brand:?string=NULL, logoutAction:string='', deviceAction:?string=NULL, links:array=[], frame:?string=NULL, contained:bool=false
 

@@ -232,9 +232,11 @@ Screens write English. `title`, `subtitle` and `tabs` labels go through `Lang::t
 
 Footer: optional extra button (`extra-action`) that opens a QR with all field values (passwords masked, files and `_token` / `_action` skipped, multi-value fields merged into arrays); in `mode="view"` a Cancel button; the split button. Choosing an item in the split menu only selects it; the main button submits. The split button always posts its choice in a field called `_action`, whatever `action-field` says.
 
-### Phone view (one column)
+### Phone view (one column, actions at the top)
 
-The panel buttons (the actions and Back) are wrapped in `<div class="dl-form__acts">`, which is `display: contents` on a desktop screen, so nothing moves. When the page body carries the class `dl-on-phone` (add `Devlib\Device::bodyClass(request())` to the layout `<body>`), or the form is inside `x-dl::phone-shell`, CSS switches the form to a phone layout: every `x-dl::form.row` and the body grid become one column, labels sit above the fields at 15 px, inputs and dropdowns are 16 px and at least 44 px high (select boxes 48 px), the plus button of an add-new select stays on the same line, the statistics strip becomes two columns, and the action buttons become a bar fixed to the bottom of the screen (at the very bottom of the content area of the phone shell, with `env(safe-area-inset-bottom)`); the form gets bottom padding so the last field is never covered. Detail tables (`x-dl::lines`) keep scrolling sideways inside their own wrapper.
+The panel buttons (the actions and Back) are wrapped in `<div class="dl-form__acts">`, which is `display: contents` on a desktop screen, so nothing moves. When the page body carries the class `dl-on-phone` (add `Devlib\Device::bodyClass(request())` to the layout `<body>`), or the form is inside `x-dl::phone-shell`, CSS switches the form to a phone layout: every `x-dl::form.row` and the body grid become one column, labels sit above the fields at 15 px, inputs and dropdowns are 16 px and at least 44 px high (select boxes 48 px), the plus button of an add-new select stays on the same line, and the statistics strip becomes two columns.
+
+The action buttons are NOT shown at the bottom (nothing sticks to the bottom of a phone screen). Inside `x-dl::phone-shell` they are hidden in state A and shown as a row at the top when the user taps the floating icon (state B): Save is the main (widest) button, Undo and Back follow, extra buttons wrap. The shell does not close that row by itself while the form is dirty, and shows an orange dot on the icon for an unsaved form. Detail tables (`x-dl::lines`) keep scrolling sideways inside their own wrapper.
 
 ## Data and events
 

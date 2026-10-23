@@ -2,7 +2,7 @@
 
 /*
  * REMARK
- * Tujuan       : Kerangka aplikasi untuk smartphone potret: bilah atas kecil (satu tombol hamburger, tombol kembali, judul), isi selebar layar penuh, dan panel Menu dari atas (menu utama besar + semua modul).
+ * Tujuan       : Kerangka aplikasi untuk smartphone potret: SATU ikon hamburger melayang (tanpa bilah permanen), baris judul + tombol kembali di isi halaman, dan deret aksi layar / lima menu utama yang muncul di atas lalu tertutup sendiri.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek. Daftar modul = bentuk yang sama dengan x-dl::layer-shell.
  * Input        : title, back, tabs, active, modules, user, brand, logoutAction, deviceAction, links, frame, contained.
  * Output       : Markup dari resources/views/components/phone-shell.blade.php; perilaku lembar Menu di phone-shell.js.
@@ -16,17 +16,17 @@ namespace Devlib\Components;
 // (Chrome / iOS tidak memperbesar sendiri), tepi layar aman lewat env(safe-area-inset-*).
 // Isi = slot, atau $frame = alamat layar desktop yang dibuka di dalam kerangka (layar yang belum punya tampilan HP).
 //
-// $tabs = [['key', 'label', 'icon', 'url'], …] = MENU UTAMA (Beranda, Stok, Transaksi, ...): tampil besar di bagian atas panel Menu; tidak ada bilah tab bawah (bilah lama dikubur: tag history/phone-shell-bottom-tabs-v1)
+// $tabs = [['key', 'label', 'icon', 'url'], …] = MENU UTAMA (Beranda, Stok, Transaksi, Opname; tombol kelima 'Menu' = daftar semua modul ditambah komponen): deretnya muncul di atas saat ikon diketuk; tidak ada bilah bawah (bilah lama dikubur: tag history/phone-shell-bottom-tabs-v1)
 // $modules = bentuk x-dl::layer-shell: [['code', 'label', 'icon', 'children' => [ITEM, …]], …]; ITEM = ['code', 'label', 'url', 'icon'?, 'badge'?]
 // $links = tautan tambahan di lembar Menu: [['label', 'icon', 'url'], …] (mis. Bantuan)
 class PhoneShell extends DevlibComponent
 {
     public function __construct(
         public string $title = '',
-        // Alamat tombol kembali di bilah atas; null = layar utama (tanpa tombol).
+        // Alamat tombol kembali di baris judul; null = layar utama (tanpa tombol).
         public ?string $back = null,
         public array $tabs = [],
-        // key menu utama yang ditandai di panel Menu.
+        // key menu utama yang ditandai di deret menu.
         public string $active = '',
         public array $modules = [],
         public array $user = ['name' => '', 'role' => ''],

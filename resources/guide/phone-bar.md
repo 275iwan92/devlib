@@ -1,6 +1,6 @@
 ## Overview
 
-`<x-dl::phone-bar>` is a bar of large buttons that sticks to the bottom of the content area of `x-dl::phone-shell` (there is no bottom tab bar; the bar uses `env(safe-area-inset-bottom)`) and stays visible while the content scrolls. Use it for step screens: Previous / Next, Save / Cancel.
+`<x-dl::phone-bar>` is a row of large buttons placed in the flow of the content of `x-dl::phone-shell`, for step screens (Previous / Next). It is NOT stuck to the bottom of the screen (nothing is: a bottom bar can collide with the Android navigation buttons); form buttons live in the actions row of the floating icon (state B).
 
 ### Generated markup
 
@@ -20,8 +20,7 @@ Constructor of `Devlib\Components\PhoneBar` (1 prop).
 
 ## Behavior
 
-- `position: sticky; bottom: -16px` with matching negative margins, so it sits flush at the bottom of the scrolling area inside the shell (the shell content has 16 px bottom padding). Buttons are at least 52 px high and do not wrap.
-- It works only inside `x-dl::phone-shell` (the scrolling content area); elsewhere it just sticks to its scroll parent.
+- A grid row with a 12 px top margin; buttons are at least 52 px high and do not wrap. It scrolls with the content.
 
 ## Data and events
 

@@ -51,21 +51,23 @@ class PhoneShellTest extends TestCase
         $this->assertStringContainsString('dl-devpick', Blade::render('<x-dl::login-box show="username, device, button" />'));
     }
 
-    public function test_phone_shell_has_one_hamburger_no_bottom_bar_and_a_menu_panel_with_main_menus_and_all_modules(): void
+    public function test_phone_shell_has_one_floating_hamburger_no_bars_and_a_row_of_main_menus_with_a_module_list(): void
     {
         $html = Blade::render('<x-dl::phone-shell title="Home" active="a" :tabs="$tabs" :modules="$modules" logout-action="/out" device-action="/ui" :user="$user">isi</x-dl::phone-shell>', [
             'user' => ['name' => 'Ann', 'role' => 'Dev'],
-            'tabs' => array_map(fn ($k) => ['key' => $k, 'label' => strtoupper($k), 'icon' => 'fa-solid fa-circle', 'url' => "/$k"], ['a', 'b', 'c', 'd', 'e']),
+            'tabs' => array_map(fn ($k) => ['key' => $k, 'label' => strtoupper($k), 'icon' => 'fa-solid fa-circle', 'url' => "/$k"], ['a', 'b', 'c', 'd']),
             'modules' => [['code' => 'M', 'label' => 'Group One', 'children' => [['code' => 'X', 'label' => 'Item X', 'url' => '/x'], ['label' => 'Sub', 'items' => [['code' => 'Y', 'label' => 'Item Y', 'url' => '/y']]]]]],
         ]);
         $this->assertSame(1, substr_count($html, 'data-dl-phone-menu'), 'satu tombol hamburger');
         $this->assertSame(1, substr_count($html, 'class="dl-phone__burger"'));
+        $this->assertStringContainsString('data-state="A"', $html, 'awal setiap layar = A');
         $this->assertStringNotContainsString('dl-phone__tabs', $html, 'tidak ada bilah tab bawah');
-        $this->assertSame(1, substr_count($html, 'data-dl-phone-sheet'));
-        $this->assertSame(5, substr_count($html, 'class="dl-phone__big'), 'lima menu utama besar di panel');
+        $this->assertStringNotContainsString('dl-phone__top', $html, 'tidak ada bilah atas permanen');
+        $this->assertSame(5, preg_match_all('/class="dl-phone__q[ "]/', $html), 'empat menu utama + tombol Menu');
+        $this->assertSame(1, substr_count($html, 'data-dl-phone-more'));
         $this->assertStringContainsString('aria-current="page"', $html);
-        $this->assertStringContainsString('aria-label="Menu"', $html);
-        foreach (['Group One', 'href="/x"', 'href="/y"', 'action="/out"', 'action="/ui"', 'name="ui" value="desktop"', 'dl-phone__close', 'isi'] as $needle) {
+        $this->assertStringContainsString('aria-expanded="false"', $html);
+        foreach (['data-l-a=', 'data-l-b=', 'data-l-c=', 'data-l-dirty=', 'Group One', 'href="/x"', 'href="/y"', 'action="/out"', 'action="/ui"', 'name="ui" value="desktop"', 'dl-phone__head', 'dl-phone__body', 'isi'] as $needle) {
             $this->assertStringContainsString($needle, $html);
         }
         $this->assertStringNotContainsString('<iframe', $html);
@@ -136,7 +138,7 @@ class PhoneShellTest extends TestCase
         $block = substr($css, strpos($css, '/* ==== Form di tampilan HP'));
         $rules = array_filter(array_map('trim', preg_split('/\R/', $block)), fn ($l) => $l !== '' && ! str_starts_with($l, '/*') && ! str_starts_with($l, 'Tidak berlaku'));
         foreach ($rules as $line) {
-            $this->assertMatchesRegularExpression('/^(:is\(body\.dl-on-phone,\.dl-phone\)|\.dl-phone) /', $line, 'aturan form HP harus dibatasi konteks HP: '.$line);
+            $this->assertMatchesRegularExpression('/^(:is\(body\.dl-on-phone,\.dl-phone\)|:is\(body\.dl-phone-acts,\.dl-phone\[data-state="B"\]\)|body\.dl-phone-shelled|\.dl-phone|@media) /', $line.' ', 'aturan form HP harus dibatasi konteks HP: '.$line);
         }
     }
 
@@ -166,7 +168,7 @@ class PhoneShellTest extends TestCase
             if (str_starts_with($line, '/*') || str_starts_with($line, '.dl-phone ')) {
                 continue;
             }
-            $this->assertStringStartsWith(':is(body.dl-on-phone,.dl-phone)', $line, 'aturan grid HP harus dibatasi konteks HP: '.$line);
+            $this->assertMatchesRegularExpression('/^(:is\(body\.dl-on-phone,\.dl-phone\)|:is\(body\.dl-phone-acts,\.dl-phone\[data-state="B"\]\)|body\.dl-phone-shelled|\.dl-phone|@media)/', $line, 'aturan grid HP harus dibatasi konteks HP: '.$line);
         }
     }
 }

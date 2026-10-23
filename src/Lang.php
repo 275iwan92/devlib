@@ -558,6 +558,7 @@ final class Lang
         'l_type_min' => ['Ketik min. 2 huruf...', 'Type at least 2 letters...'],
         'idle_title' => ['Sesi hampir berakhir', 'Your session is about to end'],
         'idle_msg' => ['Tidak ada aktivitas. Anda akan keluar otomatis dalam {time}.', 'No activity. You will be signed out automatically in {time}.'],
+        'phone_menu' => ['Menu', 'Menu'], 'phone_acts' => ['Aksi layar ini', 'Screen actions'], 'phone_main' => ['Menu utama', 'Main menu'], 'phone_dirty' => ['Perubahan belum disimpan', 'Unsaved changes'], 'phone_leave' => ['Perubahan yang belum disimpan akan hilang. Pindah layar?', 'Unsaved changes will be lost. Leave this screen?'],
         'phone_offer' => ['Ingin tampilan yang lebih nyaman di smartphone?', 'Want better view from smartphone?'], 'phone_offer_go' => ['Ketuk di sini', 'Click here'], 'phone_offer_stay' => ['Tetap desktop', 'Stay on desktop'],
         'idle_stay' => ['Tetap masuk', 'Stay signed in'], 'idle_out' => ['Keluar sekarang', 'Sign out now'],
         'idle_ended' => ['Sesi berakhir', 'Your session has ended'], 'idle_done' => ['Mengalihkan ke halaman masuk…', 'Redirecting to the sign-in page…'],
