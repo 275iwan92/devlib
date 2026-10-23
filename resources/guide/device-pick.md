@@ -1,6 +1,6 @@
 ## Overview
 
-`<x-dl::device-pick>` draws two large radio choices, "Phone view" and "Desktop view", under the field name `ui`. The choice travels with the form it sits in (the sign-in form through the `device` part of `x-dl::login-box`, or the small form in the Menu sheet of `x-dl::phone-shell`, or a profile page of your own). The component only shows the choice; the project reads `ui` on POST and stores the cookie `ui` (`hp` or `desktop`).
+`<x-dl::device-pick>` draws two large radio choices, "Phone view" and "Desktop view", under the field name `ui`. The choice travels with the form it sits in (the sign-in form through the `device` part of `x-dl::login-box`, or a form of your own, or a profile page of your own). The component only shows the choice; the project reads `ui` on POST and stores the cookie `ui` (`hp` or `desktop`).
 
 The phone and desktop screens are two variants of the DEVICE, not an old and a new version, so a user can always switch. The guess can be wrong (a tablet, a phone in landscape, a narrow desktop window), so the user's choice always wins over the guess (`Devlib\Device::resolve`).
 
@@ -69,6 +69,6 @@ On the sign-in screen, as a part of the login box:
 
 ## Related
 
-- `x-dl::phone-shell`: the phone frame whose Menu sheet carries this choice.
+- `x-dl::phone-shell`: the phone frame; its Menu panel has a "Desktop view" button (the same choice, one way).
 - `x-dl::login-box`: part `device`.
 - `Devlib\Device`: detection (`detect`, `resolve`, `fromRequest`) and the cookie name (`Device::COOKIE`).

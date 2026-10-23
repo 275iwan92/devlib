@@ -1,6 +1,6 @@
 ## Overview
 
-`<x-dl::phone-bar>` is a bar of large buttons that sticks to the bottom of the content area of `x-dl::phone-shell` (above the tab bar) and stays visible while the content scrolls. Use it for step screens: Previous / Next, Save / Cancel.
+`<x-dl::phone-bar>` is a bar of large buttons that sticks to the bottom of the content area of `x-dl::phone-shell` (there is no bottom tab bar; the bar uses `env(safe-area-inset-bottom)`) and stays visible while the content scrolls. Use it for step screens: Previous / Next, Save / Cancel.
 
 ### Generated markup
 
@@ -30,7 +30,7 @@ Constructor of `Devlib\Components\PhoneBar` (1 prop).
 ## Rules and pitfalls
 
 - Do not put more than three buttons; at 320 px each gets about 100 px.
-- It is not a navigation bar; the five-button bottom bar is the tab bar of `x-dl::phone-shell`.
+- It is not a navigation bar; the main menus live in the Menu panel of `x-dl::phone-shell`.
 - Related lint rules: none.
 
 ## Example

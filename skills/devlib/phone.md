@@ -12,7 +12,7 @@ Uji acuan: Chrome Android potret **360 x 790 px CSS** (OPPO A6 Pro). Tata letak 
 | `x-dl::device-pick`: dua radio `ui` | Isi menu (modul, tab), hak akses |
 | `x-dl::phone-offer`: popup tawaran di login desktop sempit | Layar HP: isi Beranda, daftar, layar kerja (mis. hitung stok satu barang per kartu), JS-nya |
 | `x-dl::phone-login`: halaman login HP | Data tab dan modul (`tabs`, `modules`) untuk `x-dl::phone-shell` |
-| `x-dl::phone-shell`: bilah atas, tab bawah, lembar Menu, `frame` (halaman desktop di dalam kerangka) | Teks layar (kamus bahasa proyek) |
+| `x-dl::phone-shell`: bilah atas dengan satu tombol hamburger, panel Menu dari atas, `frame` (halaman desktop di dalam kerangka) | Teks layar (kamus bahasa proyek) |
 | `x-dl::phone-tile(s)`, `x-dl::phone-link`, `x-dl::phone-bar`: kartu angka, baris tautan, bilah tombol menempel di bawah | |
 | Aksi "Phone view" di `x-dl::layer-shell` (prop `deviceAction`) | |
 
@@ -36,7 +36,7 @@ Pola layar kerja satu-barang-per-kartu (progress, cari/pindai, simpan per barang
    </x-dl::phone-login>
    ```
 4. **Login desktop.** Tambahkan di bawah `x-dl::frame`: `<x-dl::phone-offer :action="route('ui.set')" />` (hanya tertulis bila belum ada pilihan dan perangkat desktop; CSS menampilkannya hanya pada lebar <= 760 px).
-5. **Kerangka HP.** Satu layout `hp/layout.blade.php` berisi `<x-dl::phone-shell :title :back :active :tabs :modules :user :logout-action :device-action :frame>@yield('content')</x-dl::phone-shell>`. `tabs` = 4 tab tautan (`key`, `label`, `icon`, `url`; tab Menu ditambah komponen), `modules` = bentuk sama dengan `x-dl::layer-shell` (saring menurut hak akses di server). Layar yang belum punya tampilan HP: `:frame="url-halaman-desktop"` (iframe di dalam kerangka).
+5. **Kerangka HP.** Satu layout `hp/layout.blade.php` berisi `<x-dl::phone-shell :title :back :active :tabs :modules :user :logout-action :device-action :frame>@yield('content')</x-dl::phone-shell>`. `tabs` = MENU UTAMA (`key`, `label`, `icon`, `url`: Beranda, Stok, Transaksi, Opname, Laporan) yang tampil besar di panel Menu, `modules` = bentuk sama dengan `x-dl::layer-shell` (saring menurut hak akses di server). Layar yang belum punya tampilan HP: `:frame="url-halaman-desktop"` (iframe di dalam kerangka).
 6. **Isi layar HP** dengan `x-dl::phone-tiles` + `x-dl::phone-tile`, `x-dl::phone-link`, `x-dl::phone-bar`, `x-dl::alert`, `x-dl::button`; isian standar (`type=text inputmode=decimal`, 16 px) supaya keyboard HP, pen, dan pemindai barcode Bluetooth/USB (bertingkah seperti keyboard + Enter) bekerja. Tanpa fungsi yang hanya muncul saat hover.
 7. **Beranda.** Controller Beranda: bila `hp`, kembalikan view HP (data sama, tampilan lain). Desktop tidak disentuh.
 8. **Saklar di desktop (opsional).** `x-dl::layer-shell :device-action="route('ui.set')"` menambah aksi "Phone view" di menu profil.
@@ -61,7 +61,7 @@ Layar desktop yang dibuka lewat `:frame` (iframe) tidak tahu bahwa ia ada di HP.
 - `Sec-CH-UA-Mobile` hanya dikirim Chrome lewat HTTPS atau `localhost`; lewat HTTP biasa (alamat LAN) deteksi memakai User-Agent.
 - "Situs desktop" di Chrome HP mengirim User-Agent desktop dan lebar ~980 px: dianggap desktop; pengguna memilih lewat tautan "Phone view" di profil desktop (atau halaman login HP jika sudah memilih).
 - Layar desktop di dalam `frame` tidak dirapikan untuk HP; tabel lebar menggulir di dalamnya. Beri layar yang sering dipakai versi HP sendiri.
-- Tinggi nyata di Chrome Android lebih kecil dari 790 px (bilah alamat/status): jangan menaruh aksi penting di tepi bawah selain bilah tab; `x-dl::phone-bar` aman karena berada di atas bilah tab.
+- Tinggi nyata di Chrome Android lebih kecil dari 790 px (bilah alamat/status): jangan menaruh aksi penting di luar area aman: tidak ada bilah di bawah layar (menu ada di hamburger atas, sengaja menghindari tombol navigasi Android); `x-dl::phone-bar` memakai `env(safe-area-inset-bottom)`.
 - Lebar fluid 320 sampai 440 px teruji di emulasi; angka DPR OPPO A6 Pro belum diverifikasi di perangkat.
 
 ## 5. Daftar komponen HP

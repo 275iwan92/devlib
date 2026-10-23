@@ -6,7 +6,7 @@ It is meant for the sign-in screen. It needs no JavaScript: the server decides w
 
 Pick another object when you need:
 
-- A permanent choice between the two views: `x-dl::device-pick` (radios), or the Menu sheet of `x-dl::phone-shell`.
+- A permanent choice between the two views: `x-dl::device-pick` (radios), or the "Desktop view" button in the Menu panel of `x-dl::phone-shell`.
 - The phone frame itself: `x-dl::phone-shell`.
 
 ### Generated markup

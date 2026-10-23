@@ -51,15 +51,21 @@ class PhoneShellTest extends TestCase
         $this->assertStringContainsString('dl-devpick', Blade::render('<x-dl::login-box show="username, device, button" />'));
     }
 
-    public function test_phone_shell_has_five_bottom_tabs_and_a_menu_sheet_of_all_modules(): void
+    public function test_phone_shell_has_one_hamburger_no_bottom_bar_and_a_menu_panel_with_main_menus_and_all_modules(): void
     {
-        $html = Blade::render('<x-dl::phone-shell title="Home" active="a" :tabs="$tabs" :modules="$modules" logout-action="/out" device-action="/ui" :user="[\'name\' => \'Ann\', \'role\' => \'Dev\']">isi</x-dl::phone-shell>', [
-            'tabs' => array_map(fn ($k) => ['key' => $k, 'label' => strtoupper($k), 'icon' => 'fa-solid fa-circle', 'url' => "/$k"], ['a', 'b', 'c', 'd']),
+        $html = Blade::render('<x-dl::phone-shell title="Home" active="a" :tabs="$tabs" :modules="$modules" logout-action="/out" device-action="/ui" :user="$user">isi</x-dl::phone-shell>', [
+            'user' => ['name' => 'Ann', 'role' => 'Dev'],
+            'tabs' => array_map(fn ($k) => ['key' => $k, 'label' => strtoupper($k), 'icon' => 'fa-solid fa-circle', 'url' => "/$k"], ['a', 'b', 'c', 'd', 'e']),
             'modules' => [['code' => 'M', 'label' => 'Group One', 'children' => [['code' => 'X', 'label' => 'Item X', 'url' => '/x'], ['label' => 'Sub', 'items' => [['code' => 'Y', 'label' => 'Item Y', 'url' => '/y']]]]]],
         ]);
-        $this->assertSame(5, substr_count($html, 'dl-phone__tab'.'"') + substr_count($html, 'dl-phone__tab is-active"'), 'empat tautan + Menu');
+        $this->assertSame(1, substr_count($html, 'data-dl-phone-menu'), 'satu tombol hamburger');
+        $this->assertSame(1, substr_count($html, 'class="dl-phone__burger"'));
+        $this->assertStringNotContainsString('dl-phone__tabs', $html, 'tidak ada bilah tab bawah');
+        $this->assertSame(1, substr_count($html, 'data-dl-phone-sheet'));
+        $this->assertSame(5, substr_count($html, 'class="dl-phone__big'), 'lima menu utama besar di panel');
         $this->assertStringContainsString('aria-current="page"', $html);
-        foreach (['Group One', 'href="/x"', 'href="/y"', 'action="/out"', 'action="/ui"', 'name="ui"', 'isi'] as $needle) {
+        $this->assertStringContainsString('aria-label="Menu"', $html);
+        foreach (['Group One', 'href="/x"', 'href="/y"', 'action="/out"', 'action="/ui"', 'name="ui" value="desktop"', 'dl-phone__close', 'isi'] as $needle) {
             $this->assertStringContainsString($needle, $html);
         }
         $this->assertStringNotContainsString('<iframe', $html);
@@ -71,6 +77,7 @@ class PhoneShellTest extends TestCase
         $this->assertStringContainsString('<iframe class="dl-phone__frame" src="/products"', $html);
         $this->assertStringNotContainsString('>slot<', $html);
         $this->assertStringContainsString('href="/"', $html);
+        $this->assertStringContainsString('dl-phone__burger', $html, 'hamburger tetap ada di layar anak, kembali di sebelahnya');
     }
 
     public function test_phone_demo_page_opens(): void

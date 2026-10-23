@@ -2,7 +2,7 @@
 
 /*
  * REMARK
- * Tujuan       : Kerangka aplikasi untuk smartphone potret: bilah atas kecil (judul, tombol kembali), isi selebar layar, bilah tab di bawah, dan lembar Menu dari bawah berisi semua modul.
+ * Tujuan       : Kerangka aplikasi untuk smartphone potret: bilah atas kecil (satu tombol hamburger, tombol kembali, judul), isi selebar layar penuh, dan panel Menu dari atas (menu utama besar + semua modul).
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek. Daftar modul = bentuk yang sama dengan x-dl::layer-shell.
  * Input        : title, back, tabs, active, modules, user, brand, logoutAction, deviceAction, links, frame, contained.
  * Output       : Markup dari resources/views/components/phone-shell.blade.php; perilaku lembar Menu di phone-shell.js.
@@ -16,7 +16,7 @@ namespace Devlib\Components;
 // (Chrome / iOS tidak memperbesar sendiri), tepi layar aman lewat env(safe-area-inset-*).
 // Isi = slot, atau $frame = alamat layar desktop yang dibuka di dalam kerangka (layar yang belum punya tampilan HP).
 //
-// $tabs = [['key', 'label', 'icon', 'url'], …] (tab tautan; tab Menu selalu ditambahkan di akhir, membuka lembar dari bawah)
+// $tabs = [['key', 'label', 'icon', 'url'], …] = MENU UTAMA (Beranda, Stok, Transaksi, ...): tampil besar di bagian atas panel Menu; tidak ada bilah tab bawah (bilah lama dikubur: tag history/phone-shell-bottom-tabs-v1)
 // $modules = bentuk x-dl::layer-shell: [['code', 'label', 'icon', 'children' => [ITEM, …]], …]; ITEM = ['code', 'label', 'url', 'icon'?, 'badge'?]
 // $links = tautan tambahan di lembar Menu: [['label', 'icon', 'url'], …] (mis. Bantuan)
 class PhoneShell extends DevlibComponent
@@ -26,7 +26,7 @@ class PhoneShell extends DevlibComponent
         // Alamat tombol kembali di bilah atas; null = layar utama (tanpa tombol).
         public ?string $back = null,
         public array $tabs = [],
-        // key tab yang menyala; 'menu' menyalakan tab Menu.
+        // key menu utama yang ditandai di panel Menu.
         public string $active = '',
         public array $modules = [],
         public array $user = ['name' => '', 'role' => ''],

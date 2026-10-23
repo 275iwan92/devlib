@@ -629,7 +629,7 @@ Popup kecil di layar desktop yang sempit: "Ingin tampilan yang lebih nyaman di s
 - Prop: action:string='', force:bool=false
 
 ## `<x-dl::phone-shell>`
-Kerangka aplikasi untuk smartphone potret: bilah atas kecil (judul, tombol kembali), isi selebar layar, bilah tab di bawah, dan lembar Menu dari bawah berisi semua modul.
+Kerangka aplikasi untuk smartphone potret: bilah atas kecil (satu tombol hamburger, tombol kembali, judul), isi selebar layar penuh, dan panel Menu dari atas (menu utama besar + semua modul).
 - Berkas: `src/Components/PhoneShell.php`, tampilan `resources/views/components/phone-shell.blade.php`
 - Prop: title:string='', back:?string=NULL, tabs:array=[], active:string='', modules:array=[], user:array=[…], brand:?string=NULL, logoutAction:string='', deviceAction:?string=NULL, links:array=[], frame:?string=NULL, contained:bool=false
 
