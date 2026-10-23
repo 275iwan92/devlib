@@ -34,6 +34,8 @@ Keputusan Jo 2026-10-23, berdasarkan riset breakpoint (laporan "Halaman ukur vie
 - Media query lain milik komponen (`760`, `640`, `900`, dst., mis. login `x-dl::frame`, dashboard, kanban) adalah penyesuaian tata letak sendiri, **bukan** pembeda phone / desktop, dan tidak diubah.
 - Perangkat acuan: 599 = phone; 600 = desktop; 744 (iPad mini) = desktop; 761 = desktop; 820x1180 (iPad) = desktop; 690-755 (lipat dalam) = desktop; 800x360 sentuh = phone (landscape); 1280x400 sentuh = desktop.
 
+**Mengukur layar sungguhan**: `x-dl::screen-info` (halaman peraga `p7-screen`; proyek memasangnya di satu rute publik, mis. `GET /ukur`) menampilkan lebar x tinggi CSS, DPR, orientasi, `svh` / `lvh` / `dvh`, `visualViewport`, area aman, aturan layar di atas beserta alasannya, dan view yang dirender server; "Salin hasil" menyalin satu blok teks untuk ditempel ke chat. Murni sisi klien. Pakai untuk memeriksa angka sementara di atas pada perangkat nyata.
+
 ## 2. Aturan wajib
 
 1. **Setiap layar dan object menyatakan dukungan view-nya**: `phone`, `desktop`, atau keduanya. Tulis di header REMARK (baris `View`, mis. ` * View         : phone, desktop`) pada kelas PHP / berkas Blade / demo. Tanpa pernyataan = hanya `desktop` (kedudukan semua object lama; tidak ada yang rusak). **BELUM ADA penegak otomatis** (lint) untuk baris ini.

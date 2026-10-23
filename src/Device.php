@@ -109,6 +109,19 @@ final class Device
         return self::resolve(is_string($cookie) ? $cookie : null, $request->userAgent(), $request->header('Sec-CH-UA-Mobile'));
     }
 
+    // Dari mana view() permintaan ini berasal: 'override' (pratinjau), 'cookie' (pilihan pengguna), 'client-hint' (Sec-CH-UA-Mobile), atau 'user-agent'. Untuk halaman diagnostik (x-dl::screen-info).
+    public static function viewSource(Request $request): string
+    {
+        if (self::normalize($request->attributes->get(self::OVERRIDE_VIEW)) !== null) {
+            return 'override';
+        }
+        if (self::normalize($request->cookie(self::COOKIE)) !== null) {
+            return 'cookie';
+        }
+
+        return in_array(trim((string) $request->header('Sec-CH-UA-Mobile')), ['?1', '?0'], true) ? 'client-hint' : 'user-agent';
+    }
+
     // OS permintaan ini: 'android' | 'ios' | 'other' (override permintaan, selain itu User-Agent).
     public static function os(Request $request): string
     {

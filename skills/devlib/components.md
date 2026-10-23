@@ -743,6 +743,11 @@ Kotak pindai QR / barcode. Scanner USB / Bluetooth bekerja seperti keyboard: kod
 - Berkas: `src/Components/Scan.php`
 - Prop: name:string='code', label:?string=NULL, placeholder:string='Scan or type a code, the…', value:?string=NULL, action:?string=NULL, hint:?string=NULL, autofocus:bool=true
 
+## `<x-dl::screen-info>`
+Halaman diagnostik layar: lebar x tinggi CSS, DPR, orientasi, tinggi svh/lvh/dvh, visualViewport, sentuh/mouse, area aman, view dan aturan layar phone DevLib, OS, User-Agent; tombol "Salin hasil" (satu blok teks polos untuk ditempel ke chat).
+- Berkas: `src/Components/ScreenInfo.php`
+- Prop: title:string='Screen info', note:string=''
+
 ## `<x-dl::sheet>`
 Grid sel mirip spreadsheet; mendukung links (sel terhitung), reasonOnSave, reorderUrl.
 - Berkas: `src/Components/Sheet.php`
