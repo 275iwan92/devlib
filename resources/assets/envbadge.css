@@ -4,5 +4,6 @@
 .dl-envbadge{display:block;font-size:calc(10.5px * var(--dl-font-scale,1));font-weight:600;line-height:1.3;white-space:normal;overflow-wrap:anywhere;color:var(--dl-side-ink)}
 .dl-envbadge--title{display:inline;font-size:.8em;font-weight:inherit;color:inherit;white-space:nowrap}
 .dl-envbadge--version{display:inline;font-size:.75em;font-weight:500;color:inherit;white-space:nowrap;opacity:.65;margin-left:.4em}
+.dl-envbadge--loginver{display:block;text-align:center;margin:8px 0 0;font-size:calc(11px * var(--dl-font-scale,1));font-weight:500;color:inherit;opacity:.65}
 .dl-envbadge__stage{margin-left:.2em;font-weight:700}
 .dl-envbadge--login{color:var(--dl-ink-strong);text-align:center;margin:8px 0 0}
