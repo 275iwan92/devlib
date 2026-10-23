@@ -36,7 +36,7 @@ Constructor of `Devlib\Components\PhoneOffer` (2 props).
 ## Behavior
 
 - Written only when there is no valid cookie `ui` and `Devlib\Device::view` says `desktop`. A phone is guessed as `phone`, so the project shows its phone screen directly and no popup is needed.
-- Visible only at a viewport width of 760 px or less (CSS media query); on a wide screen it never shows. The dialog is centred over a dimmed background with 52 px and 44 px buttons, 16 px text, and safe-area padding.
+- Visible only on a phone-sized screen (CSS media query = `Devlib\Device::PHONE_MEDIA`): viewport narrower than 600 px, or a phone turned sideways (height under 480 px, coarse pointer, width under 1000 px). On a tablet, a folded-open phone or a laptop it never shows. The dialog is centred over a dimmed background with 52 px and 44 px buttons, 16 px text, and safe-area padding.
 - The text comes from the language dictionary (keys `phone_offer`, `phone_offer_go`, `phone_offer_stay`; Indonesian and English).
 
 ## Data and events

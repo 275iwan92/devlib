@@ -2,7 +2,7 @@
 
 Panduan memasang tampilan HP di proyek baru atau lama. Tampilan HP dan desktop adalah dua varian PERANGKAT (bukan versi lama / baru: aturan "satu default, tanpa saklar versi" di `object.md` tidak berlaku di sini). Semua bagian umum ada di DevLib dan **opt-in**: proyek yang tidak memakainya tidak berubah. Proyek hanya membuat isi layar HP-nya sendiri. Model view (`phone` / `desktop`, Android / iOS), aturan wajib, dan pratinjau "Lihat sebagai": `views.md`.
 
-Uji acuan: Chrome Android potret **360 x 790 px CSS** (OPPO A6 Pro). Tata letak mengalir dari **320 sampai sekitar 440 px** tanpa titik patah di dalam rentang itu; tinggi memakai `dvh` (bilah alamat Chrome mengubah tinggi nyata, jangan bergantung pada tinggi pasti). Batas "layar sempit" untuk popup tawaran: `<= 760 px`.
+Uji acuan: Chrome Android potret **360 x 790 px CSS** (OPPO A6 Pro). Tata letak mengalir dari **320 sampai sekitar 440 px** tanpa titik patah di dalam rentang itu; tinggi memakai `dvh` (bilah alamat Chrome mengubah tinggi nyata, jangan bergantung pada tinggi pasti). Batas layar phone (sementara, keputusan Jo 2026-10-23): lebar CSS **< 600 px**, atau HP landscape (tinggi < 480 px, pointer sentuh, lebar < 1000 px); selain itu desktop (tablet, lipat dalam, laptop). Aturan lengkap dan alasannya: `views.md` bagian 1b.
 
 ## 1. Apa milik DevLib, apa milik proyek
 
@@ -35,7 +35,7 @@ Pola layar kerja satu-barang-per-kartu (progress, cari/pindai, simpan per barang
        @if (session('status'))<x-dl::alert tone="success" :message="session('status')" />@endif
    </x-dl::phone-login>
    ```
-4. **Login desktop.** Tambahkan di bawah `x-dl::frame`: `<x-dl::phone-offer :action="route('ui.set')" />` (hanya tertulis bila belum ada pilihan dan perangkat desktop; CSS menampilkannya hanya pada lebar <= 760 px).
+4. **Login desktop.** Tambahkan di bawah `x-dl::frame`: `<x-dl::phone-offer :action="route('ui.set')" />` (hanya tertulis bila belum ada pilihan dan perangkat desktop; CSS menampilkannya hanya pada layar yang memenuhi aturan phone, `views.md` bagian 1b: lebar < 600 px, atau HP landscape).
 5. **Kerangka HP.** Satu layout `hp/layout.blade.php` berisi `<x-dl::phone-shell :title :back :active :tabs :modules :user :logout-action :device-action :frame>@yield('content')</x-dl::phone-shell>`. `tabs` = empat MENU UTAMA (`key`, `label`, `icon`, `url`: Beranda, Stok, Transaksi, Opname; tombol kelima 'Menu' = semua modul ditambah komponen) yang tampil di bilah keadaan C, `modules` = bentuk sama dengan `x-dl::layer-shell` (saring menurut hak akses di server). Layar yang belum punya tampilan HP: `:frame="url-halaman-desktop"` (iframe di dalam kerangka).
 6. **Isi layar HP** dengan `x-dl::phone-tiles` + `x-dl::phone-tile`, `x-dl::phone-link`, `x-dl::phone-bar`, `x-dl::alert`, `x-dl::button`; isian standar (`type=text inputmode=decimal`, 16 px) supaya keyboard HP, pen, dan pemindai barcode Bluetooth/USB (bertingkah seperti keyboard + Enter) bekerja. Tanpa fungsi yang hanya muncul saat hover.
 7. **Beranda.** Controller Beranda: bila view `phone`, kembalikan view HP (data sama, tampilan lain). Desktop tidak disentuh.

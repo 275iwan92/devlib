@@ -22,6 +22,18 @@ Aturan baku (permintaan Jo, 2026-10-23: "SET juga DEVLIB multi VIEW") untuk SEMU
 
 Tebakan (hanya bila belum ada pilihan pengguna): `Sec-CH-UA-Mobile` (Chrome, Edge, Opera; hanya lewat HTTPS atau localhost), selain itu User-Agent. **Safari iOS tidak mengirim client hints**: iPhone/iPod = phone lewat User-Agent. Android: ada kata "Mobile" = phone, tidak ada = tablet = desktop. iPad = desktop; iPadOS 13+ mengirim UA Mac, jadi server melihat desktop (benar: tablet = desktop; sisi klien: `Devlib.os` memakai `maxTouchPoints`). Pilihan pengguna di `x-dl::device-pick` / popup `x-dl::phone-offer` disimpan di cookie `ui` (`phone` | `desktop`, satu tahun) oleh satu rute POST proyek; **pilihan pengguna selalu menang**. Cookie lama `ui=hp` tetap terbaca sebagai `phone`; proyek lama cukup ganti `Device::HP` / `fromRequest` ke `PHONE` / `view` (kedua nama lama masih berlaku) dan validasi POST dengan `Device::CHOICES` (+ `array_keys(Device::ALIASES)` bila form lama masih beredar).
 
+## 1b. Aturan layar phone (batas 600 px; sementara)
+
+Keputusan Jo 2026-10-23, berdasarkan riset breakpoint (laporan "Halaman ukur viewport dan breakpoint HP"): batas phone lawan desktop memakai **600 px**, bukan 760, dan ditambah aturan tinggi untuk HP landscape. Angka ini **sementara**: disesuaikan bila kenyataan di perangkat kurang pas (lebar CSS asli OPPO A6 Pro, tablet 8 inci, dan tinggi HP landscape belum terukur).
+
+> Layar = **phone** bila lebar CSS **< 600 px**, ATAU (tinggi **< 480 px** DAN `pointer: coarse` DAN lebar **< 1000 px**) = HP landscape. Selain itu **desktop**: tablet (iPad mini 744 px, iPad 820+), ponsel lipat terbuka (690-755 px), laptop, dan jendela desktop yang pendek.
+
+- Satu sumber: `Device::PHONE_MEDIA` (media query), `Device::screenIsPhone($lebar, $tinggi, $sentuh)` (versi PHP, untuk tes dan logika server), `Devlib.phoneScreen()` dan `html[data-dl-screen]` di `view.js`, serta CSS `x-dl::phone-offer`. Tes menjaga keempatnya sama persis.
+- Alasan 600: batas "compact" Android (99,96% HP potret) dan satu-satunya angka yang punya dasar data; 760 / 768 menggolongkan iPad mini dan ponsel lipat sebagai HP. Semua HP potret (<= 448 px) aman di angka mana pun. Aturan tinggi memisahkan HP landscape (800-997 x 360-448) dari tablet; `pointer: coarse` menjaga jendela laptop yang pendek dan lebar `< 1000` menjaga monitor pendek.
+- **Hanya untuk keputusan "layar ini layak ditawari tampilan phone"** (popup `x-dl::phone-offer`; `Devlib.phoneScreen()`). View yang dirender (`Device::view()`) tetap memakai tebakan header, cookie, dan pilihan pengguna (bagian 1): pilihan pengguna tetap menang. Layar pendek yang memenuhi aturan tetapi berview desktop ditawari popup; yang tablet / lipat tidak.
+- Media query lain milik komponen (`760`, `640`, `900`, dst., mis. login `x-dl::frame`, dashboard, kanban) adalah penyesuaian tata letak sendiri, **bukan** pembeda phone / desktop, dan tidak diubah.
+- Perangkat acuan: 599 = phone; 600 = desktop; 744 (iPad mini) = desktop; 761 = desktop; 820x1180 (iPad) = desktop; 690-755 (lipat dalam) = desktop; 800x360 sentuh = phone (landscape); 1280x400 sentuh = desktop.
+
 ## 2. Aturan wajib
 
 1. **Setiap layar dan object menyatakan dukungan view-nya**: `phone`, `desktop`, atau keduanya. Tulis di header REMARK (baris `View`, mis. ` * View         : phone, desktop`) pada kelas PHP / berkas Blade / demo. Tanpa pernyataan = hanya `desktop` (kedudukan semua object lama; tidak ada yang rusak). **BELUM ADA penegak otomatis** (lint) untuk baris ini.

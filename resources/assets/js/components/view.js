@@ -8,6 +8,14 @@
   Devlib.os = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'ios' : /Android/.test(ua) ? 'android' : 'other';
   root.dataset.dlOs = Devlib.os;
 
+  // Aturan LAYAR phone (sama dengan Devlib\Device::PHONE_MEDIA; dijaga tes): lebar < 600, atau HP landscape (tinggi < 480, sentuh, lebar < 1000). Tidak mengubah view yang dirender server.
+  Devlib.PHONE_MQ = '(max-width: 599.98px), (max-height: 479.98px) and (max-width: 999.98px) and (pointer: coarse)';
+  const mq = window.matchMedia(Devlib.PHONE_MQ);
+  Devlib.phoneScreen = () => mq.matches;
+  const syncScreen = () => { root.dataset.dlScreen = mq.matches ? 'phone' : 'desktop'; };
+  syncScreen();
+  mq.addEventListener('change', syncScreen);
+
   // Keyboard HP: hanya di view phone (body.dl-on-phone atau x-dl::phone-shell). Tinggi yang terlihat = --dl-vvh; isian yang difokus digulir ke tengah area terlihat agar tidak tertutup keyboard.
   document.addEventListener('DOMContentLoaded', () => {
     const served = document.body.className.match(/dl-os-(android|ios)/);   // OS yang dirender server (juga pada pratinjau ?dl-os=) menang atas UA klien

@@ -86,6 +86,51 @@ class DeviceViewTest extends TestCase
         $this->assertSame('desktop', Device::view($junk), 'nilai tak sah diabaikan');
     }
 
+    public function test_phone_screen_rule_is_width_below_600_or_a_phone_turned_sideways(): void
+    {
+        // [lebar, tinggi, sentuh, phone?]
+        $cases = [
+            'portrait 360' => [360, 790, true, true],
+            'portrait 393' => [393, 852, true, true],
+            '599 (batas)' => [599, 900, false, true],
+            '599.5 pecahan' => [599.5, 900, false, true],
+            '600 (batas)' => [600, 900, false, false],
+            'tablet 7" 600 sentuh' => [600, 1024, true, false],
+            'lipat dalam 690' => [690, 840, true, false],
+            'lipat dalam 755' => [755, 900, true, false],
+            'iPad mini 744' => [744, 1133, true, false],
+            '761' => [761, 900, false, false],
+            'iPad 820x1180' => [820, 1180, true, false],
+            'iPad landscape 1180x820' => [1180, 820, true, false],
+            'HP landscape 800x360 sentuh' => [800, 360, true, true],
+            'HP landscape 956x440 sentuh' => [956, 440, true, true],
+            'HP landscape 997x448 sentuh' => [997, 448, true, true],
+            'HP landscape 800x479 sentuh' => [800, 479, true, true],
+            'tinggi 480 (batas) sentuh' => [800, 480, true, false],
+            'jendela laptop pendek 800x360 mouse' => [800, 360, false, false],
+            'monitor pendek 1280x400 sentuh' => [1280, 400, true, false],
+            'lebar 1000 landscape sentuh' => [1000, 400, true, false],
+            'desktop 1920x1080' => [1920, 1080, false, false],
+        ];
+        foreach ($cases as $name => [$w, $h, $coarse, $phone]) {
+            $this->assertSame($phone, Device::screenIsPhone($w, $h, $coarse), $name);
+        }
+    }
+
+    public function test_the_phone_screen_media_query_is_the_same_in_php_css_and_js(): void
+    {
+        $css = file_get_contents(base_path('../resources/assets/devlib.css'));
+        $js = file_get_contents(base_path('../resources/assets/js/components/view.js'));
+        $this->assertSame(
+            '(max-width: '.(Device::PHONE_MAX_WIDTH - 0.02).'px), (max-height: '.(Device::LANDSCAPE_MAX_HEIGHT - 0.02).'px) and (max-width: '.(Device::LANDSCAPE_MAX_WIDTH - 0.02).'px) and (pointer: coarse)',
+            Device::PHONE_MEDIA,
+        );
+        $this->assertStringContainsString("@media ".Device::PHONE_MEDIA."{\n  .dl-phoneoffer{", str_replace("\r\n", "\n", $css), 'popup tawaran memakai aturan layar phone');
+        $this->assertStringContainsString("Devlib.PHONE_MQ = '".Device::PHONE_MEDIA."'", $js);
+        $offer = substr($css, strpos($css, '/* Phone Offer'), 1200);
+        $this->assertStringNotContainsString('760', $offer, 'batas phone 760 sudah diganti');
+    }
+
     public function test_desktop_view_gets_no_body_class_and_the_old_viewport(): void
     {
         foreach (self::UAS as $name => [$ua, $view, $os]) {

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
  * Tujuan       : Model MULTI VIEW baku: dua view kanonik `phone` (smartphone Android / iOS, potret) dan `desktop` (laptop, desktop, DAN tablet), plus OS (android | ios | other); pilihan pengguna di cookie `ui` selalu menang atas tebakan.
  * Sumber hulu  : Sec-CH-UA-Mobile (hanya Chrome/Edge/Opera lewat HTTPS atau localhost), User-Agent (satu-satunya petunjuk Safari iOS: tidak mengirim client hints), cookie ui, atribut permintaan dl.view / dl.os (Device::override, dipasang ViewOverride untuk pratinjau).
  * Input        : objek Request (atau cookie, User-Agent, Sec-CH-UA-Mobile untuk detect / resolve).
- * Output       : view() = 'phone' | 'desktop'; os() = 'android' | 'ios' | 'other'; bodyClass(); viewport().
+ * Output       : view() = 'phone' | 'desktop'; os() = 'android' | 'ios' | 'other'; bodyClass(); viewport(); screenIsPhone() (aturan layar phone, batas 600 px + HP landscape).
  * Dipakai oleh : x-dl::device-pick, x-dl::phone-shell, x-dl::phone-offer, x-dl::view-as; middleware dan layout proyek yang memilih view; aturan di skills/devlib/views.md.
  * Status       : Aktif (DevLib).
  */
@@ -39,6 +39,23 @@ final class Device
     public const OVERRIDE_VIEW = 'dl.view';
 
     public const OVERRIDE_OS = 'dl.os';
+
+    // Aturan LAYAR phone (sementara, keputusan Jo 2026-10-23 dari riset breakpoint; disesuaikan bila kenyataan di perangkat kurang pas): lebar CSS < 600, ATAU HP landscape =
+    // tinggi < 480 DAN pointer coarse DAN lebar < 1000. Selain itu desktop (tablet, lipat dalam, laptop). Dipakai popup x-dl::phone-offer (CSS) dan Devlib.phoneScreen() (view.js);
+    // PHONE_MEDIA harus sama persis dengan media query di keduanya (dijaga tes). Ini TIDAK mengubah view(): tebakan header, cookie, dan pilihan pengguna tetap.
+    public const PHONE_MAX_WIDTH = 600;
+
+    public const LANDSCAPE_MAX_HEIGHT = 480;
+
+    public const LANDSCAPE_MAX_WIDTH = 1000;
+
+    public const PHONE_MEDIA = '(max-width: 599.98px), (max-height: 479.98px) and (max-width: 999.98px) and (pointer: coarse)';
+
+    // Apakah layar berukuran (lebar x tinggi CSS px, pointer utama kasar/sentuh) memenuhi aturan phone? Setara PHONE_MEDIA.
+    public static function screenIsPhone(int|float $width, int|float $height, bool $coarsePointer): bool
+    {
+        return $width < self::PHONE_MAX_WIDTH || ($coarsePointer && $height < self::LANDSCAPE_MAX_HEIGHT && $width < self::LANDSCAPE_MAX_WIDTH);
+    }
 
     // Nilai view yang sah ('phone' | 'desktop'), alias lama dipetakan; selain itu null.
     public static function normalize(mixed $value): ?string

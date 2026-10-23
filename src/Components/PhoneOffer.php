@@ -15,12 +15,12 @@ namespace Devlib\Components;
 use Devlib\Device;
 
 // Tawaran pindah ke tampilan HP. Ditulis ke halaman HANYA bila pengguna belum memilih (tanpa cookie `ui` yang sah) dan perangkat ditebak desktop;
-// CSS menampilkannya hanya pada lebar <= 760 px (jendela desktop sempit, tablet tegak), jadi di layar lebar tidak pernah terlihat.
+// CSS menampilkannya hanya pada layar yang memenuhi aturan phone (Device::PHONE_MEDIA: lebar < 600, atau HP landscape: tinggi < 480 + sentuh + lebar < 1000), jadi di tablet dan layar lebar tidak pernah terlihat.
 // Ketuk "Ketuk di sini" = POST ui=phone; "Tetap desktop" = POST ui=desktop (diingat di cookie, popup tidak muncul lagi). Proyek menyimpan cookie di rute `action`.
 class PhoneOffer extends DevlibComponent
 {
     public function __construct(
-        // Alamat POST yang menyimpan pilihan (field ui = hp | desktop) lalu kembali ke layar ini.
+        // Alamat POST yang menyimpan pilihan (field ui = phone | desktop) lalu kembali ke layar ini.
         public string $action = '',
         // true = ditulis walau cookie ada / perangkat ponsel (peraga katalog).
         public bool $force = false,
