@@ -39,7 +39,7 @@
             </div>
         @endif
         @if (! empty($d['weather']))
-            <x-dl::weather :city="$d['weather']['city']" :lat="$d['weather']['lat']" :lon="$d['weather']['lon']" />
+            <x-dl::weather :locate="$d['weather']['locate'] ?? true" :city="$d['weather']['city'] ?? null" :lat="$d['weather']['lat'] ?? null" :lon="$d['weather']['lon'] ?? null" />
         @endif
     </div>
 </section>

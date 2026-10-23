@@ -20,7 +20,7 @@ Status: aktif.
                     @case('clock') <x-dl::clock /> @break
                     @case('date') <x-dl::clock mode="date" /> @break
                     @case('greeting') <x-dl::greeting /> @break
-                    @case('weather') <x-dl::weather :city="$city" :lat="$lat" :lon="$lon" /> @break
+                    @case('weather') <x-dl::weather :locate="false" :city="$city" :lat="$lat" :lon="$lon" /> @break
                     @case('quote') <x-dl::quote :quotes="$quoteList ?? \Devlib\Components\Frame::textLines($quotes)" :order="$quoteOrder" :interval="$quoteInterval" /> @break
                     @case('announce') <x-dl::announce :lines="\Devlib\Components\Frame::textLines($announce)" /> @break
                 @endswitch

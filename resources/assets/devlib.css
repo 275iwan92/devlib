@@ -171,6 +171,7 @@ body.dl-body:has(> .dl-print){overflow-y:auto}
 .dl-clock--date .d{font-size:calc(15px * var(--dl-font-scale));color:var(--dl-on-dark);font-weight:600}
 .dl-greeting{font-size:clamp(20px,2.2vw,30px);font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,.35)}
 .dl-weather{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.15);border-radius:var(--dl-radius-lg);padding:8px 12px;backdrop-filter:blur(6px)}
+.dl-weather[hidden]{display:none}
 .dl-weather__icon{font-size:calc(28px * var(--dl-font-scale));line-height:1}
 .dl-weather__temp{font-size:calc(18px * var(--dl-font-scale));font-weight:700}
 .dl-weather__desc{font-size:calc(12px * var(--dl-font-scale))}

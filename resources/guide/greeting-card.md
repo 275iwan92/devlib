@@ -63,7 +63,7 @@ Constructor of `Devlib\Components\GreetingCard` (2 props).
 | `user` | `first` (name for the salutation), `position`, `department`, `superior` | Missing or empty items are dropped from the line. `superior` is shown as `Reports to: <superior>` ("Reports to" is translated). `user.name` and `user.code` are not used by this object. |
 | `brief` | Strip under the position line | List of pairs `[label, value]`, printed as `label <b>value</b>`. Not translated: values are data and labels should be given in the display language. Omit or empty = no strip. |
 | `attendance` | Check-in badge | `['in' => '07:52', 'status' => 'On time', 'tone' => 'success', 'shift' => 'Regular', 'start' => '08:00', 'end' => '17:00']`. Rendered when the array is not empty; then `in` is required (the others have fallbacks: tone `success`, status empty, shift `-`). |
-| `weather` | Weather child | `['city' => ..., 'lat' => ..., 'lon' => ...]`. All three keys are required when the array is not empty. Omit/empty = no weather. |
+| `weather` | Weather child | `['city' => ..., 'lat' => ..., 'lon' => ..., 'locate' => true]`. By default the weather follows the position of the visitor's device; `city` / `lat` / `lon` are the FALLBACK place (location refused, not HTTPS, timeout) and are all optional: give them as a set, or `['locate' => true]` alone for a card that shows only when the location works. `'locate' => false` forces the fixed place. Omit/empty array = no weather. |
 | `jobdesc` | Job Description button and modal | `['title' => ..., 'updated' => ..., 'html' => ...]`. `html` is printed unescaped. |
 | `sops` | SOP button (with the count) and modal with one accordion per SOP | List of `['code', 'title', 'revision', 'effective', 'html']`; all five keys are read. The first accordion is open. `html` is printed unescaped. |
 
@@ -94,7 +94,7 @@ Standard `button`s and modal; the sections are plain `div`/`section` without lan
 
 ## Data and events
 
-- Input: the `board` array only. No request is made by the card itself. The only network call is the weather child (browser to `api.open-meteo.com`, sends the latitude/longitude of the configured place).
+- Input: the `board` array only. No request is made by the card itself. The only network calls are from the weather child (browser to `api.open-meteo.com`; with the device location also to `api.bigdatacloud.net` for the city name; see `weather.md`).
 - Output: none. No form field, no `dl:*` event from the card. Children events: none (`x-dl::greeting`, `x-dl::clock`, `x-dl::weather` emit nothing; they listen to `dl:lang`).
 - Hooks: `data-dl-open="<key>-jd|-sop"` (document buttons), `data-dl-close-modal`, plus the child hooks `data-dl-greeting`, `data-dl-clock`, `data-dl-weather`.
 - JS: there is no script of its own (`jsClass()` is `null`); each child has its own `el.dlComponent`.
@@ -104,7 +104,7 @@ Standard `button`s and modal; the sections are plain `div`/`section` without lan
 - The `html` of `jobdesc` and of every SOP is printed with `{!! !!}`. It must come from a trusted editor and be sanitised on save (for example the HR master), never from free user input.
 - One card per profile per page: the modal ids come from `profile`. A standalone card plus an `x-dl::dashboard` with the same `profile` on one page produces duplicate ids and the buttons open the wrong modal. The dashboard already contains its card.
 - Give the already-translated text for `profile_label`, `brief` labels and the attendance `status`/`shift`; the object does not translate them. Wrap data values in `raw()` when they are mixed into translated props.
-- Missing required keys fail at render (undefined array key): `attendance.in`, `weather.city/lat/lon`, all five keys of each SOP, `jobdesc.html` (`jobdesc.title` and `jobdesc.updated` have fallbacks). Pass `null` or `[]` for a whole block you do not have.
+- Missing required keys fail at render (undefined array key): `attendance.in`, all five keys of each SOP, `jobdesc.html` (`jobdesc.title` and `jobdesc.updated` have fallbacks). Pass `null` or `[]` for a whole block you do not have.
 - Attendance and location come from the caller. The card shows what it is given; it never decides lateness. Personal data in `board` is the caller's responsibility.
 - Time zone and `timezone_label` come from `config('devlib.timezone')` and `config('devlib.timezone_label')`. The limits of the children apply here too: the device clock is the source of time, an invalid zone name breaks the page script, and the weather needs internet access from the visitor's browser.
 - Related lint rules: none (`src/Lint` has no rule for this object).
