@@ -2,7 +2,7 @@
 
 /*
  * REMARK
- * Tujuan       : Jam + tanggal berjalan menurut zona waktu SISTEM (default Asia/Jakarta = WIB), ikut bahasa aktif. mode: clock (jam+tanggal) | date (tanggal saja).
+ * Tujuan       : Jam + tanggal berjalan menurut zona waktu SISTEM (default Asia/Jakarta = WIB), ikut bahasa aktif. mode: clock (jam+tanggal) | date (tanggal saja) | line (satu baris kecil 'Jumat, 23 Oktober 2026 · 15:13', tanggal singkat di HP).
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
  * Input        : mode, timezone, tzLabel.
  * Output       : Markup Blade inline (render() kelas ini).
@@ -12,7 +12,7 @@
 
 namespace Devlib\Components;
 
-// Jam + tanggal berjalan menurut zona waktu SISTEM (default Asia/Jakarta = WIB), ikut bahasa aktif. mode: clock (jam+tanggal) | date (tanggal saja).
+// Jam + tanggal berjalan menurut zona waktu SISTEM (default Asia/Jakarta = WIB), ikut bahasa aktif. mode: clock (jam+tanggal) | date (tanggal saja) | line (satu baris kecil 'Jumat, 23 Oktober 2026 · 15:13', tanpa detik; di HP tanggal singkat 'Jum, 23 Okt 2026 · 15:13').
 class Clock extends DevlibComponent
 {
     public string $timezone;

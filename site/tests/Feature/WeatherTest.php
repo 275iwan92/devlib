@@ -72,4 +72,13 @@ class WeatherTest extends TestCase
         $this->assertSame(0, $p->getExitCode(), $p->getOutput().$p->getErrorOutput());
         $this->assertStringContainsString('OK', $p->getOutput());
     }
+
+    public function test_variant_and_clock_line_are_opt_in(): void
+    {
+        $this->assertStringNotContainsString('dl-weather--', Blade::render('<x-dl::weather />'));
+        $this->assertStringContainsString('dl-weather dl-weather--chip', Blade::render('<x-dl::weather variant="chip" />'));
+        $this->assertStringContainsString('dl-clock dl-clock--line', Blade::render('<x-dl::clock mode="line" />'));
+        $this->assertStringContainsString('data-dl-clock-time', Blade::render('<x-dl::clock />'));
+        $this->assertStringNotContainsString('data-dl-clock-time', Blade::render('<x-dl::clock mode="line" />'));
+    }
 }

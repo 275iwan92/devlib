@@ -48,7 +48,7 @@ Constructor of `Devlib\Components\PhoneShell` (12 props).
 | `tabs` | `array`, `[]` | The MAIN MENUS of the bar of state C: `[['key', 'label', 'icon', 'url'], …]` (for example Home, Stock, Transactions, Count). Use four: the fifth item "Menu" (module list) is added by the shell, always at the right end. |
 | `active` | `string`, `''` | `key` of the main menu that is marked in the row. Empty = none. |
 | `modules` | `array`, `[]` | The module list content, same shape as `x-dl::layer-shell`: `[['code', 'label', 'icon', 'children' => [ITEM, …]], …]`, `ITEM = ['code', 'label', 'url', 'icon'?, 'badge'?]`. A child with `items` (a submenu) is flattened one level. Pass only what the user may open (the project filters by role and group); the shell draws everything it receives. |
-| `user` | `array`, `['name' => '', 'role' => '']` | Name and role shown at the top of the module list. |
+| `user` | `array`, `['name' => '', 'role' => '']` | Name and role shown at the top of the module list. When the application binds `devlib.net` (see `x-dl::net-line`) the small line `client IP → server IP` with the connection status is drawn under them. |
 | `brand` | `?string`, `null` | Title when `title` is empty. `null` = `Brand::identity()['name']`. |
 | `logout-action` | `string`, `''` | POST address of the Sign out button at the bottom of the module list. Empty = no button. |
 | `device-action` | `?string`, `null` | POST address that saves `ui=desktop`: drawn as a "Desktop view" button in the module list. `null` = no such button. |

@@ -27,6 +27,7 @@
             </section>
             <div class="dl-phone__who">
                 <strong>{{ $user['name'] ?? '' }}</strong>@if (! empty($user['role']))<span>{{ $user['role'] }}</span>@endif
+                @if (app()->bound('devlib.net')) <x-dl::net-line /> @endif
             </div>
             @foreach ($modules as $m)
                 <section class="dl-phone__grp">

@@ -29,7 +29,7 @@ Without a fallback place the root has the `hidden` attribute (and no `data-lat` 
 
 ## Props
 
-Constructor of `Devlib\Components\Weather` (4 props). Bind numbers with `:lat="-7.25"`.
+Constructor of `Devlib\Components\Weather` (5 props). Bind numbers with `:lat="-7.25"`.
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -37,6 +37,7 @@ Constructor of `Devlib\Components\Weather` (4 props). Bind numbers with `:lat="-
 | `city` | `?string`, `null` | Fallback label printed after the description. Display only: it is NOT sent to Open-Meteo and is not geocoded. Not translated. |
 | `lat` | `?float`, `null` | Fallback latitude (-90 to 90). Not range-checked: a wrong value gives an error response and the widget shows "weather unavailable". |
 | `lon` | `?float`, `null` | Fallback longitude (-180 to 180). Same rules as `lat`. |
+| `variant` | `string`, `'glass'` | Look. `glass` = translucent dark glass for photos and dark cards (the original look). `card` = small solid dark-blue card for a light page. `chip` = small pill with icon, temperature and city (`25°C · Malang`, no description) for phone screens. The value is the CSS class `dl-weather--<variant>` (none for `glass`). |
 
 Pass `city`, `lat` and `lon` as one consistent set. `lat` + `lon` without `city` shows the weather without a place name. The owner decides where the fallback comes from (for example the company screen of the project); DevLib has no place setting.
 

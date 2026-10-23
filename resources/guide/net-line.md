@@ -93,6 +93,6 @@ app()->bind('devlib.net', fn () => \Devlib\NetworkInfo::of(request()));
 ## Related
 
 - `Devlib\NetworkInfo`: gives the four values (`of($request)`).
-- `x-dl::layer-menu`: places the line in the user row.
+- `x-dl::layer-menu` (user row of the left menu) and `x-dl::phone-shell` (under the name at the top of the Menu list): both place the line when `devlib.net` is bound.
 - `x-dl::env-badge`: the older Host / Client text line, still used when `devlib.net` is not bound.
 - Catalog page `p7-netline` (Simulate buttons).

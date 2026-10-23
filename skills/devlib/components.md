@@ -124,7 +124,7 @@ Baris chip / badge yang membungkus ke baris berikutnya (tag proses khusus, label
 - Prop: as:string='div'
 
 ## `<x-dl::clock>`
-Jam + tanggal berjalan menurut zona waktu SISTEM (default Asia/Jakarta = WIB), ikut bahasa aktif. mode: clock (jam+tanggal) | date (tanggal saja).
+Jam + tanggal berjalan menurut zona waktu SISTEM (default Asia/Jakarta = WIB), ikut bahasa aktif. mode: clock (jam+tanggal) | date (tanggal saja) | line (satu baris kecil 'Jumat, 23 Oktober 2026 · 15:13', tanggal singkat di HP).
 - Berkas: `src/Components/Clock.php`
 - Prop: mode:string='clock', timezone:?string=NULL, tzLabel:?string=NULL
 
@@ -891,7 +891,7 @@ Form khusus Warehouse Map (user 2026-10-02, docs/warehouselayout_tier1.md): pemi
 ## `<x-dl::weather>`
 Cuaca terkini dari internet (Open-Meteo, gratis tanpa kunci API), diambil oleh browser. Bawaan: tempat = posisi perangkat (Geolocation, nama kota dari reverse geocoding); city/lat/lon = tempat cadangan.
 - Berkas: `src/Components/Weather.php`
-- Prop: locate:bool=true, city:?string=NULL, lat:?float=NULL, lon:?float=NULL
+- Prop: locate:bool=true, city:?string=NULL, lat:?float=NULL, lon:?float=NULL, variant:string='glass'
 
 ## `<x-dl::wh-map>`
 Peta gudang (warehouse map): denah satu gedung per lantai -- garis luar gedung (kotak, huruf L, atau bentuk apa pun),.

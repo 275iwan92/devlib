@@ -29,7 +29,7 @@ Constructor of `Devlib\Components\Clock` (3 props).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
-| `mode` | `string`, `'clock'` | `clock` = time + zone label + date; anything else (the documented value is `date`) = date only. The value also becomes the CSS class `dl-clock--<mode>` and is not validated, so a typo silently gives the date-only layout. |
+| `mode` | `string`, `'clock'` | `clock` = time + zone label + date; anything else (the documented value is `date`) = date only. The value also becomes the CSS class `dl-clock--<mode>` and is not validated, so a typo silently gives the date-only layout. `line` = one small line `Jumat, 23 Oktober 2026 · 15:13` (long date, time without seconds); on a phone (`body.dl-on-phone`) the short date `Jum, 23 Okt 2026 · 15:13`. The line inherits its colour (it is made for light pages) and has no zone label. |
 | `timezone` | `?string`, `null` | IANA time zone used to format time and date (`Asia/Jakarta`, `Asia/Makassar`, `Asia/Jayapura`, `UTC`). `null` = `config('devlib.timezone')` (default `Asia/Jakarta`). Written to `data-tz`. `''` is kept and makes the browser use the visitor's own zone. An invalid name is NOT checked by PHP and throws in the browser (first code oddity below). Abbreviations such as `WIB` are not valid IANA names. |
 | `tz-label` | `?string`, `null` | Short text printed next to the time (`WIB`). `null` = `config('devlib.timezone_label')` (default `WIB`). Pure text: it is not derived from `timezone`, so when you change one, change the other. Shown only in `clock` mode. Not translated. |
 
@@ -79,7 +79,7 @@ Plain `div`/`span` text, no `role="timer"` and no `aria-live`, so a screen reade
 - Give a valid IANA zone name, never a label such as `WIB`.
 - Never use the clock as the business time of a transaction: stamp on the server.
 - Put it on a dark or photo surface.
-- `mode` only has the two documented behaviours; do not invent other modes.
+- `mode` has three behaviours (`clock`, `date`, `line`); do not invent other modes.
 - Related lint rules: none (`src/Lint` has no rule for this object).
 - Code oddity (not fixed): an invalid `timezone` makes `toLocaleTimeString` throw `RangeError` inside `init()` (`resources/assets/js/components/clock.js:17`). `boot.js:19` mounts the clock inside the single `DOMContentLoaded` handler without a `try`, so every component mounted after it (the rest of `resources/assets/js/boot.js`, including the final `Devlib.mount(document)`) is never mounted on that page. PHP does not validate the value.
 - Code oddity (not fixed): the locale is chosen with `Devlib.lang === 'id' ? 'id-ID' : 'en-US'` (`resources/assets/js/components/clock.js:16`), ignoring `DL_NUM.intl` and the other configured languages.

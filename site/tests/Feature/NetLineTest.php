@@ -64,4 +64,13 @@ class NetLineTest extends TestCase
         $this->assertStringContainsString('data-dl-net-line', $with);
         $this->assertStringNotContainsString('Host: H / 1.2.3.4', $with);
     }
+
+    public function test_phone_shell_draws_the_line_under_the_name_only_when_the_app_binds_network_data(): void
+    {
+        $tag = '<x-dl::phone-shell title="T" :user="$u" />';
+        $this->assertStringNotContainsString('data-dl-net-line', Blade::render($tag, ['u' => ['name' => 'Budi', 'role' => 'Operator']]));
+
+        app()->bind('devlib.net', fn () => self::NET);
+        $this->assertStringContainsString('data-dl-net-line', Blade::render($tag, ['u' => ['name' => 'Budi', 'role' => 'Operator']]));
+    }
 }

@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Cuaca terkini dari internet (Open-Meteo, gratis tanpa kunci API), diambil oleh browser. Bawaan: tempat = posisi perangkat (Geolocation, nama kota dari reverse geocoding); city/lat/lon = tempat cadangan.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : locate, city, lat, lon.
+ * Input        : locate, city, lat, lon, variant.
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : layar proyek lewat x-dl::weather.
  * Status       : Aktif (DevLib).
@@ -22,6 +22,8 @@ class Weather extends DevlibComponent
         public ?string $city = null,
         public ?float $lat = null,
         public ?float $lon = null,
+        // glass (bawaan: kaca gelap di atas foto / kartu gelap) | card (kartu biru tua kecil di halaman terang) | chip (pil kecil: ikon, suhu, kota).
+        public string $variant = 'glass',
     ) {}
 
     // Tempat cadangan lengkap (lat dan lon terisi).
@@ -43,7 +45,7 @@ class Weather extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class('dl-weather') }} {!! $dl() !!} data-dl-weather data-locate="{{ $locate ? 1 : 0 }}" @if ($hasFixed()) data-lat="{{ $lat }}" data-lon="{{ $lon }}" data-city="{{ $city }}" @else hidden @endif><span class="dl-weather__icon" data-dl-weather-icon>⛅</span><div><div class="dl-weather__temp" data-dl-weather-temp>--°C</div><div class="dl-weather__desc"><span data-dl-weather-desc>{{ \Devlib\Lang::text('loading weather…') }}</span><span data-dl-weather-city>{{ ! $locate && $city ? ' · '.$city : '' }}</span></div></div></div>
+            <div {{ $attributes->class(['dl-weather', 'dl-weather--'.$variant => $variant !== 'glass']) }} {!! $dl() !!} data-dl-weather data-locate="{{ $locate ? 1 : 0 }}" @if ($hasFixed()) data-lat="{{ $lat }}" data-lon="{{ $lon }}" data-city="{{ $city }}" @else hidden @endif><span class="dl-weather__icon" data-dl-weather-icon>⛅</span><div><div class="dl-weather__temp" data-dl-weather-temp>--°C</div><div class="dl-weather__desc"><span data-dl-weather-desc>{{ \Devlib\Lang::text('loading weather…') }}</span><span data-dl-weather-city>{{ ! $locate && $city ? ' · '.$city : '' }}</span></div></div></div>
             BLADE;
     }
 }

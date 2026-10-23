@@ -42,7 +42,7 @@
   --dl-side-w:262px; --dl-side-mini:66px; --dl-topbar-h:56px; --dl-tab-h:44px;
   --dl-login-panel:15vw; --dl-shadow-pop:0 16px 44px rgba(15,22,45,.24); --dl-shadow-modal:0 20px 60px rgba(15,22,45,.3);
   /* ---- teks di atas latar gelap, alat developer, dll ---- */
-  --dl-white:#fff; --dl-on-dark:#f1f4ff; --dl-on-dark-muted:#e4e9f8; --dl-on-dark-link:#8fb3ff; --dl-on-dark-success:#b9f0d9; --dl-on-dark-warn:#ffe2a8; --dl-net-bad:#ffb4c0; --dl-net-warn:#ffe08a;
+  --dl-white:#fff; --dl-on-dark:#f1f4ff; --dl-on-dark-muted:#e4e9f8; --dl-on-dark-link:#8fb3ff; --dl-on-dark-success:#b9f0d9; --dl-on-dark-warn:#ffe2a8; --dl-net-bad:#ffb4c0; --dl-net-warn:#ffe08a; --dl-net-warn-ink:#8a5a00;
   --dl-dev-bg:#1b1330; --dl-dev-ink:#efe9ff; --dl-dev-key:#b9a6ee; --dl-code-bg:#e2e8f0; --dl-code-dark:#0f172a;
   --dl-device-btn:#334155; --dl-device-line:#475569; --dl-avatar-bg:#dce1ee; --dl-avatar-ink:#6b7596; --dl-switch-off:#cfd6e6;
   --dl-accent-soft-2:#e0eaff; --dl-border-soft:#f1f3f9; --dl-surface-muted:#f0f2f7;
@@ -168,10 +168,18 @@ body.dl-body:has(> .dl-print){overflow-y:auto}
 .dl-clock .t{font-size:calc(24px * var(--dl-font-scale));font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:1px;color:var(--dl-on-dark)}
 .dl-clock__tz{font-size:calc(12px * var(--dl-font-scale));font-weight:700;letter-spacing:1px}
 .dl-clock .d{font-size:calc(13px * var(--dl-font-scale));color:var(--dl-on-dark-muted);margin-top:2px;text-transform:capitalize}
+.dl-clock--line{display:block}
+.dl-clock--line .d{font-size:calc(13px * var(--dl-font-scale));color:inherit;margin:0;opacity:.8;text-transform:none;font-variant-numeric:tabular-nums}
 .dl-clock--date .d{font-size:calc(15px * var(--dl-font-scale));color:var(--dl-on-dark);font-weight:600}
 .dl-greeting{font-size:clamp(20px,2.2vw,30px);font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,.35)}
 .dl-weather{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.15);border-radius:var(--dl-radius-lg);padding:8px 12px;backdrop-filter:blur(6px)}
 .dl-weather[hidden]{display:none}
+.dl-weather--card{background:var(--dl-navy);border-color:transparent;color:var(--dl-on-dark);backdrop-filter:none}
+.dl-weather--chip{display:inline-flex;gap:6px;padding:2px 10px;border-radius:999px;background:var(--dl-navy);border-color:transparent;color:var(--dl-on-dark);backdrop-filter:none}
+.dl-weather--chip .dl-weather__icon{font-size:calc(14px * var(--dl-font-scale))}
+.dl-weather--chip>div{display:flex;align-items:baseline;gap:2px}
+.dl-weather--chip .dl-weather__temp,.dl-weather--chip .dl-weather__desc{font-size:calc(12px * var(--dl-font-scale));font-weight:600}
+.dl-weather--chip [data-dl-weather-desc]{display:none}
 .dl-weather__icon{font-size:calc(28px * var(--dl-font-scale));line-height:1}
 .dl-weather__temp{font-size:calc(18px * var(--dl-font-scale));font-weight:700}
 .dl-weather__desc{font-size:calc(12px * var(--dl-font-scale))}
@@ -4060,6 +4068,11 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 /* deret menu utama (keadaan C): muncul di bawah baris judul, menimpa isi; tertutup sendiri */
 .dl-phone__who{display:flex;flex-direction:column;gap:2px;padding:2px 4px 10px;font-size:calc(15px * var(--dl-font-scale))}
 .dl-phone__who span{font-size:calc(13px * var(--dl-font-scale));font-weight:600}
+/* baris jaringan x-dl::net-line di lembar Menu HP: latar terang, jadi teks dan warna status memakai token gelap */
+.dl-phone__who .dl-netline{font-size:calc(12px * var(--dl-font-scale));color:var(--dl-muted);--dl-net-bad:var(--dl-danger);--dl-net-warn:var(--dl-net-warn-ink)}
+.dl-phone__who .dl-netline span{font-size:inherit;font-weight:inherit}
+.dl-phone__who .dl-netline [data-nl]{font-weight:inherit}
+.dl-phone__who .dl-netline[data-state="server"] [data-nl="server"],.dl-phone__who .dl-netline[data-state="offline"] [data-nl="client"],.dl-phone__who .dl-netline__st{font-weight:700}
 .dl-phone__grp{margin:0 0 6px}
 .dl-phone__gh{margin:10px 4px 2px;font-size:calc(13px * var(--dl-font-scale));font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--dl-ink-strong)}
 .dl-phone__row{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 8px;border-radius:10px;color:var(--dl-ink);text-decoration:none;font-size:calc(16px * var(--dl-font-scale))}
