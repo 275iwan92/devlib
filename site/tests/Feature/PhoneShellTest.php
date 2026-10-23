@@ -162,4 +162,21 @@ class PhoneShellTest extends TestCase
             $this->assertStringStartsWith(':is(body.dl-on-phone,.dl-phone)', $line, 'aturan grid HP harus dibatasi konteks HP: '.$line);
         }
     }
+
+    public function test_hamburger_shows_on_top_level_screens_only_and_opens_the_one_menu_sheet(): void
+    {
+        $top = Blade::render('<x-dl::phone-shell title="Home" :tabs="[]" />');
+        $this->assertStringContainsString('dl-phone__burger', $top);
+        $this->assertStringNotContainsString('dl-phone__back', $top);
+        $this->assertSame(1, substr_count($top, 'data-dl-phone-sheet'), 'satu lembar Menu untuk hamburger dan tab Menu');
+        $this->assertSame(2, substr_count($top, 'data-dl-phone-menu'), 'hamburger + tab Menu');
+        $this->assertStringContainsString('aria-label="Menu"', $top);
+        $this->assertStringContainsString('dl-phone__close', $top);
+
+        $child = Blade::render('<x-dl::phone-shell title="Item" back="/" />');
+        $this->assertStringContainsString('dl-phone__back', $child);
+        $this->assertStringNotContainsString('dl-phone__burger', $child);
+
+        $this->assertStringNotContainsString('dl-phone__burger', Blade::render('<x-dl::phone-shell title="Home" :burger="false" />'));
+    }
 }

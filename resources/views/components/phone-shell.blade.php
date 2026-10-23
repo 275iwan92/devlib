@@ -2,6 +2,8 @@
     <header class="dl-phone__top">
         @if ($back)
             <a class="dl-phone__back" href="{{ $back }}" aria-label="{{ \Devlib\Lang::text('Back') }}"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></a>
+        @elseif ($burger)
+            <button type="button" class="dl-phone__burger" data-dl-phone-menu aria-label="{{ \Devlib\Lang::text('Menu') }}" aria-haspopup="dialog" aria-expanded="false"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
         @endif
         <h1 class="dl-phone__title">{{ $title !== '' ? \Devlib\Lang::text($title) : $brand }}</h1>
         @isset($actions)<div class="dl-phone__acts">{{ $actions }}</div>@endisset
@@ -15,7 +17,8 @@
     </main>
     <div class="dl-phone__sheet" data-dl-phone-sheet hidden>
         <div class="dl-phone__veil" data-dl-phone-close></div>
-        <div class="dl-phone__panel" role="dialog" aria-label="{{ \Devlib\Lang::text('Menu') }}">
+        <div class="dl-phone__panel" role="dialog" aria-label="{{ \Devlib\Lang::text('Menu') }}" tabindex="-1" data-dl-phone-panel>
+            <button type="button" class="dl-phone__close" data-dl-phone-close aria-label="{{ \Devlib\Lang::text('Close') }}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             <div class="dl-phone__who">
                 <strong>{{ $user['name'] ?? '' }}</strong>@if (! empty($user['role']))<span>{{ $user['role'] }}</span>@endif
             </div>

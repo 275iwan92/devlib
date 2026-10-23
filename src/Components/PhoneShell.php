@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Kerangka aplikasi untuk smartphone potret: bilah atas kecil (judul, tombol kembali), isi selebar layar, bilah tab di bawah, dan lembar Menu dari bawah berisi semua modul.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek. Daftar modul = bentuk yang sama dengan x-dl::layer-shell.
- * Input        : title, back, tabs, active, modules, user, brand, logoutAction, deviceAction, links, frame, contained.
+ * Input        : title, back, tabs, active, modules, user, brand, logoutAction, deviceAction, links, frame, contained, burger.
  * Output       : Markup dari resources/views/components/phone-shell.blade.php; perilaku lembar Menu di phone-shell.js.
  * Dipakai oleh : layar HP proyek (dipilih lewat Devlib\Device); halaman katalog p7-phone.
  * Status       : Aktif (DevLib).
@@ -40,6 +40,8 @@ class PhoneShell extends DevlibComponent
         public ?string $frame = null,
         // true = tinggi mengikuti pembungkus (peraga katalog), false = seluruh layar.
         public bool $contained = false,
+        // true = tombol hamburger di pojok kiri atas bila layar tidak punya tombol kembali (layar tingkat atas); membuka lembar Menu yang sama dengan tab Menu.
+        public bool $burger = true,
     ) {
         $this->brand ??= Brand::identity()['name'];
     }

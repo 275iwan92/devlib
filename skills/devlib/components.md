@@ -631,7 +631,7 @@ Popup kecil di layar desktop yang sempit: "Ingin tampilan yang lebih nyaman di s
 ## `<x-dl::phone-shell>`
 Kerangka aplikasi untuk smartphone potret: bilah atas kecil (judul, tombol kembali), isi selebar layar, bilah tab di bawah, dan lembar Menu dari bawah berisi semua modul.
 - Berkas: `src/Components/PhoneShell.php`, tampilan `resources/views/components/phone-shell.blade.php`
-- Prop: title:string='', back:?string=NULL, tabs:array=[], active:string='', modules:array=[], user:array=[…], brand:?string=NULL, logoutAction:string='', deviceAction:?string=NULL, links:array=[], frame:?string=NULL, contained:bool=false
+- Prop: title:string='', back:?string=NULL, tabs:array=[], active:string='', modules:array=[], user:array=[…], brand:?string=NULL, logoutAction:string='', deviceAction:?string=NULL, links:array=[], frame:?string=NULL, contained:bool=false, burger:bool=true
 
 ## `<x-dl::phone-tile>`
 Kartu ringkasan layar HP: ikon, angka besar, dan nama; seluruh kartu adalah tautan (sasaran sentuh besar). Dua kartu per baris di dalam x-dl::phone-tiles.

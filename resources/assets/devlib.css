@@ -4010,6 +4010,12 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-phone__row em{font-style:normal;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--dl-badge);color:var(--dl-side-ink)}
 .dl-phone__dev,.dl-phone__out{display:grid;gap:10px;margin-top:14px}
 .dl-phone .dl-btn{min-height:44px}
+.dl-phone__burger{flex:none;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:0;background:none;color:inherit;font-size:20px;border-radius:50%;cursor:pointer}
+.dl-phone__burger:active,.dl-phone__burger:focus-visible{background:var(--dl-navy-2)}
+.dl-phone__back:focus-visible,.dl-phone__burger:focus-visible,.dl-phone__tab:focus-visible{outline:2px solid var(--dl-accent);outline-offset:-2px}
+.dl-phone__panel:focus{outline:none}
+.dl-phone__close{position:absolute;top:6px;right:8px;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:0;background:none;color:var(--dl-ink);font-size:20px;cursor:pointer}
+.dl-phone__who{padding-right:48px}
 /* Kartu isi layar HP (daftar jadi kartu, satu barang per kartu, dst.) */
 .dl-phone-card{background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius-md);padding:14px;margin:0 0 12px}
 /* Pilihan tampilan perangkat (x-dl::device-pick): dua radio besar */
