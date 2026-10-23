@@ -5,7 +5,7 @@
 The icon rotates through states on the same button:
 
 - **A**: icon only (the start state of every screen).
-- **B**: the ACTIONS of the screen, in a row at the top. Only on a screen that has some: a form (`x-dl::form` panel buttons: Save as the main button, Undo, Back, ...) or a grid (`x-dl::grid` toolbar: search, + New, Filters, Columns, Export). Buttons that do not fit wrap to the next line.
+- **B**: the ACTIONS of the screen, in a row at the top. Only on a screen that has some: a form (`x-dl::form` panel buttons: Save as the main button, Undo, Back, ...) a grid (`x-dl::grid` toolbar: search, + New, Filters, Columns, Export) or a report / print page (`x-dl::print-out`, `x-dl::report` bar: Print, paper size, group, share). Buttons that do not fit wrap to the next line.
 - **C**: the five MAIN MENUS as a row at the top (Home, Stock, ... and a fifth button "Menu" that opens the list of all modules, a "Desktop view" button and Sign out).
 - Then back to A. A screen without actions goes A, C, A.
 
@@ -59,7 +59,7 @@ Constructor of `Devlib\Components\PhoneShell` (12 props).
 - Tapping the icon calls `next()`: A to B (only when `hasActions()`, i.e. the page has `.dl-form__acts` or `.dl-grid__toolbar`), B to C, C to A; without actions A to C. A new screen (or the frame finishing a load) always starts at A.
 - Focus: entering B focuses the first enabled action button, C the first main menu, A returns focus to the icon. Escape and the dimmed area (state C) go back to A. In C the fifth button toggles the module list (`aria-expanded`).
 - Auto-hide: scrolling the content (ignored for 0.5 s after opening), a tap outside the row, a choice, or 6 s of no touch/key inside the shell closes B and C. It waits while focus is inside the row (typing in the grid search), and B is never closed by itself while a form is dirty (`form.is-dirty`).
-- Motion: the rows slide in for 0.18 s; with `prefers-reduced-motion: reduce` there is no animation.
+- Motion: the rows slide down from under the title for 0.2 s (no swipe gesture from the top edge: Chrome Android uses it for pull-to-refresh; the icon is a tap); with `prefers-reduced-motion: reduce` there is no animation.
 
 ### Layout
 

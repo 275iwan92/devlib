@@ -4000,16 +4000,16 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 /* deret menu utama (keadaan C): muncul di bawah baris judul, menimpa isi; tertutup sendiri */
 .dl-phone__drop{position:absolute;left:0;right:0;top:var(--dl-phone-rowtop);bottom:0;z-index:40;display:flex;flex-direction:column}
 .dl-phone__drop[hidden]{display:none}
-.dl-phone__quick{flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .18s ease-out}
+.dl-phone__quick{flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
 .dl-phone__q{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:64px;min-width:44px;padding:6px 2px;border:0;background:none;color:var(--dl-ink);font:inherit;font-size:calc(12px * var(--dl-font-scale));font-weight:600;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .dl-phone__q i{font-size:20px}
 .dl-phone__q span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dl-phone__q.is-active,.dl-phone__q[aria-expanded="true"]{color:var(--dl-accent)}
 .dl-phone__q.is-active i{background:var(--dl-accent-soft);border-radius:14px;padding:3px 14px;box-sizing:content-box}
-.dl-phone__list{flex:0 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:12px max(14px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));background:var(--dl-surface);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .18s ease-out}
+.dl-phone__list{flex:0 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:12px max(14px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));background:var(--dl-surface);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
 .dl-phone__list[hidden]{display:none}
 .dl-phone__veil{flex:1 0 28px;background:var(--dl-overlay)}
-@keyframes dl-phone-drop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes dl-phone-drop{from{opacity:.2;transform:translateY(-100%)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.dl-phone__quick,.dl-phone__list{animation:none}.dl-phone__burger{transition:none}}
 .dl-phone__who{display:flex;flex-direction:column;gap:2px;padding:2px 4px 10px;font-size:calc(15px * var(--dl-font-scale))}
 .dl-phone__who span{font-size:calc(13px * var(--dl-font-scale));font-weight:600}
@@ -4139,13 +4139,16 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 /* ==== Aksi layar di tampilan HP: disembunyikan di keadaan A, muncul sebagai deret di atas pada keadaan B; konteks body.dl-phone-shelled (iframe di dalam x-dl::phone-shell) atau .dl-phone; desktop tidak cocok ==== */
 body.dl-phone-shelled .dl-form__acts,
 body.dl-phone-shelled .dl-grid__toolbar,
+body.dl-phone-shelled .dl-print__bar,
 .dl-phone .dl-form__acts,
-.dl-phone .dl-grid__toolbar{display:none}
-:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts{position:fixed;left:0;right:0;top:var(--dl-phone-rowtop,0px);z-index:35;display:flex;flex-wrap:wrap;gap:8px;padding:8px 12px;background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .18s ease-out}
+.dl-phone .dl-grid__toolbar,
+.dl-phone .dl-print__bar{display:none}
+:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts{position:fixed;left:0;right:0;top:var(--dl-phone-rowtop,0px);z-index:35;display:flex;flex-wrap:wrap;gap:8px;padding:8px 12px;background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
 :is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts > *{flex:1 1 28%;min-width:0}
 :is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts .dl-btn{min-height:48px;padding:0 8px;font-size:calc(14px * var(--dl-font-scale));white-space:nowrap;justify-content:center}
 :is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts [data-f-act="save"]{order:-1;flex-grow:2}
 :is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts .dl-form__sep{display:none}
 :is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form{padding-top:76px}
-:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-grid__toolbar{position:fixed;left:0;right:0;top:var(--dl-phone-rowtop,0px);z-index:35;display:flex;max-height:70vh;overflow-y:auto;padding:10px 12px;background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .18s ease-out}
-@media (prefers-reduced-motion:reduce){:is(body.dl-phone-acts,.dl-phone[data-state="B"]) :is(.dl-form__acts,.dl-grid__toolbar){animation:none}}
+:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-print__bar{position:fixed;left:0;right:0;top:var(--dl-phone-rowtop,0px);z-index:35;display:flex;max-height:70vh;overflow-y:auto;border-radius:0;box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
+:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-grid__toolbar{position:fixed;left:0;right:0;top:var(--dl-phone-rowtop,0px);z-index:35;display:flex;max-height:70vh;overflow-y:auto;padding:10px 12px;background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
+@media (prefers-reduced-motion:reduce){:is(body.dl-phone-acts,.dl-phone[data-state="B"]) :is(.dl-form__acts,.dl-grid__toolbar,.dl-print__bar){animation:none}}

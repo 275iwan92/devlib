@@ -5,7 +5,7 @@
   const HIDE_MS = 6000;
 
   // Satu ikon ≡ MELAYANG (tanpa bilah atas permanen) berputar tiga keadaan:
-  //   A = ikon saja; B = deret AKSI layar (form: .dl-form__acts, grid: .dl-grid__toolbar; hanya bila ada); C = lima menu utama (+ 'Menu' = daftar semua modul).
+  //   A = ikon saja; B = deret AKSI layar (form: .dl-form__acts, grid: .dl-grid__toolbar, report / cetak: .dl-print__bar; hanya bila ada); C = lima menu utama (+ 'Menu' = daftar semua modul).
   //   Layar tanpa aksi: A -> C -> A. Awal setiap layar = A. B dan C tertutup sendiri (menggulir, ketuk di luar, memilih menu, diam 6 detik), kecuali B saat form kotor.
   class PhoneShell extends Devlib.Component {
     static selector = "[data-dl-phone]";
@@ -38,7 +38,7 @@
       try { return this.frame.contentDocument; } catch (e) { return null; }
     }
 
-    hasActions() { return !!this.doc()?.querySelector('.dl-form__acts, .dl-grid__toolbar'); }
+    hasActions() { return !!this.doc()?.querySelector('.dl-form__acts, .dl-grid__toolbar, .dl-print__bar'); }
 
     dirty() { return !!this.doc()?.querySelector('form.is-dirty'); }
 
@@ -49,7 +49,7 @@
       if (d && this.frame) {
         d.body.classList.add('dl-phone-shelled');
         d.addEventListener('scroll', () => this.scrolled(), true);
-        d.addEventListener('pointerdown', e => { if (this.state === 'B' && !e.target.closest('.dl-form__acts, .dl-grid__toolbar, .dl-pop2__panel, .dl-grid__expmenu') && !this.dirty()) this.set('A'); }, true);
+        d.addEventListener('pointerdown', e => { if (this.state === 'B' && !e.target.closest('.dl-form__acts, .dl-grid__toolbar, .dl-print__bar, .dl-pop2__panel, .dl-grid__expmenu') && !this.dirty()) this.set('A'); }, true);
       }
       if (d) {
         this.obs = new MutationObserver(() => this.mark());
@@ -82,14 +82,14 @@
       this.arm();
       if (!user) return;
       if (s === 'A') this.btn.focus({preventScroll: true});
-      else if (s === 'B') this.doc()?.querySelector('.dl-form__acts .dl-btn:not([disabled]), .dl-grid__toolbar .dl-btn')?.focus?.({preventScroll: true});
+      else if (s === 'B') this.doc()?.querySelector('.dl-form__acts .dl-btn:not([disabled]), .dl-grid__toolbar .dl-btn, .dl-print__bar .dl-btn')?.focus?.({preventScroll: true});
       else $(this.el, '.dl-phone__quick a')?.focus({preventScroll: true});
     }
 
     // Fokus sedang di dalam deret (mengetik cari, memilih saringan): jangan ditutup.
     busy() {
       const d = this.doc(), a = d?.activeElement;
-      return !!a && (this.state === 'B' ? !!a.closest?.('.dl-form__acts, .dl-grid__toolbar') : !!a.closest?.('.dl-phone__drop'));
+      return !!a && (this.state === 'B' ? !!a.closest?.('.dl-form__acts, .dl-grid__toolbar, .dl-print__bar') : !!a.closest?.('.dl-phone__drop'));
     }
 
     // Tutup sendiri setelah diam; deret aksi form TIDAK tertutup sendiri saat form kotor (Simpan tidak boleh lenyap).

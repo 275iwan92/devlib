@@ -12,7 +12,7 @@ Uji acuan: Chrome Android potret **360 x 790 px CSS** (OPPO A6 Pro). Tata letak 
 | `x-dl::device-pick`: dua radio `ui` | Isi menu (modul, tab), hak akses |
 | `x-dl::phone-offer`: popup tawaran di login desktop sempit | Layar HP: isi Beranda, daftar, layar kerja (mis. hitung stok satu barang per kartu), JS-nya |
 | `x-dl::phone-login`: halaman login HP | Data tab dan modul (`tabs`, `modules`) untuk `x-dl::phone-shell` |
-| `x-dl::phone-shell`: satu ikon hamburger MELAYANG (tanpa bilah permanen) yang berputar A (ikon) / B (aksi layar) / C (lima menu utama), `frame` (halaman desktop di dalam kerangka) | Teks layar (kamus bahasa proyek) |
+| `x-dl::phone-shell`: satu ikon hamburger MELAYANG (tanpa bilah permanen) yang berputar A (ikon) / B (aksi layar: form, grid, report) / C (lima menu utama), `frame` (halaman desktop di dalam kerangka) | Teks layar (kamus bahasa proyek) |
 | `x-dl::phone-tile(s)`, `x-dl::phone-link`, `x-dl::phone-bar`: kartu angka, baris tautan, bilah tombol menempel di bawah | |
 | Aksi "Phone view" di `x-dl::layer-shell` (prop `deviceAction`) | |
 
