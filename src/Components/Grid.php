@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Grid induk (griduistandard + perilaku tabel Filament/PowerGrid yang dipilih user).
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : id, columns, rows, rowKey, stats, tabs, filters, groups, bulk, expand, … (28 prop).
+ * Input        : id, columns, rows, rowKey, stats, tabs, filters, groups, bulk, expand, … (29 prop).
  * Output       : Markup dari resources/views/components/grid.blade.php.
  * Dipakai oleh : grid-drilldown, grid-group, grid-master-detail, grid-master dan 10 lainnya (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -82,6 +82,8 @@ class Grid extends DevlibComponent
         public ?int $perPage = null,
         public array $detail = [],
         public array $cards = [],
+        // Hanya tampilan HP (opt-in): bentuk sama dengan `cards`, tetapi tanpa tombol Tabel/Kartu; di konteks HP (body.dl-on-phone / x-dl::phone-shell) grid dibuka sebagai daftar kartu dan ketuk kartu = buka. Desktop tidak berubah.
+        public array $phoneCards = [],
         public array $quickAdd = [],
         public ?string $groupBy = null,
         public string $search = 'Search...',
@@ -170,7 +172,7 @@ class Grid extends DevlibComponent
 
     public function config(): array
     {
-        return [
+        return ($this->phoneCards ? ['phoneCards' => $this->phoneCards] : []) + [
             'id' => $this->id, 'columns' => array_values(array_map(fn ($c) => $c + ['type' => 'text', 'visible' => true, 'sortable' => true], $this->columns)),
             'rowKey' => $this->rowKey, 'stats' => $this->stats, 'tabs' => $this->tabs, 'filters' => $this->filters, 'groups' => $this->groups,
             'bulk' => $this->bulk, 'expand' => $this->expand, 'actions' => $this->actions, 'activeKey' => $this->activeKey, 'perPage' => $this->perPage,

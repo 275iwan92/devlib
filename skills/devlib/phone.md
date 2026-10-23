@@ -47,6 +47,10 @@ Pola layar kerja satu-barang-per-kartu (progress, cari/pindai, simpan per barang
 
 Layar desktop yang dibuka lewat `:frame` (iframe) tidak tahu bahwa ia ada di HP. Tambahkan `Devlib\Device::bodyClass(request())` ke `<body class="...">` layout proyek: hasilnya `dl-on-phone` bila perangkat `hp` (kosong di desktop). Dengan kelas itu CSS DevLib memadatkan `x-dl::form` menjadi satu kolom (label di atas, isian 16 px / >= 44 px, plus tambah-cepat sebaris, bilah Simpan / Urungkan / Kembali menempel di bawah di atas bilah tab, panel statistik dua kolom). Tanpa kelas itu (desktop) tidak ada aturan yang cocok, dan pembungkus tombol `dl-form__acts` adalah `display: contents` sehingga tata letak desktop identik.
 
+### Daftar (grid) sebagai kartu di HP
+
+`x-dl::grid` prop `:phone-cards="['title' => 'name', 'sub' => 'code', 'badge' => 'level', 'tones' => [...], 'meta' => ['stock', 'unit', ...]]"` (opt-in; desktop tidak berubah dan tidak mendapat tombol Tabel/Kartu). Di konteks HP grid tampil sebagai kartu, ketuk kartu = buka (`open-url`), cari selebar layar, Filters / Columns / Export sebagai lembar dari bawah, `row-tone` mewarnai kartu.
+
 ## 3. Yang opt-in dan yang tidak berubah
 
 - Tanpa memakai satu pun komponen di atas, proyek lama tidak berubah. `x-dl::login-box` bagian `device` dan `x-dl::layer-shell` prop `deviceAction` default mati; markup lama identik (dibuktikan tes).

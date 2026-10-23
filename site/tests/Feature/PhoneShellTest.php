@@ -141,4 +141,25 @@ class PhoneShellTest extends TestCase
         $this->assertSame('', Device::bodyClass($req(self::CHROME_PHONE, ['ui' => 'desktop'])));
         $this->assertSame('dl-on-phone', Device::bodyClass($req(self::WINDOWS, ['ui' => 'hp'])));
     }
+
+    public function test_grid_phone_cards_are_opt_in_and_leave_the_desktop_config_untouched(): void
+    {
+        $cols = [['key' => 'name', 'label' => 'Name']];
+        $plain = Blade::render('<x-dl::grid id="g" :rows="[]" :columns="$c" />', ['c' => $cols]);
+        $this->assertStringNotContainsString('phoneCards', $plain);
+        $this->assertStringNotContainsString('data-g-view', $plain, 'tanpa kartu tidak ada tombol Tabel/Kartu');
+
+        $with = Blade::render('<x-dl::grid id="g" :rows="[]" :columns="$c" :phone-cards="$pc" />', ['c' => $cols, 'pc' => ['title' => 'name']]);
+        $this->assertStringContainsString('phoneCards', $with);
+        $this->assertStringNotContainsString('data-g-view', $with, 'phone-cards tidak memunculkan tombol Tabel/Kartu di desktop');
+
+        $css = (string) file_get_contents(base_path('../resources/assets/devlib.css'));
+        $block = substr($css, strpos($css, '/* Grid di tampilan HP'));
+        foreach (array_filter(array_map('trim', preg_split('/\R/', $block))) as $line) {
+            if (str_starts_with($line, '/*') || str_starts_with($line, '.dl-phone ')) {
+                continue;
+            }
+            $this->assertStringStartsWith(':is(body.dl-on-phone,.dl-phone)', $line, 'aturan grid HP harus dibatasi konteks HP: '.$line);
+        }
+    }
 }

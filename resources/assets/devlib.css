@@ -4093,3 +4093,39 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 :is(body.dl-on-phone,.dl-phone) .dl-form__strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 :is(body.dl-on-phone,.dl-phone) .dl-form__strip .dl-field{flex:none}
 :is(body.dl-on-phone,.dl-phone) .dl-form .dl-tabs__bar{overflow-x:auto}
+
+/* Grid di tampilan HP: daftar kartu (nama + kode, lencana, nilai penting), cari di atas, Filters / Columns / Export sebagai lembar dari bawah; hanya di konteks HP */
+:is(body.dl-on-phone,.dl-phone) .dl-grid__toolbar{gap:8px;padding:8px 0}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__spacer{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__search{flex:1 1 100%;width:100%;order:-2}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__search input{min-height:48px;font-size:16px}
+:is(body.dl-on-phone,.dl-phone) [data-g-new]{order:-1;flex:1 1 100%;min-height:48px;font-size:16px}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__toolbar .dl-btn{min-height:44px}
+:is(body.dl-on-phone,.dl-phone) [data-g-view],
+:is(body.dl-on-phone,.dl-phone) .dl-pop2:has([data-g-panel="density"]){display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__fbar{flex-wrap:nowrap;overflow-x:auto;column-gap:16px;padding:0 4px;-webkit-overflow-scrolling:touch}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__fbar > *{flex:none}
+:is(body.dl-on-phone,.dl-phone) .dl-pop2__panel{position:fixed;left:0;right:0;bottom:0;top:auto;min-width:0;max-height:70%;padding:16px 16px calc(16px + env(safe-area-inset-bottom));border-radius:16px 16px 0 0;box-shadow:0 0 0 100vmax var(--dl-overlay);z-index:80}
+.dl-phone .dl-pop2__panel{bottom:var(--dl-phone-tab-h)}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__expmenu{position:fixed;left:0;right:0;bottom:0;top:auto;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-radius:16px 16px 0 0;box-shadow:0 0 0 100vmax var(--dl-overlay);z-index:80}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__expmenu button{min-height:48px;font-size:16px}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cards{grid-template-columns:minmax(0,1fr);gap:10px;padding:10px 0}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__card{position:relative;padding:12px 14px;border-left:5px solid var(--dl-border);-webkit-tap-highlight-color:transparent}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__card:active{background:var(--dl-hover)}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cardimg{position:absolute;top:10px;right:10px;height:auto;width:auto;background:none}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cardimg > :not(.dl-badge){display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cardimg .dl-badge{position:static}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cardbody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px;padding:0}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cardbody b,
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cardbody small{grid-column:1/-1;padding-right:96px}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cardbody b{font-size:calc(17px * var(--dl-font-scale));line-height:1.25}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cardbody small{font-size:calc(14px * var(--dl-font-scale));color:var(--dl-ink)}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cardbody span{flex-direction:column;justify-content:flex-start;font-size:calc(15px * var(--dl-font-scale));font-weight:600;gap:1px}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__cardbody em{font-size:calc(12px * var(--dl-font-scale));font-weight:600;color:var(--dl-ink)}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__card[data-tone="danger"]{border-left-color:var(--dl-danger);background:var(--dl-danger-soft)}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__card[data-tone="tangerine"],
+:is(body.dl-on-phone,.dl-phone) .dl-grid__card[data-tone="yellow"]{border-left-color:var(--dl-amber);background:color-mix(in srgb,var(--dl-amber) 12%,var(--dl-surface))}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__card[data-tone="success"]{border-left-color:var(--dl-success)}
+:is(body.dl-on-phone,.dl-phone) .dl-grid__card[data-tone="accent"]{border-left-color:var(--dl-accent)}
+:is(body.dl-on-phone,.dl-phone) .dl-pop2__field select{font-size:16px;min-height:44px}
+:is(body.dl-on-phone,.dl-phone) .dl-pop2__panel .dl-btn{min-height:44px}

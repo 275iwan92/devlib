@@ -26,6 +26,10 @@
       this.st = Object.assign({search: '', sort: null, dir: 1, stat: null, tab: 0, filters: {}, hidden: this.cols.filter(c => !c.visible).map(c => c.key),
         group: this.cfg.groupBy || '', view: 'table', page: 1, perPage: this.cfg.perPage, density: this.report ? 'compact' : 'normal', lines: 'fixed', linesN: 1, collapsed: [], open: []}, this.saved, {page: 1, search: '', colf: {}}, this.entry ? {density: this.cfg.actions === 'master' ? 'normal' : 'compact', lines: 'fixed', linesN: 1} : {});
 
+      // Tampilan HP (body.dl-on-phone atau di dalam x-dl::phone-shell): grid yang mendeklarasikan `cards` dibuka sebagai daftar kartu, ketuk kartu = buka. Tanpa konteks HP tidak ada yang berubah.
+      this.phone = document.body.classList.contains('dl-on-phone') || !!this.el.closest('.dl-phone');
+      if (this.phone && this.cfg.phoneCards) this.cfg.cards = this.cfg.phoneCards;   // phoneCards: kartu hanya di HP (tanpa tombol Tabel/Kartu di desktop)
+      if (this.phone && this.cfg.cards) this.st.view = 'cards';
       // Saringan awal: stats bertanda 'default' aktif saat grid dibuka (mis. To Do di meja kerja); All tetap bisa dipilih.
       const ds = this.cfg.stats.findIndex(s => s.default); if (ds >= 0) this.st.stat = ds;
 
@@ -95,6 +99,7 @@
         if (e.target.matches('[data-g-goto]')) { this.st.page = Math.max(1, +e.target.value || 1); this.drawBody(); }
       });
       this.el.addEventListener('dblclick', e => { const tr = e.target.closest('.dl-grid__row, .dl-grid__card'); if (!tr || e.target.closest('button,input,label')) return; const r = this.rows.find(v => String(v[this.cfg.rowKey]) === tr.dataset.id); if (this._emit('dl:grid-open', {id: tr.dataset.id, action: 'open'})) toast(Tf('g_open_dbl', {name: r.name || tr.dataset.id})); });
+      this.el.addEventListener('click', e => { if (!this.phone) return; const c = e.target.closest('.dl-grid__card'); if (c && !e.target.closest('button,input,label,a')) this._emit('dl:grid-open', {id: c.dataset.id, action: 'open'}); });
       document.addEventListener('click', e => { if (!e.target.closest('[data-g-pop]')) this.qq('.dl-pop2__panel').forEach(p => p.classList.remove('is-open')); });
 
       this.el.dlGrid = {rows: this.rows, cfg: this.cfg, redraw: this.redraw, setRows: list => { this.rows.splice(0, this.rows.length, ...list); this.st.page = 1; this.sel.clear(); this.redraw(); }};
@@ -338,7 +343,7 @@
       }
       const cardsOn = this.cfg.cards && this.st.view === 'cards';
       this.q('[data-g-cards]').hidden = !cardsOn; this.q('.dl-grid__wrap').hidden = !!cardsOn;
-      if (cardsOn) { const C = this.cfg.cards; this.q('[data-g-cards]').innerHTML = page.map(r => `<article class="dl-grid__card" data-id="${esc(r[this.cfg.rowKey])}"><div class="dl-grid__cardimg">${r[C.image] ? `<img src="${esc(r[C.image])}" alt="" loading="lazy">` : '<i class="fa-regular fa-image"></i>'}${C.badge && r[C.badge] ? `<span class="dl-badge dl-badge--pill dl-badge--${esc((C.tones || {})[r[C.badge]] || 'neutral')}">${esc(r[C.badge])}</span>` : ''}</div><div class="dl-grid__cardbody"><b>${esc(r[C.title])}</b><small>${esc(r[C.sub] ?? '')}</small>${(C.meta || []).map(k => { const c = this.cols.find(x => x.key === k) || {key: k}; return `<span><em>${esc(c.label || k)}</em>${esc(this.fmtCell(c, r[k] ?? ''))}</span>`; }).join('')}</div></article>`).join('') || '<div class="dl-empty"><b class="dl-empty__title">' + esc(T('g_no_match')) + '</b></div>'; }
+      if (cardsOn) { const C = this.cfg.cards; this.q('[data-g-cards]').innerHTML = page.map(r => `<article class="dl-grid__card" data-id="${esc(r[this.cfg.rowKey])}"${this.phone && this.cfg.rowTone && r[this.cfg.rowTone] ? ` data-tone="${esc(r[this.cfg.rowTone])}"` : ''}><div class="dl-grid__cardimg">${r[C.image] ? `<img src="${esc(r[C.image])}" alt="" loading="lazy">` : '<i class="fa-regular fa-image"></i>'}${C.badge && r[C.badge] ? `<span class="dl-badge dl-badge--pill dl-badge--${esc((C.tones || {})[r[C.badge]] || 'neutral')}">${esc(r[C.badge])}</span>` : ''}</div><div class="dl-grid__cardbody"><b>${esc(r[C.title])}</b><small>${esc(r[C.sub] ?? '')}</small>${(C.meta || []).map(k => { const c = this.cols.find(x => x.key === k) || {key: k}; if (this.phone && (r[k] ?? '') === '') return ''; return `<span><em>${esc(c.label || k)}</em>${esc(this.fmtCell(c, r[k] ?? ''))}</span>`; }).join('')}</div></article>`).join('') || '<div class="dl-empty"><b class="dl-empty__title">' + esc(T('g_no_match')) + '</b></div>'; }
       const cnt = this.q('[data-g-count]'); if (cnt) cnt.textContent = Tf('g_matched', {n: fmt.number(total), total: fmt.number(this.rows.length)});
       this.q('[data-g-foot]').innerHTML = sums.length && page.length ? '<tr>' + (this.actFirst() ? '<td></td>' : '') + (this.chk ? '<td class="dl-grid__chk"></td>' : '') + (this.hasExp ? '<td></td>' : '') + this.shown().map((c, i) => c.sum ? `<td class="num"><b>${esc(this.fmtCell(c, list.reduce((t, r) => t + (+this.val(r, c.key) || 0), 0)))}</b></td>` : `<td>${i === 0 ? '<b>' + esc(T('g_total_all')) + '</b>' : ''}</td>`).join('') + (this.actLast() ? '<td></td>' : '') + '</tr>' : '';
       this.drawPager(total, pages);
