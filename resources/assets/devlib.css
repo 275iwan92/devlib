@@ -3979,14 +3979,38 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-phone--contained{height:640px;max-height:80vh}
 .dl-phone input,.dl-phone select,.dl-phone textarea{font-size:16px}
 /* ikon hamburger MELAYANG: satu-satunya kontrol permanen, di pojok kiri atas; agak transparan sampai disentuh */
-.dl-phone__burger{position:fixed;z-index:50;top:calc(env(safe-area-inset-top) + 6px);left:calc(env(safe-area-inset-left) + 8px);display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border:0;border-radius:50%;background:var(--dl-navy);color:var(--dl-side-ink);font-size:20px;opacity:.78;box-shadow:0 2px 10px var(--dl-overlay-soft);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .15s}
+/* tombol hamburger MELAYANG: kotak membulat, satu-satunya kontrol di keadaan A; menghilang saat bilah (B / C) tampil */
+.dl-phone__burger{position:fixed;z-index:50;top:calc(env(safe-area-inset-top) + 8px);left:calc(env(safe-area-inset-left) + 8px);display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border:0;border-radius:13px;background:var(--dl-navy);color:var(--dl-side-ink);font-size:20px;opacity:.9;box-shadow:0 2px 10px var(--dl-overlay-soft);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .dl-phone--contained .dl-phone__burger{position:absolute}
-.dl-phone__burger:active,.dl-phone__burger:focus-visible,.dl-phone__burger[aria-expanded="true"]{opacity:1}
-.dl-phone__burger:focus-visible,.dl-phone__back:focus-visible,.dl-phone__q:focus-visible,.dl-phone__row:focus-visible{outline:2px solid var(--dl-accent);outline-offset:2px}
-.dl-phone__burger.has-dirty::after{content:"";position:absolute;top:1px;right:1px;width:13px;height:13px;border-radius:50%;background:var(--dl-amber-2);border:2px solid var(--dl-surface)}
+.dl-phone[data-state="B"] .dl-phone__burger,.dl-phone[data-state="C"] .dl-phone__burger{display:none}
+.dl-phone__burger:active{opacity:1}
+/* bilah di atas selebar layar (B = aksi layar, C = lima menu utama): menggantikan tombol; item Menu paling kanan, dipisah garis tipis */
+.dl-phone__bar{position:absolute;left:0;right:0;top:0;z-index:45;padding-top:env(safe-area-inset-top);background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 6px 18px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
+.dl-phone__bar[hidden],.dl-phone__items[hidden]{display:none}
+.dl-phone__items{display:flex;min-height:62px}
+.dl-phone__q{position:relative;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 2px;border:0;background:none;color:var(--dl-ink);font:inherit;font-size:calc(11.5px * var(--dl-font-scale));font-weight:600;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dl-phone__q i{font-size:19px}
+.dl-phone__q span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dl-phone__q--menu{border-left:1px solid var(--dl-border)}
+.dl-phone__q.is-active,.dl-phone__q[aria-expanded="true"]{color:var(--dl-accent)}
+.dl-phone__q.is-active i{background:var(--dl-accent-soft);border-radius:12px;padding:3px 12px;box-sizing:content-box}
+.dl-phone__q.is-primary{background:var(--dl-accent);color:var(--dl-side-ink)}
+.dl-phone__q:disabled{color:var(--dl-disabled)}
+.dl-phone__q:active:not(:disabled){background:var(--dl-hover)}
+.dl-phone__q.is-primary:active:not(:disabled){background:var(--dl-accent-2)}
+.dl-phone__q:focus-visible,.dl-phone__burger:focus-visible,.dl-phone__row:focus-visible,.dl-phone__back:focus-visible{outline:2px solid var(--dl-accent);outline-offset:-3px}
+.dl-phone__burger.has-dirty::after,.dl-phone__q--menu.has-dirty::after{content:"";position:absolute;top:5px;right:6px;width:11px;height:11px;border-radius:50%;background:var(--dl-yellow);border:2px solid var(--dl-surface)}
+.dl-phone__burger.has-dirty::after{top:-4px;right:-4px}
+/* daftar semua modul: terbuka di bawah bilah, latar sedikit digelapkan */
+.dl-phone__drop{position:absolute;left:0;right:0;top:calc(62px + env(safe-area-inset-top));bottom:0;z-index:44;display:flex;flex-direction:column}
+.dl-phone__drop[hidden]{display:none}
+.dl-phone__list{flex:0 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:12px max(14px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));background:var(--dl-surface);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
+.dl-phone__veil{flex:1 0 28px;background:var(--dl-overlay)}
+@keyframes dl-phone-drop{from{opacity:.2;transform:translateY(-100%)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.dl-phone__bar,.dl-phone__list{animation:none}}
 .dl-phone__live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* baris judul di isi halaman (bukan bilah): ruang kiri untuk ikon melayang */
-.dl-phone__head{flex:none;display:flex;align-items:center;gap:4px;min-height:calc(52px + env(safe-area-inset-top));padding:env(safe-area-inset-top) max(8px,env(safe-area-inset-right)) 0 calc(env(safe-area-inset-left) + 62px);background:var(--dl-surface);border-bottom:1px solid var(--dl-border)}
+.dl-phone__head{flex:none;display:flex;align-items:center;gap:4px;min-height:calc(62px + env(safe-area-inset-top));padding:env(safe-area-inset-top) max(8px,env(safe-area-inset-right)) 0 calc(env(safe-area-inset-left) + 62px);background:var(--dl-surface);border-bottom:1px solid var(--dl-border)}
 .dl-phone__back{flex:none;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;color:var(--dl-ink-strong);text-decoration:none;font-size:18px;border-radius:50%}
 .dl-phone__back:active{background:var(--dl-hover)}
 .dl-phone__title{flex:1;min-width:0;margin:0 8px 0 4px;font-size:calc(18px * var(--dl-font-scale));font-weight:700;color:var(--dl-ink-strong);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3998,25 +4022,14 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-phone__scroll{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .dl-phone__body table{max-width:100%}
 /* deret menu utama (keadaan C): muncul di bawah baris judul, menimpa isi; tertutup sendiri */
-.dl-phone__drop{position:absolute;left:0;right:0;top:var(--dl-phone-rowtop);bottom:0;z-index:40;display:flex;flex-direction:column}
-.dl-phone__drop[hidden]{display:none}
-.dl-phone__quick{flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
-.dl-phone__q{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:64px;min-width:44px;padding:6px 2px;border:0;background:none;color:var(--dl-ink);font:inherit;font-size:calc(12px * var(--dl-font-scale));font-weight:600;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.dl-phone__q i{font-size:20px}
-.dl-phone__q span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dl-phone__q.is-active,.dl-phone__q[aria-expanded="true"]{color:var(--dl-accent)}
-.dl-phone__q.is-active i{background:var(--dl-accent-soft);border-radius:14px;padding:3px 14px;box-sizing:content-box}
-.dl-phone__list{flex:0 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:12px max(14px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));background:var(--dl-surface);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
-.dl-phone__list[hidden]{display:none}
-.dl-phone__veil{flex:1 0 28px;background:var(--dl-overlay)}
-@keyframes dl-phone-drop{from{opacity:.2;transform:translateY(-100%)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){.dl-phone__quick,.dl-phone__list{animation:none}.dl-phone__burger{transition:none}}
 .dl-phone__who{display:flex;flex-direction:column;gap:2px;padding:2px 4px 10px;font-size:calc(15px * var(--dl-font-scale))}
 .dl-phone__who span{font-size:calc(13px * var(--dl-font-scale));font-weight:600}
 .dl-phone__grp{margin:0 0 6px}
 .dl-phone__gh{margin:10px 4px 2px;font-size:calc(13px * var(--dl-font-scale));font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--dl-ink-strong)}
 .dl-phone__row{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 8px;border-radius:10px;color:var(--dl-ink);text-decoration:none;font-size:calc(16px * var(--dl-font-scale))}
 .dl-phone__row:active{background:var(--dl-hover)}
+button.dl-phone__row{width:100%;border:0;background:none;font:inherit;text-align:left;cursor:pointer}
+button.dl-phone__row:disabled{color:var(--dl-disabled)}
 .dl-phone__row i{flex:none;width:22px;text-align:center;color:var(--dl-accent)}
 .dl-phone__row span{flex:1;min-width:0}
 .dl-phone__row em{font-style:normal;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--dl-badge);color:var(--dl-side-ink)}
@@ -4136,19 +4149,13 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 :is(body.dl-on-phone,.dl-phone) .dl-pop2__field select{font-size:16px;min-height:44px}
 :is(body.dl-on-phone,.dl-phone) .dl-pop2__panel .dl-btn{min-height:44px}
 
-/* ==== Aksi layar di tampilan HP: disembunyikan di keadaan A, muncul sebagai deret di atas pada keadaan B; konteks body.dl-phone-shelled (iframe di dalam x-dl::phone-shell) atau .dl-phone; desktop tidak cocok ==== */
+/* ==== Aksi layar di tampilan HP: tombol form, toolbar grid, dan bilah report disembunyikan; aksinya muncul di bilah B milik shell (dijalankan dengan click() pada tombol aslinya); konteks body.dl-phone-shelled atau .dl-phone; desktop tidak cocok ==== */
 body.dl-phone-shelled .dl-form__acts,
-body.dl-phone-shelled .dl-grid__toolbar,
 body.dl-phone-shelled .dl-print__bar,
 .dl-phone .dl-form__acts,
-.dl-phone .dl-grid__toolbar,
 .dl-phone .dl-print__bar{display:none}
-:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts{position:fixed;left:0;right:0;top:var(--dl-phone-rowtop,0px);z-index:35;display:flex;flex-wrap:wrap;gap:8px;padding:8px 12px;background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
-:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts > *{flex:1 1 28%;min-width:0}
-:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts .dl-btn{min-height:48px;padding:0 8px;font-size:calc(14px * var(--dl-font-scale));white-space:nowrap;justify-content:center}
-:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts [data-f-act="save"]{order:-1;flex-grow:2}
-:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form__acts .dl-form__sep{display:none}
-:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-form{padding-top:76px}
-:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-print__bar{position:fixed;left:0;right:0;top:var(--dl-phone-rowtop,0px);z-index:35;display:flex;max-height:70vh;overflow-y:auto;border-radius:0;box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
-:is(body.dl-phone-acts,.dl-phone[data-state="B"]) .dl-grid__toolbar{position:fixed;left:0;right:0;top:var(--dl-phone-rowtop,0px);z-index:35;display:flex;max-height:70vh;overflow-y:auto;padding:10px 12px;background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft);animation:dl-phone-drop .2s ease-out}
-@media (prefers-reduced-motion:reduce){:is(body.dl-phone-acts,.dl-phone[data-state="B"]) :is(.dl-form__acts,.dl-grid__toolbar,.dl-print__bar){animation:none}}
+body.dl-phone-shelled .dl-grid__toolbar,
+.dl-phone .dl-grid__toolbar{position:fixed;left:-10000px;top:0;width:360px}
+body.dl-phone-search .dl-grid__toolbar{left:0;right:0;width:auto;z-index:35;display:flex;padding:8px 12px;background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft)}
+body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
+body.dl-phone-print .dl-print__bar{position:fixed;left:0;right:0;top:0;z-index:35;display:flex;max-height:70vh;overflow-y:auto;border-radius:0;box-shadow:0 8px 20px var(--dl-overlay-soft)}

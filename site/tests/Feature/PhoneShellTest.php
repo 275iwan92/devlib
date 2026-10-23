@@ -138,7 +138,7 @@ class PhoneShellTest extends TestCase
         $block = substr($css, strpos($css, '/* ==== Form di tampilan HP'));
         $rules = array_filter(array_map('trim', preg_split('/\R/', $block)), fn ($l) => $l !== '' && ! str_starts_with($l, '/*') && ! str_starts_with($l, 'Tidak berlaku'));
         foreach ($rules as $line) {
-            $this->assertMatchesRegularExpression('/^(:is\(body\.dl-on-phone,\.dl-phone\)|:is\(body\.dl-phone-acts,\.dl-phone\[data-state="B"\]\)|body\.dl-phone-shelled|\.dl-phone|@media) /', $line.' ', 'aturan form HP harus dibatasi konteks HP: '.$line);
+            $this->assertMatchesRegularExpression('/^(:is\(body\.dl-on-phone,\.dl-phone\)|body\.dl-phone-(shelled|search|print)|\.dl-phone|@media) /', $line.' ', 'aturan form HP harus dibatasi konteks HP: '.$line);
         }
     }
 
@@ -168,7 +168,7 @@ class PhoneShellTest extends TestCase
             if (str_starts_with($line, '/*') || str_starts_with($line, '.dl-phone ')) {
                 continue;
             }
-            $this->assertMatchesRegularExpression('/^(:is\(body\.dl-on-phone,\.dl-phone\)|:is\(body\.dl-phone-acts,\.dl-phone\[data-state="B"\]\)|body\.dl-phone-shelled|\.dl-phone|@media)/', $line, 'aturan grid HP harus dibatasi konteks HP: '.$line);
+            $this->assertMatchesRegularExpression('/^(:is\(body\.dl-on-phone,\.dl-phone\)|body\.dl-phone-(shelled|search|print)|\.dl-phone|@media)/', $line, 'aturan grid HP harus dibatasi konteks HP: '.$line);
         }
     }
 }

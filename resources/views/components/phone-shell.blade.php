@@ -1,6 +1,7 @@
 <div {{ $attributes->class(['dl-phone', 'dl-phone--contained' => $contained]) }} {!! $dl() !!} data-dl-phone data-state="A"
-     data-l-a="{{ \Devlib\Lang::t('phone_menu') }}" data-l-b="{{ \Devlib\Lang::t('phone_acts') }}" data-l-c="{{ \Devlib\Lang::t('phone_main') }}" data-l-dirty="{{ \Devlib\Lang::t('phone_dirty') }}" data-l-leave="{{ \Devlib\Lang::t('phone_leave') }}">
-    <button type="button" class="dl-phone__burger" data-dl-phone-menu aria-label="{{ \Devlib\Lang::t('phone_menu') }}" aria-expanded="false" aria-controls="dl-phone-drop"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+     data-l-a="{{ \Devlib\Lang::t('phone_menu') }}" data-l-b="{{ \Devlib\Lang::t('phone_acts') }}" data-l-c="{{ \Devlib\Lang::t('phone_main') }}" data-l-dirty="{{ \Devlib\Lang::t('phone_dirty') }}" data-l-leave="{{ \Devlib\Lang::t('phone_leave') }}"
+     data-l-menu="{{ \Devlib\Lang::t('phone_menu') }}" data-l-search="{{ \Devlib\Lang::t('phone_search') }}" data-l-options="{{ \Devlib\Lang::t('phone_options') }}" data-l-other="{{ \Devlib\Lang::t('phone_other') }}">
+    <button type="button" class="dl-phone__burger" data-dl-phone-menu aria-label="{{ \Devlib\Lang::t('phone_menu') }}" aria-expanded="false" aria-controls="dl-phone-bar"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
     <span class="dl-phone__live" role="status" aria-live="polite" data-dl-phone-live></span>
     @if ($frame)
         <header class="dl-phone__head">
@@ -9,14 +10,21 @@
             @isset($actions)<div class="dl-phone__acts">{{ $actions }}</div>@endisset
         </header>
     @endif
-    <div class="dl-phone__drop" id="dl-phone-drop" data-dl-phone-drop hidden>
-        <nav class="dl-phone__quick" aria-label="{{ \Devlib\Lang::t('phone_main') }}">
+    {{-- Bilah di atas selebar layar: menggantikan tombol saat tampil. Dua isi: aksi layar (diisi JS dari halaman) dan menu utama; item Menu selalu paling kanan. --}}
+    <div class="dl-phone__bar" id="dl-phone-bar" data-dl-phone-bar hidden>
+        <div class="dl-phone__items" data-dl-phone-acts hidden></div>
+        <nav class="dl-phone__items" data-dl-phone-main aria-label="{{ \Devlib\Lang::t('phone_main') }}" hidden>
             @foreach ($tabs as $t)
                 <a class="dl-phone__q{{ $active === $t['key'] ? ' is-active' : '' }}" href="{{ $t['url'] }}" @if ($active === $t['key']) aria-current="page" @endif><i class="{{ $t['icon'] ?? 'fa-solid fa-circle' }}" aria-hidden="true"></i><span>{{ \Devlib\Lang::text($t['label']) }}</span></a>
             @endforeach
-            <button type="button" class="dl-phone__q" data-dl-phone-more aria-expanded="false" aria-controls="dl-phone-list"><i class="fa-solid fa-ellipsis" aria-hidden="true"></i><span>{{ \Devlib\Lang::t('phone_menu') }}</span></button>
+            <button type="button" class="dl-phone__q dl-phone__q--menu" data-dl-phone-more aria-expanded="false" aria-controls="dl-phone-list"><i class="fa-solid fa-bars" aria-hidden="true"></i><span>{{ \Devlib\Lang::t('phone_menu') }}</span></button>
         </nav>
-        <div class="dl-phone__list" id="dl-phone-list" data-dl-phone-list hidden>
+    </div>
+    <div class="dl-phone__drop" data-dl-phone-drop hidden>
+        <div class="dl-phone__list" id="dl-phone-list" data-dl-phone-list>
+            <section class="dl-phone__grp" data-dl-phone-other hidden>
+                <h2 class="dl-phone__gh"><i class="fa-solid fa-ellipsis" aria-hidden="true"></i> {{ \Devlib\Lang::t('phone_other') }}</h2>
+            </section>
             <div class="dl-phone__who">
                 <strong>{{ $user['name'] ?? '' }}</strong>@if (! empty($user['role']))<span>{{ $user['role'] }}</span>@endif
             </div>

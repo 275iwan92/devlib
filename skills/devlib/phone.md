@@ -36,7 +36,7 @@ Pola layar kerja satu-barang-per-kartu (progress, cari/pindai, simpan per barang
    </x-dl::phone-login>
    ```
 4. **Login desktop.** Tambahkan di bawah `x-dl::frame`: `<x-dl::phone-offer :action="route('ui.set')" />` (hanya tertulis bila belum ada pilihan dan perangkat desktop; CSS menampilkannya hanya pada lebar <= 760 px).
-5. **Kerangka HP.** Satu layout `hp/layout.blade.php` berisi `<x-dl::phone-shell :title :back :active :tabs :modules :user :logout-action :device-action :frame>@yield('content')</x-dl::phone-shell>`. `tabs` = empat MENU UTAMA (`key`, `label`, `icon`, `url`: Beranda, Stok, Transaksi, Opname; tombol kelima 'Menu' = semua modul ditambah komponen) yang tampil di deret keadaan C, `modules` = bentuk sama dengan `x-dl::layer-shell` (saring menurut hak akses di server). Layar yang belum punya tampilan HP: `:frame="url-halaman-desktop"` (iframe di dalam kerangka).
+5. **Kerangka HP.** Satu layout `hp/layout.blade.php` berisi `<x-dl::phone-shell :title :back :active :tabs :modules :user :logout-action :device-action :frame>@yield('content')</x-dl::phone-shell>`. `tabs` = empat MENU UTAMA (`key`, `label`, `icon`, `url`: Beranda, Stok, Transaksi, Opname; tombol kelima 'Menu' = semua modul ditambah komponen) yang tampil di bilah keadaan C, `modules` = bentuk sama dengan `x-dl::layer-shell` (saring menurut hak akses di server). Layar yang belum punya tampilan HP: `:frame="url-halaman-desktop"` (iframe di dalam kerangka).
 6. **Isi layar HP** dengan `x-dl::phone-tiles` + `x-dl::phone-tile`, `x-dl::phone-link`, `x-dl::phone-bar`, `x-dl::alert`, `x-dl::button`; isian standar (`type=text inputmode=decimal`, 16 px) supaya keyboard HP, pen, dan pemindai barcode Bluetooth/USB (bertingkah seperti keyboard + Enter) bekerja. Tanpa fungsi yang hanya muncul saat hover.
 7. **Beranda.** Controller Beranda: bila `hp`, kembalikan view HP (data sama, tampilan lain). Desktop tidak disentuh.
 8. **Saklar di desktop (opsional).** `x-dl::layer-shell :device-action="route('ui.set')"` menambah aksi "Phone view" di menu profil.
@@ -45,7 +45,7 @@ Pola layar kerja satu-barang-per-kartu (progress, cari/pindai, simpan per barang
 
 ### Form dan layar desktop di dalam kerangka HP
 
-Layar desktop yang dibuka lewat `:frame` (iframe) tidak tahu bahwa ia ada di HP. Tambahkan `Devlib\Device::bodyClass(request())` ke `<body class="...">` layout proyek: hasilnya `dl-on-phone` bila perangkat `hp` (kosong di desktop). Dengan kelas itu CSS DevLib memadatkan `x-dl::form` menjadi satu kolom (label di atas, isian 16 px / >= 44 px, plus tambah-cepat sebaris, panel statistik dua kolom; tombol Simpan / Urungkan / Kembali tampil sebagai deret aksi di atas saat ikon melayang diketuk, tidak ada yang menempel di bawah). Tanpa kelas itu (desktop) tidak ada aturan yang cocok, dan pembungkus tombol `dl-form__acts` adalah `display: contents` sehingga tata letak desktop identik.
+Layar desktop yang dibuka lewat `:frame` (iframe) tidak tahu bahwa ia ada di HP. Tambahkan `Devlib\Device::bodyClass(request())` ke `<body class="...">` layout proyek: hasilnya `dl-on-phone` bila perangkat `hp` (kosong di desktop). Dengan kelas itu CSS DevLib memadatkan `x-dl::form` menjadi satu kolom (label di atas, isian 16 px / >= 44 px, plus tambah-cepat sebaris, panel statistik dua kolom; tombol Simpan / Urungkan / Kembali tampil sebagai bilah aksi di atas saat tombol melayang diketuk, tidak ada yang menempel di bawah). Tanpa kelas itu (desktop) tidak ada aturan yang cocok, dan pembungkus tombol `dl-form__acts` adalah `display: contents` sehingga tata letak desktop identik.
 
 ### Daftar (grid) sebagai kartu di HP
 
@@ -61,7 +61,7 @@ Layar desktop yang dibuka lewat `:frame` (iframe) tidak tahu bahwa ia ada di HP.
 - `Sec-CH-UA-Mobile` hanya dikirim Chrome lewat HTTPS atau `localhost`; lewat HTTP biasa (alamat LAN) deteksi memakai User-Agent.
 - "Situs desktop" di Chrome HP mengirim User-Agent desktop dan lebar ~980 px: dianggap desktop; pengguna memilih lewat tautan "Phone view" di profil desktop (atau halaman login HP jika sudah memilih).
 - Layar desktop di dalam `frame` tidak dirapikan untuk HP; tabel lebar menggulir di dalamnya. Beri layar yang sering dipakai versi HP sendiri.
-- Tinggi nyata di Chrome Android lebih kecil dari 790 px (bilah alamat/status): jangan menaruh aksi penting di luar area aman: tidak ada bilah di bawah layar (menu dan aksi ada di ikon melayang di atas, sengaja menghindari tombol navigasi Android); isi memakai `env(safe-area-inset-bottom)`.
+- Tinggi nyata di Chrome Android lebih kecil dari 790 px (bilah alamat/status): jangan menaruh aksi penting di luar area aman: tidak ada bilah di bawah layar (menu dan aksi ada di tombol melayang dan bilahnya di atas, sengaja menghindari tombol navigasi Android); isi memakai `env(safe-area-inset-bottom)`.
 - Lebar fluid 320 sampai 440 px teruji di emulasi; angka DPR OPPO A6 Pro belum diverifikasi di perangkat.
 
 ## 5. Daftar komponen HP

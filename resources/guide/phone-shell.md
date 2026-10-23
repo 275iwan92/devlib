@@ -1,17 +1,17 @@
 ## Overview
 
-`<x-dl::phone-shell>` is the application frame for a smartphone held upright. There is NO permanent bar: the only permanent control is ONE hamburger icon (≡) that floats at the top left (fixed, 46 px, slightly transparent until touched, soft shadow). The screen title and the back button sit in a row at the top of the page content (the icon is given room at the left), so the screen can use all of its height, and nothing is stuck to the bottom (a bottom bar can collide with the Android navigation buttons). It is the phone sibling of `x-dl::layer-shell` (desktop). Both are variants of the DEVICE, chosen by `Devlib\Device` and the user's cookie `ui`; neither is an old or new version of the other. (The earlier bottom tab bar is history: tag `history/phone-shell-bottom-tabs-v1`.)
+`<x-dl::phone-shell>` is the application frame for a smartphone held upright. There is NO permanent bar: the only permanent control is ONE hamburger button that floats at the top left (a rounded square, 46 px, radius 13 px, opacity 0.9, `position: fixed` with `env(safe-area-inset-top/left)`). The screen title and the back button sit in a row at the top of the page content (the button is given room at the left), so the screen can use all of its height, and nothing is stuck to the bottom (a bottom bar can collide with the Android navigation buttons). It is the phone sibling of `x-dl::layer-shell` (desktop). Both are variants of the DEVICE, chosen by `Devlib\Device` and the user's cookie `ui`; neither is an old or new version of the other. (The earlier bottom tab bar is history: tag `history/phone-shell-bottom-tabs-v1`.)
 
-The icon rotates through states on the same button:
+Tapping the button makes it DISAPPEAR and a full-width BAR slides in at the top (62 px, surface background, thin bottom line), five equal items with icon and label, the item "Menu" (≡) always at the right end, separated by a thin line:
 
-- **A**: icon only (the start state of every screen).
-- **B**: the ACTIONS of the screen, in a row at the top. Only on a screen that has some: a form (`x-dl::form` panel buttons: Save as the main button, Undo, Back, ...) a grid (`x-dl::grid` toolbar: search, + New, Filters, Columns, Export) or a report / print page (`x-dl::print-out`, `x-dl::report` bar: Print, paper size, group, share). Buttons that do not fit wrap to the next line.
-- **C**: the five MAIN MENUS as a row at the top (Home, Stock, ... and a fifth button "Menu" that opens the list of all modules, a "Desktop view" button and Sign out).
-- Then back to A. A screen without actions goes A, C, A.
+- **State A**: only the floating button (the start state of every screen).
+- **State B** (only on a screen that has actions): the bar of the ACTIONS of the screen. Form: Save (the main button, accent colour), Undo, Back, New ...; grid: Search, + New, Filters, Columns; report / print page: Print, Options. Actions beyond four, or rarely used (Export, Deactivate ...), go into the section "More actions" at the top of the module list. Tapping a button runs the real button of the page (`click()`) and the bar hides, except Menu.
+- **State C**: the bar of the FIVE MAIN MENUS (Home, Stock, Transactions, Count and Menu). Tapping a main menu goes to that screen. Tapping Menu opens the LIST of all modules under the bar (dimmed background, "More actions", Desktop view and Sign out in it); tapping Menu again or outside closes the list.
+- A screen without actions goes A, C, A. In B the item Menu goes to C.
 
-The icon changes shape with the state (≡, save, menu), `aria-label` and `aria-expanded` name the state, and a visually hidden `aria-live` element announces it. B and C close by themselves: after choosing a menu, a tap outside, scrolling the content, or about 6 seconds without touch. The actions row of a FORM does not close by itself while the form is dirty (unsaved), and a small orange dot on the icon shows an unsaved form in every state; choosing a menu while dirty asks for confirmation first.
+The bar and the list hide by themselves (a choice, a tap outside, scrolling the content, or about 6 seconds without touch); the button comes back. The actions bar of a FORM does not hide by itself while the form is dirty (unsaved), and a small yellow dot on the button (and on the item Menu) shows an unsaved form; choosing a menu while dirty asks for confirmation first. `aria-label` and `aria-expanded` name the state, a visually hidden `aria-live` element announces it, Escape closes, and `prefers-reduced-motion` removes the slide.
 
-The content is the slot. A screen that has no phone version yet is shown by its existing desktop page inside the frame: pass its address in `frame` and the page opens in an `iframe` below the title row. The shell marks that page (body class `dl-phone-shelled`), moves its form buttons / grid toolbar to the B row, and watches its form state.
+The content is the slot. A screen that has no phone version yet is shown by its existing desktop page inside the frame: pass its address in `frame` and the page opens in an `iframe` below the title row. The shell marks that page (body class `dl-phone-shelled`), hides its form buttons / grid toolbar / print bar, shows their actions in the bar of state B, and watches its form state. No swipe gesture from the top edge is used (Chrome Android uses it for pull-to-refresh); the button is a tap.
 
 Touch targets are at least 44 px, input text is 16 px (phone browsers do not zoom the page when focusing a 16 px field), and the edges use `env(safe-area-inset-*)`.
 
@@ -23,11 +23,15 @@ Pick another object when you need:
 ### Generated markup
 
 ```html
-<div class="dl-phone" data-dl="x-dl::phone-shell" data-dl-phone>
+<div class="dl-phone" data-dl="x-dl::phone-shell" data-dl-phone data-state="A">
   <button class="dl-phone__burger" data-dl-phone-menu aria-label="Menu" aria-expanded="false">≡</button>   <!-- floating, the only permanent control -->
   <header class="dl-phone__head"><a class="dl-phone__back" href="/">‹</a><h1 class="dl-phone__title">Count Stock</h1></header>   <!-- inside <main> when the content is the slot -->
+  <div class="dl-phone__bar" data-dl-phone-bar hidden>
+    <div class="dl-phone__items" data-dl-phone-acts hidden>…buttons built from the page actions + Menu…</div>       <!-- state B -->
+    <nav class="dl-phone__items" data-dl-phone-main hidden><a class="dl-phone__q">…</a>… <button class="dl-phone__q dl-phone__q--menu">Menu</button></nav>   <!-- state C -->
+  </div>
+  <div class="dl-phone__drop" data-dl-phone-drop hidden>…list of all modules + veil…</div>
   <main class="dl-phone__main">…slot, or <iframe class="dl-phone__frame"> with `frame`…</main>
-  <div class="dl-phone__drop" data-dl-phone-drop hidden>…state C: <nav class="dl-phone__quick"> main menus + "Menu", the module list, a veil…</div>
 </div>
 ```
 
@@ -41,7 +45,7 @@ Constructor of `Devlib\Components\PhoneShell` (12 props).
 |---|---|---|
 | `title` | `string`, `''` | Screen title in the row at the top of the content (translated). Empty = the brand name. |
 | `back` | `?string`, `null` | Address of the back button in the title row of a child screen. `null` = a main screen, no back button. The button is always a link to this address (the shell does not use browser history). |
-| `tabs` | `array`, `[]` | The MAIN MENUS of state C: `[['key', 'label', 'icon', 'url'], …]` (for example Home, Stock, Transactions, Count). Use four: the fifth button "Menu" (module list) is added by the shell. They are drawn only in the row of state C. |
+| `tabs` | `array`, `[]` | The MAIN MENUS of the bar of state C: `[['key', 'label', 'icon', 'url'], …]` (for example Home, Stock, Transactions, Count). Use four: the fifth item "Menu" (module list) is added by the shell, always at the right end. |
 | `active` | `string`, `''` | `key` of the main menu that is marked in the row. Empty = none. |
 | `modules` | `array`, `[]` | The module list content, same shape as `x-dl::layer-shell`: `[['code', 'label', 'icon', 'children' => [ITEM, …]], …]`, `ITEM = ['code', 'label', 'url', 'icon'?, 'badge'?]`. A child with `items` (a submenu) is flattened one level. Pass only what the user may open (the project filters by role and group); the shell draws everything it receives. |
 | `user` | `array`, `['name' => '', 'role' => '']` | Name and role shown at the top of the module list. |
@@ -50,16 +54,17 @@ Constructor of `Devlib\Components\PhoneShell` (12 props).
 | `device-action` | `?string`, `null` | POST address that saves `ui=desktop`: drawn as a "Desktop view" button in the module list. `null` = no such button. |
 | `links` | `array`, `[]` | Extra links at the end of the module list: `[['label', 'icon', 'url'], …]` (for example Help). |
 | `frame` | `?string`, `null` | Address of a desktop screen shown in an `iframe` as the content (replaces the slot). The desktop page keeps its own behaviour inside; wide tables scroll inside the frame. |
-| `contained` | `bool`, `false` | `false` = the shell is as tall as the screen (`100dvh`) and the icon is `position: fixed`. `true` = as tall as its parent and the icon is positioned inside it (catalog demo). |
+| `contained` | `bool`, `false` | `false` = the shell is as tall as the screen (`100dvh`) and the button is `position: fixed`. `true` = as tall as its parent and the button is positioned inside it (catalog demo). |
 
 ## Behavior
 
 ### States and focus
 
-- Tapping the icon calls `next()`: A to B (only when `hasActions()`, i.e. the page has `.dl-form__acts` or `.dl-grid__toolbar`), B to C, C to A; without actions A to C. A new screen (or the frame finishing a load) always starts at A.
-- Focus: entering B focuses the first enabled action button, C the first main menu, A returns focus to the icon. Escape and the dimmed area (state C) go back to A. In C the fifth button toggles the module list (`aria-expanded`).
-- Auto-hide: scrolling the content (ignored for 0.5 s after opening), a tap outside the row, a choice, or 6 s of no touch/key inside the shell closes B and C. It waits while focus is inside the row (typing in the grid search), and B is never closed by itself while a form is dirty (`form.is-dirty`).
-- Motion: the rows slide down from under the title for 0.2 s (no swipe gesture from the top edge: Chrome Android uses it for pull-to-refresh; the icon is a tap); with `prefers-reduced-motion: reduce` there is no animation.
+- Tapping the button calls `next()`: A to B (only when the page has actions), B to C (item Menu), C to A; without actions A to C. A new screen (or the frame finishing a load) always starts at A. The button is hidden in B and C.
+- The actions are read from the page by `items()`: a form (`.dl-form__acts .dl-btn`), a grid (`[data-g-search]`, `[data-g-new]`, `[data-g-toggle="filters"]`, `[data-g-toggle="columns"]`, `[data-g-export]`; "Search" shows the grid search field at the top of the page and focuses it), a report / print page (the print button of `.dl-print__bar`, and "Options" which shows that bar at the top of the page). The page elements stay in the page (hidden / moved off screen) so their own behaviour, including the filter and column sheets, keeps working.
+- Focus: entering B or C focuses the first enabled item; A returns focus to the button. Escape goes back to A.
+- Auto-hide: scrolling the content (ignored for 0.5 s after opening), a tap outside, a choice, or 6 s without touch closes B and C; it waits while text is being typed in the page toolbar, and B is never closed by itself while a form is dirty (`form.is-dirty`).
+- Motion: the bar slides in for 0.2 s; with `prefers-reduced-motion: reduce` there is no animation.
 
 ### Layout
 
@@ -74,7 +79,7 @@ Constructor of `Devlib\Components\PhoneShell` (12 props).
 
 - Server to browser: only markup. Browser to server: links and the two forms in the panel (`device-action`, `logout-action`).
 - `el.dlComponent` is the `PhoneShell` instance (`toggle(open)` opens or closes the panel). No `dl:*` events.
-- Hooks: `[data-dl-phone]` (attribute `data-state` = A, B or C), `[data-dl-phone-menu]` (the icon), `[data-dl-phone-drop]`, `[data-dl-phone-more]`, `[data-dl-phone-list]`, `[data-dl-phone-close]`; JS class `PhoneShell`. Classes on the framed page: `dl-phone-shelled`, `dl-phone-acts` (state B).
+- Hooks: `[data-dl-phone]` (attribute `data-state` = A, B or C), `[data-dl-phone-menu]` (the button), `[data-dl-phone-bar]`, `[data-dl-phone-acts]`, `[data-dl-phone-main]`, `[data-dl-phone-drop]`, `[data-dl-phone-more]`, `[data-dl-phone-list]`, `[data-dl-phone-close]`; JS class `PhoneShell`. Classes on the framed page: `dl-phone-shelled`, `dl-phone-search`, `dl-phone-print`.
 
 ## Rules and pitfalls
 
