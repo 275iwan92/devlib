@@ -73,4 +73,14 @@ class NetLineTest extends TestCase
         app()->bind('devlib.net', fn () => self::NET);
         $this->assertStringContainsString('data-dl-net-line', Blade::render($tag, ['u' => ['name' => 'Budi', 'role' => 'Operator']]));
     }
+
+    public function test_foot_role_is_only_the_footer_line_and_defaults_to_the_role(): void
+    {
+        $items = [['label' => 'A', 'url' => '#']];
+        $html = Blade::render('<x-dl::layer-menu id="m" user="Budi" role="Operator" foot-role="General Manager" login="b@x.test" :items="$items" />', ['items' => $items]);
+        $this->assertMatchesRegularExpression('/dl-lm__user"><b>Budi<\/b>\s*<small>General Manager<\/small>/', $html);
+
+        $plain = Blade::render('<x-dl::layer-menu id="m" user="Budi" role="Operator" :items="$items" />', ['items' => $items]);
+        $this->assertMatchesRegularExpression('/dl-lm__user"><b>Budi<\/b>\s*<small>Operator<\/small>/', $plain);
+    }
 }

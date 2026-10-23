@@ -65,6 +65,8 @@ class LayerMenu extends DevlibComponent
         public bool $collapsible = true,
         public bool $home = false,
         public string $foldGroups = '',
+        // Baris kecil di bawah nama pada baris pengguna (footer), mis. jabatan. null = pakai $role. Header panel Profile tetap memakai $role.
+        public ?string $footRole = null,
     ) {
         $this->title ??= Brand::identity()['name'];
     }
@@ -161,7 +163,7 @@ class LayerMenu extends DevlibComponent
                         {{-- Avatar + nama = satu-satunya pintu Profile: klik = buka, klik lagi = tutup (user 2026-10-03). --}}
                         <button type="button" class="dl-lm__userbtn" data-lm-user title="{{ \Devlib\Lang::text('Profile') }}" aria-label="{{ \Devlib\Lang::text('Profile') }}" aria-expanded="false">
                             <span class="dl-lm__avatar">{{ $initials() }}<em class="dl-lm__dot-badge" data-lm-unread="avatar" hidden></em></span>
-                            <span class="dl-lm__user"><b>{{ $user }}</b>@if ($role)<small>{{ $role }}</small>@endif @if (app()->bound('devlib.net')) <x-dl::net-line /> @else <x-dl::env-badge part="where" /> @endif</span>
+                            <span class="dl-lm__user"><b>{{ $user }}</b>@if ($footRole ?? $role)<small>{{ $footRole ?? $role }}</small>@endif @if (app()->bound('devlib.net')) <x-dl::net-line /> @else <x-dl::env-badge part="where" /> @endif</span>
                         </button>
                     </div>
                 @endif

@@ -38,6 +38,7 @@ Constructor of `Devlib\Components\LayerMenu`: 19 props. Use `:prop="expr"` for a
 | `active` | `?string`, `null` | Key of the leaf to highlight and open on load (`data-active`). Wins over the position saved in the browser. |
 | `user` | `?string`, `null` | Display name. Non-empty = the user row, the Profile panel host and the action list exist. Empty = no foot row at all (so no Profile). Used for the avatar initials (first letters of the first two words, upper case). Not translated. |
 | `role` | `?string`, `null` | Role text: small line in the user row and, after `login`, in the Profile header. |
+| `foot-role` | `?string`, `null` | Small line (for example the job title) under the name in the footer user row only. `null` = the `role` text. The Profile header keeps using `role`. The shell passes `user['foot_role']`. |
 | `login` | `?string`, `null` | Second identity text in the Profile header (the shell passes the e-mail). The header small line is `login · role`, empty parts are skipped. |
 | `counts` | `bool`, `true` | Shows the number of screens under each branch (`dl-lm__n`) and, on foldable captions, the group total. `data-counts`. |
 | `root-caption` | `string`, `'Modules'` | Caption on layer 1 when there are no `views` (with `views` the label of the current view is shown). Translated through the dictionary at render time (`data-root`). |
