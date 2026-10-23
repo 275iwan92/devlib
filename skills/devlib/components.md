@@ -663,6 +663,11 @@ Matriks pilih pemenang: baris = kebutuhan (mis. baris PR), kolom = penawar (mis.
 - Berkas: `src/Components/PickMatrix.php`
 - Prop: name:string='pick', columns:array=[], rows:array=[], empty:string='There are no quotations …', unit:string='PO', source:?string=NULL
 
+## `<x-dl::pick-queue>`
+Antrean pilih: daftar dokumen sumber (mis. order) dengan kesiapan barang, dicentang lalu dijadikan SATU dokumen turunan lewat satu bilah aksi di atas daftar.
+- Berkas: `src/Components/PickQueue.php`, tampilan `resources/views/components/pick-queue.blade.php`
+- Prop: title:?string=NULL, rows:array=[], states:array=[], filters:array=[], filter:?string=NULL, action:?string=NULL, name:string='ids', button:string='Create 1 document from :…', buttonOne:string='Create document', buttonPartial:string='Create document (:have o…', together:string='same address, can be mer…', mismatch:string='Choose items with the sa…', selected:string=':n selected', rowHead:string='Order', qtyHead:string='Ready / ordered', dueHead:string='Due', empty:string='Nothing in this list.'
+
 ## `<x-dl::pivot>`
 Grid Pivot: data datar -> tabel silang yang bisa diatur user di layar.
 - Berkas: `src/Components/Pivot.php`

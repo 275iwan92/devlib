@@ -4166,6 +4166,67 @@ button.dl-phone__row:disabled{color:var(--dl-disabled)}
 .dl-sinfo__txt summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-size:calc(16px * var(--dl-font-scale));font-weight:600}
 .dl-sinfo__txt textarea{box-sizing:border-box;width:100%;padding:10px;border:1px solid var(--dl-border);border-radius:var(--dl-radius-sm);background:var(--dl-surface);color:var(--dl-ink);font:inherit;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:max(16px,1em);line-height:1.4}
 
+/* ==== Antrean pilih (x-dl::pick-queue): chip filter, bilah aksi di ATAS daftar, baris dengan kesiapan; HP = kartu, tanpa kontrol di bawah layar ==== */
+.dl-pq{display:flex;flex-direction:column;gap:10px;color:var(--dl-ink)}
+.dl-pq__title{margin:0;font-size:calc(18px * var(--dl-font-scale));font-weight:800;color:var(--dl-ink-strong)}
+.dl-pq__chips{display:flex;flex-wrap:wrap;gap:8px}
+.dl-pq__chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--dl-border);background:var(--dl-surface);color:var(--dl-ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:calc(13px * var(--dl-font-scale));font-weight:600;cursor:pointer}
+.dl-pq__chip b{background:var(--dl-chip);border-radius:999px;padding:0 8px;font-size:calc(12px * var(--dl-font-scale))}
+.dl-pq__chip:hover{border-color:var(--dl-border-hover)}
+.dl-pq__chip.is-active{background:var(--dl-accent);border-color:var(--dl-accent);color:var(--dl-white)}
+.dl-pq__chip.is-active b{background:rgba(255,255,255,.22);color:var(--dl-white)}
+.dl-pq__bar{position:sticky;top:0;z-index:3;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:10px 14px;background:var(--dl-accent-soft);border:1px solid var(--dl-accent);border-radius:var(--dl-radius-md);font-size:calc(13px * var(--dl-font-scale))}
+.dl-pq__bar[hidden]{display:none}
+.dl-pq__sum{font-weight:700}
+.dl-pq__note{flex:1;min-width:0}
+.dl-pq__note:empty{display:none}
+.dl-pq__note.is-bad{color:var(--dl-danger);font-weight:600}
+.dl-pq__go{padding:8px 16px;font-size:calc(13px * var(--dl-font-scale));margin-left:auto}
+.dl-pq__go:disabled{background:var(--dl-chip);color:var(--dl-disabled);cursor:not-allowed}
+.dl-pq__head,.dl-pq__row{display:grid;grid-template-columns:36px minmax(150px,1.3fr) minmax(220px,2fr) minmax(110px,.8fr);align-items:center;gap:14px}
+.dl-pq__head{padding:0 14px;font-size:calc(11.5px * var(--dl-font-scale));font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--dl-muted)}
+.dl-pq__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.dl-pq__row{padding:12px 14px;background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius-md);cursor:pointer}
+.dl-pq__row[hidden]{display:none}
+.dl-pq__row:hover{border-color:var(--dl-border-hover);background:var(--dl-surface-alt)}
+.dl-pq__row.is-picked{border-color:var(--dl-accent);background:var(--dl-accent-soft)}
+.dl-pq__row.is-off{cursor:default;opacity:.62}
+.dl-pq__row.is-off:hover{border-color:var(--dl-border);background:var(--dl-surface)}
+.dl-pq__pick{position:relative;display:inline-flex;width:22px;height:22px}
+.dl-pq__pick input{position:absolute;inset:0;margin:0;opacity:0;cursor:pointer}
+.dl-pq__pick input:disabled{cursor:not-allowed}
+.dl-pq__pick i{width:22px;height:22px;border:2px solid var(--dl-border-hover);border-radius:6px;background:var(--dl-surface);display:grid;place-items:center}
+.dl-pq__pick input:checked + i{background:var(--dl-accent);border-color:var(--dl-accent)}
+.dl-pq__pick input:checked + i::after{content:"";width:5px;height:10px;border:solid var(--dl-white);border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.dl-pq__pick input:disabled + i{border-style:dashed;background:transparent}
+.dl-pq__pick input:focus-visible + i{box-shadow:0 0 0 3px var(--dl-accent-ring)}
+.dl-pq__main{display:flex;flex-direction:column;min-width:0}
+.dl-pq__main b{font-size:calc(14px * var(--dl-font-scale));color:var(--dl-ink-strong)}
+.dl-pq__main span{font-size:calc(12.5px * var(--dl-font-scale));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dl-pq__qty{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0}
+.dl-pq__qty .dl-progress{width:100%;max-width:260px}
+.dl-pq__nums{font-size:calc(12.5px * var(--dl-font-scale));font-weight:600}
+.dl-pq__nums small{font-weight:400;font-size:inherit}
+.dl-pq__due{display:flex;flex-direction:column;font-size:calc(13px * var(--dl-font-scale))}
+.dl-pq__due small{font-size:calc(12px * var(--dl-font-scale))}
+.dl-pq__due.is-late small{color:var(--dl-danger);font-weight:700}
+.dl-pq__empty{margin:0;padding:24px;text-align:center;border:1px dashed var(--dl-border-hover);border-radius:var(--dl-radius-md)}
+.dl-pq__empty[hidden]{display:none}
+@media (max-width:599px),(max-height:479px) and (pointer:coarse) and (max-width:999px){
+  .dl-pq__head{display:none}
+  .dl-pq__row{grid-template-columns:30px 1fr auto;grid-template-areas:"pick main due" "qty qty qty";gap:8px 10px;padding:12px}
+  .dl-pq__pick{grid-area:pick;align-self:start;width:26px;height:26px}
+  .dl-pq__pick i{width:26px;height:26px}
+  .dl-pq__main{grid-area:main}
+  .dl-pq__main span{white-space:normal}
+  .dl-pq__qty{grid-area:qty;padding-left:40px}
+  .dl-pq__qty .dl-progress{max-width:none}
+  .dl-pq__due{grid-area:due;text-align:right}
+  .dl-pq__chip{padding:8px 14px;min-height:40px}
+  .dl-pq__sum,.dl-pq__note{flex:1 0 100%}
+  .dl-pq__go{flex:1 0 100%;min-height:44px;margin-left:0}
+}
+
 /* ==== Multi view: aturan per OS pada view phone (skills/devlib/views.md). Semua dibatasi body.dl-on-phone (Device::bodyClass); view desktop tidak mendapat satu pun aturan ini.
    iOS (dl-os-ios): isi sampai tepi layar (viewport-fit=cover) lalu env(safe-area-inset-*) menjaga notch / Dynamic Island / home indicator; teks tidak diperbesar otomatis saat landscape; isian >= 16px (iOS zoom bila lebih kecil).
    Android (dl-os-android): Chrome menaruh viewport di atas bilah navigasi sistem (3 tombol / gestur), jadi jarak bawah cukup env(safe-area-inset-bottom) (0 di browser, terisi pada PWA edge-to-edge); overscroll-behavior-y:contain mematikan pull-to-refresh Chrome agar geser-turun tidak membuang form yang belum disimpan. */

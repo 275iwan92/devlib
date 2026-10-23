@@ -461,4 +461,17 @@ final class DemoData
 
         return ['floors' => $floors, 'bins' => $bins];
     }
+
+    // Antrean pilih (x-dl::pick-queue): order fiktif dengan kesiapan barang; group = pelanggan | alamat | pajak.
+    public static function pickQueue(): array
+    {
+        return [
+            ['id' => 412, 'title' => 'ORD-0412', 'party' => 'Maju Contoh Ltd', 'place' => 'Malang', 'group' => 'maju|a1|vat', 'state' => 'ready', 'have' => 5000, 'want' => 5000, 'unit' => 'pcs', 'due' => '30 Oct', 'dueIn' => 3],
+            ['id' => 415, 'title' => 'ORD-0415', 'party' => 'Maju Contoh Ltd', 'place' => 'Malang', 'group' => 'maju|a1|vat', 'state' => 'ready', 'have' => 2000, 'want' => 2000, 'unit' => 'pcs', 'due' => '31 Oct', 'dueIn' => 4],
+            ['id' => 418, 'title' => 'ORD-0418', 'party' => 'Maju Contoh Ltd', 'place' => 'Surabaya', 'group' => 'maju|a2|vat', 'state' => 'ready', 'have' => 1200, 'want' => 1200, 'unit' => 'pcs', 'due' => '02 Nov', 'dueIn' => 6],
+            ['id' => 420, 'title' => 'ORD-0420', 'party' => 'Bintang Sample Co', 'place' => 'Sidoarjo', 'group' => 'bintang|a3|novat', 'state' => 'partial', 'have' => 3000, 'want' => 5000, 'unit' => 'pcs', 'note' => 'done 29 Oct', 'due' => '28 Oct', 'dueIn' => 1],
+            ['id' => 423, 'title' => 'ORD-0423', 'party' => 'Harbor Test Inc', 'place' => 'Kediri', 'group' => 'harbor|a4|vat', 'state' => 'waiting', 'have' => 0, 'want' => 8000, 'unit' => 'pcs', 'note' => 'done 03 Nov', 'due' => '25 Oct', 'dueIn' => -2],
+            ['id' => 425, 'title' => 'ORD-0425', 'party' => 'Bintang Sample Co', 'place' => 'Sidoarjo', 'group' => 'bintang|a3|novat', 'state' => 'ready', 'have' => 750, 'want' => 750, 'unit' => 'pcs', 'due' => '29 Oct', 'dueIn' => 2],
+        ];
+    }
 }

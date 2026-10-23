@@ -188,6 +188,10 @@ final class Catalog
                     'p6-timer' => $page('Timer (stopwatch)', 'fa-solid fa-stopwatch', ['timer' => ['Stopwatch hh:mm:ss: the server gives the seconds elapsed, the browser keeps counting while running (operator setup / run clock)', $c('Timer')]]),
                     'p6-geo-clock' => $page('Geo Clock (GPS attendance)', 'fa-solid fa-location-crosshairs', ['geo-clock' => ['GPS geofencing clock in / out (distance and decision come from the server)', $c('GeoClock')]]),
                     'p6-delivery' => $page('Delivery Track', 'fa-solid fa-truck-fast', ['delivery-track' => ['Delivery route (schematic SVG, stage follows Delivery Order status)', $c('DeliveryTrack')]]),
+                    // Antrean pilih (Review): pilih beberapa dokumen sumber yang siap lalu buat SATU dokumen turunan dari bilah aksi di atas daftar.
+                    'p5-pick-queue' => $page('Pick Queue', 'fa-solid fa-list-check', [
+                        'pick-queue' => ['Pick Queue: status chips with counts, rows with goods readiness, tick several that can be merged and create one document from the action bar above the list (phone: rows become cards)', $c('PickQueue', 'Badge', 'Progress')],
+                    ]),
                     'p6-codes' => $page('QR & Barcode', 'fa-solid fa-qrcode', [
                         'codes' => ['QR & Barcode (Code128, EAN-13)', $c('Qr', 'Barcode')],
                         'code-generator' => ['QR & Barcode Generator (QR with error correction, Code 128 A/B/C, Code 39, EAN-13 / 8, UPC-A / E, ITF-14, ITF, MSI, Codabar, Pharmacode; live preview, content check, PNG / SVG download, print)', $c('CodeGenerator')],
@@ -305,7 +309,7 @@ final class Catalog
                 ['code' => 'CH', 'label' => 'Charts & Dashboards', 'icon' => 'fa-solid fa-chart-pie', 'pages' => ['p6-charts', 'p6-indicators', 'p6-dashboard', 'p5-org']],
                 ['code' => 'SC', 'label' => 'Schedule', 'icon' => 'fa-solid fa-calendar-days', 'pages' => ['p5-kanban', 'p5-gantt', 'p5-calendar']],
                 ['code' => 'DK', 'label' => 'Print & Report', 'icon' => 'fa-solid fa-print', 'from' => ['DK'], 'pages' => ['p6-statement']],
-                ['code' => 'SP', 'label' => 'Special Screen', 'icon' => 'fa-solid fa-star', 'pages' => ['basic-themes', 'p7-profile', 'p6-wh-map', 'p6-wh-labels', 'p6-wh-scan', 'p6-delivery', 'p7-chat', 'p7-chat-model', 'p7-assistant'],
+                ['code' => 'SP', 'label' => 'Special Screen', 'icon' => 'fa-solid fa-star', 'pages' => ['basic-themes', 'p7-profile', 'p6-wh-map', 'p6-wh-labels', 'p6-wh-scan', 'p6-delivery', 'p5-pick-queue', 'p7-chat', 'p7-chat-model', 'p7-assistant'],
                     'folders' => ['p6-delivery' => ['Warehouse', 'fa-solid fa-warehouse'], 'p7-chat' => ['Chat', 'fa-solid fa-comments'], 'p7-chat-model' => ['Chat', 'fa-solid fa-comments'], 'p7-assistant' => ['Chat', 'fa-solid fa-comments']]],
                 ['code' => 'MA', 'label' => 'Shell, Account & Security', 'icon' => 'fa-solid fa-table-columns', 'pages' => ['shell', 'screen-nav', 'p7-menus', 'p7-layer', 'p7-phone', 'p7-screen', 'p7-netline', 'login-1', 'login-2', 'login-3', 'register', 'forgot-1', 'forgot-2', 'p8-lock', 'p8-security']],
             ],

@@ -90,7 +90,7 @@ abstract class DevlibComponent extends Component
     // lewat komponen ini tercatat di kelompok tersebut. Turunan boleh menimpa dictionaryGroup(); null = kelompok umum.
     public const GROUP_OF = [
         'buttons' => ['Button', 'IconButton', 'SplitButton', 'MenuButton', 'BackButton', 'CodeButton', 'ActionBar'],
-        'grid' => ['Grid', 'LookupGrid', 'Sheet', 'Table', 'Pivot', 'Report', 'Pagination', 'Coverage', 'Drilldown', 'PickMatrix', 'Lines', 'Kanban', 'Gantt'],
+        'grid' => ['Grid', 'PickQueue', 'LookupGrid', 'Sheet', 'Table', 'Pivot', 'Report', 'Pagination', 'Coverage', 'Drilldown', 'PickMatrix', 'Lines', 'Kanban', 'Gantt'],
         'form' => ['Form', 'ActionForm', 'Wizard', 'Field', 'Import', 'Approval', 'CodeChain'],
         'print' => ['PrintDoc', 'PrintOut', 'DocFooter', 'DocShare', 'Label', 'LabelSheet', 'LabelGuide', 'Barcode', 'Qr'],
         'messages' => ['Alert', 'Modal', 'Announce', 'EmptyState', 'ErrorPage', 'Tooltip', 'LockScreen', 'Skeleton', 'Spinner'],
