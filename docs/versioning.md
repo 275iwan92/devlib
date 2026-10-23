@@ -81,6 +81,7 @@ disukai, versi sebelumnya diduplikasi menjadi versi baru dan itu default). Rinci
 | `v0.3.0` | commit rilis 2026-10-21 | satu default = versi terakhir (Menu Classic dan Dieline v1/v2 dikubur), alur Approval + Form Approval baku, Nested Grid, halaman OO dan Profile, menu profil `without`; **merusak:** `x-dl::shell`, prop `classic`, `:approval`/`:otp-url` dihapus |
 | `v0.4.0` | commit rilis 2026-10-22 | Technical Guide lengkap (semua object), engine `LeadTime`, `x-dl::idle-logout` (aman untuk iframe), All Projects di Executive Summary, varian panel Profil, perbaikan kejanggalan field; tidak ada tag/prop yang dihapus, tetapi perilaku `disabled` dan beberapa field berubah (lihat CHANGELOG) |
 | `v0.5.0` | commit rilis 2026-10-22 | `x-dl::field.select` prop `add` (Add New), gaya kop + nama badan hukum pada semua cetakan (proporsional di A4), perbaikan baris NPWP kop PPN; semua opt-in, tidak ada yang dihapus |
+| `v0.6.0` | commit rilis 2026-10-23 | multi view baku (`Device::view()/os()`, cookie `ui` phone/desktop, `views.md`), tampilan HP lengkap (`x-dl::phone-shell` hamburger melayang + bilah atas, login HP, popup tawaran, form satu kolom, grid kartu, aksi grid/report), pratinjau 'Lihat sebagai', perbaikan cetak; semua opt-in, tidak ada yang dihapus dari 0.5.0 |
 
 Tidak ada tag mundur di riwayat lama: sebelum `b095b3a` (repo mandiri) tidak
 ada tonggak yang jelas, hanya rangkaian kerja bersama proyek induk lama.
