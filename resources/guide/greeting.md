@@ -41,7 +41,7 @@ The script takes the hour (0-23) in the configured zone and picks the key:
 | 15:00 - 17:59 | `gr_evening` | Selamat sore | Good evening |
 | 18:00 - 23:59 | `gr_night` | Selamat malam | Good night |
 
-The boundaries are fixed in `resources/assets/js/components/greeting.js:14`; there is no prop to change them. The result is `T(key)` + `', ' + name` (when `name` is set) + ` 👋`.
+The boundaries are fixed in `resources/assets/js/components/greeting.js:14`; there is no prop to change them. The result is `T(key)` + `', ' + name` (when `name` is set) (no emoji since 2026-10-23: Jo judged the waving hand unprofessional).
 
 ### Timezone and the clock source
 

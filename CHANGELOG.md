@@ -7,7 +7,13 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ## [Belum dirilis]
 
+### Ditambahkan
+
+- **`x-dl::greeting-card` kunci `network` + `Devlib\NetworkInfo`** (permintaan Jo 2026-10-23, mockup): baris kecil redup di bawah jam kepala dashboard: IP client, nama host client, dan IP server, supaya terlihat diakses dari mana. `NetworkInfo::of($request)` memberi `client_ip` (`$request->ip()`), `client_host` (DNS balik, hanya untuk IP pribadi/loopback, di-cache sejam; client di mesin server memakai nama mesin), `server_ip` (`SERVER_ADDR` atau tebakan dari nama mesin) dan `server_host`. Opt-in: tanpa kunci `network` HTML sama seperti sebelumnya; aplikasi yang memutuskan siapa boleh melihat (IP server adalah info internal). Browser tidak bisa menyebut nama komputer, jadi host hanya ada bila DNS/hosts jaringan mengenal IP itu. Kunci Lang `net_client` / `net_host` / `net_server`, CSS `.dl-dash__net`, tes `NetworkInfoTest`, Technical Guide `greeting-card.md`.
+
 ### Diubah
+
+- **Ikon tepuk tangan dihapus dari sapaan** (permintaan Jo 2026-10-23: kurang profesional): `x-dl::greeting` (`greeting.js`) dan judul sambutan `shell/work` kini hanya teks (`Good afternoon, Johannes`). Tidak ada prop yang berubah; panduan `greeting.md` dan `greeting-card.md` diperbarui.
 
 - **Aturan layar phone: batas 760 px diganti 600 px + aturan tinggi untuk HP landscape (sementara)** (keputusan Jo 2026-10-23, dasar: riset "Halaman ukur viewport dan breakpoint HP"): layar = phone bila lebar CSS < 600, ATAU (tinggi < 480 DAN `pointer: coarse` DAN lebar < 1000); selain itu desktop (tablet, iPad mini 744, lipat dalam 690-755, laptop). Alasan: 600 = batas "compact" Android (satu-satunya angka berdasar data) dan 760 / 768 salah menggolongkan iPad mini dan ponsel lipat sebagai HP; lebar saja tidak memisahkan HP landscape (800-997 px) dari tablet, tinggi memisahkan. Baru: `Device::PHONE_MEDIA`, `PHONE_MAX_WIDTH`, `LANDSCAPE_MAX_HEIGHT`, `LANDSCAPE_MAX_WIDTH`, `Device::screenIsPhone($w, $h, $coarse)`; `Devlib.phoneScreen()` dan `html[data-dl-screen="phone|desktop"]` di `view.js`. Popup `x-dl::phone-offer` kini muncul pada layar yang memenuhi aturan itu (sebelumnya `<= 760 px`) bila view desktop yang aktif. **Perilaku berubah (kecil):** layar 600-760 px tegak (tablet kecil, jendela desktop sempit) tidak lagi ditawari tampilan phone; HP landscape sentuh kini ditawari. `Device::view()` tidak berubah (tebakan header, cookie, dan pilihan pengguna tetap; pilihan pengguna menang). Media query komponen lain (760 / 640 / 900 dst.) tidak diubah. Tes: 599 / 600 / 761, 800x360 sentuh, iPad 820x1180 dan 744, lipat 690-755, dan kesamaan PHP-CSS-JS.
 

@@ -8,7 +8,7 @@ It does not read a database or call a server. Everything comes from `board`; the
 
 | | `x-dl::greeting` | `x-dl::greeting-card` |
 |---|---|---|
-| Output | One line of text (`Good morning, Yuna 👋`) | A whole hero section with buttons, modals, clock, check-in and weather |
+| Output | One line of text (`Good morning, Yuna`) | A whole hero section with buttons, modals, clock, check-in and weather |
 | Input | `name`, `timezone` | `board` (profile slice of the dashboard data) |
 | Network | None | Only through the weather child (browser call to Open-Meteo) |
 | Server data needed | None | Names, position, brief, documents (HTML), attendance, location |
@@ -34,6 +34,7 @@ Rule of thumb: if you only want to say hello, use `x-dl::greeting`. If the scree
     </div>
     <div class="dl-dash__side">
       <div class="dl-clock dl-clock--clock" data-dl-clock ...>...</div>
+      <div class="dl-dash__net" data-dl-network><span>Client IP ... · host</span><span>Server IP ...</span></div>   <!-- only with network -->
       <div class="dl-dash__att"><x-dl::badge/> <small>status · Shift ... (start-end)</small></div>   <!-- only with attendance -->
       <div class="dl-weather" data-dl-weather data-lat data-lon>...</div>                 <!-- only with weather -->
     </div>
@@ -63,6 +64,7 @@ Constructor of `Devlib\Components\GreetingCard` (2 props).
 | `brief` | Strip under the position line | List of pairs `[label, value]`, printed as `label <b>value</b>`. Not translated: values are data and labels should be given in the display language. Omit or empty = no strip. |
 | `attendance` | Check-in badge | `['in' => '07:52', 'status' => 'On time', 'tone' => 'success', 'shift' => 'Regular', 'start' => '08:00', 'end' => '17:00']`. Rendered when the array is not empty; then `in` is required (the others have fallbacks: tone `success`, status empty, shift `-`). |
 | `weather` | Weather child | `['city' => ..., 'lat' => ..., 'lon' => ...]`. All three keys are required when the array is not empty. Omit/empty = no weather. |
+| `network` | Small muted lines under the clock (client IP, client host, server IP) | `['client_ip' => ..., 'client_host' => ?, 'server_ip' => ...]`, normally `Devlib\NetworkInfo::of(request())`. Opt-in: no key = nothing drawn and the HTML is identical to before. The app decides who may see it (for example only users with a setup right): the server IP is internal information. `client_host` comes from reverse DNS and only exists for LAN addresses; the browser cannot report the computer name. |
 | `jobdesc` | Job Description button and modal | `['title' => ..., 'updated' => ..., 'html' => ...]`. `html` is printed unescaped. |
 | `sops` | SOP button (with the count) and modal with one accordion per SOP | List of `['code', 'title', 'revision', 'effective', 'html']`; all five keys are read. The first accordion is open. `html` is printed unescaped. |
 

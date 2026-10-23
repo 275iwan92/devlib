@@ -38,6 +38,13 @@
                 <small>{{ $a['status'] ?? '' }} · Shift {{ $a['shift'] ?? '-' }} ({{ $a['start'] ?? '' }}–{{ $a['end'] ?? '' }})</small>
             </div>
         @endif
+        @if (! empty($d['network']))
+            @php($n = $d['network'])
+            <div class="dl-dash__net" data-dl-network>
+                @if (! empty($n['client_ip']))<span>{{ \Devlib\Lang::t('net_client') }} {{ $n['client_ip'] }}@if (! empty($n['client_host'])) · {{ $n['client_host'] }}@endif</span>@endif
+                @if (! empty($n['server_ip']))<span>{{ \Devlib\Lang::t('net_server') }} {{ $n['server_ip'] }}</span>@endif
+            </div>
+        @endif
         @if (! empty($d['weather']))
             <x-dl::weather :city="$d['weather']['city']" :lat="$d['weather']['lat']" :lon="$d['weather']['lon']" />
         @endif

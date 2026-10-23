@@ -7,7 +7,7 @@
                 @else
                 <div class="dl-home">
                     <div class="dl-home__hero"></div>
-                    <h1>{{ \Devlib\Lang::t('welcome') }}, {{ \Illuminate\Support\Str::before($user['name'], ' ') }} 👋</h1>
+                    <h1>{{ \Devlib\Lang::t('welcome') }}, {{ \Illuminate\Support\Str::before($user['name'], ' ') }}</h1>
                     <p>{!! \Devlib\Lang::text($intro) !!} {!! \Devlib\Lang::text('Every form/grid opens as a <b>tab</b> in this frame and stays open when you switch modules.') !!}</p>
                     {{ $slot }}
                     <div class="dl-home__hint">{!! \Devlib\Lang::text($hint) !!}</div>
