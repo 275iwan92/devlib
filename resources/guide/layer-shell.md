@@ -22,7 +22,7 @@ The root does not render `$attributes`: extra HTML attributes and classes writte
 
 ## Props
 
-Constructor of `Devlib\Components\LayerShell`: 16 props. Blade names are kebab-case; use `:prop="expr"` for arrays and booleans.
+Constructor of `Devlib\Components\LayerShell`: 17 props. Blade names are kebab-case; use `:prop="expr"` for arrays and booleans.
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -42,6 +42,7 @@ Constructor of `Devlib\Components\LayerShell`: 16 props. Blade names are kebab-c
 | `fresh` | `bool`, `false` | `true` right after login: the old tabs and the Layer Menu position are discarded (`data-dl-fresh`, `boot.js` calls `Devlib.resetWorkspace()`), so the opening screen shows. |
 | `drawers` | `array`, `[]` | Wide windows from the right edge, each a full screen in an iframe: `['edit' => ['label', 'icon' => 'fa-...', 'url', 'subtitle'?], 'help' => [...]]`. See "Drawers". |
 | `without` | `array`, `[]` | Profile panel items to hide (opt-in, for simple applications). Recognised values: `notif`, `chat`, `ai`, `edit`, `help`, `setup`, `theme`. See "The without prop". |
+| `device-action` | `?string`, `null` | POST address that saves the chosen view (field `ui`, value `hp`). When set, the profile panel gets one more action, "Phone view", placed before Change password; it submits a hidden form and the project stores the cookie `ui` (see `Devlib\Device`, `x-dl::phone-shell`). `null` = no such action and the markup is exactly as before. |
 
 ### Slots
 

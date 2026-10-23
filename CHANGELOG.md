@@ -9,6 +9,8 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Tampilan HP (smartphone potret): `x-dl::phone-shell`, `x-dl::device-pick`, `Devlib\Device`** (permintaan Jo 2026-10-23, tahap 1; pemakai pertama sstock). Tampilan HP dan desktop adalah dua varian PERANGKAT (bukan versi lama / baru). `Devlib\Device::detect/resolve/fromRequest`: tebakan `hp` hanya untuk ponsel (`Sec-CH-UA-Mobile`, lalu User-Agent; tablet dan "situs desktop" = `desktop`), cookie `ui` (`hp` | `desktop`) yang sah selalu menang. `x-dl::phone-shell`: bilah atas kecil (judul, kembali), isi selebar layar (slot, atau `frame` = halaman desktop di dalam iframe untuk layar yang belum punya tampilan HP), bilah tab bawah (tab tautan + Menu), lembar Menu dari bawah berisi semua modul (bentuk `modules` sama dengan `x-dl::layer-shell`), pilihan tampilan dan Keluar; sasaran sentuh >= 44 px, isian 16 px, `env(safe-area-inset-*)`. `x-dl::device-pick`: dua radio `ui` (Phone view / Desktop view) terpilih awal menurut cookie / tebakan; bagian baru `device` pada `x-dl::login-box` (opt-in, tidak ada di `show` bawaan). `x-dl::layer-shell` prop baru `deviceAction` (opt-in, bawaan `null`): menambah aksi "Phone view" di menu profil desktop; tanpa prop markup identik dengan sebelumnya. Halaman peraga `p7-phone` (Review), Technical Guide `phone-shell.md`, `device-pick.md`, `login-box.md`, `layer-shell.md`, tes `PhoneShellTest`.
+
 - **`x-dl::print-out` / `x-dl::report` kolom `wrap`** (permintaan Jo 2026-10-22, Ringkasan Stok sstock terpotong di kanan): `'wrap' => true` pada definisi kolom membolehkan judul kolom turun baris (bawaan satu baris). Opt-in; tanpa `wrap` HTML identik. Guide `print-out.md`.
 
 ### Diperbaiki

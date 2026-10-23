@@ -1,15 +1,15 @@
 {
-    "generated": "2026-10-22 12:29",
+    "generated": "2026-10-23 12:50",
     "database": "devlib",
     "totals": {
-        "objects": 87,
+        "objects": 88,
         "modules": 14,
         "modules_done": 4,
-        "screens": 177,
-        "v2": 177,
+        "screens": 178,
+        "v2": 178,
         "v1": 0,
         "not_built": 0,
-        "waiting_qc": 32,
+        "waiting_qc": 33,
         "locked": 55,
         "forms": 4,
         "grids": 8,
@@ -17,8 +17,8 @@
         "engines": 5,
         "engine_groups": 4,
         "migrations": 10,
-        "tests": 30,
-        "commits": 405,
+        "tests": 31,
+        "commits": 413,
         "since": "2026-09-23"
     },
     "modules": [
@@ -156,11 +156,11 @@
         },
         {
             "label": "Shell, Account & Security",
-            "total": 12,
-            "v2": 12,
+            "total": 13,
+            "v2": 13,
             "v1": 0,
             "not_built": 0,
-            "waiting_qc": 1,
+            "waiting_qc": 2,
             "locked": 11,
             "form": 0,
             "grid": 0,
@@ -1093,6 +1093,17 @@
             "built_at": "2026-09-24",
             "built_by": null,
             "changed_at": "2026-09-24",
+            "changed_by": null
+        },
+        {
+            "type": "OBJECT",
+            "key": "page:p7-phone",
+            "name": "Phone Shell (smartphone)",
+            "module": "Shell, Account & Security",
+            "qc": "READY_FOR_QC",
+            "built_at": null,
+            "built_by": null,
+            "changed_at": null,
             "changed_by": null
         },
         {

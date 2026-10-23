@@ -224,6 +224,7 @@
       else if (a === 'help' && this.hasPage('help')) this.lm.dlComponent.openProfile('help');
       else if (a === 'notif' || a === 'ai') this.openDrawer(a);
       else if (a === 'edit' || a === 'pass') $(this.el, `[data-dl-modal="${a}"]`).classList.add('is-on');
+      else if (a === 'device') $(this.el, 'form[data-dl-device]')?.requestSubmit();   // Phone view: menyimpan pilihan tampilan lalu memuat ulang
       else if (a === 'palette') this.openPalette();
       else if (a === 'home') this.goHome();
       else if (a === 'help') this.openHelp();

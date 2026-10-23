@@ -3973,3 +3973,51 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-grid__link--ref{display:inline-block;color:var(--dl-accent);text-decoration:underline;text-underline-offset:2px}
 .dl-grid__link--ref::after{content:"\f08e";font-family:"Font Awesome 6 Free";font-weight:900;margin-left:5px;font-size:.7em;opacity:.7}
 .dl-grid__link--ref:hover{color:var(--dl-accent-2)}
+
+/* ---- Phone Shell (smartphone potret): bilah atas, isi penuh, bilah tab bawah, lembar Menu; sasaran sentuh >= 44px, isian 16px, tepi aman ---- */
+.dl-phone{--dl-phone-tab-h:calc(58px + env(safe-area-inset-bottom));position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;background:var(--dl-bg);color:var(--dl-ink);font-family:var(--dl-font)}
+.dl-phone--contained{height:640px;max-height:80vh}
+.dl-phone input,.dl-phone select,.dl-phone textarea{font-size:16px}
+.dl-phone__top{flex:none;display:flex;align-items:center;gap:4px;min-height:calc(52px + env(safe-area-inset-top));padding:env(safe-area-inset-top) max(8px,env(safe-area-inset-right)) 0 max(8px,env(safe-area-inset-left));background:var(--dl-navy);color:var(--dl-side-ink)}
+.dl-phone__back{flex:none;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;color:inherit;text-decoration:none;font-size:18px;border-radius:50%}
+.dl-phone__back:active{background:var(--dl-navy-2)}
+.dl-phone__title{flex:1;min-width:0;margin:0 8px;font-size:calc(17px * var(--dl-font-scale));font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dl-phone__acts{flex:none;display:flex;align-items:center;gap:4px}
+.dl-phone__main{flex:1;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:12px max(12px,env(safe-area-inset-right)) 16px max(12px,env(safe-area-inset-left))}
+.dl-phone__main--frame{padding:0;overflow:hidden}
+.dl-phone__frame{display:block;width:100%;height:100%;border:0;background:var(--dl-surface)}
+.dl-phone__scroll{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dl-phone__main table{max-width:100%}
+.dl-phone__tabs{flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);min-height:var(--dl-phone-tab-h);padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);background:var(--dl-surface);border-top:1px solid var(--dl-border)}
+.dl-phone__tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:58px;min-width:44px;padding:4px 2px;border:0;background:none;color:var(--dl-ink);font:inherit;font-size:calc(12px * var(--dl-font-scale));font-weight:600;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dl-phone__tab i{font-size:20px}
+.dl-phone__tab span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dl-phone__tab.is-active,.dl-phone__tab.is-open{color:var(--dl-accent)}
+.dl-phone__tab.is-active i{background:var(--dl-accent-soft);border-radius:14px;padding:3px 14px;box-sizing:content-box}
+.dl-phone:has(.dl-phone__tab.is-open) .dl-phone__tab.is-active:not(.is-open){color:var(--dl-ink)}.dl-phone:has(.dl-phone__tab.is-open) .dl-phone__tab.is-active:not(.is-open) i{background:none}
+.dl-phone__sheet{position:absolute;left:0;right:0;top:0;bottom:var(--dl-phone-tab-h);z-index:20}
+.dl-phone__sheet[hidden]{display:none}
+.dl-phone__veil{position:absolute;inset:0;background:var(--dl-overlay)}
+.dl-phone__panel{position:absolute;left:0;right:0;bottom:0;max-height:88%;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px max(14px,env(safe-area-inset-right)) 14px max(14px,env(safe-area-inset-left));background:var(--dl-surface);border-radius:18px 18px 0 0;box-shadow:0 -8px 28px var(--dl-overlay-soft)}
+.dl-phone__who{display:flex;flex-direction:column;gap:2px;padding:2px 4px 10px;font-size:calc(15px * var(--dl-font-scale))}
+.dl-phone__who span{font-size:calc(13px * var(--dl-font-scale));font-weight:600}
+.dl-phone__grp{margin:0 0 6px}
+.dl-phone__gh{margin:10px 4px 2px;font-size:calc(13px * var(--dl-font-scale));font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--dl-ink-strong)}
+.dl-phone__row{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 8px;border-radius:10px;color:var(--dl-ink);text-decoration:none;font-size:calc(16px * var(--dl-font-scale))}
+.dl-phone__row:active{background:var(--dl-hover)}
+.dl-phone__row i{flex:none;width:22px;text-align:center;color:var(--dl-accent)}
+.dl-phone__row span{flex:1;min-width:0}
+.dl-phone__row em{font-style:normal;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--dl-badge);color:var(--dl-side-ink)}
+.dl-phone__dev,.dl-phone__out{display:grid;gap:10px;margin-top:14px}
+.dl-phone .dl-btn{min-height:44px}
+/* Kartu isi layar HP (daftar jadi kartu, satu barang per kartu, dst.) */
+.dl-phone-card{background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius-md);padding:14px;margin:0 0 12px}
+/* Pilihan tampilan perangkat (x-dl::device-pick): dua radio besar */
+.dl-devpick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0;padding:0;border:0;min-width:0}
+.dl-devpick__l{grid-column:1/-1;padding:0 0 2px;font-size:calc(13px * var(--dl-font-scale));font-weight:700;color:var(--dl-ink-strong)}
+.dl-devpick__o{position:relative;display:flex;min-width:0}
+.dl-devpick__o input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.dl-devpick__t{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-height:48px;padding:6px 8px;border:1.5px solid var(--dl-border);border-radius:var(--dl-radius-md);background:var(--dl-surface);color:var(--dl-ink);font-size:calc(13px * var(--dl-font-scale));font-weight:700;text-align:center}
+.dl-devpick__o input:checked+.dl-devpick__t{border-color:var(--dl-accent);background:var(--dl-accent-soft);color:var(--dl-accent)}
+.dl-devpick__o input:focus-visible+.dl-devpick__t{outline:2px solid var(--dl-accent);outline-offset:2px}
+.dl-loginbox__device{margin:4px 0 10px}

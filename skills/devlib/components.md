@@ -168,6 +168,11 @@ Bingkai pratinjau Laptop / Tablet (768px) / Smartphone (390px) dari mockup form.
 - Berkas: `src/Components/DeviceFrame.php`
 - Prop: mode:string='laptop'
 
+## `<x-dl::device-pick>`
+Pilihan tampilan perangkat (Phone view / Desktop view): dua pilihan radio besar bernama `ui`, terpilih awal menurut cookie atau tebakan perangkat.
+- Berkas: `src/Components/DevicePick.php`
+- Prop: name:string='ui', value:?string=NULL, label:string='Display'
+
 ## `<x-dl::divider>`
 Garis pemisah dengan teks di tengah (mis. "atau").
 - Berkas: `src/Components/Divider.php`
@@ -526,7 +531,7 @@ Menu panel kiri berlapis (layer 1 modul -> layer 2 menu -> layer 3 sub -> layer 
 ## `<x-dl::layer-shell>`
 Kerangka aplikasi setelah login: navigasi x-dl::layer-menu di kiri, TANPA top bar; tab MDI, Ctrl+K, laci, modal. Satu-satunya menu utama.
 - Berkas: `src/Components/LayerShell.php`, tampilan `resources/views/components/layer-shell.blade.php`
-- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[]
+- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[], deviceAction:?string=NULL
 
 ## `<x-dl::lines>`
 Tabel baris item dokumen (detail dari Master-Detail: PO, PR, CO, Stock In, ...).
@@ -602,6 +607,11 @@ Kaki halaman ala ScriptCase: Go to + baris/halaman | navigasi | info total.
 Hak akses grup per objek (mockup security.html "Hak Akses Grup"): pilih grup -> tiap objek Form/Grid diberi.
 - Berkas: `src/Components/PermissionMatrix.php`
 - Prop: objects:array=[], groups:array=[], perms:array=[], levels:array=[…], default:int=1, source:?string=NULL, saveUrl:?string=NULL
+
+## `<x-dl::phone-shell>`
+Kerangka aplikasi untuk smartphone potret: bilah atas kecil (judul, tombol kembali), isi selebar layar, bilah tab di bawah, dan lembar Menu dari bawah berisi semua modul.
+- Berkas: `src/Components/PhoneShell.php`, tampilan `resources/views/components/phone-shell.blade.php`
+- Prop: title:string='', back:?string=NULL, tabs:array=[], active:string='', modules:array=[], user:array=[…], brand:?string=NULL, logoutAction:string='', deviceAction:?string=NULL, links:array=[], frame:?string=NULL, contained:bool=false
 
 ## `<x-dl::photo-box>`
 Kotak pas foto 3 x 4 yang bisa diklik: membuka dialog crop (bingkai tetap 3:4, geser dan zoom) lalu menaruh hasil JPEG 600 x 800 px ke input file milik form.

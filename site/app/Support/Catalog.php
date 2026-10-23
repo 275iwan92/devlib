@@ -213,6 +213,7 @@ final class Catalog
                         'mega-menu' => ['ScriptCase-style Mega Menu (color bar + 4-column icon panel)', $c('MegaMenu')],
                         'side-menu' => ['Left & right Side Panel (nested accordion, icon rail + flyout, favorites, recently opened)', $c('SideMenu')],
                     ], 'main_menu_v2.html'),
+                    'p7-phone' => $page('Phone Shell (smartphone)', 'fa-solid fa-mobile-screen', ['phone-shell' => ['Phone frame: small top bar, full-width content, five-button bottom tab bar, Menu sheet from the bottom (all modules, Display choice, Sign out); a screen without a phone version opens as its desktop page inside the frame', $c('PhoneShell', 'DevicePick')]]),
                     'p7-layer' => $page('Layer Menu', 'fa-solid fa-layer-group', ['layer-menu' => ['Layer Menu: layered left panel (module › menu › sub › sub-sub) + gear: Chat (swap / dock right) & Profile sliding up. Also used in Shell: avatar menu › Layer Menu', $c('LayerMenu', 'Chat')]]),
                     'p7-chat' => $page('Chat (WhatsApp style)', 'fa-solid fa-comment-dots', ['chat' => ['Chat: online users in bright colour, + for offline users, profile photo, file attachment, sound on a new message', $c('Chat')]], 'main_menu_v2.html'),
                     // Profile (user 2026-10-21): merekam panel Profil Layer Menu (aksi akun LayerShell::actions) sebagai contoh Special Screen; bentuk = panel yang sekarang; varian tmerp (bawaan), sstock, devlib dipilih lewat ?variant= (App\Support\ProfileVariants).
@@ -304,7 +305,7 @@ final class Catalog
                 ['code' => 'DK', 'label' => 'Print & Report', 'icon' => 'fa-solid fa-print', 'from' => ['DK'], 'pages' => ['p6-statement']],
                 ['code' => 'SP', 'label' => 'Special Screen', 'icon' => 'fa-solid fa-star', 'pages' => ['basic-themes', 'p7-profile', 'p6-wh-map', 'p6-wh-labels', 'p6-wh-scan', 'p6-delivery', 'p7-chat', 'p7-chat-model', 'p7-assistant'],
                     'folders' => ['p6-delivery' => ['Warehouse', 'fa-solid fa-warehouse'], 'p7-chat' => ['Chat', 'fa-solid fa-comments'], 'p7-chat-model' => ['Chat', 'fa-solid fa-comments'], 'p7-assistant' => ['Chat', 'fa-solid fa-comments']]],
-                ['code' => 'MA', 'label' => 'Shell, Account & Security', 'icon' => 'fa-solid fa-table-columns', 'pages' => ['shell', 'screen-nav', 'p7-menus', 'p7-layer', 'login-1', 'login-2', 'login-3', 'register', 'forgot-1', 'forgot-2', 'p8-lock', 'p8-security']],
+                ['code' => 'MA', 'label' => 'Shell, Account & Security', 'icon' => 'fa-solid fa-table-columns', 'pages' => ['shell', 'screen-nav', 'p7-menus', 'p7-layer', 'p7-phone', 'login-1', 'login-2', 'login-3', 'register', 'forgot-1', 'forgot-2', 'p8-lock', 'p8-security']],
             ],
             'Flow' => [['code' => 'FL', 'from' => ['FL']]],
             'Engine' => [['code' => 'EG', 'from' => ['EG']]],

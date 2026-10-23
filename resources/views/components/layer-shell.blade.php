@@ -18,6 +18,7 @@
     <aside class="dl-lm-dock dl-shell__dock" data-dl-lm-dock></aside>
 
     <form method="POST" action="{{ $logoutAction }}" data-dl-logout hidden>@csrf</form>
+    @if ($deviceAction)<form method="POST" action="{{ $deviceAction }}" data-dl-device hidden>@csrf<input type="hidden" name="ui" value="hp"></form>@endif
     {{-- Chat = laci kanan Shell, bukan panel kiri (user 2026-10-03). --}}
     @include('devlib::components.shell.overlays', ['chatDrawer' => ! in_array('chat', $without)])
 </div>

@@ -34,7 +34,7 @@ Constructor of `Devlib\Components\LoginBox` (9 props). Blade names are kebab-cas
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
-| `show` | `string`, `'lang, title, username, password, forgot, button, register'` | Comma separated list of the parts to draw, in drawing order. Valid names: `lang`, `support`, `brand`, `title`, `username`, `email`, `password`, `remember`, `forgot`, `button`, `register`. Names are trimmed; unknown names are silently dropped (`LoginBox::parts()`, an `array_intersect` against `PARTS`). A name written twice is drawn twice. `lang` and `support` are not part of the flow: they are always drawn in the top row (support first, then lang) wherever you write them. See the part table below. |
+| `show` | `string`, `'lang, title, username, password, forgot, button, register'` | Comma separated list of the parts to draw, in drawing order. Valid names: `lang`, `support`, `brand`, `title`, `username`, `email`, `password`, `remember`, `forgot`, `button`, `register`, `device`. Names are trimmed; unknown names are silently dropped (`LoginBox::parts()`, an `array_intersect` against `PARTS`). A name written twice is drawn twice. `lang` and `support` are not part of the flow: they are always drawn in the top row (support first, then lang) wherever you write them. See the part table below. |
 | `action` | `string`, `''` | The `action` of the form, i.e. the URL that receives the POST. Empty (`action=""`) posts to the current URL. The catalog demos pass `javascript:void(0)` so that the preview posts nothing. |
 | `button` | `string`, `'Sign in'` | Label of the submit button (part `button`). It is a standard text prop and is translated through the dictionary. See the oddity below: the script overwrites this text when the page loads. |
 | `error` | `?string`, `null` | An error CODE (not a message). Written to `data-error` on the root. The script shows the fixed message `Enter your username/email and password.` when the code is `empty`, and the fixed message `Incorrect username or password.` for any other non-empty value. `null` or `''` shows nothing. The message appears only inside the alert drawn by the `title` part. |
@@ -57,6 +57,7 @@ Constructor of `Devlib\Components\LoginBox` (9 props). Blade names are kebab-cas
 | `email` | `x-dl::field.text` `name="email"` `type="email"`, label "Email", icon `fa-envelope`, `size="lg"`, case badge off, `autocomplete="email"`. | `email` |
 | `password` | `x-dl::field.password` `name="password"`, icon `fa-lock`, `size="lg"` (eye button included, `autocomplete="current-password"`). | `password` |
 | `remember` | `x-dl::field.checkbox` `name="remember"`, text "Remember me". | `remember=1` only when ticked |
+| `device` | `x-dl::device-pick`: two radios `ui` = `hp` / `desktop` (Phone view / Desktop view), preselected by the `ui` cookie or the device guess. Opt-in: not in the default `show`. The project reads `ui` on POST and stores the cookie. | `ui` |
 | `forgot` | link button "Forgot password?" to `forgot-url`. | none |
 | `button` | submit button, large, full width, label from `button`. | none |
 | `register` | divider "or" and the line "Don't have an account? Register" (link to `register-url`). | none |

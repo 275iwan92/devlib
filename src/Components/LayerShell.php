@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Kerangka aplikasi setelah login: navigasi x-dl::layer-menu di kiri, TANPA top bar; tab MDI, Ctrl+K, laci, modal. Satu-satunya menu utama.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : modules, user, brand, tagline, logo, logoutAction, menuSource, chat, open, … (16 prop).
+ * Input        : modules, user, brand, tagline, logo, logoutAction, menuSource, chat, open, … (17 prop).
  * Output       : Markup dari resources/views/components/layer-shell.blade.php.
  * Dipakai oleh : layar home proyek (mengirim brand sendiri) dan devlib.test home / demo shell, lewat x-dl::layer-shell.
  * Status       : Aktif (DevLib).
@@ -67,6 +67,8 @@ class LayerShell extends DevlibComponent
         // 'edit' (aksi Edit profile + modal / laci-nya), 'help' (aksi Help & support), 'setup' (halaman Setup dengan Tema dan Bahasa),
         // 'theme' (pilihan Tema; tanpa Tema, halaman Setup diganti langsung halaman Bahasa). Ubah password dan Sign out tidak bisa disembunyikan.
         public array $without = [],
+        // Alamat POST yang menyimpan pilihan tampilan (field ui = hp): menambah aksi "Phone view" di menu profil (opt-in; null = tanpa aksi, markup lama).
+        public ?string $deviceAction = null,
     ) {
         $identity = Brand::identity();
         $this->brand ??= $identity['name'];
@@ -165,6 +167,7 @@ class LayerShell extends DevlibComponent
             $has('ai') ? ['key' => 'ai', 'label' => Lang::text('AI Assistant'), 'icon' => 'ai'] : null,
             $has('edit') ? ['key' => 'edit', 'label' => Lang::text('Edit profile'), 'icon' => 'fa-user-pen'] + $mark() : null,
             $has('help') ? ['key' => 'help', 'label' => Lang::text('Help & support'), 'icon' => 'help'] + $mark() : null,
+            $this->deviceAction ? ['key' => 'device', 'label' => Lang::text('Phone view'), 'icon' => 'fa-mobile-screen'] + $mark() : null,
             ['key' => 'pass', 'label' => Lang::text('Change password'), 'icon' => 'password'] + $mark(),
             ['key' => 'logout', 'label' => Lang::text('Sign out'), 'icon' => 'logout', 'tone' => 'danger', 'confirm' => Lang::text('Sign out of the application?')],
         ]));

@@ -13,12 +13,13 @@
 namespace Devlib\Components;
 
 // Isi kotak login. Cukup SEBUT bagian yang tampil, berurutan, dipisah koma:
-//   lang, support, brand, title, username, email, password, remember, forgot, button, register
+//   lang, support, brand, title, username, email, password, remember, forgot, device, button, register
+// (device = pilihan tampilan Phone / Desktop, x-dl::device-pick; opt-in, tidak ada di bawaan `show`)
 // (support = ikon bantuan berisi akun uji coba UAT, tampil di baris atas bersama bahasa)
 // Tiap bagian = komponen library (field.text, field.password, button, divider, lang-switch, ...).
 class LoginBox extends DevlibComponent
 {
-    public const PARTS = ['lang', 'brand', 'title', 'username', 'email', 'password', 'remember', 'forgot', 'button', 'register', 'support'];
+    public const PARTS = ['lang', 'brand', 'title', 'username', 'email', 'password', 'remember', 'forgot', 'button', 'register', 'support', 'device'];
 
     public function __construct(
         public string $show = 'lang, title, username, password, forgot, button, register',

@@ -19,6 +19,7 @@
                 @case('email') <x-dl::field.text name="email" type="email" label="Email" i18n="l_email" icon="fa-envelope" size="lg" :case-toggle="false" autocomplete="email" /> @break
                 @case('password') <x-dl::field.password name="password" label="Password" i18n="l_pass" icon="fa-lock" size="lg" /> @break
                 @case('remember') <x-dl::field.checkbox name="remember" text="Remember me" class="dl-loginbox__remember" /> @break
+                @case('device') <x-dl::device-pick class="dl-loginbox__device" /> @break
                 @case('forgot') <x-dl::button variant="link" :href="$forgotUrl" label="Forgot password?" i18n="forgot" class="dl-loginbox__forgot" /> @break
                 @case('button') <x-dl::button type="submit" size="lg" block :label="$button" i18n="btn" /> @break
                 @case('register')
