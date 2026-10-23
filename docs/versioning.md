@@ -14,6 +14,23 @@ dengan tahap pengembangan awal `0.y.z`. Riwayat perubahan ada di
 - `license` di `composer.json` tetap `proprietary`, selaras dengan berkas
   [`LICENSE`](../LICENSE).
 
+## Versi yang tampil di layar (keputusan Jo 2026-10-23)
+
+Satu bentuk, satu pembantu: `Devlib\AppVersion`, ditampilkan `x-dl::env-badge part="version"` di judul logo (kecil, pudar; di menu kiri `x-dl::layer-menu` dan halaman login aplikasi).
+
+| Tempat | Tampil | Sumber | Tooltip |
+| --- | --- | --- | --- |
+| Pustaka DevLib (situs katalog) | `v0.6.0` | tag rilis terakhir `v*` (`git describe`) | `v0.6.0 + 24 commits` |
+| Aplikasi, tahap alpha | `ver 0.433 A` | `0.` + jumlah commit git | `alpha` |
+| Aplikasi, tahap beta | `ver 0.452 B` | sama | `beta` |
+| Aplikasi, calon rilis | `ver 0.470 RC` | sama | `release candidate` |
+| Aplikasi, rilis (UAT lulus) | `ver 1.0.0` | tag rilis terakhir aplikasi, tanpa huruf | `release v1.0.0` |
+
+- Tahap = `APP_STAGE` (`alpha` | `beta` | `rc` | kosong) di `.env`, dibaca lewat `config('devlib.stage')` (aplikasi menulis `'stage' => env('APP_STAGE', 'alpha')` di `config/devlib.php`; kode tidak memanggil `env()` langsung). Nilai lain dianggap kosong (rilis). Alpha = dibangun dan dicoba tim sendiri; beta = UAT berjalan dengan pengguna nyata dan fitur dibekukan.
+- Jumlah commit naik sendiri tiap commit; tidak ada berkas yang disunting. `AppVersion` menjalankan `git rev-list --count HEAD` pada jalur tetap aplikasi dan menyimpan hasilnya di `storage/framework/cache` dengan kunci waktu ubah `.git/logs/HEAD`, jadi git hanya dijalankan sekali per commit baru. Tanpa git (mis. server yang hanya menerima berkas) dipakai berkas `VERSION` berisi `0.NNN`, lalu `0.0`.
+- Aplikasi mengikat `devlib.version` di `AppServiceProvider`: `app()->bind('devlib.version', fn () => \Devlib\AppVersion::of(base_path()));` dan, bila perlu, memasang `<x-dl::env-badge part="version" variant="version" />` di halaman login. Pustaka: `AppVersion::library(base_path('..'))`.
+- Peralihan tahap: ganti `APP_STAGE` di `.env` server. Rilis: kosongkan `APP_STAGE` dan beri tag aplikasi `1.0.0`.
+
 ## Arti angka selama 0.x
 
 | Naik | Boleh memuat | Contoh |

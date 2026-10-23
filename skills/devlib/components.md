@@ -209,7 +209,7 @@ Daftar ENGINE (mesin hitung / aturan bisnis) sebuah aplikasi: untuk tiap engine 
 - Prop: engines:array=[], open:bool=false, source:?string=NULL
 
 ## `<x-dl::env-badge>`
-Teks lingkungan: akhiran judul logo ('- mockup ver 0.20', part title) dan baris host/IP kecil (part where, di bawah nama pengguna); tidak tampil di situs live.
+Teks lingkungan: akhiran judul logo ('- mockup', part title), VERSI kecil dan pudar di judul logo (part version: 'ver 0.433 A' atau 'v0.6.0', dari binding devlib.version = Devlib\AppVersion) dan baris host/IP kecil (part where, di bawah nama pengguna); title dan where tidak tampil di situs live.
 - Berkas: `src/Components/EnvBadge.php`
 - Prop: part:string='where', variant:string='side', label:?string=NULL
 

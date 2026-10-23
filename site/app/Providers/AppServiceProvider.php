@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Versi pustaka di judul logo (x-dl::env-badge part=version): tag rilis terakhir (v0.6.0), jumlah commit sejak tag di tooltip.
+        $this->app->bind('devlib.version', fn () => \Devlib\AppVersion::library(dirname(base_path())));
+
         // Engine contoh situs ini (kontrak Devlib\Engine): sumber halaman Engine Catalog dan item QC.
         app(\Devlib\Engine\EngineRegistry::class)->register(
             new \App\Engines\VolumeDiscountEngine, new \App\Engines\ReorderSuggestionEngine,

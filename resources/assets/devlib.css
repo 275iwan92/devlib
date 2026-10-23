@@ -2669,6 +2669,9 @@ html.dl-locked body{overflow:hidden}
 .dl-lm__userbtn:focus-visible{outline:2px solid var(--dl-accent,#60a5fa);outline-offset:2px}
 .dl-lm__user{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
 .dl-lm__user b{color:var(--dl-side-hot,var(--dl-white));font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* versi di judul logo (x-dl::env-badge part=version); envbadge.css memuat aturan yang sama untuk halaman login tanpa devlib.css */
+.dl-envbadge--version{display:inline;font-size:.75em;font-weight:500;color:inherit;white-space:nowrap;opacity:.65;margin-left:.4em}
+.dl-envbadge__stage{margin-left:.2em;font-weight:700}
 .dl-netline{display:block;min-width:0;font-size:calc(10px * var(--dl-font-scale));line-height:1.3;color:var(--dl-side-ink);white-space:nowrap;font-variant-numeric:tabular-nums}
 .dl-netline__row{display:block;overflow:hidden;text-overflow:ellipsis;opacity:.65}
 .dl-netline__st{display:none;font-weight:600}

@@ -1,6 +1,6 @@
 ## Overview
 
-`<x-dl::env-badge>` prints a small line of environment text that the host application supplies: a suffix after the logo title (for example `- mockup ver 0.20`) or a host / IP line under the user name (for example `Host: HOST-01 / 10.0.0.10 · Client: 127.0.0.1`). It is plain text, with no pill, background or frame, and it renders nothing at all when there is no text, so a live site shows nothing.
+`<x-dl::env-badge part="version">` prints the version in the logo title, small and faint (`ver 0.433 A` for an application, `v0.6.0` for the DevLib library; see below). The rest of this entry is about the two text parts. `<x-dl::env-badge>` prints a small line of environment text that the host application supplies: a suffix after the logo title (for example `- mockup ver 0.20`) or a host / IP line under the user name (for example `Host: HOST-01 / 10.0.0.10 · Client: 127.0.0.1`). It is plain text, with no pill, background or frame, and it renders nothing at all when there is no text, so a live site shows nothing.
 
 DevLib does not know the text. The application binds it in the container (`devlib.env_title`, `devlib.env_where`); the object only reads the binding. `x-dl::layer-menu` already places two badges (title and where); the login page of an application places its own (`variant="login"`). Do NOT use it for status labels (use `x-dl::badge`) or for the application name (use `x-dl::brand`).
 
@@ -58,6 +58,10 @@ A plain `<small>`; no role or `aria-*`. It is read as normal text in the order o
 ### Permissions
 
 Only the generic `can="module.action"` (no ability = not rendered).
+
+### Part `version` (the version in the logo title)
+
+Reads the container binding `devlib.version` (an array from `Devlib\AppVersion::of($basePath)` or `AppVersion::library($basePath)`: `text`, `letter`, `title`). Shows `text`, then the stage letter in bold when there is one (`A` alpha, `B` beta, `RC` release candidate), at 75% size and 65% opacity; the tooltip (`title`) names the stage in full words, or for the library the number of commits since the tag. `x-dl::layer-menu` places it after the title badge; an application login page places `<x-dl::env-badge part="version" variant="version" />` next to its logo title. No binding = nothing is drawn. The number is `0.<git commit count>` and rises by itself with every commit; the stage comes from `APP_STAGE` through `config('devlib.stage')`. Rules: `docs/versioning.md`.
 
 ## Data and events
 
