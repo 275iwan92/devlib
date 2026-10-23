@@ -3013,7 +3013,7 @@ a.dl-ycal__d:hover{background:var(--dl-hover);outline:1px solid var(--dl-accent)
 .dl-dash__side{display:flex;flex-direction:column;gap:10px;align-items:stretch;justify-content:center;padding-left:20px;border-left:1px solid rgba(255,255,255,.14)}
 .dl-dash__side .dl-clock .t{font-size:calc(34px * var(--dl-font-scale));color:var(--dl-white)}
 .dl-dash__att{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
-.dl-dash__net{display:flex;flex-direction:column;gap:1px;font-size:calc(10.5px * var(--dl-font-scale));color:var(--dl-on-dark-muted);opacity:.8;font-variant-numeric:tabular-nums}
+.dl-dash__net{margin-top:-2px;font-size:calc(10.5px * var(--dl-font-scale));line-height:1.4;color:var(--dl-on-dark-muted);opacity:.8;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .dl-dash__att small{font-size:calc(11.5px * var(--dl-font-scale));color:var(--dl-on-dark-muted)}
 .dl-dash__bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .dl-dash__bar h2{margin:0;font-size:calc(16px * var(--dl-font-scale));color:var(--dl-ink-strong)}

@@ -66,8 +66,7 @@ class NetworkInfoTest extends TestCase
 
         $this->assertStringNotContainsString('data-dl-network', $without);
         $this->assertStringContainsString('data-dl-network', $with);
-        $this->assertStringContainsString('10.0.0.21 · PC-GUDANG', $with);
-        $this->assertStringContainsString('10.0.0.5 · SRV-1', $with);
-        $this->assertStringNotContainsString('👋', $with);
+        $this->assertStringContainsString('PC-GUDANG / 10.0.0.21 - Server: 10.0.0.5', $with);
+                $this->assertStringNotContainsString('👋', $with);
     }
 }
