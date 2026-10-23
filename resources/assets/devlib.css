@@ -4021,3 +4021,14 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-devpick__o input:checked+.dl-devpick__t{border-color:var(--dl-accent);background:var(--dl-accent-soft);color:var(--dl-accent)}
 .dl-devpick__o input:focus-visible+.dl-devpick__t{outline:2px solid var(--dl-accent);outline-offset:2px}
 .dl-loginbox__device{margin:4px 0 10px}
+
+/* Phone Offer: popup tawaran tampilan HP, hanya terlihat pada lebar <= 760px (tidak pernah di layar lebar) */
+.dl-phoneoffer{display:none}
+@media (max-width:760px){
+  .dl-phoneoffer{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:16px max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));background:var(--dl-overlay)}
+  .dl-phoneoffer__box{width:100%;max-width:340px;display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:22px 20px 14px;border-radius:16px;background:var(--dl-surface);color:var(--dl-ink);text-align:center;box-shadow:0 12px 36px var(--dl-overlay-soft)}
+  .dl-phoneoffer__ic{font-size:34px;color:var(--dl-accent)}
+  .dl-phoneoffer__t{margin:0 0 4px;font-size:calc(17px * var(--dl-font-scale));font-weight:700;line-height:1.35}
+  .dl-phoneoffer__go{min-height:52px;border:0;border-radius:var(--dl-radius-md);background:var(--dl-accent);color:var(--dl-side-ink);font:inherit;font-size:calc(16px * var(--dl-font-scale));font-weight:700;cursor:pointer;width:100%}
+  .dl-phoneoffer__stay{min-height:44px;border:0;background:none;color:var(--dl-accent);font:inherit;font-size:calc(14px * var(--dl-font-scale));font-weight:600;cursor:pointer;width:100%}
+}

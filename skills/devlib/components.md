@@ -608,6 +608,11 @@ Hak akses grup per objek (mockup security.html "Hak Akses Grup"): pilih grup -> 
 - Berkas: `src/Components/PermissionMatrix.php`
 - Prop: objects:array=[], groups:array=[], perms:array=[], levels:array=[…], default:int=1, source:?string=NULL, saveUrl:?string=NULL
 
+## `<x-dl::phone-offer>`
+Popup kecil di layar desktop yang sempit: "Ingin tampilan yang lebih nyaman di smartphone? Ketuk di sini" dan tombol kecil "Tetap desktop"; keduanya menyimpan pilihan tampilan (cookie ui) lewat POST.
+- Berkas: `src/Components/PhoneOffer.php`
+- Prop: action:string='', force:bool=false
+
 ## `<x-dl::phone-shell>`
 Kerangka aplikasi untuk smartphone potret: bilah atas kecil (judul, tombol kembali), isi selebar layar, bilah tab di bawah, dan lembar Menu dari bawah berisi semua modul.
 - Berkas: `src/Components/PhoneShell.php`, tampilan `resources/views/components/phone-shell.blade.php`

@@ -77,4 +77,21 @@ class PhoneShellTest extends TestCase
     {
         $this->get('/lib/p7-phone')->assertOk()->assertSee('dl-phone', false);
     }
+
+    public function test_phone_offer_is_written_only_when_no_view_is_chosen_and_the_device_is_desktop(): void
+    {
+        $tag = '<x-dl::phone-offer action="/ui" />';
+
+        $render = function (array $cookies, string $ua) use ($tag) {
+            $req = \Illuminate\Http\Request::create('/', 'GET', [], $cookies, [], ['HTTP_USER_AGENT' => $ua]);
+            app()->instance('request', $req);
+
+            return Blade::render($tag);
+        };
+        $this->assertStringContainsString('name="ui" value="hp"', $render([], self::WINDOWS));
+        $this->assertStringContainsString('name="ui" value="desktop"', $render([], self::WINDOWS));
+        $this->assertStringNotContainsString('dl-phoneoffer', $render([], self::CHROME_PHONE), 'ponsel = tampilan HP langsung');
+        $this->assertStringNotContainsString('dl-phoneoffer', $render(['ui' => 'desktop'], self::WINDOWS), 'pilihan sudah dibuat');
+        $this->assertStringContainsString('dl-phoneoffer', Blade::render('<x-dl::phone-offer action="/ui" force />'));
+    }
 }
