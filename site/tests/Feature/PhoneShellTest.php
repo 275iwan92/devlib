@@ -94,4 +94,27 @@ class PhoneShellTest extends TestCase
         $this->assertStringNotContainsString('dl-phoneoffer', $render(['ui' => 'desktop'], self::WINDOWS), 'pilihan sudah dibuat');
         $this->assertStringContainsString('dl-phoneoffer', Blade::render('<x-dl::phone-offer action="/ui" force />'));
     }
+
+    public function test_phone_parts_render_with_tone_badge_columns_and_the_login_page_links_back_to_desktop(): void
+    {
+        $tile = Blade::render('<x-dl::phone-tile label="Low" :value="4" url="/low" tone="danger" />');
+        $this->assertStringContainsString('dl-ptile dl-ptile--danger', $tile);
+        $this->assertStringContainsString('href="/low"', $tile);
+        $this->assertStringContainsString('<strong>4</strong>', $tile);
+        $this->assertStringNotContainsString('<strong>', Blade::render('<x-dl::phone-tile label="Low" />'));
+
+        $link = Blade::render('<x-dl::phone-link label="Count" url="/c" badge="2" tone="info" />');
+        $this->assertStringContainsString('dl-plink--info', $link);
+        $this->assertStringContainsString('<em>2</em>', $link);
+
+        $this->assertStringContainsString('grid-template-columns:1fr 2fr', Blade::render('<x-dl::phone-bar columns="1fr 2fr">x</x-dl::phone-bar>'));
+        $this->assertStringNotContainsString('style=', Blade::render('<x-dl::phone-bar>x</x-dl::phone-bar>'));
+        $this->assertStringContainsString('dl-ptiles', Blade::render('<x-dl::phone-tiles>x</x-dl::phone-tiles>'));
+
+        $login = Blade::render('<x-dl::phone-login action="/in" device-action="/ui">msg</x-dl::phone-login>');
+        foreach (['dl-plogin', 'action="/in"', 'action="/ui"', 'name="ui" value="desktop"', 'msg', 'dl-loginbox'] as $needle) {
+            $this->assertStringContainsString($needle, $login);
+        }
+        $this->assertStringNotContainsString('dl-plogin__desk', Blade::render('<x-dl::phone-login action="/in" />'));
+    }
 }

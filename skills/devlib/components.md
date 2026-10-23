@@ -608,6 +608,21 @@ Hak akses grup per objek (mockup security.html "Hak Akses Grup"): pilih grup -> 
 - Berkas: `src/Components/PermissionMatrix.php`
 - Prop: objects:array=[], groups:array=[], perms:array=[], levels:array=[…], default:int=1, source:?string=NULL, saveUrl:?string=NULL
 
+## `<x-dl::phone-bar>`
+Bilah tombol yang menempel di bawah area isi layar HP (di atas bilah tab): dua atau tiga tombol besar sebaris, selalu terlihat saat isi digulir.
+- Berkas: `src/Components/PhoneBar.php`
+- Prop: columns:string=''
+
+## `<x-dl::phone-link>`
+Baris kartu besar layar HP: ikon, nama, lencana kecil; seluruh baris adalah tautan (tinggi >= 64 px). Untuk daftar modul / menu pada layar HP.
+- Berkas: `src/Components/PhoneLink.php`
+- Prop: label:string='', icon:string='fa-solid fa-circle', url:string='#', badge:?string=NULL, tone:string=''
+
+## `<x-dl::phone-login>`
+Halaman login smartphone potret: satu kolom mengalir (320 sampai sekitar 440 px), isian 52 px dan teks 16 px, tombol Masuk besar, tepi aman, dan tautan kecil kembali ke tampilan desktop.
+- Berkas: `src/Components/PhoneLogin.php`, tampilan `resources/views/components/phone-login.blade.php`
+- Prop: action:string='', error:?string=NULL, username:string='', forgotUrl:string='#', brand:?string=NULL, tagline:?string=NULL, show:string='brand, title, username, …', deviceAction:?string=NULL, contained:bool=false
+
 ## `<x-dl::phone-offer>`
 Popup kecil di layar desktop yang sempit: "Ingin tampilan yang lebih nyaman di smartphone? Ketuk di sini" dan tombol kecil "Tetap desktop"; keduanya menyimpan pilihan tampilan (cookie ui) lewat POST.
 - Berkas: `src/Components/PhoneOffer.php`
@@ -617,6 +632,16 @@ Popup kecil di layar desktop yang sempit: "Ingin tampilan yang lebih nyaman di s
 Kerangka aplikasi untuk smartphone potret: bilah atas kecil (judul, tombol kembali), isi selebar layar, bilah tab di bawah, dan lembar Menu dari bawah berisi semua modul.
 - Berkas: `src/Components/PhoneShell.php`, tampilan `resources/views/components/phone-shell.blade.php`
 - Prop: title:string='', back:?string=NULL, tabs:array=[], active:string='', modules:array=[], user:array=[…], brand:?string=NULL, logoutAction:string='', deviceAction:?string=NULL, links:array=[], frame:?string=NULL, contained:bool=false
+
+## `<x-dl::phone-tile>`
+Kartu ringkasan layar HP: ikon, angka besar, dan nama; seluruh kartu adalah tautan (sasaran sentuh besar). Dua kartu per baris di dalam x-dl::phone-tiles.
+- Berkas: `src/Components/PhoneTile.php`
+- Prop: label:string='', value:string|int|float|null=NULL, icon:string='fa-solid fa-circle', url:string='#', tone:string=''
+
+## `<x-dl::phone-tiles>`
+Pembungkus grid dua kolom untuk x-dl::phone-tile di layar HP.
+- Berkas: `src/Components/PhoneTiles.php`
+- Prop: (tanpa prop)
 
 ## `<x-dl::photo-box>`
 Kotak pas foto 3 x 4 yang bisa diklik: membuka dialog crop (bingkai tetap 3:4, geser dan zoom) lalu menaruh hasil JPEG 600 x 800 px ke input file milik form.

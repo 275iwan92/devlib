@@ -6,7 +6,7 @@
  * Sumber hulu  : Devlib\Device (cookie ui, Sec-CH-UA-Mobile, User-Agent).
  * Input        : action.
  * Output       : dialog dengan dua form kecil (ui=hp / ui=desktop); tanpa JavaScript.
- * Dipakai oleh : halaman login desktop proyek (sstock); halaman katalog p7-phone.
+ * Dipakai oleh : halaman login desktop proyek; halaman katalog p7-phone.
  * Status       : Aktif (DevLib).
  */
 
