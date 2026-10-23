@@ -2,6 +2,8 @@
 
 namespace Devlib\Components;
 
+use Devlib\AppVersion;
+
 /*
  * REMARK
  * Tujuan       : Teks lingkungan: akhiran judul logo ('- mockup', part title), VERSI kecil dan pudar di judul logo (part version: 'ver 0.433 A' atau 'v0.6.0', dari binding devlib.version = Devlib\AppVersion) dan baris host/IP kecil (part where, di bawah nama pengguna); title dan where tidak tampil di situs live.
@@ -26,7 +28,8 @@ class EnvBadge extends DevlibComponent
     public function __construct(public string $part = 'where', public string $variant = 'side', public ?string $label = null)
     {
         if ($part === 'version') {
-            $v = app()->bound('devlib.version') ? (array) app('devlib.version') : [];
+            // Tanpa binding: aplikasi yang mengisi config('devlib.stage') (juga '' = rilis) otomatis memakai AppVersion::of(base_path()).
+            $v = app()->bound('devlib.version') ? (array) app('devlib.version') : (config('devlib.stage') !== null ? AppVersion::of(base_path()) : []);
             $this->label ??= (string) ($v['text'] ?? '');
             $this->letter = (string) ($v['letter'] ?? '');
             $this->tip = (string) ($v['title'] ?? '');

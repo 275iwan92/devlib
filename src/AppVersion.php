@@ -15,6 +15,9 @@ namespace Devlib;
  */
 final class AppVersion
 {
+    /** @var array<string, string> */
+    private static array $memo = [];
+
     public const STAGES = ['alpha' => ['A', 'alpha'], 'beta' => ['B', 'beta'], 'rc' => ['RC', 'release candidate']];
 
     /** Versi aplikasi untuk ditampilkan. @return array{text: string, letter: string, title: string, stage: string} */
@@ -54,6 +57,16 @@ final class AppVersion
     public static function commits(string $basePath): string
     {
         $key = self::stamp($basePath);
+        $memo = $basePath.'|'.$key;   // satu proses (permintaan, atau satu rangkaian tes) menghitung sekali per commit
+        if (isset(self::$memo[$memo])) {
+            return self::$memo[$memo];
+        }
+
+        return self::$memo[$memo] = self::count($basePath, $key);
+    }
+
+    private static function count(string $basePath, ?string $key): string
+    {
         $cache = storage_path('framework/cache/devlib-appver-'.md5($basePath).'.json');
         if ($key !== null && is_file($cache)) {
             $saved = json_decode((string) @file_get_contents($cache), true);
