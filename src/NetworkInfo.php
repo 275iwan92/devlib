@@ -23,12 +23,8 @@ final class NetworkInfo
     public static function of(Request $request, bool $resolveHost = true): array
     {
         $client = $request->ip();
-        $server = $request->server('SERVER_ADDR') ?: null;
         $machine = gethostname() ?: null;
-        if ($server === null && $machine !== null) {
-            $guess = gethostbyname($machine);
-            $server = $guess !== $machine ? $guess : null;
-        }
+        $server = self::serverIp((string) $request->server('SERVER_ADDR'), (string) $machine);
 
         return [
             'client_ip' => $client,
@@ -37,6 +33,22 @@ final class NetworkInfo
             'server_host' => $machine,
         ];
     }
+
+    /** SERVER_ADDR bila bukan loopback, selain itu IP dari nama mesin bila bukan loopback, selain itu apa adanya (tidak pernah dikarang); sama dengan EnvBadge mockup. */
+    public static function serverIp(string $addr, string $machine): ?string
+    {
+        $loop = fn (string $ip) => $ip === '' || str_starts_with($ip, '127.') || $ip === '::1';
+        if (! $loop($addr)) {
+            return $addr;
+        }
+        $byName = $machine !== '' ? (string) gethostbyname($machine) : '';
+        if (! $loop($byName) && $byName !== $machine) {
+            return $byName;
+        }
+
+        return $addr !== '' ? $addr : null;
+    }
+
 
     public static function isLoopback(?string $ip): bool
     {

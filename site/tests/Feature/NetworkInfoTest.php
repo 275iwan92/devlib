@@ -51,16 +51,23 @@ class NetworkInfoTest extends TestCase
         $this->assertNull(NetworkInfo::of($this->request('192.168.1.20'), false)['client_host']);
     }
 
+    public function test_the_server_ip_falls_back_from_loopback_like_the_env_badge(): void
+    {
+        $this->assertSame('10.0.0.5', NetworkInfo::serverIp('10.0.0.5', 'PC'));
+        $this->assertSame('127.0.0.1', NetworkInfo::serverIp('127.0.0.1', ''));   // tidak ada yang lain: apa adanya
+        $this->assertNull(NetworkInfo::serverIp('', ''));
+    }
+
     public function test_the_hero_draws_the_lines_only_when_the_board_has_a_network_key(): void
     {
         $board = ['user' => ['first' => 'Yuna'], 'profile_label' => 'Dashboard'];
         $without = Blade::render('<x-dl::greeting-card :board="$b" />', ['b' => $board]);
-        $with = Blade::render('<x-dl::greeting-card :board="$b" />', ['b' => $board + ['network' => ['client_ip' => '10.0.0.21', 'client_host' => 'PC-GUDANG', 'server_ip' => '10.0.0.5']]]);
+        $with = Blade::render('<x-dl::greeting-card :board="$b" />', ['b' => $board + ['network' => ['client_ip' => '10.0.0.21', 'client_host' => 'PC-GUDANG', 'server_ip' => '10.0.0.5', 'server_host' => 'SRV-1']]]);
 
         $this->assertStringNotContainsString('data-dl-network', $without);
         $this->assertStringContainsString('data-dl-network', $with);
         $this->assertStringContainsString('10.0.0.21 · PC-GUDANG', $with);
-        $this->assertStringContainsString('10.0.0.5', $with);
+        $this->assertStringContainsString('10.0.0.5 · SRV-1', $with);
         $this->assertStringNotContainsString('👋', $with);
     }
 }

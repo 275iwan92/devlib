@@ -42,7 +42,7 @@
             @php($n = $d['network'])
             <div class="dl-dash__net" data-dl-network>
                 @if (! empty($n['client_ip']))<span>{{ \Devlib\Lang::t('net_client') }} {{ $n['client_ip'] }}@if (! empty($n['client_host'])) · {{ $n['client_host'] }}@endif</span>@endif
-                @if (! empty($n['server_ip']))<span>{{ \Devlib\Lang::t('net_server') }} {{ $n['server_ip'] }}</span>@endif
+                @if (! empty($n['server_ip']))<span>{{ \Devlib\Lang::t('net_server') }} {{ $n['server_ip'] }}@if (! empty($n['server_host'])) · {{ $n['server_host'] }}@endif</span>@endif
             </div>
         @endif
         @if (! empty($d['weather']))
