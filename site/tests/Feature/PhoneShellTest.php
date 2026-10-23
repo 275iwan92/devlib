@@ -117,4 +117,28 @@ class PhoneShellTest extends TestCase
         }
         $this->assertStringNotContainsString('dl-plogin__desk', Blade::render('<x-dl::phone-login action="/in" />'));
     }
+
+    public function test_form_panel_buttons_sit_in_a_wrapper_and_phone_form_css_only_matches_the_phone_context(): void
+    {
+        $html = Blade::render('<x-dl::form title="T" back="/b" panel />');
+        $this->assertStringContainsString('<div class="dl-form__acts">', $html);
+        $this->assertSame(1, substr_count($html, 'dl-form__acts'));
+
+        $css = (string) file_get_contents(base_path('../resources/assets/devlib.css'));
+        $this->assertStringContainsString('.dl-form__acts{display:contents}', $css, 'desktop: pembungkus tidak mengubah tata letak');
+        $block = substr($css, strpos($css, '/* ==== Form di tampilan HP'));
+        $rules = array_filter(array_map('trim', preg_split('/\R/', $block)), fn ($l) => $l !== '' && ! str_starts_with($l, '/*') && ! str_starts_with($l, 'Tidak berlaku'));
+        foreach ($rules as $line) {
+            $this->assertMatchesRegularExpression('/^(:is\(body\.dl-on-phone,\.dl-phone\)|\.dl-phone) /', $line, 'aturan form HP harus dibatasi konteks HP: '.$line);
+        }
+    }
+
+    public function test_body_class_marks_only_the_phone_device(): void
+    {
+        $req = fn (string $ua, array $cookies = []) => \Illuminate\Http\Request::create('/', 'GET', [], $cookies, [], ['HTTP_USER_AGENT' => $ua]);
+        $this->assertSame('dl-on-phone', Device::bodyClass($req(self::CHROME_PHONE)));
+        $this->assertSame('', Device::bodyClass($req(self::WINDOWS)));
+        $this->assertSame('', Device::bodyClass($req(self::CHROME_PHONE, ['ui' => 'desktop'])));
+        $this->assertSame('dl-on-phone', Device::bodyClass($req(self::WINDOWS, ['ui' => 'hp'])));
+    }
 }

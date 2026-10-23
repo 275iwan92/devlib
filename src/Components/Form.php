@@ -290,6 +290,7 @@ class Form extends DevlibComponent
                         @endif
                         @if ($stage)<x-dl::badge :label="$stage" tone="info" />@endif
                         <span class="dl-print__spacer"></span>
+                        <div class="dl-form__acts">
                         @foreach ($panelActions() as $a)
                             @php [$pre, $lbl, $var, $ico, $act] = $a; $cls = $a[5] ?? ''; @endphp
                             @if ($loop->last && isset($special)){{ $special }}@endif
@@ -302,6 +303,7 @@ class Form extends DevlibComponent
                         @if (! $panelActions() && isset($special)){{ $special }}@endif
                         <span class="dl-form__sep"></span>
                         <x-dl::button variant="secondary" size="sm" icon="back" label="Back" :href="$back" data-f-act="back" data-dl-back />
+                        </div>
                         @if ($strict)<span class="dl-form__stamps">@foreach ($stamps() as [$sl, $st])<span class="dl-form__stamp dl-form__stamp--{{ $st }}">{{ $sl }}</span>@endforeach</span>@endif
                     </div>
                 @elseif ($title !== '')

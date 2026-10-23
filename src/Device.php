@@ -41,6 +41,13 @@ final class Device
         return in_array($cookie, self::CHOICES, true) ? $cookie : self::detect($userAgent, $chMobile);
     }
 
+    // Kelas untuk <body> (tambahkan di layout proyek): 'dl-on-phone' pada perangkat hp. CSS DevLib memakainya untuk memadatkan form dan layar desktop yang dibuka di dalam
+    // x-dl::phone-shell (iframe); tanpa kelas ini (desktop) tidak ada yang berubah.
+    public static function bodyClass(Request $request): string
+    {
+        return self::fromRequest($request) === self::HP ? 'dl-on-phone' : '';
+    }
+
     public static function fromRequest(Request $request): string
     {
         $cookie = $request->cookie(self::COOKIE);

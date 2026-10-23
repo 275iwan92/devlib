@@ -43,6 +43,10 @@ Pola layar kerja satu-barang-per-kartu (progress, cari/pindai, simpan per barang
 9. **Tes.** Cek: login ponsel = login HP; komputer tanpa cookie = login desktop + popup; cookie menang atas tebakan di dua arah; POST `ui` menolak nilai lain; menu HP hanya berisi modul yang boleh dibuka; desktop identik (tidak ada `dl-phone`). Acuan: `PhoneViewTest` di proyek pertama dan `site/tests/Feature/PhoneShellTest.php`.
 10. **Kamus.** Teks komponen ada di kamus DevLib (`phone_offer*`) atau memakai teks English yang diterjemahkan kamus proyek (`Phone view`, `Desktop view`, `Display`, `Apply`, `Menu`, `Sign out`).
 
+### Form dan layar desktop di dalam kerangka HP
+
+Layar desktop yang dibuka lewat `:frame` (iframe) tidak tahu bahwa ia ada di HP. Tambahkan `Devlib\Device::bodyClass(request())` ke `<body class="...">` layout proyek: hasilnya `dl-on-phone` bila perangkat `hp` (kosong di desktop). Dengan kelas itu CSS DevLib memadatkan `x-dl::form` menjadi satu kolom (label di atas, isian 16 px / >= 44 px, plus tambah-cepat sebaris, bilah Simpan / Urungkan / Kembali menempel di bawah di atas bilah tab, panel statistik dua kolom). Tanpa kelas itu (desktop) tidak ada aturan yang cocok, dan pembungkus tombol `dl-form__acts` adalah `display: contents` sehingga tata letak desktop identik.
+
 ## 3. Yang opt-in dan yang tidak berubah
 
 - Tanpa memakai satu pun komponen di atas, proyek lama tidak berubah. `x-dl::login-box` bagian `device` dan `x-dl::layer-shell` prop `deviceAction` default mati; markup lama identik (dibuktikan tes).
