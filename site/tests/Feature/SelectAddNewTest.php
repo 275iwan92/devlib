@@ -83,6 +83,28 @@ HTML;
         $this->assertStringContainsString('<textarea', $html);
     }
 
+    public function test_radio_and_select_fields_render_inside_the_popup_and_fall_back_without_options(): void
+    {
+        config(['devlib.lang' => 'en']);
+        $html = $this->select("['url' => '/x', 'fields' => [['name' => 'name', 'label' => 'Nama'], ['name' => 'kind', 'label' => 'Jenis', 'type' => 'radio', 'required' => true, 'options' => ['A' => 'Lokal', 'B' => 'Impor'], 'value' => 'B'], ['name' => 'lvl', 'label' => 'Tingkat', 'type' => 'select', 'options' => ['1' => 'Satu', '2' => 'Dua'], 'value' => '2'], ['name' => 'bad', 'type' => 'radio']]]");
+        $this->assertMatchesRegularExpression('/<input type="radio" name="kind" value="A"\s*>/', $html);
+        $this->assertMatchesRegularExpression('/<input type="radio" name="kind" value="B" checked/', $html);
+        $this->assertStringContainsString('Impor', $html);
+        $this->assertStringContainsString('name="lvl" value="2" data-dl-value', $html);
+        $this->assertStringContainsString('<input id="', $html);
+        $this->assertStringContainsString('name="bad" type="text"', $html, 'radio tanpa options = teks');
+        $old = $this->select(self::ADD);
+        $this->assertStringNotContainsString('type="radio"', $old, 'tanpa tipe baru markup lama tidak berubah');
+    }
+
+    public function test_script_handles_radio_defaults(): void
+    {
+        $js = file_get_contents(dirname(__DIR__, 3).'/resources/assets/js/components/select-add.js');
+        foreach (["i.type === 'radio'", 'defaultChecked', 'Devlib.h.setField(this.modal'] as $needle) {
+            $this->assertStringContainsString($needle, $js, $needle);
+        }
+    }
+
     public function test_caller_text_is_escaped(): void
     {
         $html = $this->select("['url' => '/x', 'title' => '<i>T</i>', 'label' => '<b>L</b>', 'note' => '<u>N</u>', 'fields' => [['name' => 'name', 'label' => '<s>F</s>']]]");

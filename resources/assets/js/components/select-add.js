@@ -16,6 +16,8 @@
       this.url = this.el.dataset.url; this.vk = this.el.dataset.valueKey; this.lk = this.el.dataset.labelKey;
       this.err = $(this.modal, '[data-dl-sa-err]'); this.save = $(this.modal, '[data-dl-sa-save]');
       this.inputs = $$(this.modal, 'input[name], textarea[name]');
+      // Isian radio / select (hidden) kembali ke nilai awalnya setelah simpan; teks dikosongkan.
+      this.defaults = {}; this.inputs.forEach(i => { if (i.type === 'radio') { if (i.defaultChecked) this.defaults[i.name] = i.value; else this.defaults[i.name] ??= ''; } else if (i.closest('[data-dl-select]')) this.defaults[i.name] = i.defaultValue; });
       document.body.appendChild(this.modal);
       this.btn.addEventListener('click', () => { this.clearErrors(); openLayer(this.modal.dataset.dlModalId); });
       this.save.addEventListener('click', () => this.submit());
@@ -30,7 +32,11 @@
       this.clearErrors();
       const body = {}; let bad = false;
       this.inputs.forEach(i => {
+        if (i.type === 'radio') { body[i.name] ??= ''; if (i.checked) body[i.name] = i.value; return; }
         body[i.name] = i.value.trim();
+      });
+      this.inputs.forEach(i => {
+        if (i.type === 'radio' && i !== this.inputs.find(x => x.name === i.name)) return;
         if (!body[i.name] && i.closest('.dl-field')?.querySelector('.dl-field__req')) { fieldErr(i, T('f_required')); bad = true; }
       });
       if (bad) return;
@@ -60,7 +66,11 @@
       if (!it) { it = document.createElement('div'); it.className = 'dl-dd__item'; it.dataset.value = v; list.appendChild(it); }
       it.textContent = l;
       h.value = v; $(this.sel, '[data-dl-dd-text]').textContent = l;
-      this.inputs.forEach(i => { i.value = ''; i.dispatchEvent(new Event('input', {bubbles: true})); i.dispatchEvent(new Event('dl:grow')); });
+      this.inputs.forEach(i => {
+        if (i.name in this.defaults) return;
+        i.value = ''; i.dispatchEvent(new Event('input', {bubbles: true})); i.dispatchEvent(new Event('dl:grow'));
+      });
+      Object.entries(this.defaults).forEach(([n, v]) => Devlib.h.setField(this.modal, n, v));
       closeLayer(this.modal);
       h.dispatchEvent(new Event('change', {bubbles: true}));
     }

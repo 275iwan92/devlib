@@ -51,7 +51,12 @@ class Select extends Field
         $fields = [];
         foreach ($a['fields'] as $f) {
             if (is_array($f) && preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', (string) ($f['name'] ?? ''))) {
-                $fields[] = $f + ['label' => '', 'required' => false, 'type' => 'text'];
+                $f += ['label' => '', 'required' => false, 'type' => 'text'];
+                // radio / select (opt-in): butuh options; tanpa options isian jatuh kembali ke teks
+                if (in_array($f['type'], ['radio', 'select'], true) && ! (is_array($f['options'] ?? null) && $f['options'])) {
+                    $f['type'] = 'text';
+                }
+                $fields[] = $f;
             }
         }
 

@@ -26,8 +26,16 @@
     <x-dl::modal :id="$uid.'-add'" :title="$add['title']" :icon="$add['icon']" size="sm" data-dl-sa-modal>
         @if ($add['note'])<p class="dl-note">{{ \Devlib\Lang::text($add['note']) }}</p>@endif
         @foreach ($add['fields'] as $f)
+            @if ($f['type'] === 'radio' || $f['type'] === 'select')
+                @if ($f['type'] === 'radio')
+                    <x-dl::field.radio :name="$f['name']" :label="$f['label']" :required="(bool) $f['required']" :options="$f['options']" :value="$f['value'] ?? null" />
+                @else
+                    <x-dl::field.select :name="$f['name']" :label="$f['label']" :required="(bool) $f['required']" :options="$f['options']" :value="$f['value'] ?? null" :placeholder="$f['placeholder'] ?? null" />
+                @endif
+            @else
             <x-dl::field.text :name="$f['name']" :label="$f['label']" :required="(bool) $f['required']" :type="$f['type'] === 'tel' ? 'tel' : 'text'" :multiline="$f['type'] === 'textarea'"
                 :maxlength="isset($f['maxlength']) ? (int) $f['maxlength'] : null" :placeholder="$f['placeholder'] ?? null" />
+            @endif
         @endforeach
         <div class="dl-selectadd__err" role="alert" data-dl-sa-err></div>
         <x-slot:footer>

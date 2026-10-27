@@ -19,6 +19,13 @@
         </x-dl::form.col>
     </x-dl::form>
 
-    <p class="dl-note" style="margin-top:20px"><b>3. Terkunci (<code>readonly</code>).</b> Tombol plus tidak tampil.</p>
+    <p class="dl-note" style="margin-top:20px"><b>3. Popup dengan pilihan (radio dan select).</b> Isian <code>type</code> bertipe <code>radio</code>, <code>level</code> bertipe <code>select</code>; setelah Save keduanya kembali ke nilai awalnya.</p>
+    <x-dl::field.select name="supplier_d" label="Supplier" placeholder="Pilih supplier..." :options="$suppliers" :add="['url' => '/demo/select-add/supplier', 'title' => 'Add Supplier', 'icon' => 'fa-truck', 'fields' => [
+        ['name' => 'name', 'label' => 'Nama', 'required' => true, 'maxlength' => 60],
+        ['name' => 'type', 'label' => 'Jenis', 'type' => 'radio', 'required' => true, 'options' => ['LOCAL' => 'Lokal', 'IMPORT' => 'Impor'], 'value' => 'LOCAL'],
+        ['name' => 'level', 'label' => 'Tingkat', 'type' => 'select', 'options' => ['A' => 'A', 'B' => 'B'], 'value' => 'B', 'placeholder' => 'Pilih...'],
+    ]]" />
+
+    <p class="dl-note" style="margin-top:20px"><b>4. Terkunci (<code>readonly</code>).</b> Tombol plus tidak tampil.</p>
     <x-dl::field.select name="supplier_c" label="Supplier" :options="$suppliers" value="S02" :add="$add" readonly />
 </div>
