@@ -100,7 +100,7 @@ HTML;
     public function test_script_handles_radio_defaults(): void
     {
         $js = file_get_contents(dirname(__DIR__, 3).'/resources/assets/js/components/select-add.js');
-        foreach (["i.type === 'radio'", 'defaultChecked', 'Devlib.h.setField(this.modal'] as $needle) {
+        foreach (["i.type === 'radio'", 'defaultChecked', 'Devlib.h.setField(this.modal', 'this.el.dataset.url'] as $needle) {
             $this->assertStringContainsString($needle, $js, $needle);
         }
     }

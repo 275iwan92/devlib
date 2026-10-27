@@ -13,7 +13,7 @@
       this.btn = $(this.el, '[data-dl-sa-btn]');
       this.modal = $(this.el, '[data-dl-sa-modal]');
       if (!this.sel || !this.btn || !this.modal) return;
-      this.url = this.el.dataset.url; this.vk = this.el.dataset.valueKey; this.lk = this.el.dataset.labelKey;
+      this.vk = this.el.dataset.valueKey; this.lk = this.el.dataset.labelKey;
       this.err = $(this.modal, '[data-dl-sa-err]'); this.save = $(this.modal, '[data-dl-sa-save]');
       this.inputs = $$(this.modal, 'input[name], textarea[name]');
       // Isian radio / select (hidden) kembali ke nilai awalnya setelah simpan; teks dikosongkan.
@@ -43,8 +43,9 @@
       this.busy = true; const label = this.save.innerHTML;
       this.save.disabled = true; this.save.textContent = T('sa_saving');
       try {
-        if (new URL(this.url, location.href).origin !== location.origin) throw new Error('origin');
-        const r = await fetch(this.url, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf()}, body: JSON.stringify(body)});
+        const url = this.el.dataset.url;  // dibaca tiap Save: halaman boleh mengubahnya (mis. mengikat ke pilihan lain)
+        if (new URL(url, location.href).origin !== location.origin) throw new Error('origin');
+        const r = await fetch(url, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': csrf()}, body: JSON.stringify(body)});
         let j = null; try { j = await r.json(); } catch (_) {}
         if (r.status === 422 && j && j.errors && typeof j.errors === 'object') {
           const rest = [];
