@@ -1,5 +1,7 @@
 @php
-    $opts = array_is_list($options) ? array_combine($options, $options) : $options;
+    $grouped = collect($options)->contains(fn ($o) => is_array($o));
+    $opts = $grouped || ! array_is_list($options) ? $options : array_combine($options, $options);
+    $flat = $grouped ? collect($opts)->flatMap(fn ($o, $k) => is_array($o) ? $o : [$k => $o])->all() : $opts;
     $empty = $placeholder ?? \Devlib\Lang::t('f_choose');
     $add = $addConfig();
     $addLabel = $add ? ($add['label'] !== '' ? \Devlib\Lang::text($add['label']) : \Devlib\Lang::t('sa_add')) : '';
@@ -10,13 +12,20 @@
 <div class="dl-dd" data-dl-select data-empty="{{ $empty }}">
     <input type="hidden" name="{{ $name }}" value="{{ $value }}" data-dl-value>
     <button type="button" id="{{ $uid }}" class="dl-dd__btn" data-dl-dd-toggle @disabled($disabled || $readonly)>
-        <span data-dl-dd-text>{{ $opts[$value] ?? $empty }}</span><span>▼</span>
+        <span data-dl-dd-text>{{ $flat[$value] ?? $empty }}</span><span>▼</span>
     </button>
     <div class="dl-dd__panel" data-dl-dd-panel>
         <div class="dl-dd__search"><input type="text" placeholder="{{ \Devlib\Lang::text($searchPlaceholder) }}" data-dl-dd-search></div>
         <div class="dl-dd__list" data-dl-dd-list>
             @foreach ($opts as $v => $l)
-                <div class="dl-dd__item" data-value="{{ $v }}">{{ $l }}</div>
+                @if (is_array($l))
+                    <div class="dl-dd__group">{{ $v }}</div>
+                    @foreach ($l as $gv => $gl)
+                        <div class="dl-dd__item" data-value="{{ $gv }}">{{ $gl }}</div>
+                    @endforeach
+                @else
+                    <div class="dl-dd__item" data-value="{{ $v }}">{{ $l }}</div>
+                @endif
             @endforeach
         </div>
     </div>

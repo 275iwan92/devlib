@@ -244,7 +244,11 @@ window.Devlib = window.Devlib || {};
     });
     panel.addEventListener('click', e => e.stopPropagation());
     const search = $(panel, '[data-dl-dd-search]');
-    if (search) search.addEventListener('input', () => $$(panel, '.dl-dd__item').forEach(it => { it.style.display = it.textContent.toLowerCase().includes(search.value.toLowerCase()) ? '' : 'none'; }));
+    if (search) search.addEventListener('input', () => {
+      $$(panel, '.dl-dd__item').forEach(it => { it.style.display = it.textContent.toLowerCase().includes(search.value.toLowerCase()) ? '' : 'none'; });
+      // Judul grup (options bersarang) hanya tampil bila grupnya masih punya butir yang terlihat.
+      $$(panel, '.dl-dd__group').forEach(g => { let n = g.nextElementSibling, any = false; while (n && !n.matches('.dl-dd__group')) { if (n.style.display !== 'none') any = true; n = n.nextElementSibling; } g.style.display = any ? '' : 'none'; });
+    });
     return {panel, search, close: () => panel.classList.remove('is-open')};
   }
 

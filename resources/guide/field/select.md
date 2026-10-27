@@ -78,6 +78,10 @@ The shared panel helper `Devlib.h.bindPanel` handles the dropdown:
 
 `disabled` and `readonly` only disable the button (CSS: opacity 0.45, no pointer events; `is-readonly` adds the grey background). Inside a locked `x-dl::form` (fieldset disabled, or `mode="view"`) the button also loses its border and arrow and reads as plain text, and the hidden input is excluded from the submit by the browser.
 
+### Grouped options
+
+`options` may nest one level: `['Tuck End' => ['RTE' => 'Reverse Tuck End', 'STE' => 'Straight Tuck End'], 'Mailer' => ['MAIL' => 'Mailer Box']]` renders a non-selectable group heading (`div.dl-dd__group`) before the items of each group; the search box hides a heading when none of its items match. A flat array renders exactly as before; mixing flat entries and groups is allowed (a flat entry is a normal item). The hidden value and the button text work as usual, and `Devlib.h.setOptions` still takes a flat list.
+
 ### Add New (prop `add`)
 
 With `add` the select is wrapped in a flex row and a square button with a plus icon sits to the right of the dropdown, same height (theme and density through the tokens). The button is a real `<button>`: reachable with `Tab`, `aria-label` and tooltip = `add.label`. Inside a locked `x-dl::form` (fieldset disabled, or `mode="view"`) it is hidden.

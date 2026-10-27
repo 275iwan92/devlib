@@ -105,6 +105,18 @@ HTML;
         }
     }
 
+    public function test_grouped_options_render_headings_and_the_selected_label(): void
+    {
+        config(['devlib.lang' => 'en']);
+        $o = ['Tuck End' => ['R' => 'Reverse', 'S' => 'Straight'], 'Mailer' => ['M' => 'Mailer Box']];
+        $html = Blade::render('<x-dl::field.select name="t" label="Type" :options="$o" value="S" />', ['o' => $o]);
+        $this->assertSame(2, substr_count($html, 'class="dl-dd__group"'));
+        $this->assertStringContainsString('<div class="dl-dd__group">Tuck End</div>', $html);
+        $this->assertStringContainsString('<div class="dl-dd__item" data-value="M">Mailer Box</div>', $html);
+        $this->assertStringContainsString('<span data-dl-dd-text>Straight</span>', $html);
+        $this->assertStringNotContainsString('dl-dd__group', $this->select(), 'flat options are unchanged');
+    }
+
     public function test_caller_text_is_escaped(): void
     {
         $html = $this->select("['url' => '/x', 'title' => '<i>T</i>', 'label' => '<b>L</b>', 'note' => '<u>N</u>', 'fields' => [['name' => 'name', 'label' => '<s>F</s>']]]");
