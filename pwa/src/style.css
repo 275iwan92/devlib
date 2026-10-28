@@ -1,8 +1,63 @@
-:root { color-scheme: light dark; font-family: system-ui, sans-serif; }
-body { margin: 0; }
-.screen {
-    min-height: 100svh;
+:root {
+    color-scheme: light;
+    font-family: system-ui, sans-serif;
+    --accent: #2f6fed; --accent-2: #255bd4; --accent-ring: rgba(47, 111, 237, .12);
+    --bg: #eef1f6; --surface: #fff; --border: #e3e7f0; --ink: #1f2742; --muted: #5d6786;
+    --danger: #d0453f; --danger-soft: #fdeceb; --danger-line: #f6cfcd;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); }
+
+.plogin {
+    min-height: 100dvh;
+    max-width: 440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
     padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
 }
-.ok { color: #1a7f37; }
-.off { color: #b42318; }
+.plogin__box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 24px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+.plogin__brand { margin: 0; font-size: 28px; }
+.plogin__tag { margin: 0 0 10px; color: var(--muted); }
+.plogin label { margin-top: 10px; font-size: 14px; font-weight: 600; }
+.plogin input, .plogin button { font: inherit; }
+.plogin input {
+    width: 100%;
+    height: 52px;
+    padding: 0 14px;
+    font-size: 16px; /* 16 px: peramban HP tidak memperbesar halaman saat fokus */
+    color: inherit;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+.plogin input:focus-visible { outline: 0; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-ring); }
+.plogin__pw { position: relative; }
+.plogin__pw input { padding-right: 84px; }
+.plogin__pw button {
+    position: absolute; top: 4px; right: 4px; height: 44px; min-width: 44px; padding: 0 12px;
+    color: var(--accent); background: none; border: 0; border-radius: 10px; cursor: pointer;
+}
+.plogin__forgot { align-self: flex-end; display: inline-flex; align-items: center; min-height: 44px; color: var(--accent); text-decoration: none; }
+.plogin__go {
+    height: 54px; margin-top: 4px; font-size: 17px; font-weight: 600; color: #fff;
+    background: var(--accent); border: 0; border-radius: 12px; cursor: pointer;
+}
+.plogin__go:active { background: var(--accent-2); }
+.plogin__error {
+    margin: 4px 0 0; padding: 10px 12px; color: var(--danger);
+    background: var(--danger-soft); border: 1px solid var(--danger-line); border-radius: 10px;
+}
+.plogin__desk { text-align: center; }
+.plogin__desk button { min-height: 44px; padding: 0 16px; color: var(--muted); background: none; border: 0; cursor: pointer; }
+@media (prefers-reduced-motion: no-preference) { .plogin__go { transition: background .15s; } }
