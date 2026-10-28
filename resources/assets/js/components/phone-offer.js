@@ -16,7 +16,9 @@
         form.requestSubmit ? form.requestSubmit() : form.submit();
       };
       go();
-      window.matchMedia(Devlib.PHONE_MQ).addEventListener('change', go);
+      this.mq = window.matchMedia(Devlib.PHONE_MQ);   // guna ulang referensi: pendengar tidak hilang bersama objek
+      this.mq.addEventListener('change', go);
+      window.addEventListener('resize', go);   // cadangan: tidak semua browser / alat uji mengirim 'change' saat jendela diseret
     }
   }
   Devlib.define("PhoneOffer", PhoneOffer);
