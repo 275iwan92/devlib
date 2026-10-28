@@ -2704,6 +2704,14 @@ html.dl-locked body{overflow:hidden}
 .dl-lm.is-mini{width:var(--dl-lm-mini)}
 .dl-lm.is-mini.is-peek{position:absolute;left:0;top:0;bottom:0;height:auto;width:var(--dl-side-w);z-index:60;box-shadow:var(--dl-shadow-pop)}
 .dl-lm.is-mini.is-peek + *{margin-left:var(--dl-lm-mini)}
+/* Layar phone di view desktop (is-narrow, dipasang layer-menu.js dari Devlib.PHONE_MQ): menu kiri tersembunyi, hamburger melayang membukanya sebagai menu melayang; tab bar diberi ruang kiri untuk tombolnya. */
+.dl-lm__burger{position:fixed;z-index:55;top:2px;left:6px;width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:var(--dl-radius);background:var(--dl-navy);color:var(--dl-side-ink);font-size:18px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dl-lm__burger[hidden]{display:none}
+.dl-lm.is-narrow:not(.is-peek){display:none}
+.dl-lm.is-narrow.is-peek{width:min(var(--dl-side-w),88vw)}
+.dl-lm.is-narrow.is-peek + *{margin-left:0}
+.dl-lm.is-narrow [data-lm-mini]{display:none}
+.dl-shell:has(> .dl-lm.is-narrow) .dl-tabbar{padding-left:52px}
 .dl-lm-demo{position:relative}
 .dl-lm-demo > .dl-lm.is-mini.is-peek + *{margin-left:calc(var(--dl-lm-mini) + 12px)}
 .dl-lm.is-mini:not(.is-peek) :is(.dl-lm__brand,.dl-lm__gap,.dl-lm__t,.dl-lm__badge,.dl-lm__n,.dl-lm__chev,.dl-lm__title b,.dl-lm__back span,.dl-lm__user,[data-lm-swap],[data-lm-dockbtn]){display:none}

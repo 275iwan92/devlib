@@ -55,8 +55,28 @@
         if (!this.mini || this.peek) return;
         e.stopPropagation(); this.setPeek(true); this.openProfile();
       });
-      let on = false; try { on = localStorage.getItem(this.key + '-mini') === '1'; } catch (e) {}
-      if (on) this.setMini(true, false);
+      const saved = () => { try { return localStorage.getItem(this.key + '-mini') === '1'; } catch (e) { return false; } };
+      if (saved()) this.setMini(true, false);
+      this.initNarrow(saved);
+    }
+
+    /* Layar phone (Devlib.PHONE_MQ) di view desktop: menu kiri disembunyikan, tombol hamburger melayang membukanya sebagai menu melayang (peek).
+       Tidak disimpan: layar lebar kembali ke pilihan mini pengguna. Pilihan Tampilan HP / Desktop (cookie ui) tidak diubah. */
+    initNarrow(saved) {
+      const burger = document.createElement('button');
+      burger.type = 'button'; burger.className = 'dl-lm__burger'; burger.hidden = true;
+      burger.title = this.miniBtn.dataset.tMax; burger.setAttribute('aria-label', burger.title);
+      burger.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
+      this.el.before(burger);   // sebelum panel: aturan "is-peek + *" tetap mengenai area isi
+      burger.addEventListener('click', e => { e.stopPropagation(); this.setPeek(!this.peek); });
+      const mq = window.matchMedia(Devlib.PHONE_MQ);
+      const fit = () => {
+        this.el.classList.toggle('is-narrow', mq.matches);
+        burger.hidden = !mq.matches;
+        this.setMini(mq.matches || saved(), false);
+      };
+      mq.addEventListener('change', fit);
+      if (mq.matches) fit();
     }
 
     setMini(on, save = true) {
