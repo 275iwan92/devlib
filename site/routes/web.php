@@ -9,6 +9,7 @@ use App\Support\Generator;
 use App\Support\Qc;
 use App\Support\Summary;
 use Devlib\Locale;
+use Devlib\Pwa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -23,15 +24,12 @@ Route::get('/login', fn () => view('login', [
 ]))->name('login');
 
 // Layar login PWA (pwa/, React): token CSRF + bahasa tamu; login yang sama dengan form Blade, balasannya JSON.
-Route::get('/pwa', fn () => response()->file(public_path('pwa/index.html')))->name('pwa'); // folder tidak disajikan sebagai index oleh peladen; berkasnya hasil `npm run build` di pwa/
-Route::get('/pwa/session', fn () => response()->json(['csrf' => csrf_token(), 'lang' => Locale::lang()]))->name('pwa.session');
+Pwa::routes();
 
 Route::post('/login', function (Request $r) {
     $login = trim((string) $r->input('login'));
     $password = (string) $r->input('password');
-    $fail = fn (string $code) => $r->expectsJson()
-        ? response()->json(['error' => $code], 422)
-        : back()->withInput(['login' => $login])->with('login_error', $code);
+    $fail = fn (string $code) => Pwa::fail($r, $code, fn () => back()->withInput(['login' => $login])->with('login_error', $code));
 
     if ($login === '' || $password === '') {
         return $fail('empty');
@@ -57,9 +55,8 @@ Route::post('/login', function (Request $r) {
 
     $r->session()->regenerate();
     $r->session()->put('devlib_user', collect($user)->except('password')->all());
-    $to = redirect()->intended(route('home'));
 
-    return $r->expectsJson() ? response()->json(['redirect' => $to->getTargetUrl()]) : $to;
+    return Pwa::done($r, redirect()->intended(route('home')));
 })->name('login.submit');
 
 Route::post('/logout', function (Request $r) {

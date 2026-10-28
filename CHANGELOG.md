@@ -9,6 +9,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **`Devlib\Pwa` (opt-in): sisi server login PWA diwariskan, bukan disalin** (permintaan Jo 2026-10-28): `Pwa::routes()` (`GET /pwa`, `GET /pwa/session`), `Pwa::fail()` dan `Pwa::done()` (balasan JSON bila diminta, selain itu balasan form apa adanya); logika login tetap milik proyek. Situs demo dipindah memakainya (perilaku sama, `PwaLoginTest` hijau); panduan `phone.md` §2b. Proyek pewaris belum memanggilnya, jadi tidak berubah.
 - **Login PWA React terhubung ke Laravel** (permintaan Jo 2026-10-28): `GET /pwa/session` (token CSRF + bahasa tamu), `POST /login` membalas JSON bila diminta (`{redirect}` atau 422 `{error: empty|wrong}`; form Blade tidak berubah), bahasa disimpan di cookie `dl_lang` seperti `core.js`, galat jaringan ditangani. Build PWA ke `site/public/pwa` (tidak di-commit), disajikan di `/pwa/`. Tes `PwaLoginTest`. Tautan Daftar dan Lupa password masih `#` (situs belum punya rutenya).
 - **Layar login HP React disamakan dengan situs** (disetujui Jo 2026-10-28): tema `soft_green` lewat token `--dl-*` (cadangan hijau), ikon, pilihan GB/ID, ikon isian, tombol tampil/sembunyi password, "atau / Daftar". Peraga tanpa server; Daftar dan simpan bahasa belum terhubung.
 - **Layar login HP React (`pwa/src/screens/PhoneLogin.tsx`)** (disetujui Jo 2026-10-28): padanan React dari `x-dl::phone-login` (satu kolom 320 sampai 440 px, isian 52 px teks 16 px, tombol tampil/sembunyi sandi, tautan desktop). Peraga tanpa server; `x-dl::phone-login` Blade tidak diubah.
