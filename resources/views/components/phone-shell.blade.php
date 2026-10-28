@@ -44,6 +44,11 @@
                     @endforeach
                 </section>
             @endif
+            @if ($installUrl)
+                <section class="dl-phone__grp">
+                    <a class="dl-phone__row" href="{{ $installUrl }}"><i class="fa-solid fa-mobile-screen" aria-hidden="true"></i><span>{{ \Devlib\Lang::t('phone_install') }}</span></a>
+                </section>
+            @endif
             @if ($deviceAction)
                 <form class="dl-phone__dev" method="POST" action="{{ $deviceAction }}">
                     @csrf

@@ -82,6 +82,13 @@ class PhoneShellTest extends TestCase
         $this->assertStringContainsString('dl-phone__burger', $html, 'hamburger tetap ada di layar anak, kembali di sebelahnya');
     }
 
+    public function test_phone_shell_install_row_is_opt_in_and_links_to_the_given_address(): void
+    {
+        $this->assertStringNotContainsString('fa-mobile-screen', Blade::render('<x-dl::phone-shell title="Home">x</x-dl::phone-shell>'));
+        $html = Blade::render('<x-dl::phone-shell title="Home" install-url="/pwa/">x</x-dl::phone-shell>');
+        $this->assertMatchesRegularExpression('#<a class="dl-phone__row" href="/pwa/"><i class="fa-solid fa-mobile-screen"#', $html);
+    }
+
     public function test_phone_demo_page_opens(): void
     {
         $this->get('/lib/p7-phone')->assertOk()->assertSee('dl-phone', false);

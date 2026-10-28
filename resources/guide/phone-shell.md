@@ -39,7 +39,7 @@ The slot named `actions` (`<x-slot:actions>`) puts buttons at the right end of t
 
 ## Props
 
-Constructor of `Devlib\Components\PhoneShell` (13 props).
+Constructor of `Devlib\Components\PhoneShell` (14 props).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -56,6 +56,7 @@ Constructor of `Devlib\Components\PhoneShell` (13 props).
 | `frame` | `?string`, `null` | Address of a desktop screen shown in an `iframe` as the content (replaces the slot). The desktop page keeps its own behaviour inside; wide tables scroll inside the frame. |
 | `contained` | `bool`, `false` | `false` = the shell is as tall as the screen (`100dvh`) and the button is `position: fixed`. `true` = as tall as its parent and the button is positioned inside it (catalog demo). |
 | `auto-return` | `bool`, `false` | `true` = when this phone screen is not the user's own choice (the phone view was chosen automatically: cookie `ui_auto`, set by `x-dl::phone-offer auto`; or the page was opened directly while `Device::view` says desktop) and the screen is no longer phone-sized, the Menu sheet form posts `ui=desktop` (+ `auto=1`) by itself through `device-action`, so a widened window returns to the desktop view (at most once per 10 seconds). Needs `device-action`. A choice the user made (cookie `ui=phone` without `ui_auto`) and a real phone (guessed `phone`) are never touched. |
+| `install-url` | `?string`, `null` | Address of the PWA install page (for example `/pwa/`). Set = the Menu sheet gets a row "Install app" / "Pasang aplikasi" (icon `fa-mobile-screen`) that opens it, after `links` and before Desktop view. `null` (default) = no row, nothing changes. The install dialog (Android) and the iPhone instructions live on that page. |
 
 ## Behavior
 
