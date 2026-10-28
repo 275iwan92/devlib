@@ -133,6 +133,8 @@ class PhoneShellTest extends TestCase
         $shell = '<x-dl::phone-shell title="Home" device-action="/ui" auto-return />';
         $this->assertStringContainsString('data-auto-return', $render(['ui' => 'phone', 'ui_auto' => '1'], self::WINDOWS, $shell));
         $this->assertStringNotContainsString('data-auto-return', $render(['ui' => 'phone'], self::WINDOWS, $shell), 'pilihan pengguna: tidak kembali sendiri');
+        $this->assertStringContainsString('data-auto-return', $render([], self::WINDOWS, $shell), 'dibuka langsung sementara view = desktop: boleh kembali');
+        $this->assertStringNotContainsString('data-auto-return', $render([], self::CHROME_PHONE, $shell), 'ponsel sungguhan: tetap phone');
         $this->assertStringNotContainsString('data-auto-return', $render(['ui' => 'phone', 'ui_auto' => '1'], self::WINDOWS, '<x-dl::phone-shell title="Home" device-action="/ui" />'), 'opt-in');
         $this->assertTrue(\Devlib\Device::autoChosen(\Illuminate\Http\Request::create('/', 'GET', [], ['ui_auto' => '1'])));
         $this->assertStringContainsString('initAutoReturn', \Devlib\DevlibServiceProvider::bundle());

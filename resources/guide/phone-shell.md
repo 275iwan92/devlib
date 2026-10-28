@@ -55,7 +55,7 @@ Constructor of `Devlib\Components\PhoneShell` (13 props).
 | `links` | `array`, `[]` | Extra links at the end of the module list: `[['label', 'icon', 'url'], …]` (for example Help). |
 | `frame` | `?string`, `null` | Address of a desktop screen shown in an `iframe` as the content (replaces the slot). The desktop page keeps its own behaviour inside; wide tables scroll inside the frame. |
 | `contained` | `bool`, `false` | `false` = the shell is as tall as the screen (`100dvh`) and the button is `position: fixed`. `true` = as tall as its parent and the button is positioned inside it (catalog demo). |
-| `auto-return` | `bool`, `false` | `true` = when this phone view was chosen automatically (cookie `ui_auto`, set by `x-dl::phone-offer auto`) and the screen is no longer phone-sized, the Menu sheet form posts `ui=desktop` (+ `auto=1`) by itself through `device-action`, so a widened window returns to the desktop view (at most once per 10 seconds). Needs `device-action`. A choice the user made is never touched. |
+| `auto-return` | `bool`, `false` | `true` = when this phone screen is not the user's own choice (the phone view was chosen automatically: cookie `ui_auto`, set by `x-dl::phone-offer auto`; or the page was opened directly while `Device::view` says desktop) and the screen is no longer phone-sized, the Menu sheet form posts `ui=desktop` (+ `auto=1`) by itself through `device-action`, so a widened window returns to the desktop view (at most once per 10 seconds). Needs `device-action`. A choice the user made (cookie `ui=phone` without `ui_auto`) and a real phone (guessed `phone`) are never touched. |
 
 ## Behavior
 

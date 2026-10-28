@@ -40,7 +40,7 @@ class PhoneShell extends DevlibComponent
         public ?string $frame = null,
         // true = tinggi mengikuti pembungkus (peraga katalog), false = seluruh layar.
         public bool $contained = false,
-        // true = bila tampilan phone ini dipilih OTOMATIS (cookie Device::AUTO_COOKIE; x-dl::phone-offer auto) dan layar kembali melebar (bukan lagi aturan phone), lembar Menu mengirim sendiri ui=desktop (+ auto=1) lewat deviceAction. Pilihan pengguna tidak disentuh. Bawaan false.
+        // true = bila tampilan phone ini bukan pilihan pengguna (dipilih OTOMATIS: cookie Device::AUTO_COOKIE; atau halaman phone dibuka langsung sementara Device::view = desktop) dan layar kembali melebar (bukan lagi aturan phone), lembar Menu mengirim sendiri ui=desktop (+ auto=1) lewat deviceAction. Pilihan pengguna tidak disentuh. Bawaan false.
         public bool $autoReturn = false,
     ) {
         $this->brand ??= Brand::identity()['name'];
