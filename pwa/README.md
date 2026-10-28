@@ -9,7 +9,8 @@ npm run build    # tsc --noEmit + vite build -> ../site/public/pwa (manifest + s
 npx vite build --watch   # pengembangan: bangun ulang saat berkas berubah
 ```
 
-- Ikon: satu SVG (`public/icon.svg`). Safari iOS menuntut PNG 192/512 bila dipasang; tambahkan saat proyek pewaris membutuhkannya.
-- Pasang di HP butuh HTTPS (Herd menyediakannya) atau `localhost`.
+- Ikon: `public/icon-192.png` dan `icon-512.png` (dipakai manifest, juga sebagai maskable dan apple-touch-icon Safari iOS) dibuat dari rancangan `icon.svg` oleh `php scripts/make-icons.php <font-tebal.ttf>` (GD); jalankan ulang bila rancangan ikon berubah.
+- Manifest bernama `manifest.json` (bukan `.webmanifest`): peladen Herd menyajikan `.webmanifest` sebagai `application/octet-stream`, `.json` sebagai `application/json`.
+- Pasang di HP butuh HTTPS (Herd: `herd secure`, atau tunnel HTTPS) atau `localhost`; `http://devlib.test` di HP sungguhan tidak memenuhi syarat. Di HP: buka alamat HTTPS `/pwa/` di Chrome, menu titik tiga, "Instal aplikasi" (atau "Tambahkan ke layar utama"); ikon DL biru muncul di layar utama dan membuka layar login tanpa bilah alamat.
 - Rencana layar berikutnya (satu per waktu) ditentukan Jo; menu HP tetap `x-dl::phone-shell` (Blade).
 - Dibuka dari situs Laravel di `/pwa/` (satu asal: cookie sesi dan CSRF berlaku). Server: `GET /pwa/session` dan `POST /login` (JSON) di `site/routes/web.php`.

@@ -10,6 +10,8 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
+            // .json dikenal semua peladen (application/json); .webmanifest jatuh ke application/octet-stream di Herd
+            manifestFilename: 'manifest.json',
             manifest: {
                 name: 'DevLib',
                 short_name: 'DevLib',
@@ -20,10 +22,14 @@ export default defineConfig({
                 scope: '.',
                 background_color: '#ffffff',
                 theme_color: '#1f6feb',
-                // shortcut: ikon SVG satu berkas, ganti PNG 192/512 bila proyek pewaris menuntutnya (Safari iOS)
-                icons: [{ src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }],
+                // PNG dibuat scripts/make-icons.php dari rancangan icon.svg (Chrome Android menuntut 192 + 512; Safari iOS memakai apple-touch-icon di index.html)
+                icons: [
+                    { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+                    { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+                    { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+                ],
             },
-            workbox: { globPatterns: ['**/*.{js,css,html,svg}'] },
+            workbox: { globPatterns: ['**/*.{js,css,html,svg,png}'] },
         }),
     ],
 });
