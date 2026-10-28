@@ -22,12 +22,19 @@ Route::get('/login', fn () => view('login', [
     'username' => old('login', ''),
 ]))->name('login');
 
+// Layar login PWA (pwa/, React): token CSRF + bahasa tamu; login yang sama dengan form Blade, balasannya JSON.
+Route::get('/pwa', fn () => response()->file(public_path('pwa/index.html')))->name('pwa'); // folder tidak disajikan sebagai index oleh peladen; berkasnya hasil `npm run build` di pwa/
+Route::get('/pwa/session', fn () => response()->json(['csrf' => csrf_token(), 'lang' => Locale::lang()]))->name('pwa.session');
+
 Route::post('/login', function (Request $r) {
     $login = trim((string) $r->input('login'));
     $password = (string) $r->input('password');
+    $fail = fn (string $code) => $r->expectsJson()
+        ? response()->json(['error' => $code], 422)
+        : back()->withInput(['login' => $login])->with('login_error', $code);
 
     if ($login === '' || $password === '') {
-        return back()->withInput(['login' => $login])->with('login_error', 'empty');
+        return $fail('empty');
     }
 
     // Akun sungguhan = tabel sec_user di database devlib (terpisah dari mockup.test, user 2026-10-05).
@@ -45,13 +52,14 @@ Route::post('/login', function (Request $r) {
     $user ??= collect(config('devlib.users'))->first(fn ($u) => strcasecmp($u['login'], $login) === 0 && hash_equals($u['password'], $password));
 
     if (! $user) {
-        return back()->withInput(['login' => $login])->with('login_error', 'wrong');
+        return $fail('wrong');
     }
 
     $r->session()->regenerate();
     $r->session()->put('devlib_user', collect($user)->except('password')->all());
+    $to = redirect()->intended(route('home'));
 
-    return redirect()->intended(route('home'));
+    return $r->expectsJson() ? response()->json(['redirect' => $to->getTargetUrl()]) : $to;
 })->name('login.submit');
 
 Route::post('/logout', function (Request $r) {

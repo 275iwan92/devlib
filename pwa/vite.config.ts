@@ -2,7 +2,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// Disajikan situs Laravel di /pwa/ (satu asal: cookie sesi + CSRF berlaku); keluaran build = site/public/pwa (tidak di-commit).
 export default defineConfig({
+    base: '/pwa/',
+    build: { outDir: '../site/public/pwa', emptyOutDir: true },
     plugins: [
         react(),
         VitePWA({

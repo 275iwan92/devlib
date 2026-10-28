@@ -1,17 +1,21 @@
 import { useId, useState, type FormEvent, type ReactNode } from 'react';
-
-type Lang = 'id' | 'en';
+import type { Lang, LoginError } from '../api';
 
 const T = {
-    id: { title: 'Masuk', sub: 'Gunakan akun terdaftar untuk mengakses aplikasi.', user: 'Username atau email', pass: 'Password', forgot: 'Lupa password?', go: 'Masuk', or: 'atau', noacc: 'Belum punya akun?', reg: 'Daftar', desk: 'Tampilan desktop', show: 'Tampilkan password', hide: 'Sembunyikan password' },
-    en: { title: 'Sign in', sub: 'Use your registered account to access the application.', user: 'Username or email', pass: 'Password', forgot: 'Forgot password?', go: 'Sign in', or: 'or', noacc: "Don't have an account?", reg: 'Register', desk: 'Desktop view', show: 'Show password', hide: 'Hide password' },
+    id: { title: 'Masuk', sub: 'Gunakan akun terdaftar untuk mengakses aplikasi.', user: 'Username atau email', pass: 'Password', forgot: 'Lupa password?', go: 'Masuk', or: 'atau', noacc: 'Belum punya akun?', reg: 'Daftar', desk: 'Tampilan desktop', show: 'Tampilkan password', hide: 'Sembunyikan password',
+        empty: 'Isi username/email dan password.', wrong: 'Username atau password salah.', network: 'Server tidak terjangkau. Periksa koneksi, lalu coba lagi.' },
+    en: { title: 'Sign in', sub: 'Use your registered account to access the application.', user: 'Username or email', pass: 'Password', forgot: 'Forgot password?', go: 'Sign in', or: 'or', noacc: "Don't have an account?", reg: 'Register', desk: 'Desktop view', show: 'Show password', hide: 'Hide password',
+        empty: 'Enter your username/email and password.', wrong: 'Incorrect username or password.', network: 'Server unreachable. Check your connection and try again.' },
 } as const;
 
 export type PhoneLoginProps = {
-    action?: string;
+    lang: Lang;
+    onLang: (lang: Lang) => void;
+    /** Kirim ke server; `null` = berhasil (halaman berpindah), selain itu kode galat. */
+    onSignIn: (login: string, password: string) => Promise<LoginError | null>;
+    /** Server tidak terjangkau saat layar dibuka. */
+    offline?: boolean;
     csrfToken?: string;
-    error?: string | null;
-    username?: string;
     forgotUrl?: string;
     registerUrl?: string;
     deviceAction?: string;
@@ -24,13 +28,21 @@ const Svg = ({ children }: { children: ReactNode }) => (
 );
 
 /** Layar login HP (padanan React dari x-dl::phone-login + login-box): satu kolom, isian 52 px teks 16 px, warna dari token --dl-*. */
-export function PhoneLogin({ action = '', csrfToken, error = null, username = '', forgotUrl = '#', registerUrl = '#', deviceAction }: PhoneLoginProps) {
-    const [lang, setLang] = useState<Lang>('id');
+export function PhoneLogin({ lang, onLang, onSignIn, offline = false, csrfToken, forgotUrl = '#', registerUrl = '#', deviceAction }: PhoneLoginProps) {
     const [show, setShow] = useState(false);
+    const [error, setError] = useState<LoginError | null>(null);
+    const [busy, setBusy] = useState(false);
     const id = useId();
     const t = T[lang];
-    // Tanpa action (peraga) formulir tidak dikirim.
-    const onSubmit = (e: FormEvent) => action || e.preventDefault();
+
+    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const f = new FormData(e.currentTarget);
+        setBusy(true);
+        setError(await onSignIn(String(f.get('login') ?? ''), String(f.get('password') ?? '')));
+        setBusy(false);
+    };
+    const shown = error ?? (offline ? 'network' : null);
 
     return (
         <main className="plogin">
@@ -42,19 +54,18 @@ export function PhoneLogin({ action = '', csrfToken, error = null, username = ''
                 </span>
                 <div className="plogin__langs" role="group" aria-label="Language">
                     {(['en', 'id'] as const).map((l) => (
-                        <button key={l} type="button" aria-pressed={lang === l} onClick={() => setLang(l)}>
+                        <button key={l} type="button" aria-pressed={lang === l} onClick={() => onLang(l)}>
                             {l === 'en' ? 'GB' : 'ID'}
                         </button>
                     ))}
                 </div>
             </div>
-            <form className="plogin__box" method="POST" action={action || undefined} onSubmit={onSubmit} noValidate>
-                {csrfToken && <input type="hidden" name="_token" value={csrfToken} />}
+            <form className="plogin__box" onSubmit={onSubmit} noValidate>
                 <h1>{t.title}</h1>
                 <p className="plogin__sub">{t.sub}</p>
-                {error && (
+                {shown && (
                     <p className="plogin__error" role="alert">
-                        {error}
+                        {t[shown]}
                     </p>
                 )}
                 <label htmlFor={`${id}u`}>{t.user}</label>
@@ -62,7 +73,7 @@ export function PhoneLogin({ action = '', csrfToken, error = null, username = ''
                     <Svg>
                         <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-8 2-8 5v3h16v-3c0-3-4-5-8-5z" />
                     </Svg>
-                    <input id={`${id}u`} name="username" defaultValue={username} autoComplete="username" autoCapitalize="none" spellCheck={false} />
+                    <input id={`${id}u`} name="login" autoComplete="username" autoCapitalize="none" spellCheck={false} />
                 </div>
                 <label htmlFor={`${id}p`}>{t.pass}</label>
                 <div className="plogin__field">
@@ -79,7 +90,7 @@ export function PhoneLogin({ action = '', csrfToken, error = null, username = ''
                 <a className="plogin__forgot" href={forgotUrl}>
                     {t.forgot}
                 </a>
-                <button className="plogin__go" type="submit">
+                <button className="plogin__go" type="submit" disabled={busy}>
                     {t.go}
                 </button>
                 <p className="plogin__or">
