@@ -8,11 +8,13 @@ use App\Support\GanttDemo;
 use App\Support\Generator;
 use App\Support\Qc;
 use App\Support\Summary;
+use Devlib\Device;
 use Devlib\Locale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rule;
 
 // Situs DevLib: sesi file; akun dari database devlib (sec_user) + akun contoh di config/devlib.php.
 
@@ -61,6 +63,9 @@ Route::post('/login', function (Request $r) {
 
     return $r->expectsJson() ? response()->json(['redirect' => $to->getTargetUrl()]) : $to;
 })->name('login.submit');
+
+// Pilihan tampilan (phone / desktop) -> cookie `ui` terenkripsi yang dibaca Device::view (skills/devlib/phone.md). Tujuan tombol "Tampilan desktop" login PWA.
+Route::post('/ui', fn (Request $r) => redirect()->route('home')->withCookie(cookie(Device::COOKIE, $r->validate(['ui' => ['required', Rule::in(Device::CHOICES)]])['ui'], 60 * 24 * 365)))->name('ui.set');
 
 Route::post('/logout', function (Request $r) {
     $r->session()->invalidate();
