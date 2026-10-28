@@ -1,5 +1,6 @@
 import { useId, useState, type FormEvent, type ReactNode } from 'react';
 import type { Lang, LoginError } from '../api';
+import { InstallPrompt } from '../InstallPrompt';
 
 const T = {
     id: { title: 'Masuk', sub: 'Gunakan akun terdaftar untuk mengakses aplikasi.', user: 'Username atau email', pass: 'Password', forgot: 'Lupa password?', go: 'Masuk', or: 'atau', noacc: 'Belum punya akun?', reg: 'Daftar', desk: 'Tampilan desktop', show: 'Tampilkan password', hide: 'Sembunyikan password',
@@ -100,6 +101,7 @@ export function PhoneLogin({ lang, onLang, onSignIn, offline = false, csrfToken,
                     {t.noacc} <a href={registerUrl}>{t.reg}</a>
                 </p>
             </form>
+            <InstallPrompt lang={lang} />
             {deviceAction && (
                 <form method="POST" action={deviceAction} className="plogin__desk">
                     {csrfToken && <input type="hidden" name="_token" value={csrfToken} />}
