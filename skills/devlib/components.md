@@ -636,7 +636,7 @@ Halaman login smartphone potret: satu kolom mengalir (320 sampai sekitar 440 px)
 ## `<x-dl::phone-offer>`
 Popup kecil di layar desktop yang sempit: "Ingin tampilan yang lebih nyaman di smartphone? Ketuk di sini" dan tombol kecil "Tetap desktop"; keduanya menyimpan pilihan tampilan (cookie ui) lewat POST.
 - Berkas: `src/Components/PhoneOffer.php`
-- Prop: action:string='', force:bool=false
+- Prop: action:string='', force:bool=false, auto:bool=false
 
 ## `<x-dl::phone-shell>`
 Kerangka aplikasi untuk smartphone potret: SATU ikon hamburger melayang (tanpa bilah permanen), baris judul + tombol kembali di isi halaman, dan deret aksi layar / lima menu utama yang muncul di atas lalu tertutup sendiri.

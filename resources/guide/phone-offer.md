@@ -2,7 +2,7 @@
 
 `<x-dl::phone-offer>` is a small popup (a dialog, not a banner) for a desktop screen that is shown on a narrow window or a phone: "Want better view from smartphone?" with a big button "Click here" and a small button "Stay on desktop". Both buttons are tiny forms that POST the view choice (`ui=phone` or `ui=desktop`) to the project, which stores the cookie `ui`. After "Click here" the project shows its phone screen; after "Stay on desktop" the popup does not come back.
 
-It is meant for the sign-in screen. It needs no JavaScript: the server decides whether to write it, and CSS decides whether it is visible.
+It is meant for the sign-in screen. Without `auto` it needs no JavaScript: the server decides whether to write it, and CSS decides whether it is visible. With `auto` one small JS class presses the "phone" button for a phone-sized screen.
 
 Pick another object when you need:
 
@@ -26,12 +26,13 @@ Nothing is written at all when the popup is not wanted (see Behavior).
 
 ## Props
 
-Constructor of `Devlib\Components\PhoneOffer` (2 props).
+Constructor of `Devlib\Components\PhoneOffer` (3 props).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
 | `action` | `string`, `''` | POST address that stores the choice (field `ui` = `phone` or `desktop`) and then returns to the screen. It must accept guests when used on the sign-in screen, and it must be a route with CSRF (the forms carry the token). |
 | `force` | `bool`, `false` | `true` writes the popup even when a view was already chosen or the device is a phone. Only for the catalog demo; do not use in a project. |
+| `auto` | `bool`, `false` | `true` presses the "phone" button by itself when the popup is wanted and the screen is phone-sized (`Devlib.phoneScreen()`, also when the window is narrowed after the page loaded): the phone view opens without asking. Default `false` keeps the question. It only acts when the user has not chosen yet (no cookie `ui`), so a choice still wins. |
 
 ## Behavior
 
@@ -41,12 +42,13 @@ Constructor of `Devlib\Components\PhoneOffer` (2 props).
 
 ## Data and events
 
-- Browser to server: `ui=phone` or `ui=desktop` (+ CSRF token). No `dl:*` event; no `el.dlComponent` (no JS class).
+- Browser to server: `ui=phone` or `ui=desktop` (+ CSRF token). No `dl:*` event. With `auto`, the root carries `data-dl-phone-offer data-auto` and the JS class `PhoneOffer` submits the "phone" form (at most once per 10 seconds per tab, so a browser that refuses cookies does not loop); without `auto` there is no JS class.
 - The project's route validates `Rule::in(Device::CHOICES)`, stores the cookie `ui` and redirects.
 
 ## Rules and pitfalls
 
 - The popup closes only by choosing one of the two buttons; there is no close icon, because both choices must be remembered, or it would reappear on every visit.
+- With `auto`, a window dragged narrower than 600 px switches to the phone view at once and stays there after the window is widened again (the choice is stored like a tap on "Click here"); the user goes back through "Desktop view".
 - A user who already has the cookie never sees it, and a user on a wide screen never sees it. Pair it with a way back to desktop on the phone screen.
 - Related lint rules: none.
 
@@ -54,6 +56,8 @@ Constructor of `Devlib\Components\PhoneOffer` (2 props).
 
 ```blade
 <x-dl::phone-offer :action="route('ui.set')" />
+{{-- or switch by itself on a phone-sized screen --}}
+<x-dl::phone-offer :action="route('ui.set')" auto />
 ```
 
 ## Related

@@ -5,7 +5,7 @@
  * Tujuan       : Popup kecil di layar desktop yang sempit: "Ingin tampilan yang lebih nyaman di smartphone? Ketuk di sini" dan tombol kecil "Tetap desktop"; keduanya menyimpan pilihan tampilan (cookie ui) lewat POST.
  * Sumber hulu  : Devlib\Device (cookie ui, Sec-CH-UA-Mobile, User-Agent).
  * Input        : action.
- * Output       : dialog dengan dua form kecil (ui=phone / ui=desktop); tanpa JavaScript.
+ * Output       : dialog dengan dua form kecil (ui=phone / ui=desktop); tanpa JavaScript, kecuali prop opt-in `auto` (satu kelas JS kecil: layar phone langsung memilih tampilan phone).
  * Dipakai oleh : halaman login desktop proyek; halaman katalog p7-phone.
  * Status       : Aktif (DevLib).
  */
@@ -24,6 +24,8 @@ class PhoneOffer extends DevlibComponent
         public string $action = '',
         // true = ditulis walau cookie ada / perangkat ponsel (peraga katalog).
         public bool $force = false,
+        // true = bila popup diminta dan layar memenuhi aturan phone (Devlib.phoneScreen(), juga saat jendela dipersempit), tombol "phone" ditekan sendiri: tampilan phone tanpa bertanya. Hanya bila belum ada pilihan (cookie ui); pilihan pengguna tetap menang. Bawaan false = hanya bertanya.
+        public bool $auto = false,
     ) {}
 
     public function tag(): string
@@ -48,7 +50,7 @@ class PhoneOffer extends DevlibComponent
     {
         return <<<'BLADE'
             @if ($wanted())
-                <div {{ $attributes->class('dl-phoneoffer') }} {!! $dl() !!} role="dialog" aria-modal="true" aria-labelledby="dl-phoneoffer-t">
+                <div {{ $attributes->class('dl-phoneoffer')->merge($auto ? ['data-dl-phone-offer' => '', 'data-auto' => ''] : []) }} {!! $dl() !!} role="dialog" aria-modal="true" aria-labelledby="dl-phoneoffer-t">
                     <div class="dl-phoneoffer__box">
                         <i class="fa-solid fa-mobile-screen-button dl-phoneoffer__ic" aria-hidden="true"></i>
                         <p class="dl-phoneoffer__t" id="dl-phoneoffer-t">{{ \Devlib\Lang::t('phone_offer') }}</p>

@@ -104,6 +104,21 @@ class PhoneShellTest extends TestCase
         $this->assertStringContainsString('dl-phoneoffer', Blade::render('<x-dl::phone-offer action="/ui" force />'));
     }
 
+    public function test_phone_offer_auto_is_opt_in_and_the_default_markup_has_no_script_hooks(): void
+    {
+        $req = \Illuminate\Http\Request::create('/', 'GET', [], [], [], ['HTTP_USER_AGENT' => self::WINDOWS]);
+        app()->instance('request', $req);
+
+        $plain = Blade::render('<x-dl::phone-offer action="/ui" />');
+        $auto = Blade::render('<x-dl::phone-offer action="/ui" auto />');
+        $this->assertStringNotContainsString('data-dl-phone-offer', $plain, 'bawaan: murni HTML + CSS, tanpa kait JS');
+        $this->assertStringNotContainsString('data-auto', $plain);
+        $this->assertStringContainsString('data-dl-phone-offer', $auto);
+        $this->assertStringContainsString('data-auto', $auto);
+        $this->assertStringContainsString('name="ui" value="phone"', $auto, 'popup tetap ada sebagai cadangan');
+        $this->assertStringContainsString('class PhoneOffer', \Devlib\DevlibServiceProvider::bundle());
+    }
+
     public function test_phone_parts_render_with_tone_badge_columns_and_the_login_page_links_back_to_desktop(): void
     {
         $tile = Blade::render('<x-dl::phone-tile label="Low" :value="4" url="/low" tone="danger" />');
