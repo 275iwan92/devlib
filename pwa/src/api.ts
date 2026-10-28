@@ -28,6 +28,12 @@ export async function signIn(csrf: string, login: string, password: string): Pro
     }
 }
 
+/** Bahasa dari cookie dl_lang (sinkron, tanpa jaringan); `null` bila belum dipilih atau nilainya tidak sah. */
+export function cookieLang(): Lang | null {
+    const v = document.cookie.match(/(?:^|;\s*)dl_lang=(id|en)(?:;|$)/);
+    return v ? (v[1] as Lang) : null;
+}
+
 /** Sama dengan core.js DevLib: cookie dl_lang dibaca server (Locale::lang). */
 export function saveLang(lang: Lang) {
     document.cookie = `dl_lang=${lang};path=/;max-age=31536000;SameSite=Lax`;

@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
-import { loadSession, saveLang, signIn, type Lang, type LoginError } from './api';
+import { cookieLang, loadSession, saveLang, signIn, type Lang, type LoginError } from './api';
 import { PhoneLogin } from './screens/PhoneLogin';
 
 export function App() {
     const [csrf, setCsrf] = useState('');
-    const [lang, setLang] = useState<Lang>('id');
+    // Cookie dibaca sinkron agar render pertama sudah berbahasa pilihan pengguna (tanpa kedipan menunggu server).
+    const [lang, setLang] = useState<Lang>(() => cookieLang() ?? 'id');
     const [offline, setOffline] = useState(false);
 
     useEffect(() => {
         loadSession().then((s) => {
             if (!s) return setOffline(true);
             setCsrf(s.csrf);
-            setLang(s.lang);
+            if (!cookieLang()) setLang(s.lang);
         });
     }, []);
 
