@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Tabel sederhana (di dalam form/kartu). columns: key => label, atau key => [label, num=>true]. Angka rata kanan.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : columns, rows, empty, striped, totals, source.
+ * Input        : columns, rows, empty, striped, totals, source, stack.
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : assistant, doc-share, side-screen, table dan 2 lainnya (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -24,6 +24,7 @@ class Table extends DevlibComponent
         public bool $striped = true,
         public array $totals = [],
         public ?string $source = null,
+        public bool $stack = false,
     ) {}
 
     public function tag(): string
@@ -39,12 +40,12 @@ class Table extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class('dl-table-wrap') }} {!! $dl() !!}>
+            <div {{ $attributes->class(['dl-table-wrap', 'dl-table--stack' => $stack]) }} {!! $dl() !!}>
                 <table class="dl-table {{ $striped ? 'is-striped' : '' }}">
                     <thead><tr>@foreach ($columns as $k => $c)<th class="{{ is_array($c) && ($c['num'] ?? false) ? 'num' : '' }}">{{ is_array($c) ? $c[0] : $c }}</th>@endforeach</tr></thead>
                     <tbody>
                         @forelse ($rows as $r)
-                            <tr>@foreach ($columns as $k => $c)<td class="{{ is_array($c) && ($c['num'] ?? false) ? 'num' : '' }}">@if (is_array($r[$k] ?? null) && isset($r[$k]['href']))<a href="{{ $r[$k]['href'] }}">{{ $r[$k]['text'] ?? $r[$k]['href'] }}</a>@else{{ is_array($c) && ($c['raw'] ?? false) ? ($r[$k] ?? '') : (is_array($c) && ($c['money'] ?? false) ? \Devlib\Locale::money($r[$k] ?? 0) : (is_array($c) && ($c['num'] ?? false) ? \Devlib\Locale::number($r[$k] ?? 0) : ($r[$k] ?? ''))) }}@endif</td>@endforeach</tr>
+                            <tr>@foreach ($columns as $k => $c)<td class="{{ is_array($c) && ($c['num'] ?? false) ? 'num' : '' }}"@if ($stack) data-label="{{ is_array($c) ? $c[0] : $c }}"@endif>@if (is_array($r[$k] ?? null) && isset($r[$k]['href']))<a href="{{ $r[$k]['href'] }}">{{ $r[$k]['text'] ?? $r[$k]['href'] }}</a>@else{{ is_array($c) && ($c['raw'] ?? false) ? ($r[$k] ?? '') : (is_array($c) && ($c['money'] ?? false) ? \Devlib\Locale::money($r[$k] ?? 0) : (is_array($c) && ($c['num'] ?? false) ? \Devlib\Locale::number($r[$k] ?? 0) : ($r[$k] ?? ''))) }}@endif</td>@endforeach</tr>
                         @empty
                             <tr><td colspan="{{ count($columns) }}" class="dl-table__empty">{{ $empty }}</td></tr>
                         @endforelse

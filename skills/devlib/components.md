@@ -841,7 +841,7 @@ Dropdown yang menukar panel di bawahnya tanpa memuat ulang (mis. peran / jabatan
 ## `<x-dl::table>`
 Tabel sederhana (di dalam form/kartu). columns: key => label, atau key => [label, num=>true]. Angka rata kanan.
 - Berkas: `src/Components/Table.php`
-- Prop: columns:array=[], rows:array=[], empty:string='No data yet.', striped:bool=true, totals:array=[], source:?string=NULL
+- Prop: columns:array=[], rows:array=[], empty:string='No data yet.', striped:bool=true, totals:array=[], source:?string=NULL, stack:bool=false
 
 ## `<x-dl::tabs>`
 Tab: judul di atas (vertical = daftar di kiri, seperti halaman Setup & Security), isi berganti.

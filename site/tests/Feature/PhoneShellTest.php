@@ -232,4 +232,27 @@ class PhoneShellTest extends TestCase
             $this->assertMatchesRegularExpression('/^(:is\(body\.dl-on-phone,\.dl-phone\)|body\.dl-phone-(shelled|search|print)|\.dl-phone|@media)/', $line, 'aturan grid HP harus dibatasi konteks HP: '.$line);
         }
     }
+
+    public function test_table_stack_is_opt_in_and_only_adds_labels_and_a_class(): void
+    {
+        $cols = ['item' => 'Item', 'qty' => ['Qty', 'num' => true]];
+        $rows = [['item' => 'Pensil', 'qty' => 5]];
+        $plain = Blade::render('<x-dl::table :columns="$c" :rows="$r" />', ['c' => $cols, 'r' => $rows]);
+        $this->assertStringNotContainsString('dl-table--stack', $plain);
+        $this->assertStringNotContainsString('data-label', $plain, 'tanpa stack markup desktop identik');
+
+        $stack = Blade::render('<x-dl::table :columns="$c" :rows="$r" :stack="true" />', ['c' => $cols, 'r' => $rows]);
+        $this->assertStringContainsString('dl-table-wrap dl-table--stack', $stack);
+        $this->assertStringContainsString('data-label="Item"', $stack);
+        $this->assertStringContainsString('data-label="Qty"', $stack);
+
+        $css = (string) file_get_contents(base_path('../resources/assets/devlib.css'));
+        preg_match_all('/^[^
+]*dl-table--stack[^
+]*$/m', $css, $m);
+        $this->assertNotEmpty($m[0]);
+        foreach ($m[0] as $line) {
+            $this->assertStringStartsWith(':is(body.dl-on-phone,.dl-phone)', ltrim($line), 'aturan stack hanya di konteks HP');
+        }
+    }
 }

@@ -31,7 +31,7 @@ Extra HTML attributes (`id`, `class`, `style`, `data-*`) and `can="module.action
 
 ## Props
 
-Constructor of `Devlib\Components\Table` (6 props). Use `:prop="expr"` for arrays and booleans.
+Constructor of `Devlib\Components\Table` (7 props). Use `:prop="expr"` for arrays and booleans.
 
 | Prop | Type | Default | Meaning |
 |---|---|---|---|
@@ -41,6 +41,7 @@ Constructor of `Devlib\Components\Table` (6 props). Use `:prop="expr"` for array
 | `striped` | `bool` | `true` | Adds `is-striped` to the `<table>` (even rows get the alternate background). `false` removes the class. |
 | `totals` | `array` | `[]` | Map `column key => value` for the footer row. Empty array = no `<tfoot>`. Only keys present in `totals` print a value; every other column in the footer is an empty cell. |
 | `source` | `?string` | `null` | Free text naming where the data comes from, shown by the developer catalog (`data-dl-src`); default `baris tabel`. No visual or runtime effect. |
+| `stack` | `bool` | `false` | Opt-in for the phone view: the wrapper gets class `dl-table--stack` and every body cell gets `data-label` (the column label). Only inside `body.dl-on-phone` / `.dl-phone` each row then becomes a card (label on the left, value on the right, no sideways scroll, header hidden); on desktop the table looks exactly as before. |
 
 ### Column definition
 

@@ -4354,3 +4354,42 @@ body.dl-phone-shelled .dl-grid__toolbar,
 body.dl-phone-search .dl-grid__toolbar{left:0;right:0;width:auto;z-index:35;display:flex;padding:8px 12px;background:var(--dl-surface);border-bottom:1px solid var(--dl-border);box-shadow:0 8px 20px var(--dl-overlay-soft)}
 body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 @media screen{body.dl-phone-shelled .dl-print__pages{zoom:var(--dl-phone-fit,1)}}
+
+/* ==== Form di tampilan HP, pelengkap audit layar formulir master (opt-in konteks phone: body.dl-on-phone / .dl-phone; desktop tidak cocok) ==== */
+/* Dropdown / lookup / tab / pesan galat / hint / pilihan radio / dialog dan tabel bertumpuk (prop stack) agar nyaman dengan jempol: teks >= 14-16px, sasaran ketuk >= 44px. */
+:is(body.dl-on-phone,.dl-phone) .dl-tabs__tab{min-height:44px;font-size:calc(14px * var(--dl-font-scale))}
+:is(body.dl-on-phone,.dl-phone) .dl-field__error{font-size:calc(14px * var(--dl-font-scale));margin-top:3px}
+:is(body.dl-on-phone,.dl-phone) .dl-field__hint{font-size:calc(13px * var(--dl-font-scale));line-height:1.35;padding:4px 8px}
+:is(body.dl-on-phone,.dl-phone) .dl-form__panel .dl-badge{font-size:calc(12px * var(--dl-font-scale))}
+:is(body.dl-on-phone,.dl-phone) .dl-dd__item{display:flex;align-items:center;min-height:44px;padding:8px 12px;font-size:16px}
+:is(body.dl-on-phone,.dl-phone) .dl-dd__group{padding:8px 12px;font-size:calc(12px * var(--dl-font-scale))}
+:is(body.dl-on-phone,.dl-phone) .dl-dd__search input{min-height:44px;padding:6px 10px;font-size:16px}
+:is(body.dl-on-phone,.dl-phone) .dl-lookup__table{font-size:15px}
+:is(body.dl-on-phone,.dl-phone) .dl-lookup__table :is(th,td){padding:10px 12px;white-space:normal}
+:is(body.dl-on-phone,.dl-phone) .dl-case{position:relative}
+:is(body.dl-on-phone,.dl-phone) .dl-case::after,
+:is(body.dl-on-phone,.dl-phone) .dl-numtg::after{content:"";position:absolute;inset:-12px -8px}
+:is(body.dl-on-phone,.dl-phone) .dl-prefix:not(.has-numtg) .dl-numtg{position:relative}
+:is(body.dl-on-phone,.dl-phone) .dl-field .dl-spin{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-choices{gap:0 20px}
+:is(body.dl-on-phone,.dl-phone) .dl-choice{min-height:44px;gap:10px;font-size:16px}
+:is(body.dl-on-phone,.dl-phone) .dl-upload__placeholder{font-size:calc(14px * var(--dl-font-scale))}
+:is(body.dl-on-phone,.dl-phone) .dl-mov{padding:12px}
+:is(body.dl-on-phone,.dl-phone) .dl-modal__head{padding:8px 8px 8px 16px}
+:is(body.dl-on-phone,.dl-phone) .dl-modal__x{min-width:44px;min-height:44px}
+:is(body.dl-on-phone,.dl-phone) .dl-modal__body{padding:16px}
+:is(body.dl-on-phone,.dl-phone) .dl-modal__foot{padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
+:is(body.dl-on-phone,.dl-phone) .dl-modal__foot .dl-btn{flex:1;min-height:48px;font-size:16px}
+:is(body.dl-on-phone,.dl-phone) .dl-mfield label{font-size:calc(14px * var(--dl-font-scale))}
+:is(body.dl-on-phone,.dl-phone) .dl-mfield input{min-height:44px;font-size:16px}
+/* Tabel kecil di dalam form (x-dl::table :stack): tiap baris = satu kartu, label kolom di kiri nilainya (data-label); tanpa gulir ke samping. */
+:is(body.dl-on-phone,.dl-phone) .dl-table--stack{border:0;background:none;overflow:visible}
+:is(body.dl-on-phone,.dl-phone) .dl-table--stack :is(.dl-table,tbody,tr,td){display:block;width:auto}
+:is(body.dl-on-phone,.dl-phone) .dl-table--stack thead{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-table--stack tbody tr{margin:0 0 10px;padding:8px 12px;border:1px solid var(--dl-border);border-radius:var(--dl-radius-md);background:var(--dl-surface)}
+:is(body.dl-on-phone,.dl-phone) .dl-table--stack tbody td{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:36px;padding:4px 0;border:0;background:none;text-align:right!important;font-size:calc(15px * var(--dl-font-scale))}
+:is(body.dl-on-phone,.dl-phone) .dl-table--stack tbody td[data-label]::before{content:attr(data-label);flex:none;font-size:calc(13px * var(--dl-font-scale));font-weight:600;color:var(--dl-muted);text-align:left}
+:is(body.dl-on-phone,.dl-phone) .dl-table--stack tbody td[data-label=""]::before{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-table--stack tbody td a{display:inline-flex;align-items:center;min-height:44px;padding:0 8px;font-weight:700}
+:is(body.dl-on-phone,.dl-phone) .dl-table--stack tbody td.dl-table__empty{display:block;text-align:left!important}
+:is(body.dl-on-phone,.dl-phone) textarea.dl-input{min-height:96px}
