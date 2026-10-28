@@ -4,13 +4,15 @@ export type LoginError = 'empty' | 'wrong' | 'network';
 
 const json = { Accept: 'application/json', 'Content-Type': 'application/json' };
 
-/** Token CSRF + bahasa tamu (cookie dl_lang dibaca server). `null` bila server tidak terjangkau. */
-export async function loadSession(): Promise<{ csrf: string; lang: Lang } | null> {
+export type Links = { register?: string; forgot?: string; device?: string };
+
+/** Token CSRF, bahasa tamu (cookie dl_lang dibaca server) dan alamat tautan dari server. `null` bila server tidak terjangkau. */
+export async function loadSession(): Promise<{ csrf: string; lang: Lang; links: Links } | null> {
     try {
         const r = await fetch('/pwa/session', { headers: json, credentials: 'same-origin' });
         if (!r.ok) return null;
         const s = await r.json();
-        return { csrf: s.csrf, lang: s.lang === 'en' ? 'en' : 'id' };
+        return { csrf: s.csrf, lang: s.lang === 'en' ? 'en' : 'id', links: s.links ?? {} };
     } catch {
         return null;
     }

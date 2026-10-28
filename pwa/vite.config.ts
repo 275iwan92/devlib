@@ -29,7 +29,19 @@ export default defineConfig({
                     { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
                 ],
             },
-            workbox: { globPatterns: ['**/*.{js,css,html,svg,png}'] },
+            workbox: {
+                globPatterns: ['**/*.{js,css,html,svg,png}'],
+                // Halaman Blade di dalam scope (Daftar, Lupa password) bukan layar React: jangan jatuh ke index.html.
+                navigateFallbackDenylist: [/^\/pwa\/(register|forgot)\/?$/],
+                runtimeCaching: [
+                    {
+                        urlPattern: ({ url }) => /^\/pwa\/(register|forgot)\/?$/.test(url.pathname),
+                        handler: 'NetworkFirst',
+                        // Halaman yang pernah dibuka tersedia offline; yang belum pernah dibuka dan server mati: offline.html (pesan ramah, bukan galat peramban).
+                        options: { cacheName: 'pwa-pages', networkTimeoutSeconds: 4, precacheFallback: { fallbackURL: 'offline.html' } },
+                    },
+                ],
+            },
         }),
     ],
 });

@@ -11,11 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 // Logika login (tabel pengguna, hash, sesi) tetap milik proyek; di sini hanya bentuk balasannya.
 class Pwa
 {
-    // Panggil di routes/web.php (grup web: sesi + CSRF): GET /pwa menyajikan hasil build, GET /pwa/session memberi {csrf, lang}.
-    public static function routes(string $index = 'pwa/index.html'): void
+    // Panggil di routes/web.php (grup web: sesi + CSRF): GET /pwa menyajikan hasil build, GET /pwa/session memberi {csrf, lang, links}.
+    // $links = alamat yang dipakai layar login (register, forgot, device) sebagai teks atau closure (nama rute baru dikenal setelah semua rute didaftar); kosong = tautan tidak tampil.
+    public static function routes(string $index = 'pwa/index.html', array $links = []): void
     {
         Route::get('/pwa', fn () => response()->file(public_path($index)))->name('pwa');  // folder tidak disajikan sebagai index oleh peladen
-        Route::get('/pwa/session', fn () => response()->json(['csrf' => csrf_token(), 'lang' => Locale::lang()]))->name('pwa.session');
+        Route::get('/pwa/session', fn () => response()->json(['csrf' => csrf_token(), 'lang' => Locale::lang(), 'links' => array_map(fn ($v) => value($v), $links)]))->name('pwa.session');
     }
 
     // Login gagal: 422 {error: $code} bila klien minta JSON (empty | wrong), selain itu $html() (alur form biasa).

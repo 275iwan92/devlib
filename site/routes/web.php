@@ -26,7 +26,15 @@ Route::get('/login', fn () => view('login', [
 ]))->name('login');
 
 // Layar login PWA (pwa/, React): token CSRF + bahasa tamu; login yang sama dengan form Blade, balasannya JSON.
-Pwa::routes();
+Pwa::routes(links: [
+    'register' => fn () => route('register', [], false),
+    'forgot' => fn () => route('password.request', [], false),
+    'device' => fn () => route('ui.set', [], false),
+]);
+
+// Daftar / Lupa password di DALAM scope PWA (/pwa/), supaya PWA terpasang tidak keluar ke bilah peramban. Contoh tampilan: komponen tanpa action = PREVIEW (tidak ada akun, e-mail, atau OTP sungguhan).
+Route::view('/pwa/register', 'auth.register')->name('register');
+Route::view('/pwa/forgot', 'auth.forgot')->name('password.request');
 
 Route::post('/login', function (Request $r) {
     $login = trim((string) $r->input('login'));

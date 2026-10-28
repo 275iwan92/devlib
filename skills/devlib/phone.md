@@ -81,7 +81,9 @@ Layar login React di `pwa/` memerlukan dua hal dari server; keduanya diwariskan 
 ```php
 use Devlib\Pwa;
 
-Pwa::routes();   // GET /pwa (hasil build di public/pwa/index.html) dan GET /pwa/session -> {csrf, lang}; di routes/web.php (grup web)
+Pwa::routes();   // GET /pwa (hasil build di public/pwa/index.html) dan GET /pwa/session -> {csrf, lang, links}; di routes/web.php (grup web)
+// Tautan layar login (tanpa itu tidak tampil): Pwa::routes(links: ['register' => fn () => route('register', [], false), 'forgot' => ..., 'device' => fn () => route('ui.set', [], false)]);
+// Halaman Daftar / Lupa password HARUS di bawah /pwa/ (mis. /pwa/register): di luar scope PWA terpasang yang berjalan standalone menampilkan bilah peramban.
 
 Route::post('/login', function (Request $r) {
     // ... validasi dan cek kredensial milik proyek ...

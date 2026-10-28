@@ -14,6 +14,18 @@ class PwaLoginTest extends TestCase
         $this->assertContains($r->json('lang'), ['id', 'en']);
     }
 
+    public function test_session_memberi_alamat_tautan_yang_ada(): void
+    {
+        $links = $this->getJson('/pwa/session')->json('links');
+        $this->assertSame(['register', 'forgot', 'device'], array_keys($links));
+        $this->assertSame(['register' => '/pwa/register', 'forgot' => '/pwa/forgot', 'device' => '/ui'], $links);
+        // Di dalam scope PWA (/pwa/): satu kolom HP, penanda contoh, dan jalan kembali ke layar login PWA.
+        foreach (['register', 'forgot'] as $k) {
+            $this->get($links[$k])->assertOk()->assertSee('dl-plogin', false)->assertSee('Contoh tampilan', false)
+                ->assertSee('Kembali ke login', false)->assertSee('href="/pwa/"', false);
+        }
+    }
+
     public function test_bahasa_mengikuti_cookie(): void
     {
         // Cookie dari JS (document.cookie) tidak terenkripsi: Locale::lang() membacanya dari $_COOKIE.
