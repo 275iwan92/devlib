@@ -14,15 +14,13 @@ namespace Devlib\Components;
 
 use Devlib\Locale;
 
-// Pilihan bahasa (bendera). Daftar bahasa = Locale::languages() (aplikasi: sys_languages yang aktif), jadi bahasa baru
+// Pilihan bahasa (kode: EN | ID). Daftar bahasa = Locale::languages() (aplikasi: sys_languages yang aktif), jadi bahasa baru
 // muncul sendiri. Memicu event "dl:lang" di dokumen (cookie perangkat + teks [data-dl-t]).
 // reload: halaman dimuat ulang setelah bahasa dipilih supaya teks yang dirender server ikut berganti, dan pilihannya
 // disimpan ke akun user lewat config devlib.lang_url. Bawaan: aktif bila ada user yang login; halaman tamu (login /
 // daftar) berganti di tempat tanpa muat ulang.
 class LangSwitch extends DevlibComponent
 {
-    private const FLAGS = ['id' => '🇮🇩', 'en' => '🇬🇧', 'ja' => '🇯🇵', 'zh' => '🇨🇳', 'ko' => '🇰🇷', 'th' => '🇹🇭', 'vi' => '🇻🇳', 'ms' => '🇲🇾'];
-
     public function __construct(
         public array $langs = [],
         public ?string $active = null,
@@ -30,7 +28,7 @@ class LangSwitch extends DevlibComponent
     ) {
         if (! $this->langs) {
             foreach (Locale::languages() as $code => $spec) {
-                $this->langs[$code] = [self::FLAGS[$code] ?? strtoupper($code), $spec['name'] ?? $code];
+                $this->langs[$code] = [strtoupper($code), $spec['name'] ?? $code]; // kode (EN | ID), bukan emoji bendera: Windows menampilkannya sebagai "GB" / "ID"
             }
         }
         $this->active ??= Locale::lang();

@@ -8,8 +8,8 @@ Generated markup:
 
 ```html
 <div class="dl-langs" data-dl="x-dl::lang-switch" data-dl-class="LangSwitch ← DevlibComponent" data-dl-src="sys_languages + sec_user.lang_code (aplikasi pemakai)" data-dl-langs data-reload>
-  <button type="button" class="dl-flag is-active" data-lang="en" title="English">🇬🇧</button>
-  <button type="button" class="dl-flag" data-lang="id" title="Bahasa Indonesia">🇮🇩</button>
+  <button type="button" class="dl-flag is-active" data-lang="en" title="English">EN</button>
+  <button type="button" class="dl-flag" data-lang="id" title="Bahasa Indonesia">ID</button>
 </div>
 ```
 
@@ -21,7 +21,7 @@ Constructor of `Devlib\Components\LangSwitch` (3 props).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
-| `langs` | `array`, `[]` | The buttons as `code => [flag, title]`, for example `['en' => ['🇬🇧', 'English']]`. Empty (default) = built from `Locale::languages()`: the flag is looked up by code (`id` 🇮🇩, `en` 🇬🇧, `ja` 🇯🇵, `zh` 🇨🇳, `ko` 🇰🇷, `th` 🇹🇭, `vi` 🇻🇳, `ms` 🇲🇾), a code without a flag shows the upper-case code (`DE`), and the title is the language `name` (or the code). The title is the button tooltip and is not translated. |
+| `langs` | `array`, `[]` | The buttons as `code => [label, title]`, for example `['en' => ['EN', 'English']]`. Empty (default) = built from `Locale::languages()`: the label is the upper-case code (`EN`, `ID`, `DE`; flag emoji are not used by default because Windows draws them as letters such as `GB`), and the title is the language `name` (or the code). A project may still pass its own label, even a flag emoji, through this prop. The title is the button tooltip and is not translated. |
 | `active` | `?string`, `null` | The code marked `is-active` at render. `null` = the current display language `Locale::lang()` (print language, user account, device cookie, then application default). |
 | `reload` | `?bool`, `null` | Whether choosing a language saves it to the account and reloads the page. `null` = `true` when a user is signed in (`auth()->check()`), otherwise `false`. `true` writes `data-reload`. Force `:reload="false"` for a switcher that must only change texts in place, `:reload="true"` to always reload. |
 
@@ -73,7 +73,7 @@ Demo (`site/resources/views/demos/i18n.blade.php`):
 Fixed list, in-place change only:
 
 ```blade
-<x-dl::lang-switch :langs="['en' => ['🇬🇧', 'English'], 'id' => ['🇮🇩', 'Bahasa Indonesia']]" active="en" :reload="false" />
+<x-dl::lang-switch :langs="['en' => ['EN', 'English'], 'id' => ['ID', 'Bahasa Indonesia']]" active="en" :reload="false" />
 ```
 
 ## Related

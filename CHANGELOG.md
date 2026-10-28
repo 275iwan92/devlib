@@ -32,6 +32,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Diubah
 
+- **Pilihan bahasa tampil sebagai EN | ID di semua tempat** (permintaan Jo 2026-10-28): `x-dl::lang-switch` bawaan memakai kode huruf besar, bukan emoji bendera (Windows menggambar 🇬🇧 sebagai "GB"); layar login PWA "GB" menjadi "EN". Prop `langs` tetap bisa memberi label sendiri. Proyek pewaris yang memakai komponen bawaan ikut berubah tampilannya saat memperbarui DevLib.
 - **Sasaran ketuk HP diperbesar (hasil uji layar satu per satu, Stoku 2026-10-28; konteks phone saja)**: tombol kalender / pilih `.dl-pick > .dl-field__trigger` min 44 px lebar, segmen bilah cetak (`.dl-print__bar .dl-segment__opt`) min 44 px tinggi, tombol ikon baris (`.dl-lines__act .dl-iconbtn`) 44 x 44 dan tombol huruf (`.dl-lines__case`) 40 x 36 di kartu `x-dl::lines`. Desktop tidak berubah.
 
 - **`x-dl::report` / `x-dl::print-out` prop `phone-list` (opt-in, bawaan `false`)** (permintaan Stoku 2026-10-28: lembar A4 diperkecil ke 33% di HP, huruf tak terbaca): di konteks phone lembar diganti daftar baca berupa kartu dari data yang sama (`print.js` `list()`: kotak kriteria dan KPI, satu kartu per baris dengan kolom pertama sebagai judul, kolom teks kedua sebagai subjudul, lencana dan nada baris, judul kelompok dengan subtotal, total); bilah pratinjau tetap, tombol Grup membangun ulang daftar, saat cetak lembar tetap dipakai. Tanpa prop perilaku lama; panduan, tes.

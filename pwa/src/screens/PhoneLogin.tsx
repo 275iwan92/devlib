@@ -56,7 +56,7 @@ export function PhoneLogin({ lang, onLang, onSignIn, offline = false, csrfToken,
                 <div className="plogin__langs" role="group" aria-label="Language">
                     {(['en', 'id'] as const).map((l) => (
                         <button key={l} type="button" aria-pressed={lang === l} onClick={() => onLang(l)}>
-                            {l === 'en' ? 'GB' : 'ID'}
+                            {l === 'en' ? 'EN' : 'ID'}
                         </button>
                     ))}
                 </div>
