@@ -4409,6 +4409,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 :is(body.dl-on-phone,.dl-phone) .dl-lookup__table tbody tr.dl-dd__item td{display:inline;padding:0;border:0;font-size:13px;color:var(--dl-muted);white-space:normal}
 :is(body.dl-on-phone,.dl-phone) .dl-lookup__table tbody tr.dl-dd__item td:first-child{display:block;margin-bottom:2px;font-size:16px;font-weight:700;color:var(--dl-ink-strong)}
 :is(body.dl-on-phone,.dl-phone) .dl-lookup__table tbody tr.dl-dd__item td:not(:first-child):not(:last-child)::after{content:" \00b7 "}
+:is(body.dl-on-phone,.dl-phone) .dl-lookup__table tbody tr.dl-dd__item td:not(:first-child)[data-label]::before{content:attr(data-label) ": ";opacity:.75}
 
 /* ==== Penomoran halaman, pilihan jumlah baris, chip filter, dan kartu baris tanpa tombol di HP (hasil uji layar Modul / Grup, 2026-10-29; konteks phone saja). ==== */
 :is(body.dl-on-phone,.dl-phone) .dl-pager button{min-width:44px;min-height:44px}
