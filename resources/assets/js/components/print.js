@@ -31,6 +31,32 @@
       return $(this.el, `template[data-p-${n}]`).innerHTML;
     }
 
+    // Daftar baca untuk layar phone: kartu dari data yang sama dengan tabel cetak (kolom pertama = judul kartu, kolom lain = pasangan label / nilai, kelompok dan jumlah ikut).
+    // CSS menampilkannya hanya di konteks phone dan hanya di layar; lembar cetak tetap dasar tombol Cetak.
+    list() {
+      const v = this.vis(), g = this.el.dataset.group, sums = v.filter(c => c.sum);
+      const val = (c, r) => {
+        const x = r[c.key];
+        if (c.type === 'badge') return x ? `<span class="dl-print__badge is-${esc((c.tones || {})[x] || 'neutral')}">${esc(x)}</span>` : '';
+        return this.isNum(c) ? this.fmtN(c, x) : esc(x ?? '');
+      };
+      const lbl = c => esc(c.group ? c.group + ' · ' + c.label : c.label);
+      const card = r => {
+        const rt = this.cols.map(c => c.rowTones && c.rowTones[r[c.key]]).find(Boolean), [h, ...more] = v;
+        // Kolom kedua yang berupa teks (mis. nama barang di bawah kodenya) menjadi subjudul kartu; kolom `sub` kolom pertama tetap diutamakan.
+        const s2 = h.sub ? null : more.find((c, i) => i === 0 && !this.isNum(c) && c.type !== 'badge' && val(c, r) !== ''), rest = more.filter(c => c !== s2);
+        const kv = rest.filter(c => val(c, r) !== '').map(c => `<div><small>${lbl(c)}</small><b class="${this.tone(c, r[c.key])}">${val(c, r)}</b></div>`).join('');
+        const sub = h.sub && r[h.sub] ? esc(r[h.sub]) : s2 ? val(s2, r) : '';
+        return `<article class="dl-print__lcard ${rt ? 'is-row-' + rt : ''}"><div class="dl-print__ltitle">${val(h, r)}${sub ? `<small>${sub}</small>` : ''}</div>${kv ? `<div class="dl-print__lkv">${kv}</div>` : ''}</article>`;
+      };
+      const total = (label, list, cls) => sums.length ? `<div class="dl-print__lsum ${cls}"><b>${esc(label)}</b>${sums.map(c => `<span><small>${lbl(c)}</small><b class="${this.tone(c, this.sumOf(list, c.key))}">${this.fmtN(c, this.sumOf(list, c.key))}</b></span>`).join('')}</div>` : '';
+      const out = [];
+      if (g) [...new Set(this.data.map(r => r[g]))].forEach(k => { const list = this.data.filter(r => r[g] === k); out.push(`<h3 class="dl-print__lgrp">${esc(k)} · ${list.length} ${esc(T('pr_rows'))}</h3>`, ...list.map(card), total(T('pr_subtotal') + ' ' + k, list, 'is-sub')); });
+      else out.push(...this.data.map(card));
+      out.push(total(T('pr_total'), this.data, 'is-grand'));
+      return this.tpl('criteria') + this.summary() + out.filter(Boolean).join('');
+    }
+
     num(v) {
       return fmt.num(+v || 0, 2);
     }
@@ -123,6 +149,10 @@
 
     build() {
       this.pages.innerHTML = '';
+      if (this.el.hasAttribute('data-phone-list') && (document.body.classList.contains('dl-on-phone') || this.el.closest('.dl-phone'))) {   // opt-in prop phone-list, hanya konteks phone
+        let L = $(this.el, '[data-p-list]'); if (!L) { L = document.createElement('div'); L.className = 'dl-print__list'; L.dataset.pList = ''; this.pages.after(L); }
+        L.innerHTML = this.list();
+      }
       this.el.dataset.paperNow = this.el.dataset.paper;
       let s = this.sheet(), body = $(s, '[data-p-body]');
       body.insertAdjacentHTML('beforeend', this.tpl('parties') + this.tpl('criteria') + this.summary());

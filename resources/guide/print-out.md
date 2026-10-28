@@ -29,7 +29,7 @@ The templates hold the server-rendered pieces; `print.js` copies them into each 
 
 ## Props
 
-Constructor of `Devlib\Components\PrintOut`: **23 props**. Use `:prop="expr"` for anything that is not a plain string (`:rows="$rows"`, `:ppn="true"`, `:prices="false"`).
+Constructor of `Devlib\Components\PrintOut`: **24 props**. Use `:prop="expr"` for anything that is not a plain string (`:rows="$rows"`, `:ppn="true"`, `:prices="false"`).
 
 ### Document header
 
@@ -63,6 +63,7 @@ Constructor of `Devlib\Components\PrintOut`: **23 props**. Use `:prop="expr"` fo
 | `groups` | `array`, `[]` | `column key => label` of the columns the user may group by. When not empty a **Group** switch appears (None + one button per entry); a group shows a heading row `<value> . n rows` and, when some column has `sum`, a subtotal row. Labels translated. |
 | `group-by` | `?string`, `null` | Column key the table is grouped by from the start (`data-group`). Works even when `groups` is empty (then the user cannot change it); a value not in `groups` leaves no switch button active. |
 | `opening` | `?float`, `null` | Opening balance for `running` columns (null counts as 0). |
+| `phone-list` | `bool`, `false` | Phone view only (opt-in). `true` = in the phone context (page body has `dl-on-phone`, or inside `x-dl::phone-shell`) the sheets, which a phone shrinks to about a third so the text is unreadable, give way on screen to a reading list of cards built from the same data (`print.js` `list()`): criteria box and KPI tiles first, then one card per row (first column = title, a second text column = subtitle, the other visible columns as label / value pairs, badges, row tones), group headings with sub totals, and the grand total. The preview bar (paper, group, ink saver, Print) stays and the group switch rebuilds the list. When printing, the list is hidden and the sheets are used. Default `false` keeps the scaled sheets. |
 | `totals` | `array`, `[]` | Totals block, see below. Printed on the last sheet only and only while prices are shown. |
 | `currency` | `string`, `'IDR'` | Key of `Devlib\Terbilang::CURRENCIES` (`IDR`, `USD`, `EUR`, `SGD`, `MYR`, `AUD`, `JPY`, `CNY`, `GBP`). Decides the rounding of the VAT amount (IDR 0 decimals, most others 2) and the currency word of the amount in words. An unknown code is passed as null: VAT rounds to 2 decimals and the words have no currency. |
 

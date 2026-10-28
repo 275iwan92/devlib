@@ -4302,6 +4302,25 @@ body.dl-on-phone :is(.dl-btn,summary){min-height:44px}
 :is(body.dl-on-phone,.dl-phone) .dl-lines__ro{padding:6px 0!important;white-space:normal}
 :is(body.dl-on-phone,.dl-phone) .dl-lines__pick .dl-btn{min-height:44px}
 :is(body.dl-on-phone,.dl-phone) .dl-lines__table .dl-lines__more > td:first-child{display:none}
+/* Report / Print Out di tampilan HP (opt-in prop phone-list): lembar cetak (diperkecil 33%, huruf tak terbaca) diganti DAFTAR BACA berupa kartu dari data yang sama (print.js list()); hanya di layar, saat cetak yang tampil tetap lembar. */
+@media screen{:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__pages{display:none}}
+@media screen{:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__list{display:grid;gap:10px;padding:10px 0}}
+@media print{.dl-print__list{display:none!important}}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lcard{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--dl-border);border-left-width:4px;border-radius:var(--dl-radius-md);background:var(--dl-surface);color:var(--dl-ink)}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lcard.is-row-danger{border-left-color:var(--dl-pr-neg);background:var(--dl-pr-negbg)}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lcard.is-row-warn{border-left-color:var(--dl-amber-2);background:var(--dl-pr-warnbg)}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__ltitle{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 8px;font-size:calc(16px * var(--dl-font-scale));font-weight:700;color:var(--dl-ink-strong)}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__ltitle small{flex:1 0 100%;font-size:calc(13px * var(--dl-font-scale));font-weight:400;color:var(--dl-muted)}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lkv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lkv small,
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lsum small{display:block;font-size:calc(12px * var(--dl-font-scale));color:var(--dl-muted)}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lkv b,
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lsum span b{font-size:calc(15px * var(--dl-font-scale));font-weight:600;font-variant-numeric:tabular-nums}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lgrp{margin:8px 2px 0;font-size:calc(14px * var(--dl-font-scale));font-weight:700;color:var(--dl-muted)}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lsum{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px;padding:10px 14px;border-radius:var(--dl-radius-md);background:var(--dl-surface-alt)}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lsum > b{grid-column:1 / -1}
+:is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__lsum.is-grand{border:1px solid var(--dl-border);font-weight:700}
+
 
 :is(body.dl-on-phone,.dl-phone) .dl-grid__card{position:relative;padding:12px 14px;border-left:5px solid var(--dl-border);-webkit-tap-highlight-color:transparent}
 :is(body.dl-on-phone,.dl-phone) .dl-grid__card:active{background:var(--dl-hover)}

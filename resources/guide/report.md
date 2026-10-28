@@ -49,7 +49,11 @@ The templates carry the server-rendered pieces (company header, criteria box, pa
 
 ## Props
 
-Constructor of `Devlib\Components\PrintOut` (inherited by `Report`): 23 props. Blade names are kebab-case; use `:prop="expr"` for anything that is not a plain string (`:rows="$rows"`, `:opening="450"`, `:prices="false"`).
+Constructor of `Devlib\Components\PrintOut` (inherited by `Report`): 24 props. Blade names are kebab-case; use `:prop="expr"` for anything that is not a plain string (`:rows="$rows"`, `:opening="450"`, `:prices="false"`).
+
+### Phone reading list
+
+`phone-list` (default `false`, opt-in, inherited from `x-dl::print-out`): on a phone the scaled A4 sheet is unreadable, so with `phone-list` the screen shows one card per row (grouped, with sub totals and the grand total) built from the same columns and rows; printing still uses the sheets. See the prop row `phone-list` in `x-dl::print-out`.
 
 ### Header and identity
 

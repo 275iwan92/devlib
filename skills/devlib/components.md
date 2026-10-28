@@ -681,7 +681,7 @@ Cetakan dokumen transaksi (user 2026-10-01): A5 landscape untuk 1-5 baris, A4 po
 ## `<x-dl::print-out>`
 Dokumen cetak (nota_co_mockup, nota_pv_spb, printnotastandard). Layar cukup deklarasi isi dokumen.
 - Berkas: `src/Components/PrintOut.php`, tampilan `resources/views/components/print-out.blade.php`
-- Prop: title:string='', subtitle:?string=NULL, number:?string=NULL, date:?string=NULL, status:?string=NULL, company:array=[], companyPpn:array=[], ppn:bool=false, parties:array=[], columns:array=[], rows:array=[], totals:array=[], currency:string='IDR', signatures:array=[], paper:string='a4', prices:bool=true, printedBy:?string=NULL, criteria:array=[], summary:array=[], groups:array=[], groupBy:?string=NULL, opening:?float=NULL, source:?string=NULL
+- Prop: title:string='', subtitle:?string=NULL, number:?string=NULL, date:?string=NULL, status:?string=NULL, company:array=[], companyPpn:array=[], ppn:bool=false, parties:array=[], columns:array=[], rows:array=[], totals:array=[], currency:string='IDR', signatures:array=[], paper:string='a4', prices:bool=true, printedBy:?string=NULL, criteria:array=[], summary:array=[], groups:array=[], groupBy:?string=NULL, opening:?float=NULL, source:?string=NULL, phoneList:bool=false
 
 ## `<x-dl::print-sheet>`
 Cetakan lembar berbagian (laporan cetak / formulir lapangan): kop perusahaan, judul + kode formulir, baris info, bagian bernomor berisi tabel / kotak pihak / catatan, tanda tangan, kaki. Melengkapi x-dl::print-doc (dokumen transaksi satu tabel).
@@ -736,7 +736,7 @@ Isi kotak Daftar Akun (mockup register.html), dipasang di x-dl::frame seperti lo
 ## `<x-dl::report>`
 Laporan cetak (mockup_print_stock_card, mockup_print_master_stock): sama dengan x-dl::print-out.
 - Berkas: `src/Components/Report.php`
-- Prop: title:string='', subtitle:?string=NULL, number:?string=NULL, date:?string=NULL, status:?string=NULL, company:array=[], companyPpn:array=[], ppn:bool=false, parties:array=[], columns:array=[], rows:array=[], totals:array=[], currency:string='IDR', signatures:array=[], paper:string='a4', prices:bool=true, printedBy:?string=NULL, criteria:array=[], summary:array=[], groups:array=[], groupBy:?string=NULL, opening:?float=NULL, source:?string=NULL
+- Prop: title:string='', subtitle:?string=NULL, number:?string=NULL, date:?string=NULL, status:?string=NULL, company:array=[], companyPpn:array=[], ppn:bool=false, parties:array=[], columns:array=[], rows:array=[], totals:array=[], currency:string='IDR', signatures:array=[], paper:string='a4', prices:bool=true, printedBy:?string=NULL, criteria:array=[], summary:array=[], groups:array=[], groupBy:?string=NULL, opening:?float=NULL, source:?string=NULL, phoneList:bool=false
 
 ## `<x-dl::review-feed>`
 Umpan review gaya blog (user 2026-10-13): satu kartu per butir, huruf besar seperti WordPress, teks hitam, lalu tombol keputusan besar yang langsung tersimpan.

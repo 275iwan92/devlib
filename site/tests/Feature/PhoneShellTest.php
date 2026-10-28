@@ -151,6 +151,20 @@ class PhoneShellTest extends TestCase
         $this->assertStringContainsString('dataset.label', file_get_contents(__DIR__.'/../../../resources/assets/js/components/lines.js'));
     }
 
+    public function test_report_phone_list_is_opt_in_and_scoped_to_the_phone_screen(): void
+    {
+        $data = ['cols' => [['key' => 'a', 'label' => 'A']], 'rows' => [['a' => 1]]];
+        $plain = Blade::render('<x-dl::report title="R" :columns="$cols" :rows="$rows" />', $data);
+        $opt = Blade::render('<x-dl::report title="R" :columns="$cols" :rows="$rows" phone-list />', $data);
+        $this->assertStringNotContainsString('data-phone-list', $plain, 'bawaan: lembar seperti sebelumnya');
+        $this->assertStringContainsString('data-phone-list', $opt);
+
+        $css = file_get_contents(__DIR__.'/../../../resources/assets/devlib.css');
+        $this->assertStringContainsString(':is(body.dl-on-phone,.dl-phone) .dl-print[data-phone-list] .dl-print__pages{display:none}', $css);
+        $this->assertStringNotContainsString("\n.dl-print__pages{display:none}", $css);
+        $this->assertStringContainsString("hasAttribute('data-phone-list')", file_get_contents(__DIR__.'/../../../resources/assets/js/components/print.js'));
+    }
+
     public function test_phone_parts_render_with_tone_badge_columns_and_the_login_page_links_back_to_desktop(): void
     {
         $tile = Blade::render('<x-dl::phone-tile label="Low" :value="4" url="/low" tone="danger" />');

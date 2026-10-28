@@ -51,6 +51,8 @@ class PrintOut extends DevlibComponent
         public ?string $groupBy = null,
         public ?float $opening = null,
         public ?string $source = null,
+        // true = di layar phone (konteks body.dl-on-phone / .dl-phone) lembar cetak yang diperkecil diganti daftar baca berupa kartu dari data yang sama; saat dicetak lembar tetap dipakai. Bawaan false = perilaku lama.
+        public bool $phoneList = false,
     ) {}
 
     public function tag(): string

@@ -1,5 +1,5 @@
 @php($cfg = $config())
-<div {{ $attributes->class('dl-print') }} {!! $dl() !!} data-dl-print data-config="{{ json_encode($cfg) }}" data-paper="{{ $paper }}" data-prices="{{ $prices ? 1 : 0 }}" data-ppn="{{ $ppn ? 1 : 0 }}" data-group="{{ $groupBy }}">
+<div {{ $attributes->class('dl-print')->merge($phoneList ? ['data-phone-list' => ''] : []) }} {!! $dl() !!} data-dl-print data-config="{{ json_encode($cfg) }}" data-paper="{{ $paper }}" data-prices="{{ $prices ? 1 : 0 }}" data-ppn="{{ $ppn ? 1 : 0 }}" data-group="{{ $groupBy }}">
     <div class="dl-print__bar">
         <b>{{ \Devlib\Lang::t('pr_preview') }}</b><span class="dl-print__doc">— {{ $title }}{{ $number ? ' · '.$number : '' }}</span>
         <span class="dl-print__spacer"></span>
