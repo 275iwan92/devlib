@@ -123,6 +123,10 @@ Left side: tabs Discount / Tax / Other Costs / Notes (only those that exist), ea
 
 The first table column is frozen on the left (`dl-lines__fzl`), the last formula column on the right (`dl-lines__fzr`), so wide tables scroll sideways with the key columns visible.
 
+### Phone view
+
+In the phone context (page body has `dl-on-phone`, see `Devlib\Device::bodyClass`, or the lines are inside `x-dl::phone-shell`) each row becomes a card instead of a table row, so nothing scrolls sideways: the row number at the top left, the row buttons (save, undo, edit, delete, copy) at the top right, and every column as a labelled field below (`lines.js` puts the column label on each cell as `data-label`). Short cells (number, money, read-only, date, select) sit two or three to a line; text and lookup cells take the whole line. Fields are 16 px and at least 44 px tall. The sums row of the table footer is hidden on a phone; the `totals` Summary stays. No prop is needed and the desktop table is not changed (every rule is scoped to the phone context).
+
 ### Lookup columns
 
 Local lookups (rows embedded in the page) show the first 50 matches of the typed text over all lookup columns. Remote lookups (a definition with `search`) wait for at least 2 letters, then `GET <devlib.lookup route>?q=...` (250 ms debounce, stale answers dropped). Choosing a row sets `<key>`, `<key>_label` and the `fill` fields, closes the list, redraws and moves focus to the next column. Leaving the box restores its text to the chosen label (free text is never kept).

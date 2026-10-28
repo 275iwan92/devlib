@@ -235,6 +235,8 @@
       const exp = i => this.more.length ? `<button type="button" class="dl-lines__exp ${this.open.has(i) ? 'is-open' : ''} ${this.more.some(c => String(this.rows[i][c.key] ?? '').trim() !== '') ? 'has-val' : ''}" data-l-exp="${i}" title="${esc(Tf('l_row_detail', {cols: this.more.map(c => c.label).join(', ')}))}"><i class="fa-solid fa-chevron-right"></i></button>` : '';
       $(this.el, '[data-l-body]').innerHTML = this.rows.map((r, i) => `<tr data-i="${i}"><td class="dl-lines__no">${exp(i)}${i + 1}</td>${this.tcols.map(c => this.cell(c, r, i)).join('')}${this.ro ? '' : `<td class="dl-lines__act">${this.acts(r)}</td>`}</tr>${this.more.length && this.open.has(i) ? this.panel(r, i) : ''}`).join('')
         || `<tr><td colspan="${this.tcols.length + 2}" class="dl-lines__empty">${esc(T('l_no_rows'))}${$(this.el, '[data-l-add]') ? ' ' + Tf('l_click_x', {x: `<b>${esc($(this.el, '[data-l-add]').textContent.trim())}</b>`}) : ''}</td></tr>`;
+      // Tampilan HP (CSS kartu per baris): tiap sel membawa label kolomnya (td 0 = nomor, terakhir = aksi).
+      $$(this.el, '[data-l-body] tr[data-i]:not(.dl-lines__more)').forEach(tr => [...tr.children].forEach((td, k) => { const c = this.tcols[k - 1]; if (c) td.dataset.label = c.label; }));
       this.refresh();
     }
 

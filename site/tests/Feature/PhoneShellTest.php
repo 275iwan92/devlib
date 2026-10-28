@@ -140,6 +140,17 @@ class PhoneShellTest extends TestCase
         $this->assertStringContainsString('initAutoReturn', \Devlib\DevlibServiceProvider::bundle());
     }
 
+    public function test_lines_become_cards_only_in_the_phone_context_and_cells_carry_their_labels(): void
+    {
+        $css = file_get_contents(__DIR__.'/../../../resources/assets/devlib.css');
+        preg_match_all('/^.*dl-lines__table tbody tr\[data-i\].*$/m', $css, $m);
+        $this->assertNotEmpty($m[0]);
+        foreach ($m[0] as $rule) {
+            $this->assertStringContainsString(':is(body.dl-on-phone,.dl-phone)', $rule, 'aturan kartu Lines hanya di konteks phone');
+        }
+        $this->assertStringContainsString('dataset.label', file_get_contents(__DIR__.'/../../../resources/assets/js/components/lines.js'));
+    }
+
     public function test_phone_parts_render_with_tone_badge_columns_and_the_login_page_links_back_to_desktop(): void
     {
         $tile = Blade::render('<x-dl::phone-tile label="Low" :value="4" url="/low" tone="danger" />');
