@@ -4393,3 +4393,9 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 :is(body.dl-on-phone,.dl-phone) .dl-table--stack tbody td a{display:inline-flex;align-items:center;min-height:44px;padding:0 8px;font-weight:700}
 :is(body.dl-on-phone,.dl-phone) .dl-table--stack tbody td.dl-table__empty{display:block;text-align:left!important}
 :is(body.dl-on-phone,.dl-phone) textarea.dl-input{min-height:96px}
+
+/* ==== Sasaran ketuk HP (hasil uji layar satu per satu, 2026-10-28; konteks phone saja, desktop tidak cocok): tombol kalender / pilih >= 44 px lebar, segmen bilah cetak (Kertas, Grup) >= 44 px tinggi, tombol ikon baris dan tombol huruf (aa) di kartu x-dl::lines. ==== */
+:is(body.dl-on-phone,.dl-phone) .dl-pick > .dl-field__trigger:not(.dl-case){min-width:44px}
+:is(body.dl-on-phone,.dl-phone) .dl-print__bar .dl-segment__opt{min-height:44px}
+:is(body.dl-on-phone,.dl-phone) .dl-lines__table tbody tr[data-i] td.dl-lines__act .dl-iconbtn{width:44px;height:44px}
+:is(body.dl-on-phone,.dl-phone) .dl-lines__table tbody tr[data-i] .dl-lines__case{min-width:40px;min-height:36px;font-size:12px}
