@@ -14,6 +14,23 @@
     static selector = "[data-dl-phone]";
     static ICON = {A: 'fa-bars', B: 'fa-floppy-disk', C: 'fa-table-cells-large'};
 
+    // autoReturn: tampilan phone dipilih otomatis (data-auto-return, dari cookie ui_auto) lalu layar melebar -> kirim ui=desktop (+ auto=1) lewat form lembar Menu; sekali per 10 detik agar tidak berputar.
+    initAutoReturn() {
+      const form = this.el.hasAttribute('data-auto-return') ? $(this.el, 'form.dl-phone__dev') : null;
+      if (!form) return;
+      const KEY = 'dl-phone-return';
+      const go = () => {
+        if (Devlib.phoneScreen()) return;
+        try { if (Date.now() - (+sessionStorage.getItem(KEY) || 0) < 10000) return; sessionStorage.setItem(KEY, String(Date.now())); } catch (e) { /* tanpa penyimpanan sesi: tetap kirim sekali */ }
+        if (!form.querySelector('input[name=auto]')) form.insertAdjacentHTML('beforeend', '<input type="hidden" name="auto" value="1">');
+        form.requestSubmit ? form.requestSubmit() : form.submit();
+      };
+      this.mq = window.matchMedia(Devlib.PHONE_MQ);
+      this.mq.addEventListener('change', go);
+      window.addEventListener('resize', go);
+      go();
+    }
+
     init() {
       this.btn = $(this.el, '[data-dl-phone-menu]');
       this.bar = $(this.el, '[data-dl-phone-bar]');
@@ -32,6 +49,7 @@
       this.L = {A: d.lA, B: d.lB, C: d.lC, dirty: d.lDirty, leave: d.lLeave, menu: d.lMenu, search: d.lSearch, ui: JSON.parse(d.lUi || '{}')};
       this.state = 'A';
       this.overflow = [];
+      this.initAutoReturn();
       this.btn.addEventListener('click', () => this.set(this.next(), true));
       this.more.addEventListener('click', () => this.toggleList());
       $$(this.el, '[data-dl-phone-close]').forEach(x => x.addEventListener('click', () => this.set('A', true)));

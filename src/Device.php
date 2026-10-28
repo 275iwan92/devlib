@@ -29,6 +29,9 @@ final class Device
 
     public const CHOICES = [self::PHONE, self::DESKTOP];
 
+    // Cookie penanda: nilai cookie `ui` dipilih OTOMATIS (x-dl::phone-offer auto / x-dl::phone-shell autoReturn), bukan pilihan pengguna. Diisi rute POST `ui` proyek (field auto=1); selama ada, `ui` dianggap belum dipilih untuk keperluan tawaran / peralihan otomatis.
+    public const AUTO_COOKIE = 'ui_auto';
+
     public const ANDROID = 'android';
 
     public const IOS = 'ios';
@@ -55,6 +58,12 @@ final class Device
     public static function screenIsPhone(int|float $width, int|float $height, bool $coarsePointer): bool
     {
         return $width < self::PHONE_MAX_WIDTH || ($coarsePointer && $height < self::LANDSCAPE_MAX_HEIGHT && $width < self::LANDSCAPE_MAX_WIDTH);
+    }
+
+    // Apakah cookie `ui` permintaan ini hasil peralihan otomatis (bukan pilihan pengguna)?
+    public static function autoChosen(Request $request): bool
+    {
+        return $request->cookie(self::AUTO_COOKIE) === '1';
     }
 
     // Nilai view yang sah ('phone' | 'desktop'), alias lama dipetakan; selain itu null.

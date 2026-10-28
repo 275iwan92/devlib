@@ -13,6 +13,7 @@
         if (!Devlib.phoneScreen()) return;
         // Pengaman putaran: cookie ditolak browser = halaman kembali dengan popup yang sama; satu kiriman per 10 detik.
         try { if (Date.now() - (+sessionStorage.getItem(KEY) || 0) < 10000) return; sessionStorage.setItem(KEY, String(Date.now())); } catch (e) { /* tanpa penyimpanan sesi: tetap kirim sekali */ }
+        if (!form.querySelector('input[name=auto]')) form.insertAdjacentHTML('beforeend', '<input type="hidden" name="auto" value="1">');   // rute proyek menandai pilihan ini otomatis (Device::AUTO_COOKIE)
         form.requestSubmit ? form.requestSubmit() : form.submit();
       };
       go();

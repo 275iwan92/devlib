@@ -36,19 +36,19 @@ Constructor of `Devlib\Components\PhoneOffer` (3 props).
 
 ## Behavior
 
-- Written only when there is no valid cookie `ui` and `Devlib\Device::view` says `desktop`. A phone is guessed as `phone`, so the project shows its phone screen directly and no popup is needed.
+- Written only when the user has not chosen (no valid cookie `ui`, or a `ui` that an automatic switch stored together with `ui_auto=1`) and `Devlib\Device::view` says `desktop`. A phone is guessed as `phone`, so the project shows its phone screen directly and no popup is needed.
 - Visible only on a phone-sized screen (CSS media query = `Devlib\Device::PHONE_MEDIA`): viewport narrower than 600 px, or a phone turned sideways (height under 480 px, coarse pointer, width under 1000 px). On a tablet, a folded-open phone or a laptop it never shows. The dialog is centred over a dimmed background with 52 px and 44 px buttons, 16 px text, and safe-area padding.
 - The text comes from the language dictionary (keys `phone_offer`, `phone_offer_go`, `phone_offer_stay`; Indonesian and English).
 
 ## Data and events
 
 - Browser to server: `ui=phone` or `ui=desktop` (+ CSRF token). No `dl:*` event. With `auto`, the root carries `data-dl-phone-offer data-auto` and the JS class `PhoneOffer` submits the "phone" form (at most once per 10 seconds per tab, so a browser that refuses cookies does not loop); without `auto` there is no JS class.
-- The project's route validates `Rule::in(Device::CHOICES)`, stores the cookie `ui` and redirects.
+- The project's route validates `Rule::in(Device::CHOICES)`, stores the cookie `ui` and redirects. With `auto` it also reads the optional field `auto` (boolean): `1` stores `Device::AUTO_COOKIE`, absent forgets it.
 
 ## Rules and pitfalls
 
 - The popup closes only by choosing one of the two buttons; there is no close icon, because both choices must be remembered, or it would reappear on every visit.
-- With `auto`, a window dragged narrower than 600 px switches to the phone view at once and stays there after the window is widened again (the choice is stored like a tap on "Click here"); the user goes back through "Desktop view".
+- With `auto`, the "phone" form also carries `auto=1`. The project's `ui` route then stores the cookie `Devlib\Device::AUTO_COOKIE` (`ui_auto=1`) next to `ui`, and forgets it on any choice made without `auto` (a tap on a button, the profile action, `x-dl::device-pick`). While `ui_auto` is there, the stored `ui` counts as "not chosen by the user": the popup is written again on a desktop view, so a narrow window switches to phone again after it went back to desktop. A user's own choice stays sticky. Pair it with `autoReturn` on `x-dl::phone-shell`, so a widened window comes back to the desktop view.
 - A user who already has the cookie never sees it, and a user on a wide screen never sees it. Pair it with a way back to desktop on the phone screen.
 - Related lint rules: none.
 

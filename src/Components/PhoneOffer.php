@@ -38,12 +38,12 @@ class PhoneOffer extends DevlibComponent
         return 'cookie ui, Sec-CH-UA-Mobile, User-Agent';
     }
 
-    // Tampil hanya bila pilihan belum dibuat dan tebakan = desktop.
+    // Tampil hanya bila pengguna belum memilih (cookie `ui` kosong, atau hasil peralihan otomatis: Device::autoChosen) dan tebakan = desktop.
     public function wanted(): bool
     {
-        $cookie = request()->cookie(Device::COOKIE);
+        $explicit = Device::normalize(request()->cookie(Device::COOKIE)) !== null && ! Device::autoChosen(request());
 
-        return $this->force || (Device::normalize($cookie) === null && Device::view(request()) === Device::DESKTOP);
+        return $this->force || (! $explicit && Device::view(request()) === Device::DESKTOP);
     }
 
     public function render()

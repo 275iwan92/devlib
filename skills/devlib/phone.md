@@ -25,6 +25,7 @@ Pola layar kerja satu-barang-per-kartu (progress, cari/pindai, simpan per barang
    Route::post('ui', fn (Request $r) => redirect()->route('home')->withCookie(cookie(Device::COOKIE, $r->validate(['ui' => ['required', Rule::in(Device::CHOICES)]])['ui'], 60 * 24 * 365)))->name('ui.set');
    ```
    (`home` bagi tamu akan dialihkan ke login oleh middleware `auth`.)
+   Peralihan otomatis dua arah (opsional, `x-dl::phone-offer auto` + `x-dl::phone-shell :auto-return`): rute yang sama membaca field opsional `auto`; `auto=1` menyimpan juga cookie `Device::AUTO_COOKIE` (`ui_auto`, 1 tahun), tanpa `auto` cookie itu dibuang (pilihan pengguna lagi). Selama `ui_auto` ada, `ui` dianggap belum dipilih pengguna.
 2. **Memilih view.** `Device::view($request)` = `phone` | `desktop` (nama lama `fromRequest`): cookie `ui` yang sah menang; selain itu `Sec-CH-UA-Mobile`, lalu User-Agent (ponsel saja; tablet dan "situs desktop" = desktop).
    ```php
    return view(Device::view($request) === Device::PHONE ? 'login-hp' : 'login', [...]);

@@ -119,6 +119,25 @@ class PhoneShellTest extends TestCase
         $this->assertStringContainsString('class PhoneOffer', \Devlib\DevlibServiceProvider::bundle());
     }
 
+    public function test_auto_chosen_view_counts_as_not_chosen_and_the_shell_returns_only_for_it(): void
+    {
+        $render = function (array $cookies, string $ua, string $tag) {
+            app()->instance('request', \Illuminate\Http\Request::create('/', 'GET', [], $cookies, [], ['HTTP_USER_AGENT' => $ua]));
+
+            return Blade::render($tag);
+        };
+        $offer = '<x-dl::phone-offer action="/ui" auto />';
+        $this->assertStringContainsString('dl-phoneoffer', $render(['ui' => 'desktop', 'ui_auto' => '1'], self::WINDOWS, $offer), 'ui automatis = belum dipilih pengguna');
+        $this->assertStringNotContainsString('dl-phoneoffer', $render(['ui' => 'desktop'], self::WINDOWS, $offer), 'pilihan pengguna tetap menang');
+
+        $shell = '<x-dl::phone-shell title="Home" device-action="/ui" auto-return />';
+        $this->assertStringContainsString('data-auto-return', $render(['ui' => 'phone', 'ui_auto' => '1'], self::WINDOWS, $shell));
+        $this->assertStringNotContainsString('data-auto-return', $render(['ui' => 'phone'], self::WINDOWS, $shell), 'pilihan pengguna: tidak kembali sendiri');
+        $this->assertStringNotContainsString('data-auto-return', $render(['ui' => 'phone', 'ui_auto' => '1'], self::WINDOWS, '<x-dl::phone-shell title="Home" device-action="/ui" />'), 'opt-in');
+        $this->assertTrue(\Devlib\Device::autoChosen(\Illuminate\Http\Request::create('/', 'GET', [], ['ui_auto' => '1'])));
+        $this->assertStringContainsString('initAutoReturn', \Devlib\DevlibServiceProvider::bundle());
+    }
+
     public function test_phone_parts_render_with_tone_badge_columns_and_the_login_page_links_back_to_desktop(): void
     {
         $tile = Blade::render('<x-dl::phone-tile label="Low" :value="4" url="/low" tone="danger" />');

@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Kerangka aplikasi untuk smartphone potret: SATU ikon hamburger melayang (tanpa bilah permanen), baris judul + tombol kembali di isi halaman, dan deret aksi layar / lima menu utama yang muncul di atas lalu tertutup sendiri.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek. Daftar modul = bentuk yang sama dengan x-dl::layer-shell.
- * Input        : title, back, tabs, active, modules, user, brand, logoutAction, deviceAction, links, frame, contained.
+ * Input        : title, back, tabs, active, modules, user, brand, logoutAction, deviceAction, links, frame, contained, autoReturn.
  * Output       : Markup dari resources/views/components/phone-shell.blade.php; perilaku lembar Menu di phone-shell.js.
  * Dipakai oleh : layar HP proyek (dipilih lewat Devlib\Device); halaman katalog p7-phone.
  * Status       : Aktif (DevLib).
@@ -40,6 +40,8 @@ class PhoneShell extends DevlibComponent
         public ?string $frame = null,
         // true = tinggi mengikuti pembungkus (peraga katalog), false = seluruh layar.
         public bool $contained = false,
+        // true = bila tampilan phone ini dipilih OTOMATIS (cookie Device::AUTO_COOKIE; x-dl::phone-offer auto) dan layar kembali melebar (bukan lagi aturan phone), lembar Menu mengirim sendiri ui=desktop (+ auto=1) lewat deviceAction. Pilihan pengguna tidak disentuh. Bawaan false.
+        public bool $autoReturn = false,
     ) {
         $this->brand ??= Brand::identity()['name'];
     }

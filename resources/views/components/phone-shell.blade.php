@@ -1,4 +1,4 @@
-<div {{ $attributes->class(['dl-phone', 'dl-phone--contained' => $contained]) }} {!! $dl() !!} data-dl-phone data-state="A"
+<div {{ $attributes->class(['dl-phone', 'dl-phone--contained' => $contained])->merge($autoReturn && $deviceAction && \Devlib\Device::autoChosen(request()) ? ['data-auto-return' => ''] : []) }} {!! $dl() !!} data-dl-phone data-state="A"
      data-l-a="{{ \Devlib\Lang::t('phone_menu') }}" data-l-b="{{ \Devlib\Lang::t('phone_acts') }}" data-l-c="{{ \Devlib\Lang::t('phone_main') }}" data-l-dirty="{{ \Devlib\Lang::t('phone_dirty') }}" data-l-leave="{{ \Devlib\Lang::t('phone_leave') }}"
      data-l-menu="{{ \Devlib\Lang::t('phone_menu') }}" data-l-search="{{ \Devlib\Lang::t('phone_search') }}" data-l-ui="{{ json_encode(collect(['filter', 'export', 'paper', 'group', 'ink', 'view', 'cols', 'apply'])->mapWithKeys(fn ($k) => [$k => \Devlib\Lang::t('phone_'.$k)])) }}" data-l-other="{{ \Devlib\Lang::t('phone_other') }}">
     <button type="button" class="dl-phone__burger" data-dl-phone-menu aria-label="{{ \Devlib\Lang::t('phone_menu') }}" aria-expanded="false" aria-controls="dl-phone-bar"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
