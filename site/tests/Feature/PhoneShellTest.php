@@ -151,6 +151,16 @@ class PhoneShellTest extends TestCase
         $this->assertStringContainsString('dataset.label', file_get_contents(__DIR__.'/../../../resources/assets/js/components/lines.js'));
     }
 
+    public function test_lookup_popup_and_pager_phone_rules_are_scoped_to_the_phone_context(): void
+    {
+        $css = file_get_contents(__DIR__.'/../../../resources/assets/devlib.css');
+        foreach ([':is(body.dl-on-phone,.dl-phone) .dl-lines__pop{', ':is(body.dl-on-phone,.dl-phone) .dl-lookup__table thead{display:none}', ':is(body.dl-on-phone,.dl-phone) .dl-pager button{'] as $rule) {
+            $this->assertStringContainsString($rule, $css);
+        }
+        $this->assertStringNotContainsString("
+.dl-lines__pop{left:8px", $css, 'popup lookup bawaan (desktop) tidak diubah');
+    }
+
     public function test_report_phone_list_is_opt_in_and_scoped_to_the_phone_screen(): void
     {
         $data = ['cols' => [['key' => 'a', 'label' => 'A']], 'rows' => [['a' => 1]]];

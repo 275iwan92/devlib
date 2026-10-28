@@ -4399,3 +4399,19 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 :is(body.dl-on-phone,.dl-phone) .dl-print__bar .dl-segment__opt{min-height:44px}
 :is(body.dl-on-phone,.dl-phone) .dl-lines__table tbody tr[data-i] td.dl-lines__act .dl-iconbtn{width:44px;height:44px}
 :is(body.dl-on-phone,.dl-phone) .dl-lines__table tbody tr[data-i] .dl-lines__case{min-width:40px;min-height:36px;font-size:12px}
+
+/* ==== Popup hasil pencarian (lookup) di HP (hasil uji interaksi, 2026-10-29; konteks phone saja): selebar layar, hasil bertumpuk sebagai kartu dua baris (nama tebal, lalu kode / satuan / dst.), tanpa membuat halaman melebar. ==== */
+:is(body.dl-on-phone,.dl-phone) .dl-lines__pop{left:8px!important;right:8px;width:auto;min-width:0!important;max-width:calc(100vw - 16px)}
+:is(body.dl-on-phone,.dl-phone) .dl-lookup__table,
+:is(body.dl-on-phone,.dl-phone) .dl-lookup__table tbody{display:block}
+:is(body.dl-on-phone,.dl-phone) .dl-lookup__table thead{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-lookup__table tbody tr.dl-dd__item{display:block;padding:10px 12px;border-bottom:1px solid var(--dl-border-soft)}
+:is(body.dl-on-phone,.dl-phone) .dl-lookup__table tbody tr.dl-dd__item td{display:inline;padding:0;border:0;font-size:13px;color:var(--dl-muted);white-space:normal}
+:is(body.dl-on-phone,.dl-phone) .dl-lookup__table tbody tr.dl-dd__item td:first-child{display:block;margin-bottom:2px;font-size:16px;font-weight:700;color:var(--dl-ink-strong)}
+:is(body.dl-on-phone,.dl-phone) .dl-lookup__table tbody tr.dl-dd__item td:not(:first-child):not(:last-child)::after{content:" \00b7 "}
+
+/* ==== Penomoran halaman, pilihan jumlah baris, chip filter, dan kartu baris tanpa tombol di HP (hasil uji layar Modul / Grup, 2026-10-29; konteks phone saja). ==== */
+:is(body.dl-on-phone,.dl-phone) .dl-pager button{min-width:44px;min-height:44px}
+:is(body.dl-on-phone,.dl-phone) .dl-pager__size{min-width:44px;min-height:44px}
+:is(body.dl-on-phone,.dl-phone) .dl-fb{min-height:44px}
+:is(body.dl-on-phone,.dl-phone) .dl-lines__table tbody tr[data-i] td.dl-lines__act:not(:has(button)){display:none}
