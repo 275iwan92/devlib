@@ -4420,3 +4420,28 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 :is(body.dl-on-phone,.dl-phone) .dl-pager__size{min-width:44px;min-height:44px}
 :is(body.dl-on-phone,.dl-phone) .dl-fb{min-height:44px}
 :is(body.dl-on-phone,.dl-phone) .dl-lines__table tbody tr[data-i] td.dl-lines__act:not(:has(button)){display:none}
+
+/* ==== Side screen layout di tampilan HP: daftar bagian, lalu satu bagian dengan tombol kembali (data-ss-view = list | detail; diatur side-screen.js) ==== */
+:is(body.dl-on-phone,.dl-phone) .dl-ssl{display:block;height:auto;scroll-margin-top:64px}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl[data-ss-view=list] .dl-ssl__body{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl[data-ss-view=detail] .dl-ssl__rail{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__rail{border-right:0;background:none;padding:0;gap:0;overflow:visible}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__cap{font-size:calc(12px * var(--dl-font-scale));padding:16px 4px 6px}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__nav{min-height:52px;padding:8px 12px;font-size:16px;background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:0;margin-top:-1px}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__nav i{width:24px;font-size:16px}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__nav::after{content:"";width:8px;height:8px;margin-left:8px;border-top:2px solid var(--dl-muted);border-right:2px solid var(--dl-muted);transform:rotate(45deg);flex:none}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__nav.is-on{background:var(--dl-surface);color:inherit;font-weight:inherit}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__nav.is-on i{color:var(--dl-muted)}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__nav.is-on::before{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__sec{position:static;padding:8px 4px 10px;gap:4px;border-bottom:0}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__sec>i{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__sec h2{font-size:calc(18px * var(--dl-font-scale))}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__sec p{font-size:calc(13px * var(--dl-font-scale))}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__crumb{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__back{display:grid;place-items:center;width:44px;height:44px;margin-left:-8px;border:0;background:none;color:var(--dl-ink-strong);font-size:18px;flex:none;cursor:pointer}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__panel{padding:4px 0 24px}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__top{padding:0}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__foot{position:static;margin:8px 0 0;padding:0;border-top:0;background:none;flex-wrap:wrap}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__foot-acts{width:100%}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__foot-acts .dl-btn{flex:1;min-height:48px}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__foot-hint{margin-left:0;width:100%}

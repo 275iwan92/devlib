@@ -18,6 +18,7 @@ final class PhoneRef
         'form' => ['Item', 'stock'],
         'grid' => ['Items', 'stock'],
         'report' => ['Stock Summary', 'report'],
+        'profile' => ['Edit profile', ''],
         'login' => ['Sign in', ''],
         'offer' => ['Sign in (desktop, narrow)', ''],
     ];

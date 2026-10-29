@@ -49,7 +49,7 @@ class Layout extends Tabs
     {
         return <<<'BLADE'
             @php $cur = $active ?? array_key_first($sections); @endphp
-            <div {{ $attributes->class(['dl-ssl']) }} {!! $dl() !!} data-dl-ss-layout data-dl-ss-param="{{ $param }}">
+            <div {{ $attributes->class(['dl-ssl']) }} {!! $dl() !!} data-dl-ss-layout data-dl-ss-param="{{ $param }}" data-l-back="{{ \Devlib\Lang::text('Back') }}">
                 <nav class="dl-ssl__rail" aria-label="{{ \Devlib\Lang::text('Sections') }}">
                     @php $first = true; @endphp
                     @foreach ($sections as $key => $s)

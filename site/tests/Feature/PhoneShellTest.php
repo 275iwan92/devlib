@@ -82,6 +82,25 @@ class PhoneShellTest extends TestCase
         $this->assertStringContainsString('dl-phone__burger', $html, 'hamburger tetap ada di layar anak, kembali di sebelahnya');
     }
 
+    public function test_side_screen_layout_phone_mode_is_scoped_to_the_phone_context_and_the_desktop_markup_stays(): void
+    {
+        $css = (string) file_get_contents(base_path('../resources/assets/devlib.css'));
+        $block = substr($css, (int) strpos($css, '/* ==== Side screen layout di tampilan HP'));
+        $rules = array_filter(array_map('trim', preg_split('/\R/', $block)), fn ($l) => $l !== '' && ! str_starts_with($l, '/*'));
+        $this->assertNotEmpty($rules);
+        foreach ($rules as $line) {
+            $this->assertStringStartsWith(':is(body.dl-on-phone,.dl-phone) ', $line, 'aturan side-screen HP harus dibatasi konteks HP: '.$line);
+        }
+
+        $html = Blade::render('<x-dl::side-screen.layout :sections="$s"><x-slot:a>x</x-slot:a></x-dl::side-screen.layout>', ['s' => ['a' => ['A', 'fa-user']]]);
+        $this->assertStringContainsString('data-dl-ss-layout', $html);
+        $this->assertStringNotContainsString('dl-ssl__back', $html, 'tombol kembali dibuat JS hanya di HP');
+        $this->assertStringNotContainsString('data-ss-view', $html, 'keadaan daftar/detail diatur JS hanya di HP');
+        $js = file_get_contents(__DIR__.'/../../../resources/assets/js/components/side-screen.js');
+        $this->assertStringContainsString('initPhone', $js);
+        $this->assertStringContainsString("closest('.dl-phone')", $js);
+    }
+
     public function test_phone_demo_page_opens(): void
     {
         $this->get('/lib/p7-phone')->assertOk()->assertSee('dl-phone', false);

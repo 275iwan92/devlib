@@ -116,16 +116,37 @@
       window.addEventListener('message', e => { if (e.data && e.data.dl === 'ss-search') this.filter(e.data.q); });
       // Esc di dalam iframe = tutup jendela induk (Side Screen mendengarkan pesan ini).
       document.addEventListener('keydown', e => { if (e.key === 'Escape' && window.name === 'dl-wide' && window.parent !== window) window.parent.postMessage({dl: 'ss-close'}, '*'); });
-      if (window.ResizeObserver) new ResizeObserver(() => this.el.classList.toggle('is-narrow', this.el.clientWidth < 900)).observe(this.el);
+      this.phone = document.body.classList.contains('dl-on-phone') || !!this.el.closest('.dl-phone');
+      if (this.phone) this.initPhone();
+      else if (window.ResizeObserver) new ResizeObserver(() => this.el.classList.toggle('is-narrow', this.el.clientWidth < 900)).observe(this.el);
+    }
+    /* ---- tampilan HP: dua keadaan, daftar bagian (list) lalu satu bagian (detail) dengan tombol kembali; desktop tidak tersentuh ---- */
+    initPhone() {
+      const param = this.el.dataset.dlSsParam || 'tab';
+      this.view(new URL(location.href).searchParams.has(param) ? 'detail' : 'list');
+      const back = document.createElement('button');
+      back.type = 'button'; back.className = 'dl-ssl__back'; back.setAttribute('aria-label', this.el.dataset.lBack || 'Back');
+      back.innerHTML = '<i class="fa-solid fa-chevron-left" aria-hidden="true"></i>';
+      $(this.el, '.dl-ssl__sec').prepend(back);
+      // Tombol kembali Android = kembali ke daftar (bukan keluar layar): detail yang dibuka dari daftar punya satu entri riwayat sendiri.
+      back.addEventListener('click', () => (history.state && history.state.ssl ? history.back() : this.list()));
+      window.addEventListener('popstate', () => { if (this.el.dataset.ssView === 'detail') this.list(); });
+    }
+    view(v) { this.el.dataset.ssView = v; }
+    list() {
+      this.view('list');
+      try { const u = new URL(location.href); u.searchParams.delete(this.el.dataset.dlSsParam || 'tab'); history.replaceState(history.state, '', u); } catch (e) {}
+      this.el.scrollIntoView?.({block: 'start'});
     }
     show(key) {
+      if (this.phone && this.el.dataset.ssView !== 'detail') { try { history.pushState({ssl: 1}, '', location.href); } catch (e) {} this.view('detail'); this.el.scrollIntoView?.({block: 'start'}); }
       $$(this.el, '[data-dl-ss-nav]').forEach(b => b.classList.toggle('is-on', b.dataset.dlSsNav === key));
       $$(this.el, '[data-dl-ss-panel]').forEach(p => p.classList.toggle('is-active', p.dataset.dlSsPanel === key));
       const b = $(this.el, `[data-dl-ss-nav="${key}"]`), p = $(this.el, `[data-dl-ss-panel="${key}"]`);
       if (b) { $(this.el, '[data-dl-ss-sec-title]').textContent = b.dataset.label; const i = $(this.el, '[data-dl-ss-sec-icon]'); if (i) i.className = 'fa-solid ' + (b.dataset.icon || 'fa-circle'); }
       if (p) $(this.el, '[data-dl-ss-sec-hint]').textContent = p.dataset.hint || '';
       $(this.el, '[data-dl-ss-body]').scrollTop = 0;
-      try { const u = new URL(location.href); u.searchParams.set(this.el.dataset.dlSsParam || 'tab', key); history.replaceState(null, '', u); } catch (e) {}
+      try { const u = new URL(location.href); u.searchParams.set(this.el.dataset.dlSsParam || 'tab', key); history.replaceState(history.state, '', u); } catch (e) {}
       this.emit('dl:side-screen:section', {key});
     }
     // Saring: rel = bagian yang cocok namanya; isi = kartu (.dl-card / [data-ss-item]) di bagian aktif yang memuat teks itu.
