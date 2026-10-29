@@ -55,7 +55,22 @@ Status: aktif.
                 </x-dl::side-screen.foot>
             </x-slot:leave>
             <x-slot:swap><x-dl::card title="Shift Swap" icon="fa-rotate">Sample section. Content of this part is the project's own.</x-dl::card></x-slot:swap>
-            <x-slot:security><x-dl::card title="Security" icon="fa-shield-halved">Sample section. Content of this part is the project's own.</x-dl::card></x-slot:security>
+            <x-slot:security>
+                <x-dl::card title="Change Password" icon="fa-key">
+                    <x-dl::field.password name="old_password" label="Old password" required autocomplete="current-password" />
+                    <x-dl::field.password name="new_password" label="New password" required autocomplete="new-password" hint="Minimum 8 characters." />
+                    <x-dl::field.password name="new_password_confirmation" label="Confirm new password" required autocomplete="new-password" />
+                    <x-dl::button icon="fa-key" label="Update Password" block />
+                </x-dl::card>
+                <x-dl::card title="Account Recovery" description="Used to prove it is you if you forget your password. No email needed." icon="fa-shield-halved">
+                    <x-dl::field.date name="birth_date" label="Date of birth" required />
+                    <x-dl::field.text name="mother_name" label="Mother's maiden name" required />
+                    <x-dl::field.phone name="phone" label="Registered phone" kind="mobile" required />
+                    <x-dl::field.select name="question_id" label="Security question" placeholder="Choose a question..." :options="['pet' => 'Name of your first pet', 'school' => 'Name of your primary school', 'city' => 'City where you were born']" required />
+                    <x-dl::field.text name="answer" label="Your answer" required />
+                    <x-dl::button icon="fa-floppy-disk" label="Save Recovery Data" block />
+                </x-dl::card>
+            </x-slot:security>
         </x-dl::side-screen.layout>
     </x-dl::phone-shell>
 @endsection
