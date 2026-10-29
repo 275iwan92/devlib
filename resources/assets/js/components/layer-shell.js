@@ -237,6 +237,7 @@
       this.lm = $(this.el, '[data-dl-layer-menu]');
       this.lm.addEventListener('dl:layer-menu', e => { e.preventDefault(); this.openTab(e.detail.key); });
       this.lm.addEventListener('dl:layer-menu-action', e => { e.preventDefault(); this.command(e.detail.key); });
+      this.lm.addEventListener('dl:layer-menu-open', e => { e.preventDefault(); this.openUrlTab(e.detail.key, e.detail.label, e.detail.url, e.detail.icon || undefined); });
       // Breadcrumb di dalam layar (iframe, origin sama) -> buka menu pada modul / grup itu.
       window.addEventListener('message', e => {
         if (e.origin === location.origin && e.data?.dl === 'menu') this.lm.dlComponent?.goTo(e.data.path || [], e.data.leaf);

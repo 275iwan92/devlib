@@ -81,7 +81,7 @@ class LayerMenu extends DevlibComponent
     {
         return array_map(function ($it) {
             $n = ['label' => $it['label'], 'icon' => $this->fa($it['icon'] ?? 'fa-circle-dot')];
-            foreach (['key', 'url', 'badge', 'tone', 'group', 'pin'] as $k) {
+            foreach (['key', 'url', 'open', 'badge', 'tone', 'group', 'pin'] as $k) {
                 if (isset($it[$k])) {
                     $n[$k] = $it[$k];
                 }

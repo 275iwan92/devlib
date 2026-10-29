@@ -25,6 +25,7 @@ use Devlib\Lang;
 //       ITEM,                                              // item langsung
 //   ]],
 // ]
+// Grup (ITEM ber-'items') boleh membawa 'open' = url halaman pembuka grup: klik grup turun satu layer DAN membuka halaman itu sebagai tab.
 // ITEM = ['code', 'label', 'url', 'type' => form|grid|report, 'icon'?, 'badge'?, 'badgeTone'?]
 // $chat = ['me', 'people', 'convos', 'api'] -> Chat (x-dl::chat, versi ringkas); 'api' kosong = pratinjau tanpa server.
 // $open = code item yang dibuka sebagai tab saat mulai (bila tidak ada tab yang dipulihkan dari sesi browser).
@@ -98,7 +99,9 @@ class LayerShell extends DevlibComponent
         // Item ber-'items' = submenu bertingkat (dibuka sebagai panel berikutnya), selain itu daun.
         $leaf = function (array $it, ?string $group) use (&$leaf, $tone) {
             if (isset($it['items'])) {
+                // 'open' = url halaman pembuka grup (opsional); grup ber-open perlu key (kode) untuk tab-nya.
                 return array_filter(['label' => $it['label'], 'icon' => $it['icon'] ?? null, 'group' => $it['group'] ?? $group,
+                    'open' => $it['open'] ?? null, 'key' => isset($it['open']) ? ($it['code'] ?? null) : null,
                     'items' => array_map(fn ($c) => $leaf($c, null), $it['items'])]);
             }
 

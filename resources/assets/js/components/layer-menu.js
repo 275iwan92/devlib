@@ -227,7 +227,12 @@
       if (!t.hasAttribute('data-lm-x')) return;
       const d = [...this.track.children].indexOf(t.closest('.dl-lm__pane'));
       const n = this.nodes(d)[+t.dataset.lmX];
-      if (n.items) { this.setPeek(true); this.path = [...this.path.slice(0, d), n]; this.draw(); this.track.children[d + 1].querySelector('[data-lm-back]').focus({preventScroll: true}); return; }
+      if (n.items) {
+        this.setPeek(true); this.path = [...this.path.slice(0, d), n]; this.draw(); this.track.children[d + 1].querySelector('[data-lm-back]').focus({preventScroll: true});
+        // Grup yang punya halaman pembuka (n.open = url): panel kanan ikut membuka halaman itu; menu kiri tetap turun satu layer.
+        if (n.open) this.emit('dl:layer-menu-open', {key: n.key, label: n.label, url: n.open, icon: n.icon}, true);
+        return;
+      }
       if (!n.url || n.url === '#') e.preventDefault();
       this.sel = n.key;
       this.$$('.dl-lm__a.is-active').forEach(a => a.classList.remove('is-active'));
