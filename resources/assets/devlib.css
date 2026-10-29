@@ -4078,6 +4078,10 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-phone__who .dl-netline{font-size:calc(12px * var(--dl-font-scale));color:var(--dl-muted);--dl-net-bad:var(--dl-danger);--dl-net-warn:var(--dl-net-warn-ink)}
 .dl-phone__who .dl-netline span{font-size:inherit;font-weight:inherit}
 .dl-phone__who .dl-netline [data-nl]{font-weight:inherit}
+.dl-phone__who--out{position:relative;padding-right:58px}
+.dl-phone__who--out form{position:absolute;top:0;right:2px;margin:0}
+.dl-phone__poweroff{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--dl-danger);border-radius:12px;background:transparent;color:var(--dl-danger);font-size:calc(18px * var(--dl-font-scale));cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dl-phone__poweroff:active{background:var(--dl-danger);color:var(--dl-surface)}
 .dl-phone__who .dl-netline[data-state="server"] [data-nl="server"],.dl-phone__who .dl-netline[data-state="offline"] [data-nl="client"],.dl-phone__who .dl-netline__st{font-weight:700}
 .dl-phone__grp{margin:0 0 6px}
 .dl-phone__gh{margin:10px 4px 2px;font-size:calc(13px * var(--dl-font-scale));font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--dl-ink-strong)}

@@ -273,3 +273,15 @@ class PhoneShellTest extends TestCase
         }
     }
 }
+
+    public function test_phone_shell_logout_top_is_opt_in_and_moves_the_button_to_the_name_row(): void
+    {
+        $default = Blade::render('<x-dl::phone-shell title="Home" logout-action="/logout" :user="[\'name\' => \'Iwan\']">x</x-dl::phone-shell>');
+        $this->assertStringContainsString('dl-phone__out', $default);
+        $this->assertStringNotContainsString('dl-phone__poweroff', $default);
+
+        $top = Blade::render('<x-dl::phone-shell title="Home" logout-action="/logout" logout-top :user="[\'name\' => \'Iwan\']">x</x-dl::phone-shell>');
+        $this->assertStringNotContainsString('dl-phone__out"', $top, 'tombol Sign out di dasar tidak digambar');
+        $this->assertMatchesRegularExpression('#class="dl-phone__who dl-phone__who--out".*<form method="POST" action="/logout">.*class="dl-phone__poweroff".*data-dl-confirm=#s', $top);
+        $this->assertStringNotContainsString('dl-phone__poweroff', Blade::render('<x-dl::phone-shell title="Home" logout-top>x</x-dl::phone-shell>'), 'tanpa logout-action tidak ada tombol');
+    }

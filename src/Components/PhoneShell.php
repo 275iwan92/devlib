@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Kerangka aplikasi untuk smartphone potret: SATU ikon hamburger melayang (tanpa bilah permanen), baris judul + tombol kembali di isi halaman, dan deret aksi layar / lima menu utama yang muncul di atas lalu tertutup sendiri.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek. Daftar modul = bentuk yang sama dengan x-dl::layer-shell.
- * Input        : title, back, tabs, active, modules, user, brand, logoutAction, deviceAction, links, frame, contained, autoReturn.
+ * Input        : title, back, tabs, active, modules, user, brand, logoutAction, deviceAction, links, frame, contained, autoReturn, installUrl, logoutTop.
  * Output       : Markup dari resources/views/components/phone-shell.blade.php; perilaku lembar Menu di phone-shell.js.
  * Dipakai oleh : layar HP proyek (dipilih lewat Devlib\Device); halaman katalog p7-phone.
  * Status       : Aktif (DevLib).
@@ -44,6 +44,8 @@ class PhoneShell extends DevlibComponent
         public bool $autoReturn = false,
         // Alamat halaman pasang PWA (mis. '/pwa/'); diisi = lembar Menu punya baris "Pasang aplikasi" ke sana. null = tanpa baris (bawaan, opt-in).
         public ?string $installUrl = null,
+        // true = tombol keluar berupa ikon power di baris nama (bagian paling atas lembar Menu; ketukan pertama meminta konfirmasi) dan tombol "Sign out" di dasar lembar tidak digambar. Bawaan false (opt-in); perlu logoutAction.
+        public bool $logoutTop = false,
     ) {
         $this->brand ??= Brand::identity()['name'];
     }

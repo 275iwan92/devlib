@@ -25,9 +25,15 @@
             <section class="dl-phone__grp" data-dl-phone-other hidden>
                 <h2 class="dl-phone__gh"><i class="fa-solid fa-ellipsis" aria-hidden="true"></i> {{ \Devlib\Lang::t('phone_other') }}</h2>
             </section>
-            <div class="dl-phone__who">
+            <div @class(['dl-phone__who', 'dl-phone__who--out' => $logoutTop && $logoutAction])>
                 <strong>{{ $user['name'] ?? '' }}</strong>@if (! empty($user['role']))<span>{{ $user['role'] }}</span>@endif
                 @if (app()->bound('devlib.net')) <x-dl::net-line /> @endif
+                @if ($logoutTop && $logoutAction)
+                    <form method="POST" action="{{ $logoutAction }}">
+                        @csrf
+                        <button type="submit" class="dl-phone__poweroff" aria-label="{{ \Devlib\Lang::text('Sign out') }}" title="{{ \Devlib\Lang::text('Sign out') }}" data-dl-confirm="{{ \Devlib\Lang::text('Sign out of the application?') }}" data-dl-confirm-tone="warn"><i class="fa-solid fa-power-off" aria-hidden="true"></i></button>
+                    </form>
+                @endif
             </div>
             @foreach ($modules as $m)
                 <section class="dl-phone__grp">
@@ -56,7 +62,7 @@
                     <x-dl::button type="submit" variant="secondary" icon="fa-desktop" label="Desktop view" block />
                 </form>
             @endif
-            @if ($logoutAction)
+            @if ($logoutAction && ! $logoutTop)
                 <form method="POST" action="{{ $logoutAction }}" class="dl-phone__out">
                     @csrf
                     <x-dl::button type="submit" variant="secondary" icon="logout" label="Sign out" block />
