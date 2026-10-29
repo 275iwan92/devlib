@@ -11,7 +11,7 @@
   // Bilah / daftar menyembunyi sendiri (memilih, ketuk di luar, menggulir, diam 6 detik); aksi form yang kotor tidak menyembunyi sendiri.
   // Aksi diambil dari halaman (iframe atau isi sendiri) dan dijalankan dengan click() pada tombol aslinya.
   class PhoneShell extends Devlib.Component {
-    static selector = "[data-dl-phone]";
+    static selector = ".dl-phone[data-dl-phone]";
     static ICON = {A: 'fa-bars', B: 'fa-floppy-disk', C: 'fa-table-cells-large'};
 
     // autoReturn: tampilan phone dipilih otomatis (data-auto-return, dari cookie ui_auto) lalu layar melebar -> kirim ui=desktop (+ auto=1) lewat form lembar Menu; sekali per 10 detik agar tidak berputar.

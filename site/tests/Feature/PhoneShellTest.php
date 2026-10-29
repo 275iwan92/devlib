@@ -98,6 +98,8 @@ class PhoneShellTest extends TestCase
         $this->assertStringNotContainsString('data-ss-view', $html, 'keadaan daftar/detail diatur JS hanya di HP');
         $js = file_get_contents(__DIR__.'/../../../resources/assets/js/components/side-screen.js');
         $this->assertStringContainsString('initPhone', $js);
+        // Kolom field.phone membawa atribut data-dl-phone juga: selector shell harus dibatasi ke .dl-phone supaya kolom itu tidak ikut dipasang sebagai shell.
+        $this->assertStringContainsString('static selector = ".dl-phone[data-dl-phone]"', file_get_contents(__DIR__.'/../../../resources/assets/js/components/phone-shell.js'));
         $this->assertStringContainsString("closest('.dl-phone')", $js);
     }
 

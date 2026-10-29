@@ -41,6 +41,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Diperbaiki
 
+- **`x-dl::phone-shell`: kolom `x-dl::field.phone` di halaman ber-shell tidak lagi merusak pemasangan komponen** (ditemukan 2026-10-29, layar Edit profile HP): kolom telepon membawa atribut `data-dl-phone` yang sama dengan penanda shell, jadi dianggap shell dan `init()` gagal (tombol menu null) sehingga komponen sesudahnya tidak terpasang; selector shell kini `.dl-phone[data-dl-phone]`.
 - **`x-dl::table` prop `stack` / `dl-table--stack` (konteks phone): sel tabel kembali berupa baris label + isi** (ditemukan Jo 2026-10-29, layar Akun UAT Stoku di HP): aturan `display:block` untuk `td` lebih spesifik daripada `display:flex` sel bertumpuk, sehingga label dan isi menempel (`Usernameadmin`) dan rata kanan semua. `td` dikeluarkan dari aturan block; sel tetap `display:flex` (label kiri, isi kanan). Hanya konteks phone.
 
 ## [0.6.0] - 2026-10-23
