@@ -19,3 +19,6 @@ Route::get('/ref/phone/inner/{name}', function (string $name) {
 
     return view('phone-ref.inner-'.$name);
 })->name('phone.ref.inner');
+
+// Edit profile di laptop/desktop (isi bagian sama dengan layar HP: partial ref/profile/*).
+Route::view('/ref/profile', 'ref.profile')->name('profile.ref');

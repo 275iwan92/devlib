@@ -4445,3 +4445,4 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__foot-acts{width:100%}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__foot-acts .dl-btn{flex:1;min-height:48px}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__foot-hint{margin-left:0;width:100%}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl__panel .dl-actionbar .dl-btn{flex:1;min-height:48px}
