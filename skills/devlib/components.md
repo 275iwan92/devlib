@@ -559,9 +559,9 @@ Kartu login karyawan baru yang bisa dicetak: nama, kode, username, password awal
 - Prop: name:string='', code:string='', login:string='', password:string='', title:string='Login card', note:?string=NULL
 
 ## `<x-dl::lookup-grid>`
-Grid lookup kecil = Sheet mode lookup; meneruskan saveUrl, reorderUrl, reasonOnSave, links, autoSave, addLabel, deleteUrl/deleteLabel, resetUrl/resetLabel, searchable, showCount.
+Grid lookup kecil = Sheet mode lookup; meneruskan saveUrl, reorderUrl, reasonOnSave, links, autoSave, addLabel, deleteUrl/deleteLabel, resetUrl/resetLabel, searchable, showCount, rowTone.
 - Berkas: `src/Components/LookupGrid.php`
-- Prop: columns:array=[], rows:array=[], rowKey:string='id', title:string='', source:?string=NULL, saveUrl:?string=NULL, stats:array=[], addRows:bool=true, reorderUrl:?string=NULL, reasonOnSave:?string=NULL, links:array=[], autoSave:bool=false, addLabel:?string=NULL, deleteUrl:?string=NULL, searchable:bool=true, showCount:bool=true, deleteLabel:?string=NULL, resetUrl:?string=NULL, resetLabel:?string=NULL
+- Prop: columns:array=[], rows:array=[], rowKey:string='id', title:string='', source:?string=NULL, saveUrl:?string=NULL, stats:array=[], addRows:bool=true, reorderUrl:?string=NULL, reasonOnSave:?string=NULL, links:array=[], autoSave:bool=false, addLabel:?string=NULL, deleteUrl:?string=NULL, searchable:bool=true, showCount:bool=true, deleteLabel:?string=NULL, resetUrl:?string=NULL, resetLabel:?string=NULL, rowTone:?string=NULL
 
 ## `<x-dl::media>`
 Gambar atau frame dokumen (img / iframe) sebagai objek, supaya layar tidak menulis tag media mentah.
@@ -761,7 +761,7 @@ Halaman diagnostik layar: lebar x tinggi CSS, DPR, orientasi, tinggi svh/lvh/dvh
 ## `<x-dl::sheet>`
 Grid sel mirip spreadsheet; mendukung links (sel terhitung), reasonOnSave, reorderUrl.
 - Berkas: `src/Components/Sheet.php`
-- Prop: columns:array=[], rows:array=[], rowKey:string='id', title:string='', source:?string=NULL, lookup:bool=false, saveUrl:?string=NULL, stats:array=[], addRows:bool=true, reorderUrl:?string=NULL, reasonOnSave:?string=NULL, links:array=[], autoSave:bool=false, addLabel:?string=NULL, deleteUrl:?string=NULL, searchable:bool=true, showCount:bool=true, deleteLabel:?string=NULL, resetUrl:?string=NULL, resetLabel:?string=NULL
+- Prop: columns:array=[], rows:array=[], rowKey:string='id', title:string='', source:?string=NULL, lookup:bool=false, saveUrl:?string=NULL, stats:array=[], addRows:bool=true, reorderUrl:?string=NULL, reasonOnSave:?string=NULL, links:array=[], autoSave:bool=false, addLabel:?string=NULL, deleteUrl:?string=NULL, searchable:bool=true, showCount:bool=true, deleteLabel:?string=NULL, resetUrl:?string=NULL, resetLabel:?string=NULL, rowTone:?string=NULL
 
 ## `<x-dl::side-menu>`
 Menu panel samping (kiri ATAU kanan). Mode lebar: akordeon bertingkat (grup -> sub -> item), cari (buka otomatis.

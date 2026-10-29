@@ -2130,6 +2130,9 @@ td.dl-print__no{text-align:center}
 .dl-sheet__table td.is-empty{background:color-mix(in srgb,var(--dl-amber) 12%,var(--dl-surface))}
 .dl-sheet__table td.is-filltgt{background:color-mix(in srgb,var(--dl-green) 14%,var(--dl-surface));outline:1px dashed var(--dl-green);outline-offset:-2px}
 .dl-sheet__table tr.is-new td:not(.dl-sheet__no){background-image:linear-gradient(90deg,color-mix(in srgb,var(--dl-green) 7%,transparent),transparent)}
+.dl-sheet__table tr.is-tone-danger td:not(.dl-sheet__no):not(.is-sel):not(.is-cur):not(.is-bad){background:color-mix(in srgb,var(--dl-danger) 14%,var(--dl-surface))}
+.dl-sheet__table tr.is-tone-warn td:not(.dl-sheet__no):not(.is-sel):not(.is-cur):not(.is-bad){background:color-mix(in srgb,var(--dl-amber-2) 16%,var(--dl-surface))}
+.dl-sheet__table tr.is-tone-success td:not(.dl-sheet__no):not(.is-sel):not(.is-cur):not(.is-bad){background:color-mix(in srgb,var(--dl-green) 12%,var(--dl-surface))}
 .dl-sheet__fill{position:absolute;right:-4px;bottom:-4px;width:8px;height:8px;background:var(--dl-accent);border:1.5px solid var(--dl-surface);cursor:crosshair;z-index:3}
 .dl-sheet__in{position:absolute;inset:0;width:100%;height:100%;border:2px solid var(--dl-accent);padding:4px 7px;font-family:inherit;font-size:inherit;background:var(--dl-surface);color:var(--dl-f-ink);outline:none;box-sizing:border-box}
 .dl-sheet__in.has-case{padding-right:34px}

@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Grid sel mirip spreadsheet; mendukung links (sel terhitung), reasonOnSave, reorderUrl.
  * Sumber hulu  : Komponen generik DevLib.
- * Input        : columns, rows, saveUrl, reorderUrl, reasonOnSave, links; autoSave, addLabel, deleteUrl/deleteLabel, resetUrl/resetLabel, searchable, showCount; kolom lockSaved + lockFilled + emptyText.
+ * Input        : columns, rows, saveUrl, reorderUrl, reasonOnSave, links; autoSave, addLabel, deleteUrl/deleteLabel, resetUrl/resetLabel, searchable, showCount, rowTone; kolom lockSaved + lockFilled + emptyText.
  * Output       : Config JSON untuk sheet.js; Save mengirim {changed, reason}.
  * Dipakai oleh : x-dl::lookup-grid; tab Bill of Process dan Bill of Material.
  * Status       : Aktif (DevLib).
@@ -54,6 +54,7 @@ class Sheet extends DevlibComponent
         public ?string $deleteLabel = null,  // text of the delete button (default "Delete row"); with deleteUrl the button is danger and enabled only after a row number is clicked
         public ?string $resetUrl = null,     // set = a RESET button: POST {dry:true} returns {message} for the confirmation, POST {} returns {rows, message}
         public ?string $resetLabel = null,   // text of the reset button (default "Reset")
+        public ?string $rowTone = null,      // set = name of a row field whose value (danger | warn | success) tints the whole row; empty or missing value = no tint
     ) {}
 
     // Jumlah baris yang cocok dengan satu kotak statistik: ['label', 'where' => [kolom => nilai | [nilai, ...]], 'tone'].
@@ -82,7 +83,7 @@ class Sheet extends DevlibComponent
 
             return $c;
         }, $this->columns), 'rowKey' => $this->rowKey, 'lookup' => $this->lookup,
-            'saveUrl' => $this->saveUrl, 'reorderUrl' => $this->reorderUrl, 'reasonOnSave' => $this->reasonOnSave, 'autoSave' => $this->autoSave && (bool) $this->saveUrl, 'deleteUrl' => $this->deleteUrl, 'resetUrl' => $this->resetUrl, 'links' => $this->links, 'csrf' => ($this->saveUrl || $this->reorderUrl) ? csrf_token() : null];
+            'saveUrl' => $this->saveUrl, 'reorderUrl' => $this->reorderUrl, 'reasonOnSave' => $this->reasonOnSave, 'autoSave' => $this->autoSave && (bool) $this->saveUrl, 'deleteUrl' => $this->deleteUrl, 'resetUrl' => $this->resetUrl, 'rowTone' => $this->rowTone, 'links' => $this->links, 'csrf' => ($this->saveUrl || $this->reorderUrl) ? csrf_token() : null];
     }
 
     public function render()

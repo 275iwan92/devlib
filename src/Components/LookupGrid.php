@@ -2,7 +2,7 @@
 
 /*
  * REMARK
- * Tujuan       : Grid lookup kecil = Sheet mode lookup; meneruskan saveUrl, reorderUrl, reasonOnSave, links, autoSave, addLabel, deleteUrl/deleteLabel, resetUrl/resetLabel, searchable, showCount.
+ * Tujuan       : Grid lookup kecil = Sheet mode lookup; meneruskan saveUrl, reorderUrl, reasonOnSave, links, autoSave, addLabel, deleteUrl/deleteLabel, resetUrl/resetLabel, searchable, showCount, rowTone.
  * Sumber hulu  : Turunan Sheet.
  * Input        : Sama dengan Sheet.
  * Output       : Sama dengan Sheet.
@@ -36,9 +36,10 @@ class LookupGrid extends Sheet
         ?string $deleteLabel = null,
         ?string $resetUrl = null,
         ?string $resetLabel = null,
+        ?string $rowTone = null,
     ) {
         parent::__construct($columns, $rows, $rowKey, $title, $source, lookup: true, saveUrl: $saveUrl, stats: $stats, addRows: $addRows, reorderUrl: $reorderUrl, reasonOnSave: $reasonOnSave, links: $links, autoSave: $autoSave, addLabel: $addLabel, deleteUrl: $deleteUrl,
-            searchable: $searchable, showCount: $showCount, deleteLabel: $deleteLabel, resetUrl: $resetUrl, resetLabel: $resetLabel);
+            searchable: $searchable, showCount: $showCount, deleteLabel: $deleteLabel, resetUrl: $resetUrl, resetLabel: $resetLabel, rowTone: $rowTone);
     }
 
     public function tag(): string

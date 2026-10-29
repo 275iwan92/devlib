@@ -52,6 +52,7 @@ Constructor of `Devlib\Components\Sheet` (19 props). Blade names are kebab-case;
 | `delete-label` | `?string` | `null` | Text of the delete button, default `Delete row`. When set, the button is the red `danger` variant and is enabled only after a row number was clicked (the whole row is chosen); when null the button is the plain `secondary` variant and is always enabled and acts on the current cell range. Lookup mode, needs `delete-url`. |
 | `reset-url` | `?string` | `null` | Set = a `Reset` button (contract below). Lookup mode only. |
 | `reset-label` | `?string` | `null` | Text of the reset button, default `Reset`. |
+| `row-tone` | `?string` | `null` | Name of a row field whose value (`danger`, `warn` or `success`) tints the whole row (read-only and editable cells alike; the selected / current / invalid cell keeps its own colour). Empty or missing value = no tint. The server sets the field, so a tinted row follows the data after every save. Both modes. Default: no row is tinted and the markup is unchanged. |
 
 ### Column definition
 

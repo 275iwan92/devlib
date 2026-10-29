@@ -54,6 +54,7 @@ Constructor of `Devlib\Components\LookupGrid` (19 props; the same as `x-dl::shee
 | `delete-label` | `?string` | `null` | Text of the delete button (default `Delete row`). When set the button is the `danger` variant and **disabled until a row number is clicked** (a whole row chosen); when empty it is a secondary button that is always enabled. Only with `delete-url`. |
 | `reset-url` | `?string` | `null` | Draws a `Reset` button. `POST {dry: true}` must return `{message}` shown in a confirm dialog; on OK `POST {}` returns `{message}` and the page is reloaded (the server keeps the message as flash). Meant for engine-made rows (restore the generated list). |
 | `reset-label` | `?string` | `null` | Text of the reset button (default `Reset`). Translated. |
+| `row-tone` | `?string` | `null` | Name of a row field whose value (`danger`, `warn`, `success`) tints the whole row; empty = no tint. Opt-in, see `sheet.md`. |
 
 The class passes every prop to `Sheet::__construct` and fixes `lookup: true`; `lookup` cannot be set from the tag.
 
