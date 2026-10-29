@@ -49,6 +49,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Diperbaiki
 
+- **`x-dl::table` prop `stack` / `dl-table--stack` (konteks phone): sel tabel kembali berupa baris label + isi** (ditemukan Jo 2026-10-29, layar Akun UAT Stoku di HP): aturan `display:block` untuk `td` lebih spesifik daripada `display:flex` sel bertumpuk, sehingga label dan isi menempel (`Usernameadmin`) dan rata kanan semua. `td` dikeluarkan dari aturan block; sel tetap `display:flex` (label kiri, isi kanan). Hanya konteks phone.
 - **Login PWA React: tidak ada lagi kedipan bahasa saat dibuka**: bahasa awal dibaca sinkron dari cookie `dl_lang` (nilai sah `id` / `en`, selain itu `id`), jadi render pertama sudah berbahasa pilihan pengguna dan tetap benar saat offline; jawaban `GET /pwa/session` hanya dipakai bila belum ada cookie.
 
 ## [0.6.0] - 2026-10-23
