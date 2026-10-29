@@ -2,6 +2,19 @@
 
 Aturan baku (permintaan Jo, 2026-10-23: "SET juga DEVLIB multi VIEW") untuk SEMUA proyek yang mewarisi DevLib: setiap layar dan object hidup di dua view, **phone** dan **desktop**. Pasang di proyek: `phone.md` (menu, login, kerangka HP). Halaman ini = model, aturan, dan padanan; semuanya **opt-in**: proyek yang tidak memakainya tidak berubah, dan view desktop tidak pernah mendapat aturan khusus HP.
 
+## 0. Keputusan Jo 2026-10-29: tampilan mengikuti perangkat, otomatis (berlaku; KODE BELUM DISESUAIKAN)
+
+Keputusan ini menggantikan semua bagian di bawah yang bertentangan; bagian itu masih menggambarkan kode yang berjalan sekarang dan diubah satu per satu (preview dulu, sesuai `CLAUDE.md` bagian 2).
+
+1. **Satu perangkat, satu tampilan, ditentukan di belakang layar.** Server mengenali perangkat dari `Sec-CH-UA-Mobile` lalu User-Agent. Pengguna **tidak pernah memilih**: tidak ada menu, tombol, popup, atau cookie pilihan tampilan (`x-dl::phone-offer`, `x-dl::device-pick`, aksi "Desktop view" / "Phone view", cookie `ui`) di aplikasi proyek. Alasannya: membuka dari smartphone dan dari laptop adalah dua sesi yang berbeda.
+2. **Smartphone = tampilan HP (potret); tablet, laptop, dan desktop = satu tampilan desktop (landscape).** Tablet tidak punya tampilan sendiri.
+3. **Salah pintu dialihkan otomatis**: laptop yang membuka alamat HP diarahkan ke padanan desktop, dan sebaliknya.
+4. **Jendela laptop yang diperkecil tidak berubah menjadi tampilan HP.** Ia tetap tampilan desktop, responsif sampai batas, lalu terpotong (geser horizontal). Batas **(usulan, menunggu persetujuan Jo)**: 1366 px ke atas normal; 1024-1365 padat (menu samping menyempit jadi ikon); di bawah 1024 berhenti mengecil (halaman tetap selebar 1024; tablet potret memakai `viewport width=1024`). Tampilan HP dirancang untuk lebar 320-480 px potret; di atas 480 isinya ditengah, lebar maksimal 480.
+5. **Web tidak bisa memaksa layar berputar.** "Landscape otomatis" berarti tablet dan laptop memakai tampilan landscape; memutar layar tetap oleh pengguna. Kunci landscape lewat `orientation` manifest PWA ditunda sampai ada aplikasi desktop / tablet tersendiri (manifest berlaku satu untuk semua perangkat).
+6. **Layar dan halaman katalog yang belum punya padanan smartphone disembunyikan di smartphone** (tidak ditampilkan, tidak diberi catatan). Setelah padanannya dibuat, smartphone menampilkan versi smartphone-nya. Penanda: baris `View` di header REMARK (bagian 2 aturan 1); tanpa `phone` = hanya desktop.
+7. **Pratinjau HP di katalog (`device-frame`, "Lihat sebagai")** hanya tampil bila katalog dibuka dari laptop / tablet, hanya di lokal dan demo, bukan di proyek pewaris.
+8. **Pewaris.** Per 2026-10-29 hanya sstock yang memakai komponen pemilih (`phone-offer auto`, `device-action`, cookie `ui` / `ui_auto`, rute `ui.set`, `ResetViewChoice`, `PhoneViewTest`); tmerp dan mockuptm tidak (pencarian hanya-baca). Karena itu DevLib menambah mode otomatis sebagai **opt-in** dan tidak menghapus komponen lama sebelum sstock disesuaikan: penyesuaian sstock dilaporkan ke Jo, tidak dikerjakan dari DevLib.
+
 ## 1. Model: dua view dan satu OS
 
 | View | Perangkat | Ciri |
