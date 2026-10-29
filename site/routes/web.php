@@ -10,7 +10,6 @@ use App\Support\Qc;
 use App\Support\Summary;
 use Devlib\Device;
 use Devlib\Locale;
-use Devlib\Pwa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -25,21 +24,10 @@ Route::get('/login', fn () => view('login', [
     'username' => old('login', ''),
 ]))->name('login');
 
-// Layar login PWA (pwa/, React): token CSRF + bahasa tamu; login yang sama dengan form Blade, balasannya JSON.
-Pwa::routes(links: [
-    'register' => fn () => route('register', [], false),
-    'forgot' => fn () => route('password.request', [], false),
-    'device' => fn () => route('ui.set', [], false),
-]);
-
-// Daftar / Lupa password di DALAM scope PWA (/pwa/), supaya PWA terpasang tidak keluar ke bilah peramban. Contoh tampilan: komponen tanpa action = PREVIEW (tidak ada akun, e-mail, atau OTP sungguhan).
-Route::view('/pwa/register', 'auth.register')->name('register');
-Route::view('/pwa/forgot', 'auth.forgot')->name('password.request');
-
 Route::post('/login', function (Request $r) {
     $login = trim((string) $r->input('login'));
     $password = (string) $r->input('password');
-    $fail = fn (string $code) => Pwa::fail($r, $code, fn () => back()->withInput(['login' => $login])->with('login_error', $code));
+    $fail = fn (string $code) => back()->withInput(['login' => $login])->with('login_error', $code);
 
     if ($login === '' || $password === '') {
         return $fail('empty');
@@ -66,10 +54,10 @@ Route::post('/login', function (Request $r) {
     $r->session()->regenerate();
     $r->session()->put('devlib_user', collect($user)->except('password')->all());
 
-    return Pwa::done($r, redirect()->intended(route('home')));
+    return redirect()->intended(route('home'));
 })->name('login.submit');
 
-// Pilihan tampilan (phone / desktop) -> cookie `ui` terenkripsi yang dibaca Device::view (skills/devlib/phone.md). Tujuan tombol "Tampilan desktop" login PWA.
+// Pilihan tampilan (phone / desktop) -> cookie `ui` terenkripsi yang dibaca Device::view (skills/devlib/phone.md).
 Route::post('/ui', fn (Request $r) => redirect()->route('home')->withCookie(cookie(Device::COOKIE, $r->validate(['ui' => ['required', Rule::in(Device::CHOICES)]])['ui'], 60 * 24 * 365)))->name('ui.set');
 
 Route::post('/logout', function (Request $r) {

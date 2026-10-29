@@ -74,29 +74,6 @@ Contoh minimal layar sendiri di dalam shell (tombol disembunyikan di halaman, ta
 
 Referensi visual hidup dan tangkapan layar tiap keadaan: halaman katalog `p7-phone` (`/lib/p7-phone`, alamat pendek `/ref/phone-shell`); berkas gambar di `site/public/ref/phone/`.
 
-## 2b. Sisi server layar login PWA React (`pwa/`, opt-in)
-
-Layar login React di `pwa/` memerlukan dua hal dari server; keduanya diwariskan lewat `Devlib\Pwa`, bukan disalin. Logika login (tabel pengguna, hash, sesi) tetap milik proyek.
-
-```php
-use Devlib\Pwa;
-
-Pwa::routes();   // GET /pwa (hasil build di public/pwa/index.html) dan GET /pwa/session -> {csrf, lang, links}; di routes/web.php (grup web)
-// Tautan layar login (tanpa itu tidak tampil): Pwa::routes(links: ['register' => fn () => route('register', [], false), 'forgot' => ..., 'device' => fn () => route('ui.set', [], false)]);
-// Halaman Daftar / Lupa password HARUS di bawah /pwa/ (mis. /pwa/register): di luar scope PWA terpasang yang berjalan standalone menampilkan bilah peramban.
-
-Route::post('/login', function (Request $r) {
-    // ... validasi dan cek kredensial milik proyek ...
-    if ($gagal) {
-        return Pwa::fail($r, 'wrong', fn () => back()->with('login_error', 'wrong'));   // JSON: 422 {error: empty|wrong}
-    }
-    $r->session()->regenerate();
-    return Pwa::done($r, redirect()->intended(route('home')));                          // JSON: {redirect}
-});
-```
-
-Tanpa `Accept: application/json` kedua pembantu mengembalikan balasan form biasa apa adanya, jadi form Blade tidak berubah. Proyek yang tidak memanggil `Pwa` tidak mendapat rute apa pun. Contoh hidup + tes: `site/routes/web.php`, `site/tests/Feature/PwaLoginTest.php`.
-
 ## 3. Yang opt-in dan yang tidak berubah
 
 - Tanpa memakai satu pun komponen di atas, proyek lama tidak berubah. `x-dl::login-box` bagian `device` dan `x-dl::layer-shell` prop `deviceAction` default mati; markup lama identik (dibuktikan tes).

@@ -8,7 +8,7 @@ Status: aktif.
 --}}
 @extends('layout', ['title' => 'Phone shell · '.$title, 'bodyClass' => 'dl-on-phone'])
 @section('body')
-    <x-dl::phone-shell :title="$title" :active="$active" :tabs="\App\Support\PhoneRef::tabs()" :modules="\App\Support\PhoneRef::modules()" :user="\App\Support\PhoneRef::user()" logout-action="#" device-action="#" install-url="/pwa/">
+    <x-dl::phone-shell :title="$title" :active="$active" :tabs="\App\Support\PhoneRef::tabs()" :modules="\App\Support\PhoneRef::modules()" :user="\App\Support\PhoneRef::user()" logout-action="#" device-action="#">
         <x-dl::phone-tiles>
             <x-dl::phone-tile label="Active items" :value="27" icon="fa-solid fa-boxes-stacked" :url="\App\Support\PhoneRef::url('grid')" />
             <x-dl::phone-tile label="Low stock" :value="4" icon="fa-solid fa-triangle-exclamation" tone="danger" :url="\App\Support\PhoneRef::url('grid')" />
