@@ -47,6 +47,8 @@ Constructor of `Devlib\Components\Grid` (29 props). Blade names are kebab-case; 
 | `id` | string | `'grid'` | Grid identity. Used as the `localStorage` key (`dl-grid-<id>`), the `sessionStorage` return key (`dl-grid-ret-<id>`), the export file name (`<id>.csv` / `<id>.xlsx`), the radio-group name of the Group chooser and the lint location (`grid#<id>`). **Must be unique per grid and stable.** |
 | `columns` | array | `[]` | Column definitions, see [columns](#columns). |
 | `rows` | array | `[]` | List of associative arrays (one per row). Serialised to `data-rows`. |
+| `size` | string | `null` | `lg` = larger text for grids that are read all day (table text 15px, column titles 13px, 38px photo, bigger card text). `null` = normal size. Sets `data-size` on the grid. |
+| `layout` | string | `null` | Version of the default column layout. The saved column choice in the browser is keyed `dl-grid-<id>-<layout>`, so changing the value drops old saved choices that would hide a new default. |
 | `row-key` | string | `'id'` | Row field that identifies a row (selection, open/toggle URLs, highlight, events). |
 | `stats` | array | `[]` | Count boxes that act as filters, see [stats and tabs](#stats-and-tabs). |
 | `tabs` | array | `[]` | Second filter group, same shape as `stats`. |
@@ -98,7 +100,7 @@ Types (all handled in `cell()` of `grid.js`):
 | `type` | Cell | Extra options |
 |---|---|---|
 | `text` (default) | Plain text. Also used for `time`/`datetime` (formatted through `fmtCell`). | `url`, `ref`, `list` (see below) |
-| `identity` | Name in bold with a small code line; coloured initials square by default. | `code` (row field of the small line, also searched and exported as `name (code)`), `avatar => false` (no square), `box => true` (no initials; name + code inside one coloured rectangle), `hue` (row field with an angle 0-359 to colour the box/square per group; otherwise derived from the name), `lead => true` (adds `dl-avatar-id--lead`) |
+| `identity` | Name in bold with a small code line; coloured initials square by default. | `code` (row field of the small line, also searched and exported as `name (code)`), `avatar => false` (no square), `box => true` (no initials; name + code inside one coloured rectangle), `hue` (row field with an angle 0-359 to colour the box/square per group; otherwise derived from the name), `lead => true` (adds `dl-avatar-id--lead`), `sub` (row field of a second line shown under name + code on one line, e.g. position and department; kept to one line with the full text as tooltip) |
 | `doc` | **Legacy.** Bold document number + smaller `party` line, no coloured square. With `kind="transactional"` it is rewritten to `identity` + `avatar => false` + `code => party`. | `party` (row field of the second line) |
 | `integer` | Right-aligned whole number. | |
 | `number` | Right-aligned number. | `decimals => n` fixed digits (without it: 2 digits if the value contains `.`, otherwise 0) |
@@ -236,7 +238,7 @@ The Export button opens a two-item menu, CSV and XLSX. The export takes the **vi
 
 ### Card view
 
-When `cards` is set, the Table/Cards switch toggles between the table and a card grid of the **current page** of the filtered, sorted rows. Cards support double-click open but have no checkbox, actions or detail. The choice is not persisted.
+When `cards` is set, the Table/Cards switch toggles between the table and a card grid of the **current page** of the filtered, sorted rows. Cards support double-click open but have no checkbox, actions or detail. The choice is not persisted. `fallback` (row field, usually the name) draws the initials in the picture area of a card without a photo instead of a generic image icon.
 
 ### Nested detail rows
 
@@ -283,7 +285,7 @@ Not stored: search, page, stat box, view (table/cards), collapsed groups, open d
 
 ### data-config keys (JSON on `data-config`)
 
-`id`, `columns`, `rowKey`, `stats`, `tabs`, `filters`, `groups`, `bulk`, `expand`, `actions`, `activeKey`, `perPage`, `openUrl`, `newUrl`, `newModal`, `toggleUrl`, `csrf` (only when `toggle-url` is set), `detail` (or `null`), `cards` (or `null`), `quickAdd`, `groupBy`, `mode`, `rowTone`, `restore`, `pageSizes`. `kind`, `search` and `new-record` are not in the config (they only change PHP-side output: the `dl-grid--tx` class, the placeholder and the button). `data-rows` is the `rows` array.
+`id`, `columns`, `rowKey`, `size`, `layout`, `stats`, `tabs`, `filters`, `groups`, `bulk`, `expand`, `actions`, `activeKey`, `perPage`, `openUrl`, `newUrl`, `newModal`, `toggleUrl`, `csrf` (only when `toggle-url` is set), `detail` (or `null`), `cards` (or `null`), `quickAdd`, `groupBy`, `mode`, `rowTone`, `restore`, `pageSizes`. `kind`, `search` and `new-record` are not in the config (they only change PHP-side output: the `dl-grid--tx` class, the placeholder and the button). `data-rows` is the `rows` array.
 
 ### Root and hook attributes
 

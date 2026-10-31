@@ -755,6 +755,17 @@ body.dl-page-body{overflow:auto;height:auto;min-height:100vh}
 /* lead = kolom utama dua baris: baris 1 lebih besar, baris 2 nama detail dengan huruf normal (teks gelap, bukan kode mono). */
 .dl-avatar-id--lead .dl-avatar-id__txt b{font-size:calc(17px * var(--dl-font-scale))}
 .dl-avatar-id--lead .dl-avatar-id__txt small{font-family:inherit;font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink)}
+/* sub = baris kedua kolom identitas (jabatan, departemen): huruf biasa gelap; l1 = nama + kode sebaris. */
+.dl-avatar-id__l1{display:flex;align-items:baseline;gap:8px}
+.dl-avatar-id__txt small.dl-avatar-id__sub{font-family:inherit;color:var(--dl-ink);max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* size lg (opt-in lewat size="lg" di x-dl::grid): grid yang dibaca terus-menerus, teks 15px, judul kolom 13px, foto 38px. */
+.dl-grid[data-size="lg"] .dl-grid__table{font-size:calc(15px * var(--dl-font-scale))}
+.dl-grid[data-size="lg"] .dl-grid__table th{font-size:calc(13px * var(--dl-font-scale))}
+.dl-grid[data-size="lg"] .dl-avatar-id__txt b{font-size:calc(15px * var(--dl-font-scale))}
+.dl-grid[data-size="lg"] .dl-avatar-id__txt small{font-size:calc(13px * var(--dl-font-scale))}
+.dl-grid[data-size="lg"] .dl-grid__thumb img,.dl-grid[data-size="lg"] .dl-grid__noimg{width:38px;height:38px}
+.dl-grid[data-size="lg"] .dl-grid__imgcell{width:52px}
+.dl-grid[data-size="lg"] .dl-badge{font-size:calc(12.5px * var(--dl-font-scale))}
 .dl-doctag{display:inline-flex;flex-direction:column;align-items:flex-start;vertical-align:middle;box-sizing:border-box;width:160px;padding:4px 10px;border-radius:var(--dl-radius);line-height:1.25;white-space:nowrap;color:var(--dl-white);background:linear-gradient(135deg,var(--dl-doc-a),var(--dl-doc-b))}
 .dl-doctag b{font-size:calc(12.5px * var(--dl-font-scale));font-weight:800;font-variant-numeric:tabular-nums;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .dl-doctag small{font-size:calc(11.5px * var(--dl-font-scale));opacity:.93;max-width:100%;overflow:hidden;text-overflow:ellipsis}
@@ -2078,8 +2089,13 @@ td.dl-print__no{text-align:center}
 .dl-grid__cardbody{padding:10px 12px;display:flex;flex-direction:column;gap:3px}
 .dl-grid__cardbody b{font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink-strong)}
 .dl-grid__cardbody small{font-size:calc(11.5px * var(--dl-font-scale));color:var(--dl-muted);font-family:var(--dl-font-mono)}
-.dl-grid__cardbody span{display:flex;justify-content:space-between;font-size:calc(12px * var(--dl-font-scale))}
-.dl-grid__cardbody em{font-style:normal;color:var(--dl-muted)}
+.dl-grid__cardbody span{display:flex;justify-content:space-between;gap:8px;font-size:calc(12px * var(--dl-font-scale))}
+.dl-grid__cardbody em{font-style:normal;color:var(--dl-muted);flex:none}
+.dl-grid__cardini{font-size:calc(34px * var(--dl-font-scale));font-weight:700;color:var(--dl-accent)}
+.dl-grid[data-size="lg"] .dl-grid__cardbody b{font-size:calc(15px * var(--dl-font-scale))}
+.dl-grid[data-size="lg"] .dl-grid__cardbody small{font-size:calc(13px * var(--dl-font-scale))}
+.dl-grid[data-size="lg"] .dl-grid__cardbody span{font-size:calc(14px * var(--dl-font-scale))}
+.dl-grid[data-size="lg"] .dl-grid__cardimg{height:120px}
 
 .dl-drill{display:flex;flex-direction:column;gap:10px}
 .dl-drill__crumb{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:calc(13px * var(--dl-font-scale));color:var(--dl-muted)}

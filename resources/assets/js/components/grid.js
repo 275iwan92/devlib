@@ -19,7 +19,7 @@
       // Centang hanya bila layar memasang aksi massal (bulk) -- tanpa bulk centang tak berguna.
       this.entry = !this.report;
       this.chk = !this.report && this.cfg.bulk.length > 0;
-      this.saveKey = 'dl-grid-' + this.cfg.id;
+      this.saveKey = 'dl-grid-' + this.cfg.id + (this.cfg.layout ? '-' + this.cfg.layout : '');   // layout = versi susunan kolom bawaan: ubah bila kolom bawaan berubah, supaya pilihan kolom lama di browser pengguna tidak menutupinya
       this.saved = {};
       try { this.saved = JSON.parse(localStorage.getItem(this.saveKey) || '{}'); } catch (e) {}
 
@@ -264,7 +264,10 @@
           if (c.hue) { const hv = Number(this.val(r, c.hue)); if (Number.isFinite(hv)) h = ((hv % 360) + 360) % 360; }
           // 'box' => true: tanpa inisial; nama + kode berada di dalam satu persegi panjang berwarna (gradasi dari hue / nama).
           if (c.box) return `<td><span class="dl-avatar-id dl-avatar-id--box" style="--h:${h}"><span class="dl-avatar-id__txt"><b>${esc(name)}</b>${c.code ? `<small>${esc(this.val(r, c.code))}</small>` : ''}</span></span></td>`;
-          return `<td><span class="dl-avatar-id${c.lead ? ' dl-avatar-id--lead' : ''}">${c.avatar === false ? '' : `<span class="dl-avatar-id__pic" style="--h:${h}">${esc(ini)}</span>`}<span class="dl-avatar-id__txt"><b>${esc(name)}</b>${c.code ? `<small>${esc(this.val(r, c.code))}</small>` : ''}</span></span></td>`;
+          // 'sub' => nama kolom baris berisi teks baris kedua (mis. jabatan, departemen); nama dan kode berada satu baris di atasnya.
+          const sub = c.sub ? String(this.val(r, c.sub) ?? '') : '';
+          const txt = sub ? `<span class="dl-avatar-id__l1"><b>${esc(name)}</b>${c.code ? `<small>${esc(this.val(r, c.code))}</small>` : ''}</span><small class="dl-avatar-id__sub" title="${esc(sub)}">${esc(sub)}</small>` : `<b>${esc(name)}</b>${c.code ? `<small>${esc(this.val(r, c.code))}</small>` : ''}`;
+          return `<td><span class="dl-avatar-id${c.lead ? ' dl-avatar-id--lead' : ''}">${c.avatar === false ? '' : `<span class="dl-avatar-id__pic" style="--h:${h}">${esc(ini)}</span>`}<span class="dl-avatar-id__txt">${txt}</span></span></td>`;
         }
         // Grid Transactional (user 2026-10-20): nomor dokumen tebal + nama pihak ('party') kecil di bawah, TANPA kotak warna --
         // data transaksi bisa ribuan baris, polos lebih cepat. Persegi dokumen berwarna (2026-10-02) dihentikan; type 'doc' tetap
@@ -345,7 +348,7 @@
       }
       const cardsOn = this.cfg.cards && this.st.view === 'cards';
       this.q('[data-g-cards]').hidden = !cardsOn; this.q('.dl-grid__wrap').hidden = !!cardsOn;
-      if (cardsOn) { const C = this.cfg.cards; this.q('[data-g-cards]').innerHTML = page.map(r => `<article class="dl-grid__card" data-id="${esc(r[this.cfg.rowKey])}"${this.phone && this.cfg.rowTone && r[this.cfg.rowTone] ? ` data-tone="${esc(r[this.cfg.rowTone])}"` : ''}><div class="dl-grid__cardimg">${r[C.image] ? `<img src="${esc(r[C.image])}" alt="" loading="lazy">` : '<i class="fa-regular fa-image"></i>'}${C.badge && r[C.badge] ? `<span class="dl-badge dl-badge--pill dl-badge--${esc((C.tones || {})[r[C.badge]] || 'neutral')}">${esc(r[C.badge])}</span>` : ''}</div><div class="dl-grid__cardbody"><b>${esc(r[C.title])}</b><small>${esc(r[C.sub] ?? '')}</small>${(C.meta || []).map(k => { const c = this.cols.find(x => x.key === k) || {key: k}; if (this.phone && (r[k] ?? '') === '') return ''; return `<span><em>${esc(c.label || k)}</em>${esc(this.fmtCell(c, r[k] ?? ''))}</span>`; }).join('')}</div></article>`).join('') || '<div class="dl-empty"><b class="dl-empty__title">' + esc(T('g_no_match')) + '</b></div>'; }
+      if (cardsOn) { const C = this.cfg.cards; this.q('[data-g-cards]').innerHTML = page.map(r => `<article class="dl-grid__card" data-id="${esc(r[this.cfg.rowKey])}"${this.phone && this.cfg.rowTone && r[this.cfg.rowTone] ? ` data-tone="${esc(r[this.cfg.rowTone])}"` : ''}><div class="dl-grid__cardimg">${r[C.image] ? `<img src="${esc(r[C.image])}" alt="" loading="lazy">` : (C.fallback ? `<span class="dl-grid__cardini">${esc(String(r[C.fallback] || '?').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase())}</span>` : '<i class="fa-regular fa-image"></i>')}${C.badge && r[C.badge] ? `<span class="dl-badge dl-badge--pill dl-badge--${esc((C.tones || {})[r[C.badge]] || 'neutral')}">${esc(r[C.badge])}</span>` : ''}</div><div class="dl-grid__cardbody"><b>${esc(r[C.title])}</b><small>${esc(r[C.sub] ?? '')}</small>${(C.meta || []).map(k => { const c = this.cols.find(x => x.key === k) || {key: k}; if (this.phone && (r[k] ?? '') === '') return ''; return `<span><em>${esc(c.label || k)}</em>${esc(this.fmtCell(c, r[k] ?? ''))}</span>`; }).join('')}</div></article>`).join('') || '<div class="dl-empty"><b class="dl-empty__title">' + esc(T('g_no_match')) + '</b></div>'; }
       const cnt = this.q('[data-g-count]'); if (cnt) cnt.textContent = Tf('g_matched', {n: fmt.number(total), total: fmt.number(this.rows.length)});
       this.q('[data-g-foot]').innerHTML = sums.length && page.length ? '<tr>' + (this.actFirst() ? '<td></td>' : '') + (this.chk ? '<td class="dl-grid__chk"></td>' : '') + (this.hasExp ? '<td></td>' : '') + this.shown().map((c, i) => c.sum ? `<td class="num"><b>${esc(this.fmtCell(c, list.reduce((t, r) => t + (+this.val(r, c.key) || 0), 0)))}</b></td>` : `<td>${i === 0 ? '<b>' + esc(T('g_total_all')) + '</b>' : ''}</td>`).join('') + (this.actLast() ? '<td></td>' : '') + '</tr>' : '';
       this.drawPager(total, pages);
@@ -371,7 +374,7 @@
       this.qq('[data-g-density] .dl-segment__opt').forEach(b => b.classList.toggle('is-active', b.dataset.value === this.st.density));
       this.qq('[data-g-lines] .dl-segment__opt').forEach(b => b.classList.toggle('is-active', b.dataset.value === this.st.lines));
       const ln = this.q('[data-g-lines-n]'); if (ln) { ln.value = this.st.linesN; ln.disabled = this.st.lines === 'auto'; }
-      this.el.dataset.density = this.st.density; this.el.style.setProperty('--dl-grid-lines', this.st.lines === 'auto' ? 'unset' : this.st.linesN); this.el.classList.toggle('is-clamped', this.st.lines !== 'auto');
+      this.el.dataset.density = this.st.density; if (this.cfg.size) this.el.dataset.size = this.cfg.size; this.el.style.setProperty('--dl-grid-lines', this.st.lines === 'auto' ? 'unset' : this.st.linesN); this.el.classList.toggle('is-clamped', this.st.lines !== 'auto');
       const chips = [
         ...(this.st.stat !== null ? [['stat', 'Filter: ' + this.cfg.stats[this.st.stat].label]] : []),
         ...Object.entries(this.st.filters).filter(([, v]) => v !== '').map(([k, v]) => ['f:' + k, `${this.cfg.filters[k]}: ${v}`]),

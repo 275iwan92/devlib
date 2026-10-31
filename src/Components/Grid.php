@@ -43,7 +43,7 @@ use Devlib\Lang;
 // Aturan Grid Transactional (user 2026-10-20, menggantikan aturan 2026-10-02): demi kecepatan memuat ribuan baris bentuknya PLAIN: tanpa kotak/avatar,
 //   baris selang-seling (zebra) warna lembut (kind="transactional"; zebra juga wajib di mode="report", user 2026-10-20), kolom pertama hanya teks tebal, hanya kolom Status yang boleh berwarna; baris induk 5-8 kolom tampil,
 //   tanpa kolom "jumlah item"; baris anak (detail) paling banyak 7 kolom dan SELALU memuat nama item / product.
-// cards: ['image','title','sub','badge','tones','meta' => [kolom..]] -> tombol Tabel/Kartu (CardView).
+// cards: ['image','title','sub','badge','tones','meta' => [kolom..], 'fallback' => kolom nama (inisial bila tanpa foto)] -> tombol Tabel/Kartu (CardView).
 // openUrl: alamat buka baris, {id} diganti nilai rowKey (klik 2x / tombol Buka / Edit langsung pindah layar);
 //   {kolom} lain diganti nilai kolom baris itu, mis. '{open_url}' bila tiap baris membawa alamatnya sendiri.
 // restore (opt-in, alur grid -> form: skills/devlib/grid-form-flow.md): grid mengingat cari, halaman, dan statistik (dan saringan kolom) saat membuka form lewat openUrl / newUrl atau saat tautan sel ('url') diikuti (Nested Grid), dan memulihkannya
@@ -96,6 +96,10 @@ class Grid extends DevlibComponent
         public ?string $rowTone = null,
         public ?string $kind = null,
         public bool $restore = false,
+        // size: lg = teks tabel 15px (judul kolom 13px, foto 38px) untuk grid yang dibaca terus-menerus (mis. Master Employee); kosong = ukuran biasa.
+        public ?string $size = null,
+        // layout: versi susunan kolom bawaan; mengganti nilainya membuang pilihan kolom / urutan lama yang tersimpan di browser pengguna (kunci simpanan memuatnya).
+        public ?string $layout = null,
     ) {
         $this->applyKind();
         if ($this->isReport()) {
@@ -178,7 +182,7 @@ class Grid extends DevlibComponent
             'bulk' => $this->bulk, 'expand' => $this->expand, 'actions' => $this->actions, 'activeKey' => $this->activeKey, 'perPage' => $this->perPage,
             'openUrl' => $this->openUrl, 'newUrl' => $this->newUrl, 'newModal' => $this->newModal,
             'toggleUrl' => $this->toggleUrl, 'csrf' => $this->toggleUrl ? csrf_token() : null, 'detail' => $this->detail ?: null, 'cards' => $this->cards ?: null, 'quickAdd' => $this->quickAdd, 'groupBy' => $this->groupBy,
-            'mode' => $this->mode, 'rowTone' => $this->rowTone, 'restore' => $this->restore, 'pageSizes' => $this->isReport() ? [50, 100, 250, 500] : [10, 25, 50, 100],
+            'mode' => $this->mode, 'rowTone' => $this->rowTone, 'restore' => $this->restore, 'size' => $this->size, 'layout' => $this->layout, 'pageSizes' => $this->isReport() ? [50, 100, 250, 500] : [10, 25, 50, 100],
         ];
     }
 
