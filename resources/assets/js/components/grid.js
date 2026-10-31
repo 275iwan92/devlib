@@ -24,7 +24,7 @@
       try { this.saved = JSON.parse(localStorage.getItem(this.saveKey) || '{}'); } catch (e) {}
 
       this.st = Object.assign({search: '', sort: null, dir: 1, stat: null, tab: 0, filters: {}, hidden: this.cols.filter(c => !c.visible).map(c => c.key),
-        group: this.cfg.groupBy || '', view: 'table', page: 1, perPage: this.cfg.perPage, density: this.report ? 'compact' : 'normal', lines: 'fixed', linesN: 1, collapsed: [], open: []}, this.saved, {page: 1, search: '', colf: {}}, this.entry ? {density: this.cfg.actions === 'master' ? 'normal' : 'compact', lines: 'fixed', linesN: 1} : {});
+        group: this.cfg.groupBy || '', view: 'table', page: 1, perPage: this.cfg.perPage, density: this.report ? 'compact' : 'normal', lines: 'fixed', linesN: 1, collapsed: [], open: []}, this.saved, {page: 1, search: '', colf: {}}, this.entry ? {density: ['master', 'edit'].includes(this.cfg.actions) ? 'normal' : 'compact', lines: 'fixed', linesN: 1} : {});
 
       // Tampilan HP (body.dl-on-phone atau di dalam x-dl::phone-shell): grid yang mendeklarasikan `cards` dibuka sebagai daftar kartu, ketuk kartu = buka. Tanpa konteks HP tidak ada yang berubah.
       this.phone = document.body.classList.contains('dl-on-phone') || !!this.el.closest('.dl-phone');
@@ -301,7 +301,9 @@
       // Tanpa Confirm/Approve di grid (user 2026-09-30): Confirm hanya di dalam form dokumen.
       if (this.cfg.actions === 'worklist') return `<td class="dl-grid__act"><button type="button" class="dl-iconbtn" data-g-act="open" data-id="${id}" title="${esc(T('g_open_hint'))}"><i class="fa-solid fa-up-right-from-square"></i></button></td>`;
       const on = !!r[this.cfg.activeKey];
-      return `<td class="dl-grid__act"><button type="button" class="dl-iconbtn" data-g-act="edit" data-id="${id}" title="${esc(T('g_edit_hint'))}"><i class="fa-solid fa-pen"></i></button><button type="button" class="dl-iconbtn dl-iconbtn--${on ? 'danger' : 'success'}" data-g-act="toggle" data-id="${id}" title="${esc(T(on ? 'g_deactivate' : 'g_activate'))}" data-dl-confirm="${esc(T(on ? 'g_ask_deactivate' : 'g_ask_activate'))}"><i class="fa-solid ${on ? 'fa-ban' : 'fa-circle-check'}"></i></button></td>`;
+      const edit = `<button type="button" class="dl-iconbtn" data-g-act="edit" data-id="${id}" title="${esc(T('g_edit_hint'))}"><i class="fa-solid fa-pen"></i></button>`;
+      if (this.cfg.actions === 'edit') return `<td class="dl-grid__act">${edit}</td>`;
+      return `<td class="dl-grid__act">${edit}<button type="button" class="dl-iconbtn dl-iconbtn--${on ? 'danger' : 'success'}" data-g-act="toggle" data-id="${id}" title="${esc(T(on ? 'g_deactivate' : 'g_activate'))}" data-dl-confirm="${esc(T(on ? 'g_ask_deactivate' : 'g_ask_activate'))}"><i class="fa-solid ${on ? 'fa-ban' : 'fa-circle-check'}"></i></button></td>`;
     }
 
     rowHtml(r, idx) {

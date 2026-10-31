@@ -31,7 +31,7 @@ use Devlib\Lang;
 //   desimal tetap, money = kode mata uang ('currency' => 'USD', bawaan IDR) + 'decimals', date / time / datetime = format DevLib.
 // stats/tabs: [['label', 'where' => [kolom => nilai|[nilai..]], 'tone']]  (tanpa where = total); stats 'default' => true = saringan awal
 // bulk: [['key', 'label', 'icon', 'variant', 'confirm', 'quiet' => true (no preview toast; the screen listens to dl:grid-bulk and does the work)]]
-// actions: master (Edit + Aktif/Nonaktif, Pilihan C) | worklist (Buka saja; Confirm/Approve TIDAK di grid, hanya di form) | none
+// actions: master (Edit + Aktif/Nonaktif, Pilihan C) | edit (Edit saja, tanpa tombol Aktif/Nonaktif: nonaktif lewat dialog di form) | worklist (Buka saja; Confirm/Approve TIDAK di grid, hanya di form) | none
 // link: nilai hasil transaksi (Grid Master, mis. 'Valued transactions'), hanya-baca; 'format' => money|number,
 //   'url' => alamat daftar transaksi baris itu ({id}); tanpa url -> event dl:grid-link.
 // Kolom teks / daftar dengan 'url' = isi sel jadi tautan; {id} = kunci baris, {kolom} = nilai kolom lain di baris itu; 'ref' => true = gaya tautan rujukan
