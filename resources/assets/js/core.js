@@ -114,7 +114,7 @@ window.Devlib = window.Devlib || {};
     else if (dots || commas) {
       const ch = dots ? '.' : ',', n = dots || commas;
       if (ch === NUM.dec) { if (n > 1) return ''; s = s.replace(ch, '.'); }
-      else if (new RegExp('^-?\\d{1,3}(\\' + ch + '\\d{3})+$').test(s)) s = s.split(ch).join('');
+      else if (new RegExp('^-?[1-9]\\d{0,2}(\\' + ch + '\\d{3})+$').test(s)) s = s.split(ch).join('');   // ribuan tidak diawali 0: "0.500" = 0,5 bukan 500 (sama dengan NumberValue::parse)
       else if (n === 1) s = s.replace(ch, '.');
       else return '';
     }

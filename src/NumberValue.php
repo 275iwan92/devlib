@@ -44,7 +44,7 @@ final class NumberValue implements Stringable
                     return null;
                 }
                 $s = str_replace($ch, '.', $s);
-            } elseif (preg_match('/^-?\d{1,3}('.preg_quote($ch, '/').'\d{3})+$/', $s)) {
+            } elseif (preg_match('/^-?[1-9]\d{0,2}('.preg_quote($ch, '/').'\d{3})+$/', $s)) {   // kelompok ribuan tidak diawali 0: "0.500" = 0,5 bukan 500
                 $s = str_replace($ch, '', $s);
             } elseif (max($dots, $commas) === 1) {
                 $s = str_replace($ch, '.', $s);

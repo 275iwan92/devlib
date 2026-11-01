@@ -41,6 +41,18 @@ class ValueLogicTest extends TestCase
         }
     }
 
+    public function test_typed_dot_grouping_never_starts_with_zero(): void
+    {
+        // parse() = ketikan manusia (sama dengan numStr di core.js). Ribuan id tidak diawali 0: "0.500" = 0,5 (bukan 500).
+        $cases = [
+            ['0.500', '0.500'], ['0.125', '0.125'], ['-0.250', '-0.250'], ['0,500', '0.500'],
+            ['10.500', '10500'], ['1.250', '1250'], ['100.000', '100000'], ['1.234.567', '1234567'],
+        ];
+        foreach ($cases as [$typed, $canonical]) {
+            $this->assertSame($canonical, NumberValue::parse($typed, 'id')?->canonical, "{$typed} (id)");
+        }
+    }
+
     public function test_number_value_displays_per_language(): void
     {
         $n = NumberValue::of('1234.5');
