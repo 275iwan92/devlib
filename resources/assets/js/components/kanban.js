@@ -20,24 +20,20 @@
       this.drag = null;
       this.seq = Date.now();
 
-      // Drag & drop: posisi sisip = kartu pertama yang titik tengahnya di bawah kursor.
-      this.el.addEventListener('dragstart', e => { const c = e.target.closest('[data-k-card]'); if (!c || this.readonly) return; this.drag = c.dataset.kCard; c.classList.add('is-drag'); e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', this.drag); } catch (x) {} });
-      this.el.addEventListener('dragend', () => { this.drag = null; $$(this.el, '.is-drag,.is-target').forEach(x => x.classList.remove('is-drag', 'is-target')); $$(this.el, '.dl-kcard__ph').forEach(x => x.remove()); });
-      this.el.addEventListener('dragover', e => {
-        const body = e.target.closest('[data-k-drop]'); if (!body || this.drag == null) return;
-        e.preventDefault();
-        $$(this.el, '.is-target').forEach(x => x.classList.remove('is-target')); body.closest('.dl-kcol').classList.add('is-target');
-        const after = $$(body, '[data-k-card]:not(.is-drag)').find(c => { const r = c.getBoundingClientRect(); return e.clientY < r.top + r.height / 2; });
-        let ph = $(this.el, '.dl-kcard__ph'); if (!ph) { ph = document.createElement('div'); ph.className = 'dl-kcard__ph'; }
-        if (after) body.insertBefore(ph, after); else body.appendChild(ph);
-      });
-      this.el.addEventListener('drop', e => {
-        const body = e.target.closest('[data-k-drop]'); if (!body || this.drag == null) return;
-        e.preventDefault();
-        const card = this.cardById(this.drag), ph = $(body, '.dl-kcard__ph');
-        const index = ph ? $$(body, '[data-k-card]:not(.is-drag), .dl-kcard__ph').indexOf(ph) : null;
-        this.move(card, body.closest('[data-k-col]').dataset.kCol, index);
-      });
+      this.openOn = this.el.dataset.openOn === 'click' ? 'click' : 'dblclick';
+      this.undoOn = this.el.dataset.undo === '1';
+
+      // Drag & drop memakai pointer events (mouse, pena, sentuh): kartu terangkat mengikuti jari/kursor, kolom tujuan = kolom
+      // terdekat menurut sumbu x (area lepas = seluruh lebar kolom, juga kolom kosong), tepi papan menggulir sendiri.
+      // Mouse/pena mulai setelah 5 px; sentuh = tahan 250 ms (jari yang bergerak lebih dulu tetap menggulir papan).
+      this.pend = null;
+      this.el.addEventListener('pointerdown', e => this.dragDown(e));
+      this.el.addEventListener('touchmove', e => { if (this.drag) e.preventDefault(); }, {passive: false});
+      this.el.addEventListener('contextmenu', e => { if (this.pend || this.drag) e.preventDefault(); });
+      document.addEventListener('pointermove', e => this.dragMove(e));
+      document.addEventListener('pointerup', () => this.dragUp());
+      document.addEventListener('pointercancel', () => { if (this.drag) this.dragEnd(false); else this.dragClear(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && this.drag) this.dragEnd(false); });
 
       this.el.addEventListener('click', e => {
         const x = e.target;
@@ -64,7 +60,7 @@
         }
         if (x.closest('[data-k-addcol]')) { const key = 'c' + (++this.seq); this.cols.push({key, label: T('k_new_col'), tone: 'neutral'}); this.render(); const t = $(this.el, `[data-k-col="${key}"] [data-k-rename]`); t.focus(); document.getSelection().selectAllChildren(t); this._emit('column', null, null, key); }
       });
-      this.el.addEventListener('dblclick', e => { const c = e.target.closest('[data-k-card]'); if (c && !this.readonly && !e.target.closest('[data-k-move]')) this.openCard(this.cardById(c.dataset.kCard)); });
+      this.el.addEventListener('dblclick', e => { const c = e.target.closest('[data-k-card]'); if (this.openOn === 'dblclick' && c && !this.readonly && !e.target.closest('[data-k-move]')) this.openCard(this.cardById(c.dataset.kCard)); });
       this.el.addEventListener('keydown', e => {
         if (e.target.matches('[data-k-rename]') && e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
         if (e.target.matches('[data-k-new-title]') && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); e.target.closest('.dl-kcol__foot').querySelector('[data-k-new-save]').click(); }
@@ -107,7 +103,7 @@
 
     cardHtml(c) {
       const ck = c.checklist || [], done = ck.filter(i => i.done).length, d = this.due(c), late = d && d < new Date() && !this.colOf(c.col)?.done;
-      return `<div class="dl-kcard" draggable="${this.readonly ? 'false' : 'true'}" data-k-card="${esc(c.id)}" tabindex="0" ${this.readonly ? '' : `title="${esc(T('k_dbl_open'))}"`}>
+      return `<div class="dl-kcard" data-k-card="${esc(c.id)}" tabindex="0" ${this.readonly || this.openOn === 'click' ? '' : `title="${esc(T('k_dbl_open'))}"`}>
         ${(c.tags || []).length ? `<div class="dl-kcard__tags">${c.tags.map(t => `<span class="dl-badge dl-badge--${esc(t.tone || 'accent')}">${esc(t.label || t)}</span>`).join('')}</div>` : ''}
         <div class="dl-kcard__title">${esc(c.title)}</div>
         ${c.desc ? `<div class="dl-kcard__desc">${esc(c.desc)}</div>` : ''}
@@ -137,10 +133,13 @@
       }).join('') + (this.canAddCol ? '<button type="button" class="dl-kanban__addcol" data-k-addcol><i class="fa-solid fa-plus"></i> ' + esc(T('k_add_col')) + '</button>' : '');
     }
 
-    move(card, to, index) {
+    // opts: {extra} = isian tambahan untuk body move-url; {undo} = pindah hasil Urungkan; {resumed} = lanjutan dari dl:kanban-beforemove.
+    move(card, to, index, opts = {}) {
       const from = card.col;
       if (!this.allowed(from, to)) { toast(Tf('k_move_denied', {from: this.colOf(from).label, to: this.colOf(to).label}), 'danger'); this.render(); return false; }
-      const tgt = this.colOf(to);
+      // Aplikasi boleh menunda pindah antar kolom (mis. pop-up jadwal): preventDefault(), lalu detail.resume({isian tambahan}) melanjutkan.
+      if (from !== to && !opts.resumed && !this.el.dispatchEvent(new CustomEvent('dl:kanban-beforemove', {bubbles: true, cancelable: true, detail: {card, from, to, index, undo: !!opts.undo, resume: extra => this.move(card, to, index, {...opts, resumed: true, extra})}}))) return false;
+      const tgt = this.colOf(to), snap = this.cards.slice(), oldIndex = this.cards.filter(c => c.col === from).indexOf(card);
       if (from !== to && tgt.limit && this.cards.filter(c => c.col === to).length >= tgt.limit) toast(Tf('k_wip_over', {col: tgt.label, n: tgt.limit}), 'warn');
       this.cards.splice(this.cards.indexOf(card), 1);
       card.col = to;
@@ -149,22 +148,122 @@
       this.cards.splice(before ? this.cards.indexOf(before) : this.cards.length, 0, card);
       if (from !== to) (card.activity = card.activity || []).unshift({by: this.me, at: `${fmt.date()} ${fmt.time()}`, text: Tf('k_act_moved', {from: this.colOf(from).label, to: tgt.label})});
       this.render(); this._emit('move', card, from, to);
-      if (from !== to) this.persist(card, from, to);
+      if (from !== to) {
+        this.persist(card, from, to, opts.extra, () => { this.cards.splice(0, this.cards.length, ...snap); card.col = from; card.activity.shift(); this.render(); });
+        if (this.undoOn && !opts.undo) this.undoBar(Tf('k_moved_to', {col: tgt.label}), () => this.move(card, from, oldIndex, {undo: true}));
+      }
       return true;
     }
 
-    // Dengan data-move-url, pindah kartu dikirim ke server (JSON {card, from, to}); ditolak = kartu kembali ke kolom asal + pesan galat.
+    // Dengan data-move-url, pindah kartu dikirim ke server (JSON {card, from, to, ...extra}); ditolak = kartu kembali ke kolom dan urutan asal + pesan galat.
     // DB = satu-satunya sumber kebenaran posisi kartu (kanbanboardstandard), jadi layar memvalidasi ulang aturannya di server.
-    async persist(card, from, to) {
+    async persist(card, from, to, extra, back) {
       const url = this.el.dataset.moveUrl;
       if (!url) return;
+      back = back || (() => { card.col = from; this.render(); });
       try {
-        const r = await fetch(url, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': window.DL_CSRF || ''}, body: JSON.stringify({card: card.id, from, to})});
+        const r = await fetch(url, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': window.DL_CSRF || ''}, body: JSON.stringify({...extra, card: card.id, from, to})});
         if (r.ok) return;
         const body = await r.json().catch(() => ({}));
-        card.col = from; this.render();
+        back();
         toast(body.message || r.statusText, 'danger');
-      } catch (e) { card.col = from; this.render(); toast(String(e.message || e), 'danger'); }
+      } catch (e) { back(); toast(String(e.message || e), 'danger'); }
+    }
+
+    // Bilah Urungkan di dasar layar (6 detik) setelah kartu pindah kolom; hanya bila prop undo menyala.
+    undoBar(text, fn) {
+      this.bar = this.bar || this.el.appendChild(Object.assign(document.createElement('div'), {className: 'dl-kanban__undo', role: 'status'}));
+      this.bar.innerHTML = `<span>${esc(text)}</span><button type="button">${esc(T('discard'))}</button>`;
+      this.bar.hidden = false;
+      $(this.bar, 'button').onclick = () => { this.bar.hidden = true; fn(); };
+      clearTimeout(this.barTimer); this.barTimer = setTimeout(() => { this.bar.hidden = true; }, 6000);
+    }
+
+    dragDown(e) {
+      const c = e.target.closest('[data-k-card]');
+      if (!c || this.readonly || this.drag || e.button > 0 || e.target.closest('a,button,[contenteditable]')) return;
+      const s = this.pend = {c, id: c.dataset.kCard, x: e.clientX, y: e.clientY, touch: e.pointerType === 'touch'};
+      if (s.touch) s.t = setTimeout(() => { if (this.pend === s) this.dragStart(s); }, 250);
+    }
+
+    dragClear() {
+      if (this.pend) clearTimeout(this.pend.t);
+      this.pend = null;
+    }
+
+    dragMove(e) {
+      const p = this.pend;
+      if (p) {
+        const m = Math.hypot(e.clientX - p.x, e.clientY - p.y);
+        if (!p.touch && m > 5) this.dragStart(p);
+        else if (p.touch && m > 8) this.dragClear();
+      }
+      if (this.drag) { this.drag.cx = e.clientX; this.drag.cy = e.clientY; this.dragPlace(); }
+    }
+
+    dragUp() {
+      if (this.drag) return this.dragEnd(true);
+      const p = this.pend; this.dragClear();
+      if (p && this.openOn === 'click') this.openCard(this.cardById(p.id));
+    }
+
+    dragStart(s) {
+      this.dragClear();
+      const r = s.c.getBoundingClientRect(), g = s.c.cloneNode(true);
+      g.removeAttribute('data-k-card'); g.removeAttribute('tabindex'); g.removeAttribute('title');
+      g.classList.add('dl-kcard--ghost'); g.style.cssText = `width:${r.width}px;left:${r.left}px;top:${r.top}px`;
+      document.body.appendChild(g);
+      s.g = g; s.dx = s.x - r.left; s.dy = s.y - r.top; s.cx = s.x; s.cy = s.y; s.from = s.c.closest('[data-k-col]').dataset.kCol;
+      s.ph = document.createElement('div'); s.ph.className = 'dl-kcard__ph'; s.ph.style.height = r.height + 'px';
+      s.c.after(s.ph); s.c.classList.add('is-drag');
+      this.drag = s; this.el.classList.add('is-dragging');
+      if (navigator.vibrate) navigator.vibrate(15);
+      this.dragPlace(); this.dragLoop();
+    }
+
+    // Kolom tujuan = yang terdekat menurut x (kursor di atas/bawah papan tetap kena); posisi = sebelum kartu pertama yang titik tengahnya di bawah kursor.
+    dragPlace() {
+      const s = this.drag, cols = $$(this.board, '[data-k-col]');
+      s.g.style.left = (s.cx - s.dx) + 'px'; s.g.style.top = (s.cy - s.dy) + 'px';
+      let best = cols[0], bm = Infinity;
+      cols.forEach(c => { const r = c.getBoundingClientRect(), d = s.cx < r.left ? r.left - s.cx : s.cx > r.right ? s.cx - r.right : 0; if (d < bm) { bm = d; best = c; } });
+      const denied = !this.allowed(s.from, best.dataset.kCol);
+      cols.forEach(c => { c.classList.toggle('is-target', c === best && !denied); c.classList.toggle('is-denied', c === best && denied); });
+      if (denied) { if (s.c.nextElementSibling !== s.ph) s.c.after(s.ph); return; }
+      s.body = $(best, '[data-k-drop]');
+      const after = $$(s.body, '[data-k-card]:not(.is-drag)').find(c => { const r = c.getBoundingClientRect(); return s.cy < r.top + r.height / 2; });
+      if (after) { if (after.previousElementSibling !== s.ph) s.body.insertBefore(s.ph, after); } else if (s.body.lastElementChild !== s.ph) s.body.appendChild(s.ph);
+    }
+
+    // Auto-scroll saat kursor/jari di tepi: papan ke samping, isi kolom dan halaman ke atas/bawah.
+    dragLoop() {
+      const s = this.drag; if (!s) return;
+      const r = this.board.getBoundingClientRect(), e = 60, speed = (d) => d / e * 16;
+      let moved = false;
+      if (s.cx < r.left + e) { this.board.scrollLeft -= speed(r.left + e - s.cx); moved = true; } else if (s.cx > r.right - e) { this.board.scrollLeft += speed(s.cx - (r.right - e)); moved = true; }
+      const b = s.body && s.body.getBoundingClientRect();
+      if (b && s.cy < b.top + 40) { s.body.scrollTop -= 10; moved = true; } else if (b && s.cy > b.bottom - 40) { s.body.scrollTop += 10; moved = true; }
+      if (s.cy < 50) scrollBy(0, -12); else if (s.cy > innerHeight - 50) scrollBy(0, 12);
+      if (moved) this.dragPlace();
+      s.raf = requestAnimationFrame(this.dragLoop);
+    }
+
+    dragEnd(ok) {
+      const s = this.drag; this.drag = null; cancelAnimationFrame(s.raf);
+      this.el.classList.remove('is-dragging');
+      const col = s.ph.closest('[data-k-col]'), to = col.dataset.kCol, card = this.cardById(s.id);
+      const dn = $(this.el, '.is-denied'), denied = !!dn; // ditolak aturan transitions: bayangan balik ke tempat semula
+      $$(this.el, '.is-target,.is-denied').forEach(x => x.classList.remove('is-target', 'is-denied'));
+      let n = s.ph.nextElementSibling; while (n && !n.matches('[data-k-card]:not(.is-drag)')) n = n.nextElementSibling;
+      const inCol = this.cards.filter(c => c.col === to && c !== card), index = n ? inCol.indexOf(this.cardById(n.dataset.kCard)) : null;
+      const cur = this.cards.filter(c => c.col === to).indexOf(card);
+      if (ok && denied) toast(Tf('k_move_denied', {from: this.colOf(s.from).label, to: this.colOf(dn.dataset.kCol).label}), 'danger');
+      if (ok && !denied && !(to === s.from && (index == null ? cur === inCol.length : index === cur))) this.move(card, to, index);
+      s.ph.remove(); s.c.classList.remove('is-drag');
+      // Kartu "mendarat": bayangan meluncur ke kartu yang kini ada di papan, lalu hilang.
+      const land = $(this.el, `[data-k-card="${CSS.escape(String(s.id))}"]`)?.getBoundingClientRect();
+      if (land) { s.g.style.transition = 'left .15s, top .15s, transform .15s'; s.g.style.left = land.left + 'px'; s.g.style.top = land.top + 'px'; s.g.style.transform = 'none'; }
+      setTimeout(() => s.g.remove(), land ? 160 : 0);
     }
 
     cardById(id) {
@@ -183,7 +282,9 @@
       return (card.activity = card.activity || []).unshift({by: this.me, at: `${fmt.date()} ${fmt.time()}`, text});
     }
 
+    // dl:kanban-open (bisa dibatalkan): aplikasi yang punya layar detail sendiri memakai preventDefault() lalu membuka layarnya.
     openCard(card) {
+      if (!this.el.dispatchEvent(new CustomEvent('dl:kanban-open', {bubbles: true, cancelable: true, detail: {card}}))) return;
       const ov = document.createElement('div'); ov.className = 'dl-mov is-on dl-kmodal';
       let pop = null, editDesc = false, addItem = false, labelQ = '';
       const members = [...new Set([this.me, ...this.members0, ...this.cards.flatMap(c => c.members || (c.assignee ? [c.assignee] : []))])];

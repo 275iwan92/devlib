@@ -21,7 +21,7 @@ It sits in the shared field frame (`Devlib\Components\Field\Field`): label row, 
 
 ## Props
 
-Constructor of `Devlib\Components\Field\Lookup` (18 props). Blade names are kebab-case; arrays and booleans use the `:` binding (`create` alone = `true`).
+Constructor of `Devlib\Components\Field\Lookup` (19 props). Blade names are kebab-case; arrays and booleans use the `:` binding (`create` alone = `true`).
 
 ### Own props
 
@@ -31,6 +31,7 @@ Constructor of `Devlib\Components\Field\Lookup` (18 props). Blade names are keba
 | `fill` | `array`, `[]` | `fieldName => column` pairs: after a row is chosen, each target field is set to that column of the row. Empty array = use the `fill` of the definition; a non-empty array **replaces** it (no merge). |
 | `create` | `bool`, `false` | Adds an "+ Add new: <typed text>" button in the panel for text that matches no existing label (see Behavior). |
 | `params` | `array`, `[]` | Remote mode only. Extra query parameters added to the search URL and passed to the definition's `search` closure as its second argument (for example `['customer_id' => 12]` to list that customer's items first). Fixed at render time. A key `name` or `q` is ignored/overwritten. |
+| `server-search` | `bool`, `false` | Opt-in. The server filters the rows, so the browser does not filter the typed text again (words in any order); Arrow up/down and Enter choose a row without submitting the form, Escape closes the panel; `fill` never overwrites what the user typed with an empty value; a row `{_notice: text}` from the server shows as a note that cannot be chosen. Without it the lookup behaves as before. The definition may carry `choices` (value => text), `choice` (current value) and `choice_url` (POST `{value}`): the panel head then shows a display choice that the server keeps and the search is repeated. |
 
 #### Definition (`Devlib\Lookup::define($name, $def)` or `config('devlib.lookups.<name>')`)
 

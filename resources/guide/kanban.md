@@ -44,7 +44,7 @@ Extra HTML attributes (`id`, `class`, `style`, `data-*`) go on the root `div`. `
 
 ## Props
 
-Constructor of `Devlib\Components\Kanban` (10 props). Blade names are kebab-case; use `:prop="expr"` for arrays and booleans (`:add-column="false"`, `:readonly="true"`).
+Constructor of `Devlib\Components\Kanban` (12 props). Blade names are kebab-case; use `:prop="expr"` for arrays and booleans (`:add-column="false"`, `:readonly="true"`).
 
 | Prop | Type | Default | Meaning |
 |---|---|---|---|
@@ -57,6 +57,8 @@ Constructor of `Devlib\Components\Kanban` (10 props). Blade names are kebab-case
 | `me` | `string` | `'Me'` | Name of the current user: author of comments and activity lines, assignee of new cards, first name in the Members popover. The default `Me` is translated through the dictionary (`Saya` in Indonesian); any other value is used as given. |
 | `source` | `?string` | `null` | Free text naming where the data comes from, shown by the developer catalog (`data-dl-src`); the default is `kartu kanban`. A subclass can fix it. No runtime effect. |
 | `move-url` | `?string` | `null` | Address that receives every move to a different column as a JSON `POST` (contract in "Data and events"). Without it the move stays in the browser. |
+| `open-on` | `string` | `'dblclick'` | How a card opens: `dblclick` (default, locked) or `click` (one click or tap; needed on phones, where a double-tap is unreliable). Enter on a focused card always opens. |
+| `undo` | `bool` | `false` | After a card moves to another column a bar "Moved to X · Undo" shows for 6 seconds; Undo moves the card back (to the same place) through the normal `move`, so `transitions`, `dl:kanban-beforemove` and `move-url` apply again. |
 | `readonly` | `bool` | `false` | Read-only board: cards are not draggable, no double-click open, no "Move to" menu, column titles are not editable. The search box and the priority switch still work, and cards with `url` keep their link. `add-card` and `add-column` still show unless you turn them off, so a read-only board normally also has `:add-card="false" :add-column="false"`. |
 
 ## Behavior
@@ -67,7 +69,8 @@ A search box (matches `title`, `desc` and tag labels, case-insensitive) and a se
 
 ### Moving cards
 
-- Drag and drop (HTML5): while dragging, a dashed placeholder shows the drop position (the first card whose middle is below the cursor decides it) and the target column gets `is-target`. Dropping into another column, or between cards of the same column, calls `move`.
+- Drag and drop (pointer events, so mouse, pen and touch): the card lifts (tilted, shadow) and follows the pointer; a dashed placeholder of the card's own height shows the drop position (the first card whose middle is below the pointer decides it). The target column is the nearest one by horizontal position, so the whole column width, an empty column and the space below a short column all accept the drop; it is highlighted (`is-target`). A column refused by `transitions` gets `is-denied` and the card goes back. Mouse and pen start after 5 px of movement; a finger starts after a 250 ms hold (moving earlier scrolls the board as usual). Near the board's left or right edge the board scrolls by itself; near the top or bottom of a column body or of the window, those scroll. Escape cancels. Dropping calls `move`; dropping where the card already was does nothing.
+- Hold a move: the app can listen to `dl:kanban-beforemove` (see Data and events), for example to ask for a date before a card enters a column.
 - Menu: the `...` button on every card (`data-k-move`) opens a small "Move to" menu with all columns; the current column and columns not allowed by `transitions` are disabled. This is the keyboard/touch fallback.
 - Dialog: the Move popover in the card dialog does the same.
 - A move into a column that is already at its `limit` is allowed but shows a warning toast ("Column X is over its WIP limit"). The limit is a signal, not a block; the column counter turns red.
@@ -76,7 +79,7 @@ A search box (matches `title`, `desc` and tag labels, case-insensitive) and a se
 
 ### Card dialog (double-click)
 
-Open a card by double-clicking it, or by focusing it (cards have `tabindex="0"`) and pressing Enter. Opening is locked to double-click on purpose (a single click is kept free). The dialog (`dl-mov dl-kmodal`, appended to `<body>`) has:
+Open a card by double-clicking it, or by focusing it (cards have `tabindex="0"`) and pressing Enter. Opening is locked to double-click by default (a single click is kept free); `open-on="click"` opts into one click or tap. Before the dialog opens the board fires the cancelable `dl:kanban-open`: an app that has its own detail screen calls `preventDefault()` and opens that instead. The dialog (`dl-mov dl-kmodal`, appended to `<body>`) has:
 
 - an editable title and the current column;
 - action buttons with popovers: Labels (search, tick existing labels, or create a new one from the typed text), Dates (due date and time, clear), Checklist (create a titled checklist), Members (tick names; the first ticked name becomes `assignee`), Priority (`High` / `Medium` / `Low` / none), Move (target column);
@@ -95,7 +98,7 @@ Escape closes a popover first, then the dialog. Clicking the dark overlay closes
 
 ### Accessibility and keyboard
 
-Cards are focusable (`tabindex="0"`), Enter opens the dialog, the `...` button is a real button with a tooltip. The dialog has `role="dialog"` and `aria-modal="true"` but no focus trap and the board has no keyboard drag: use the Move menu. The search box has an aria-label. Color is never the only signal for the WIP limit (the counter shows `n / limit`), but the priority and late state use color plus text.
+Cards are focusable (`tabindex="0"`), Enter opens the dialog, the `...` button is a real button with a tooltip. The dialog has `role="dialog"` and `aria-modal="true"` but no focus trap and the board has no keyboard drag: use the Move menu (a finger drags after a 250 ms hold; the menu stays the non-drag path). The search box has an aria-label. Color is never the only signal for the WIP limit (the counter shows `n / limit`), but the priority and late state use color plus text.
 
 ### Language and translation
 
@@ -131,7 +134,8 @@ credentials: same-origin
 - Any `2xx` answer means accepted; the body is ignored (a redirect that ends in a `200` HTML page would also be taken as accepted, so answer with JSON status codes, never a redirect).
 - Any other status means rejected: the script reads `message` from a JSON body (falls back to the HTTP status text), puts the card back in `from` (`card.col = from`), redraws and shows a danger toast with that message. Laravel's `422` / `403` JSON answers fit this directly: `return response()->json(['message' => 'Work order is locked.'], 422);`.
 - A network error (fetch throws) rolls back the same way and toasts the error text.
-- The rollback restores the column only, not the position inside the column, and removes nothing from `card.activity`. The `move` event has already been fired before the answer arrives, and no event is fired for the rollback.
+- The rollback restores the column and the position inside it and removes the "moved" line from `card.activity`. The `move` event has already been fired before the answer arrives, and no event is fired for the rollback.
+- Extra fields from `dl:kanban-beforemove` `resume(extra)` are merged into the body next to `card`, `from`, `to`.
 - Position inside a column is never sent. If the order matters, listen to `dl:kanban` and save it yourself.
 - Creating, editing and deleting cards, and column changes, are not sent to `move-url`.
 
@@ -154,6 +158,12 @@ document.querySelector('[data-dl-kanban]').addEventListener('dl:kanban', e => {
 });
 ```
 
+### Event `dl:kanban-beforemove` (cancelable) and `dl:kanban-open` (cancelable)
+
+`dl:kanban-beforemove` is fired for a move to ANOTHER column (drag, Move menu, dialog, Undo) after `transitions` allowed it and before anything changes. `detail`: `{card, from, to, index, undo, resume(extra)}`. Without `preventDefault()` the move goes on. With `preventDefault()` nothing moves; the app can ask the user (a date and time, a reason) and later call `detail.resume({scheduled_on: '...'})`, which moves the card and posts the move to `move-url` with those fields added to the body. Never calling `resume` leaves the card where it was.
+
+`dl:kanban-open`: `detail: {card}`; fired before the card dialog (double-click, click when `open-on="click"`, Enter). `preventDefault()` replaces the dialog with the app's own screen.
+
 ### JS API
 
 `el.dlKanban = {cards, cols, render, move(id, to, index)}`: `cards` and `cols` are the live arrays, `render()` redraws, `move(id, to, index)` moves a card by id (checks `transitions`, fires the event, posts to `move-url`; returns `true`/`false`). `el.dlComponent` is the `Kanban` instance (methods such as `allowed`, `cardHtml`, `openCard`, `persist`; DevLib autobinds methods).
@@ -166,7 +176,7 @@ A project can extend the JS class: `class KanbanProduksi extends Devlib.classes.
 
 - The server is the source of truth. Re-validate every move (existing card, allowed transition, permission, WIP policy) and answer with a JSON status code; the screen rules are only a convenience.
 - Use `move-url` for the one write the board can do by itself. Everything else (create, update, delete, rename column) needs your own listener on `dl:kanban`.
-- Opening a card is a double-click (locked). Do not add a single-click open.
+- Opening a card is a double-click by default (locked); one click or tap only through `open-on="click"`.
 - Keep the "Move to" menu: it is the required non-drag path. Do not hide the `...` button with CSS.
 - Column `key` and card `id` must be unique and stable; `cards[].col` must equal a column `key`, otherwise the card is invisible.
 - Write `due` as `'YYYY-MM-DD HH:MM'`; it is interpreted as `+07:00` whatever the application time zone is.
@@ -181,8 +191,7 @@ A project can extend the JS class: `class KanbanProduksi extends Devlib.classes.
 
 - The header comment of `src/Components/Kanban.php` lists the column shape as `key, label, tone, limit` but the script also reads `done` (`resources/assets/js/components/kanban.js:109`, used by the demos `kanban-production` and by `ObjectNotes`).
 - The late-due highlight on the card (`kanban.js:109`) skips columns with `done: true`, but the same highlight inside the card dialog (`kanban.js:216`) only compares with the clock, so a finished card can look late in the dialog and normal on the board.
-- Drag reorder index with an active filter (`kanban.js:38` and `:148`): the drop index is counted among the visible (filtered) cards, but `move()` applies it to all cards of the column, so the card can land at a different position than the placeholder showed.
-- Server refusal (`persist`, `kanban.js:158`) restores `card.col` only: the activity line "moved from..." stays in `card.activity` and the position inside the column is not restored; `dl:kanban` already announced `move` and announces nothing for the rollback.
+- Server refusal: `dl:kanban` already announced `move` and announces nothing for the rollback.
 - `readonly` leaves "Add card" and "Add column" active (`kanban.js:133` and `:137` test only `addCard` / `addColumn`), although the header comment describes a read-only board without any change. A read-only board must also set `:add-card="false" :add-column="false"`.
 - Several texts in the script are English constants outside the dictionary (`Save`, `Cancel`, `Delete`, `Checklist`, `High`, `Medium`, `Low`, `Open`), so they stay English in the Indonesian interface.
 - A redirect answer to `move-url` (for example to a login page) ends as `200` HTML and `r.ok` is true, so the move is taken as accepted.

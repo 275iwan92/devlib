@@ -496,7 +496,7 @@ Popup peringatan yang harus terlihat: judul + penjelasan + tabel masalah (WO, pr
 ## `<x-dl::kanban>`
 Papan Kanban (mockup_UIUX_kanban, kanbanboardstandard). Layar cukup deklarasi kolom + kartu.
 - Berkas: `src/Components/Kanban.php`
-- Prop: columns:array=[], cards:array=[], transitions:array=[], members:array=[], addColumn:bool=true, addCard:bool=true, me:string='Me', source:?string=NULL, moveUrl:?string=NULL, readonly:bool=false
+- Prop: columns:array=[], cards:array=[], transitions:array=[], members:array=[], addColumn:bool=true, addCard:bool=true, me:string='Me', source:?string=NULL, moveUrl:?string=NULL, readonly:bool=false, openOn:string='dblclick', undo:bool=false
 
 ## `<x-dl::kpi>`
 Kartu KPI dashboard: label, nilai, perubahan vs periode lalu (▲▼, warna sesuai arah yang BAIK),.

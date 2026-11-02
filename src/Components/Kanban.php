@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Papan Kanban (mockup_UIUX_kanban, kanbanboardstandard). Layar cukup deklarasi kolom + kartu.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : columns, cards, transitions, members, addColumn, addCard, me, source, moveUrl, readonly.
+ * Input        : columns, cards, transitions, members, addColumn, addCard, me, source, moveUrl, readonly, openOn, undo.
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : kanban-production (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -20,6 +20,8 @@ namespace Devlib\Components;
 // transitions: [kolom asal => [kolom tujuan..]] (kosong = bebas). Pindah lewat drag ATAU menu "Pindah ke"
 // (cadangan non-drag, wajib ada). :readonly = papan baca-saja (tanpa geser / buka / ubah kartu; kartu boleh membawa 'url' + 'urlLabel' = tombol Buka ke layar asal). :move-url = alamat POST JSON {card, from, to}: server memutuskan; ditolak = kartu kembali + pesan galat. Tiap perubahan memancarkan dl:kanban (detail: {type, card, from, to}) —
 // aplikasi WAJIB memvalidasi ulang di server (DB = sumber kebenaran posisi kartu).
+// :open-on="click" = ketuk/klik kartu membuka detail (bawaan 'dblclick', LOCKED); :undo = bilah Urungkan 6 detik setelah kartu pindah kolom.
+// Drag memakai pointer events (mouse, pena, sentuh: tahan 250 ms lalu seret). Event dapat dibatalkan: dl:kanban-beforemove {card, from, to, index, resume(extra)} dan dl:kanban-open {card}.
 class Kanban extends DevlibComponent
 {
     public function __construct(
@@ -33,6 +35,8 @@ class Kanban extends DevlibComponent
         public ?string $source = null,
         public ?string $moveUrl = null,
         public bool $readonly = false,
+        public string $openOn = 'dblclick',
+        public bool $undo = false,
     ) {}
 
     public function tag(): string
@@ -48,7 +52,7 @@ class Kanban extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class('dl-kanban') }} {!! $dl() !!} data-dl-kanban data-columns="{{ json_encode($columns) }}" data-cards="{{ json_encode($cards) }}" data-transitions="{{ json_encode((object) $transitions) }}" @if ($moveUrl) data-move-url="{{ $moveUrl }}" @endif data-add-column="{{ $addColumn ? 1 : 0 }}" data-add-card="{{ $addCard ? 1 : 0 }}" data-readonly="{{ $readonly ? 1 : 0 }}" data-me="{{ $me === 'Me' ? \Devlib\Lang::text('Me') : $me }}" data-members="{{ json_encode($members) }}">
+            <div {{ $attributes->class('dl-kanban') }} {!! $dl() !!} data-dl-kanban data-columns="{{ json_encode($columns) }}" data-cards="{{ json_encode($cards) }}" data-transitions="{{ json_encode((object) $transitions) }}" @if ($moveUrl) data-move-url="{{ $moveUrl }}" @endif data-add-column="{{ $addColumn ? 1 : 0 }}" data-add-card="{{ $addCard ? 1 : 0 }}" data-readonly="{{ $readonly ? 1 : 0 }}" data-open-on="{{ $openOn }}" data-undo="{{ $undo ? 1 : 0 }}" data-me="{{ $me === 'Me' ? \Devlib\Lang::text('Me') : $me }}" data-members="{{ json_encode($members) }}">
                 <div class="dl-kanban__bar">
                     <div class="dl-grid__search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" placeholder="{{ \Devlib\Lang::text('Search cards...') }}" data-k-search aria-label="{{ \Devlib\Lang::text('Search cards') }}"></div>
                     <div class="dl-segment" data-k-prio><button type="button" class="dl-segment__opt is-active" data-value="">{{ \Devlib\Lang::text('All') }}</button><button type="button" class="dl-segment__opt" data-value="High">High</button><button type="button" class="dl-segment__opt" data-value="Medium">Medium</button><button type="button" class="dl-segment__opt" data-value="Low">Low</button></div>

@@ -1491,7 +1491,8 @@ form.is-dirty .dl-form__title::after{content:" • belum disimpan";color:var(--d
 .dl-kanban__board{display:flex;gap:12px;align-items:flex-start;overflow-x:auto;padding-bottom:8px;min-height:320px}
 .dl-kcol{flex:0 0 280px;display:flex;flex-direction:column;max-height:calc(100vh - 180px);background:var(--dl-chip);border-radius:var(--dl-radius-lg);border-top:4px solid var(--dl-kc,var(--dl-accent))}
 .dl-kcol--success{--dl-kc:var(--dl-green)}.dl-kcol--warn{--dl-kc:var(--dl-amber-2)}.dl-kcol--danger{--dl-kc:var(--dl-danger)}.dl-kcol--neutral{--dl-kc:var(--dl-muted)}.dl-kcol--violet{--dl-kc:var(--dl-violet)}
-.dl-kcol.is-target{box-shadow:0 0 0 2px var(--dl-accent-ring)}
+.dl-kcol.is-target{box-shadow:0 0 0 2px var(--dl-accent-ring);background:var(--dl-accent-soft)}
+.dl-kcol.is-denied{box-shadow:0 0 0 2px var(--dl-danger);cursor:not-allowed}
 .dl-kcol__head{display:flex;align-items:center;gap:8px;padding:10px 12px}
 .dl-kcol__title{flex:1;font-weight:700;font-size:calc(13.5px * var(--dl-font-scale));color:var(--dl-ink-strong);border-radius:4px;padding:2px 4px;outline:none}
 .dl-kcol__title:focus{background:var(--dl-surface);box-shadow:0 0 0 2px var(--dl-accent-ring)}
@@ -1508,7 +1509,14 @@ form.is-dirty .dl-form__title::after{content:" • belum disimpan";color:var(--d
 .dl-kcard{background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius);padding:10px;cursor:grab;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 2px rgba(15,22,45,.06)}
 .dl-kcard:hover{border-color:var(--dl-accent-ring)}
 .dl-kcard:focus-visible{outline:2px solid var(--dl-accent)}
-.dl-kcard.is-drag{opacity:.4}
+.dl-kcard{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.dl-kcard.is-drag{display:none}
+.dl-kcard--ghost{position:fixed;z-index:400;margin:0;pointer-events:none;transform:rotate(4deg);box-shadow:0 12px 28px rgba(15,22,45,.3);cursor:grabbing;opacity:.97}
+.dl-kanban.is-dragging,.dl-kanban.is-dragging *{cursor:grabbing!important}
+.dl-kcol__body:has(.dl-kcard__ph) .dl-kcol__empty{display:none}
+.dl-kanban__undo{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:320;display:flex;align-items:center;gap:14px;background:var(--dl-toast);color:var(--dl-white);padding:10px 16px;border-radius:var(--dl-radius);font-size:calc(13px * var(--dl-font-scale))}
+.dl-kanban__undo[hidden]{display:none}
+.dl-kanban__undo button{border:none;background:none;color:inherit;font:inherit;font-weight:700;text-decoration:underline;cursor:pointer;padding:4px 2px}
 .dl-kcard__ph{height:52px;border:2px dashed var(--dl-accent-ring);border-radius:var(--dl-radius);background:var(--dl-accent-soft)}
 .dl-kcard__tags{display:flex;gap:4px;flex-wrap:wrap}
 .dl-kcard__title{font-weight:600;font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink-strong)}

@@ -531,6 +531,7 @@ final class Lang
         'i_sample' => ['contoh', 'sample'],
         'k_act_created' => ['membuat kartu ini', 'created this card'],
         'k_new_col' => ['Kolom baru', 'New column'],
+        'k_moved_to' => ['Dipindah ke "{col}"', 'Moved to "{col}"'],
         'k_dbl_open' => ['Klik 2x untuk membuka detail', 'Double-click to open the details'],
         'k_rename' => ['Klik untuk ganti nama', 'Click to rename'],
         'k_wip_limit' => ['Batas WIP {n}', 'WIP limit {n}'],
