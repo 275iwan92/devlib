@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Pilih dari data master (bukan ketik bebas) + isi otomatis field lain.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : lookup, fill, create, params, name, label, tooltip, hint, error, value, … (18 prop).
+ * Input        : lookup, fill, create, params, serverSearch, name, label, tooltip, hint, error, value, … (19 prop). serverSearch (opt-in, bawaan mati) = server yang menyaring baris (kata bebas urutan): klien tidak menyaring ulang, panah/Enter memilih tanpa mengirim form, isian otomatis tidak menimpa ketikan dengan nilai kosong, baris {_notice} jadi catatan.
  * Output       : Markup dari resources/views/components/field/lookup.blade.php.
  * Dipakai oleh : card-actionbar, dev-mode, field-lookup, input-theme dan 2 lainnya (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -23,6 +23,7 @@ class Lookup extends Field
         public array $fill = [],
         public bool $create = false,
         public array $params = [],
+        public bool $serverSearch = false,
         string $name = '',
         string $label = '',
         ?string $tooltip = null,

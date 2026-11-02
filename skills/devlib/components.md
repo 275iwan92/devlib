@@ -281,7 +281,7 @@ Daftar pasangan nama - nilai (mis. spesifikasi barang) + tambah/hapus baris.
 ## `<x-dl::field.lookup>`
 Pilih dari data master (bukan ketik bebas) + isi otomatis field lain.
 - Berkas: `src/Components/Field/Lookup.php`, tampilan `resources/views/components/field/lookup.blade.php`
-- Prop: lookup:string='', fill:array=[], create:bool=false, params:array=[], name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
+- Prop: lookup:string='', fill:array=[], create:bool=false, params:array=[], serverSearch:bool=false, name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
 
 ## `<x-dl::field.masked>`
 Input bermask angka, mis. NIK 6.6.4 digit.
@@ -441,7 +441,7 @@ Widget sapaan berdiri sendiri (user 2026-10-07, tampilan disetujui): salam + jab
 ## `<x-dl::grid>`
 Grid induk (griduistandard + perilaku tabel Filament/PowerGrid yang dipilih user).
 - Berkas: `src/Components/Grid.php`, tampilan `resources/views/components/grid.blade.php`
-- Prop: id:string='grid', columns:array=[], rows:array=[], rowKey:string='id', stats:array=[], tabs:array=[], filters:array=[], groups:array=[], bulk:array=[], expand:array=[], actions:string='master', activeKey:?string='active', newRecord:?string='+ New Record', perPage:?int=NULL, detail:array=[], cards:array=[], phoneCards:array=[], quickAdd:array=[], groupBy:?string=NULL, search:string='Search...', source:?string=NULL, openUrl:?string=NULL, newUrl:?string=NULL, newModal:?string=NULL, toggleUrl:?string=NULL, mode:string='entry', rowTone:?string=NULL, kind:?string=NULL, restore:bool=false
+- Prop: id:string='grid', columns:array=[], rows:array=[], rowKey:string='id', stats:array=[], tabs:array=[], filters:array=[], groups:array=[], bulk:array=[], expand:array=[], actions:string='master', activeKey:?string='active', newRecord:?string='+ New Record', perPage:?int=NULL, detail:array=[], cards:array=[], phoneCards:array=[], quickAdd:array=[], groupBy:?string=NULL, search:string='Search...', source:?string=NULL, openUrl:?string=NULL, newUrl:?string=NULL, newModal:?string=NULL, toggleUrl:?string=NULL, mode:string='entry', rowTone:?string=NULL, kind:?string=NULL, restore:bool=false, size:?string=NULL, layout:?string=NULL
 
 ## `<x-dl::headline>`
 Judul besar nama dokumen / produk di dalam isi form (22px tebal), dengan sub-teks kecil opsional.

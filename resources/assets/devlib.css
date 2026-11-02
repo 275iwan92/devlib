@@ -704,6 +704,8 @@ body.dl-page-body{overflow:auto;height:auto;min-height:100vh}
 .dl-lookup__table td{padding:6px 10px;border-bottom:1px solid var(--dl-border-soft);color:var(--dl-f-label);white-space:nowrap}
 .dl-lookup__table tr.dl-dd__item{display:table-row}
 .dl-lookup__table tr.dl-dd__item:hover td{background:var(--dl-accent-soft)}
+.dl-lookup__table tr.dl-dd__item.is-active td{background:var(--dl-accent-soft)}
+.dl-lookup__table tr.dl-lookup__note td{background:var(--dl-surface-alt);white-space:normal;font-weight:700}
 .dl-lookup .dl-dd__panel{max-height:260px;overflow:auto}
 .dl-field.is-filled .dl-field__box,.dl-field.is-filled .dl-dd__btn{animation:dl-filled 1.2s ease}
 @keyframes dl-filled{0%{box-shadow:0 0 0 3px var(--dl-accent-ring);background:var(--dl-accent-soft)}100%{box-shadow:none}}

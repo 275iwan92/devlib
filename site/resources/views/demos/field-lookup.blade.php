@@ -4,5 +4,6 @@
     <x-dl::field.text name="ship_address" label="Alamat Kirim" multiline />
     <x-dl::field.lookup name="uom" lookup="uom" label="Satuan" value="RIM" />
     <x-dl::field.lookup name="area_id" lookup="area_remote" label="Wilayah kirim (remote)" tooltip="Data besar: ketik min. 2 huruf, dicari ke server (Lookup::define dengan search + find)." value="7" />
+    <x-dl::field.lookup name="area_server" lookup="area_remote" label="Wilayah kirim (server-search)" tooltip="Opt-in server-search: server yang menyaring, panah dan Enter memilih tanpa mengirim form, isian otomatis tidak menimpa ketikan dengan nilai kosong." server-search />
     <x-dl::field.text name="postal" label="Kode Pos" code />
 </div>
