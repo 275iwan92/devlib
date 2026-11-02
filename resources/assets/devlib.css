@@ -705,6 +705,8 @@ body.dl-page-body{overflow:auto;height:auto;min-height:100vh}
 .dl-lookup__table tr.dl-dd__item{display:table-row}
 .dl-lookup__table tr.dl-dd__item:hover td{background:var(--dl-accent-soft)}
 .dl-lookup__table tr.dl-dd__item.is-active td{background:var(--dl-accent-soft)}
+.dl-lookup[data-server-search] .dl-lookup__table td{white-space:normal}
+.dl-lookup[data-server-search] .dl-lookup__table td:is(:first-child,:last-child){white-space:nowrap}
 .dl-lookup__table tr.dl-lookup__note td{background:var(--dl-surface-alt);white-space:normal;font-weight:700}
 .dl-lookup .dl-dd__panel{max-height:260px;overflow:auto}
 .dl-field.is-filled .dl-field__box,.dl-field.is-filled .dl-dd__btn{animation:dl-filled 1.2s ease}
