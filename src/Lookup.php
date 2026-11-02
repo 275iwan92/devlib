@@ -45,6 +45,10 @@ final class Lookup
             'fill' => $def['fill'] ?? [],
             'source' => $def['source'] ?? $name,
             'remote' => $remote,
+            // Pilihan tampilan yang disimpan server (opsional, dipakai x-dl::field.lookup server-search): choices [nilai => teks], choice (nilai sekarang), choice_url (POST {value}).
+            'choices' => $def['choices'] ?? [],
+            'choice' => value($def['choice'] ?? null),
+            'choice_url' => value($def['choice_url'] ?? null),
         ];
     }
 

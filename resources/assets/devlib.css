@@ -707,6 +707,9 @@ body.dl-page-body{overflow:auto;height:auto;min-height:100vh}
 .dl-lookup__table tr.dl-dd__item.is-active td{background:var(--dl-accent-soft)}
 .dl-lookup[data-server-search] .dl-lookup__table td{white-space:normal}
 .dl-lookup[data-server-search] .dl-lookup__table td:is(:first-child,:last-child){white-space:nowrap}
+.dl-lookup__choice{display:flex;justify-content:flex-end;gap:4px;padding:6px 10px 0}
+.dl-lookup__choice button{font-size:calc(11px * var(--dl-font-scale));padding:2px 8px;border:1px solid var(--dl-border);border-radius:var(--dl-radius,6px);background:transparent;color:var(--dl-f-label);cursor:pointer}
+.dl-lookup__choice button.is-on{background:var(--dl-accent-soft);border-color:var(--dl-accent);font-weight:700;cursor:default}
 .dl-lookup__table tr.dl-lookup__note td{background:var(--dl-surface-alt);white-space:normal;font-weight:700}
 .dl-lookup .dl-dd__panel{max-height:260px;overflow:auto}
 .dl-field.is-filled .dl-field__box,.dl-field.is-filled .dl-dd__btn{animation:dl-filled 1.2s ease}

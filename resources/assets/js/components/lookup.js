@@ -48,6 +48,18 @@
           else if (e.key === 'Escape' && this.p.panel.classList.contains('is-open')) { e.stopPropagation(); this.p.close(); }
         });
       }
+      // Tombol pilihan tampilan di kepala panel (choices): disimpan server (POST {value}), lalu pencarian diulang.
+      const choice = $(this.el, '[data-dl-choice]');
+      if (server && choice && this.p.search) {
+        choice.addEventListener('click', async e => {
+          const b = e.target.closest('button[data-v]'); if (!b || b.classList.contains('is-on')) return;
+          const res = await fetch(choice.dataset.url, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': window.DL_CSRF || ''}, body: JSON.stringify({value: b.dataset.v})}).catch(() => null);
+          if (!res || !res.ok) return;
+          $$(choice, 'button').forEach(x => x.classList.toggle('is-on', x === b));
+          this.p.search.dispatchEvent(new Event('input'));
+          this.p.search.focus();
+        });
+      }
       list.addEventListener('click', e => {
         const tr = e.target.closest('tr.dl-dd__item'); if (!tr) return;
         const r = this.rows[+tr.dataset.i];

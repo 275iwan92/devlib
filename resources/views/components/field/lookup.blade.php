@@ -5,6 +5,9 @@
         <span data-dl-dd-text>{{ $cur[$def['label']] ?? ($placeholder ?? \Devlib\Lang::t('f_choose')) }}</span><span><i class="fa-solid fa-magnifying-glass"></i></span>
     </button>
     <div class="dl-dd__panel dl-lookup__panel" data-dl-dd-panel>
+        @if ($serverSearch && $def['choices'])
+            <div class="dl-lookup__choice" data-dl-choice data-url="{{ $def['choice_url'] }}">@foreach ($def['choices'] as $v => $l)<button type="button" data-v="{{ $v }}" @class(['is-on' => (string) $v === (string) $def['choice']])>{{ \Devlib\Lang::text($l) }}</button>@endforeach</div>
+        @endif
         <div class="dl-dd__search"><input type="text" placeholder="{{ strtr(\Devlib\Lang::text($url() ? 'Type at least 2 letters to search :x...' : 'Search :x...'), [':x' => strtolower($label)]) }}" data-dl-dd-search></div>
         <table class="dl-lookup__table">
             <thead><tr>@foreach ($def['columns'] as $h)<th>{{ \Devlib\Lang::text($h) }}</th>@endforeach</tr></thead>
