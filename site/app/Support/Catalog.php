@@ -185,6 +185,7 @@ final class Catalog
                     ], 'dashboard_home_sales.html'),
                     'p6-indicators' => $page('Dashboard Indicators', 'fa-solid fa-gauge-high', ['indicators' => ['KPI, gauge, progress ring, bullet, traffic light', $c('Kpi', 'Gauge', 'ProgressRing', 'Bullet', 'TrafficLight')]]),
                     'p6-statement' => $page('Financial Statement', 'fa-solid fa-file-invoice-dollar', ['statement' => ['Statement lines: group, line, subtotal, net total; one or more amount columns (period comparison)', $c('Statement')]]),
+                    'p6-floor-plan' => $page('Floor Plan', 'fa-solid fa-map-location-dot', ['floor-plan' => ['Floor 1: schematic plan from room rectangles, pins by status (Safe / Due soon / Overdue / none), select a pin to open its detail card below, summary on top, legend', $c('FloorPlan', 'StatBox', 'KpiRow')], 'floor-plan-image' => ['Floor 2: uploaded plan image as background, pins as links (the screen renders the detail on the server)', $c('FloorPlan')]]),
                     'p6-timer' => $page('Timer (stopwatch)', 'fa-solid fa-stopwatch', ['timer' => ['Stopwatch hh:mm:ss: the server gives the seconds elapsed, the browser keeps counting while running (operator setup / run clock)', $c('Timer')]]),
                     'p6-geo-clock' => $page('Geo Clock (GPS attendance)', 'fa-solid fa-location-crosshairs', ['geo-clock' => ['GPS geofencing clock in / out (distance and decision come from the server)', $c('GeoClock')]]),
                     'p6-delivery' => $page('Delivery Track', 'fa-solid fa-truck-fast', ['delivery-track' => ['Delivery route (schematic SVG, stage follows Delivery Order status)', $c('DeliveryTrack')]]),
@@ -302,7 +303,7 @@ final class Catalog
             'Components' => [
                 ['code' => 'IN', 'label' => 'Inputs & Buttons', 'icon' => 'fa-solid fa-i-cursor', 'pages' => $in('p2-', ['inputs', 'numbers', 'datetime', 'choices', 'select-add', 'files', 'buttons'])],
                 ['code' => 'DF', 'label' => 'Display & Feedback', 'icon' => 'fa-solid fa-comment-dots', 'pages' => [...$in('p2-', ['display', 'containers', 'navigation']), ...$in('p3-', ['feedback', 'loading', 'notifications', 'idle-logout', 'errors'])]],
-                ['code' => 'WU', 'label' => 'Widgets & Utilities', 'icon' => 'fa-solid fa-puzzle-piece', 'pages' => ['p6-greeting-card', 'p6-timer', 'p6-geo-clock', 'p6-codes']],
+                ['code' => 'WU', 'label' => 'Widgets & Utilities', 'icon' => 'fa-solid fa-puzzle-piece', 'pages' => ['p6-greeting-card', 'p6-floor-plan', 'p6-timer', 'p6-geo-clock', 'p6-codes']],
             ],
             'Screen' => [
                 ['code' => 'GR', 'from' => ['GR', 'FM']],

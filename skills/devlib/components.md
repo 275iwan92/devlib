@@ -383,6 +383,11 @@ Unggah file (tarik-lepas / pilih) + pratinjau nama file.
 - Berkas: `src/Components/Field/Upload.php`, tampilan `resources/views/components/field/upload.blade.php`
 - Prop: accept:?string=NULL, multiple:bool=false, preview:bool=true, name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
 
+## `<x-dl::floor-plan>`
+Denah dengan titik objek (floor plan): persegi ruang berlabel "KODE Nama" (atau gambar denah sebagai latar) dengan titik bulat berwarna menurut status (success | warn | danger | neutral) dan bernomor; titik dipilih dengan klik, ketuk, atau papan ketik; kartu detail di bawah diisi layar pemanggil.
+- Berkas: `src/Components/FloorPlan.php`, tampilan `resources/views/components/floor-plan.blade.php`
+- Prop: rooms:array=[], pins:array=[], image:?string=NULL, aspect:string='16:9', selected:?string=NULL, legend:array|bool=false, name:?string=NULL, readonly:bool=false, label:?string=NULL
+
 ## `<x-dl::flow>`
 Diagram alur proses berupa blok bersambung (gaya pipeline approval), untuk menjelaskan alur antar modul/dokumen.
 - Berkas: `src/Components/Flow.php`
