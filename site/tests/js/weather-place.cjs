@@ -39,5 +39,17 @@ const mk = (o = {}) => { const mem = o.mem || {}; return {locate: true, secure: 
   // 9. tanpa cadangan dan lokasi gagal: null (kartu tidak tampil)
   assert.strictEqual(await place(mk({fixed: null, secure: false})), null);
   assert.strictEqual(await place(mk({fixed: null, locate: false})), null);
+  // 10. lokasi perangkat ditolak, lapis IP berhasil: dipakai sebagai sumber 'ip' (koordinat dibulatkan 2 desimal)
+  p = await place(mk({
+    geo: async () => { const x = new Error('denied'); x.code = 1; throw x; },
+    ip: async () => ({lat: -6.91471, lon: 107.60981, city: 'Bandung'}),
+  }));
+  assert.deepStrictEqual([p.source, p.lat, p.lon, p.city], ['ip', -6.91, 107.61, 'Bandung']);
+  // 11. bukan HTTPS (lokasi perangkat tak tersedia): lapis IP tetap jalan, HTTP biasa
+  p = await place(mk({secure: false, ip: async () => ({lat: 1.5, lon: 2.5, city: 'X'})}));
+  assert.strictEqual(p.source, 'ip');
+  // 12. layanan IP gagal/timeout atau menjawab tanpa koordinat: diam-diam lanjut ke tempat tetap
+  assert.strictEqual((await place(mk({secure: false, ip: async () => { throw new Error('timeout'); }}))).source, 'fixed');
+  assert.strictEqual((await place(mk({secure: false, ip: async () => null}))).source, 'fixed');
   console.log('OK');
 })().catch(e => { console.error(e); process.exit(1); });

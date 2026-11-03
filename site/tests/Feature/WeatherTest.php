@@ -28,9 +28,17 @@ class WeatherTest extends TestCase
         $html = Blade::render('<x-dl::weather city="Malang" :lat="-7.98" :lon="112.63" />');
 
         $this->assertStringContainsString('data-locate="1"', $html);
+        $this->assertStringContainsString('data-ip-fallback="1"', $html);   // bawaan: lapis IP aktif
         $this->assertStringContainsString('data-lat="-7.98" data-lon="112.63" data-city="Malang"', $html);
         $this->assertStringNotContainsString(' hidden', $html);
         $this->assertStringContainsString('data-dl-weather-city></span>', $html);   // kota dipasang skrip, bukan server (tidak berkedip kota cadangan)
+    }
+
+    public function test_ip_fallback_can_be_turned_off(): void
+    {
+        $html = Blade::render('<x-dl::weather :ip-fallback="false" city="Malang" :lat="-7.98" :lon="112.63" />');
+
+        $this->assertStringContainsString('data-ip-fallback="0"', $html);
     }
 
     public function test_locate_false_is_the_fixed_place_printed_by_the_server(): void
@@ -56,7 +64,7 @@ class WeatherTest extends TestCase
         $none = Blade::render('<x-dl::greeting-card :board="$b" />', ['b' => $board]);
 
         $this->assertStringContainsString('data-city="Surabaya"', $fixed);
-        $this->assertMatchesRegularExpression('/data-dl-weather data-locate="1"\s+hidden/', $only);
+        $this->assertMatchesRegularExpression('/data-dl-weather data-locate="1" data-ip-fallback="1"\s+hidden/', $only);
         $this->assertStringNotContainsString('data-dl-weather', $none);
     }
 

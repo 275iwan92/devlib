@@ -899,9 +899,9 @@ Form khusus Warehouse Map (user 2026-10-02, docs/warehouselayout_tier1.md): pemi
 - Prop: desk:array=[]
 
 ## `<x-dl::weather>`
-Cuaca terkini dari internet (Open-Meteo, gratis tanpa kunci API), diambil oleh browser. Bawaan: tempat = posisi perangkat (Geolocation, nama kota dari reverse geocoding); city/lat/lon = tempat cadangan.
+Cuaca terkini dari internet (Open-Meteo, gratis tanpa kunci API), diambil oleh browser. Bawaan: tempat = posisi perangkat (Geolocation, nama kota dari reverse geocoding); gagal/ditolak -> lokasi dari IP pengakses (ipapi.co); gagal lagi -> city/lat/lon tempat cadangan.
 - Berkas: `src/Components/Weather.php`
-- Prop: locate:bool=true, city:?string=NULL, lat:?float=NULL, lon:?float=NULL, variant:string='glass'
+- Prop: locate:bool=true, city:?string=NULL, lat:?float=NULL, lon:?float=NULL, variant:string='glass', ipFallback:bool=true
 
 ## `<x-dl::wh-map>`
 Peta gudang (warehouse map): denah satu gedung per lantai -- garis luar gedung (kotak, huruf L, atau bentuk apa pun),.

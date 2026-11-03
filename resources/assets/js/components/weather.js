@@ -7,9 +7,10 @@
   const KEY = 'dl-wx', DENIED = 'dl-wx-no';
   const round2 = n => Math.round(n * 100) / 100;
 
-  // Rantai tempat: (1) cache jam terakhir dari lokasi perangkat, (2) lokasi perangkat (Geolocation, hanya HTTPS / localhost dan bila belum
-  // ditolak), (3) tempat tetap dari props (cadangan), (4) tidak ada = null (kartu disembunyikan). Murni: semua yang dibutuhkan masuk lewat env.
-  //   env = {locate, secure, geo() -> Promise<{lat, lon}> | null, fixed: {lat, lon, city} | null, read(key), write(key, value), now}
+  // Rantai tempat: (1) cache jam terakhir, (2) lokasi perangkat (Geolocation, hanya HTTPS / localhost dan bila belum ditolak), (3) lokasi dari
+  // IP pengakses (layanan gratis, tanpa izin browser, jalan di HTTP biasa; lapis tengah, keputusan Jo 2026-11-03), (4) tempat tetap dari props
+  // (cadangan), (5) tidak ada = null (kartu disembunyikan). Murni: semua yang dibutuhkan masuk lewat env.
+  //   env = {locate, secure, geo() -> Promise<{lat, lon}> | null, ip() -> Promise<{lat, lon, city}> | null, fixed: {lat, lon, city} | null, read(key), write(key, value), now}
   async function place(env) {
     if (env.locate) {
       const hit = env.read(KEY);
@@ -22,6 +23,12 @@
         } catch (e) {
           if (e && e.code === 1) env.write(DENIED, env.now);   // izin ditolak: jangan tanya lagi selama seminggu
         }
+      }
+      if (env.ip) {
+        try {
+          const p = await env.ip();
+          if (p) return {lat: round2(p.lat), lon: round2(p.lon), city: p.city || '', source: 'ip'};
+        } catch (e) { /* layanan IP gagal/timeout: diam-diam lanjut ke tempat tetap */ }
       }
     }
     return env.fixed ? Object.assign({source: 'fixed'}, env.fixed) : null;
@@ -42,11 +49,20 @@
         locate: d.locate === '1', secure: window.isSecureContext === true, fixed, now: Date.now(), ...store,
         // maximumAge enam jam, timeout pendek, tanpa akurasi tinggi: cukup tingkat kota.
         geo: navigator.geolocation ? () => new Promise((ok, no) => navigator.geolocation.getCurrentPosition(p => ok({lat: p.coords.latitude, lon: p.coords.longitude}), no, {maximumAge: 6 * HOUR, timeout: 8000, enableHighAccuracy: false})) : null,
+        ip: d.ipFallback === '0' ? null : this.ipLocate,
       }).then(p => p ? this.load(p, store) : null);
+    }
+
+    // Lokasi dari IP pengakses: ipapi.co (gratis, CORS, HTTPS, tanpa kunci), jalan di HTTP biasa karena tidak lewat Geolocation browser.
+    ipLocate() {
+      const ctl = new AbortController(), cut = setTimeout(() => ctl.abort(), 4000);
+      return fetch('https://ipapi.co/json/', {signal: ctl.signal}).then(r => r.json()).finally(() => clearTimeout(cut))
+        .then(j => j && j.latitude != null && j.longitude != null ? {lat: j.latitude, lon: j.longitude, city: j.city || ''} : null);
     }
 
     async load(p, store) {
       this.el.hidden = false;
+      this.el.dataset.src = p.source;
       this.setCity(p.city || '');
       if (p.source === 'cache') { this.w = {temp: p.temp, code: p.code}; return this.paint(); }
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${p.lat}&longitude=${p.lon}&current=temperature_2m,weather_code&timezone=auto`;
@@ -55,7 +71,7 @@
         this.w = {temp: j.current.temperature_2m, code: j.current.weather_code};
         this.setCity(city || '');
         this.paint();
-        if (p.source === 'device') store.write(KEY, {lat: p.lat, lon: p.lon, city: city || '', temp: this.w.temp, code: this.w.code, t: Date.now()});
+        if (p.source === 'device' || p.source === 'ip') store.write(KEY, {lat: p.lat, lon: p.lon, city: city || '', temp: this.w.temp, code: this.w.code, t: Date.now()});
       } catch (e) {
         $(this.el, '[data-dl-weather-desc]').textContent = Devlib.h.T('wx_unavailable');
       }
