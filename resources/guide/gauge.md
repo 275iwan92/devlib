@@ -84,7 +84,6 @@ The `<svg>` has `role="img"` and `aria-label="<label> <value><unit>"`. The zones
 - There is no lint rule for this object (`lint()` returns nothing).
 - Code oddity (not fixed): the caption word `target` is hard-coded English in the view (`src/Components/Gauge.php:81`), not passed through the dictionary like `label` (compare `x-dl::kpi`, which translates `of target`).
 - Code oddity (not fixed): the `aria-label` prints the raw number (`src/Components/Gauge.php:73`) while the visible number uses the locale (`:80`), so a screen reader reads `78.5` where an Indonesian page shows `78,5`.
-- Code oddity (not fixed): the CSS class `.dl-gauge__val` (`resources/assets/devlib.css:1917`) is not used by the view any more; the number is `.dl-gauge__big`.
 
 ## Example
 

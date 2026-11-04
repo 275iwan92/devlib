@@ -78,11 +78,6 @@ final class DateValue implements Stringable
         return sprintf('%02d', $this->d).'-'.Locale::spec($lang)['months'][$this->m - 1].'-'.$this->y;
     }
 
-    public function carbon(): CarbonImmutable
-    {
-        return CarbonImmutable::create($this->y, $this->m, $this->d, 0, 0, 0, Locale::timezone());
-    }
-
     public function __toString(): string
     {
         return $this->display();
