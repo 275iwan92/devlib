@@ -294,7 +294,7 @@
         // 'url' pada kolom teks / daftar: isi sel menjadi tautan ({id} = kunci baris); sel kosong tampil "+" supaya tetap bisa diklik.
         // {id} = kunci baris; {kolom} = nilai kolom lain di baris itu (Nested Grid). 'ref' => true: gaya tautan rujukan (aksen, garis bawah, panah) ke grid lain.
         const txt = esc(this.fmtCell(c, v)), href = c.url ? esc(c.url.replace(/\{(\w+)\}/g, (m, k) => encodeURIComponent(k === 'id' ? r[this.cfg.rowKey] : (r[k] ?? '')))) : null;
-        return `<td><div class="dl-grid__txt${c.list ? ' dl-grid__txt--list' : ''}">${href ? `<a class="dl-grid__link dl-grid__link--text${c.ref ? ' dl-grid__link--ref' : ''}" href="${href}" data-g-link="${esc(c.key)}">${txt || '+'}</a>` : txt}</div></td>`;
+        return `<td><div class="dl-grid__txt${c.list ? ' dl-grid__txt--list' : ''}"${c.lines ? ` style="--dl-grid-lines:${+c.lines}"` : ''}>${href ? `<a class="dl-grid__link dl-grid__link--text${c.ref ? ' dl-grid__link--ref' : ''}" href="${href}" data-g-link="${esc(c.key)}">${txt || '+'}</a>` : txt}</div></td>`;
       }
       }
     }
