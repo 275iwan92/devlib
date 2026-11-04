@@ -225,6 +225,7 @@
       else if (a === 'notif' || a === 'ai') this.openDrawer(a);
       else if (a === 'edit' || a === 'pass') $(this.el, `[data-dl-modal="${a}"]`).classList.add('is-on');
       else if (a === 'device') $(this.el, 'form[data-dl-device]')?.requestSubmit();   // Phone view: menyimpan pilihan tampilan lalu memuat ulang
+      else if (a === 'devices') { const d = $(this.el, '[data-lm-act="devices"]')?.dataset; if (d?.url) this.openUrlTab('devices', d.label, d.url, d.icon); }   // My devices: layar biasa sebagai tab
       else if (a === 'palette') this.openPalette();
       else if (a === 'home') this.goHome();
       else if (a === 'help') this.openHelp();

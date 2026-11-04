@@ -70,6 +70,8 @@ class LayerShell extends DevlibComponent
         public array $without = [],
         // Alamat POST yang menyimpan pilihan tampilan (field ui = phone): menambah aksi "Phone view" di menu profil (opt-in; null = tanpa aksi, markup lama).
         public ?string $deviceAction = null,
+        // Alamat layar "My devices" (opt-in; null = tanpa aksi): menambah aksi di menu profil, antara Edit profile dan Help & support, yang membuka alamat itu sebagai tab.
+        public ?string $devicesUrl = null,
     ) {
         $identity = Brand::identity();
         $this->brand ??= $identity['name'];
@@ -169,6 +171,7 @@ class LayerShell extends DevlibComponent
             $has('chat') ? ['key' => 'chat', 'label' => 'Chat', 'icon' => 'fa-comment-dots'] : null,
             $has('ai') ? ['key' => 'ai', 'label' => Lang::text('AI Assistant'), 'icon' => 'ai'] : null,
             $has('edit') ? ['key' => 'edit', 'label' => Lang::text('Edit profile'), 'icon' => 'fa-user-pen'] + $mark() : null,
+            $this->devicesUrl ? ['key' => 'devices', 'label' => Lang::text('My devices'), 'icon' => 'fa-laptop', 'url' => $this->devicesUrl] + $mark() : null,
             $has('help') ? ['key' => 'help', 'label' => Lang::text('Help & support'), 'icon' => 'help'] + $mark() : null,
             $this->deviceAction ? ['key' => 'device', 'label' => Lang::text('Phone view'), 'icon' => 'fa-mobile-screen'] + $mark() : null,
             ['key' => 'pass', 'label' => Lang::text('Change password'), 'icon' => 'password'] + $mark(),
