@@ -48,13 +48,22 @@ return [
     // Executive Summary > All Projects: `php artisan projects:snapshot` HANYA membaca `git log` tiap path dan menghitung berkas sesi Claude
     // (awalan nama folder di ~/.claude/projects, termasuk folder worktree), lalu menulis resources/data/projects.json (angka agregat saja).
     // tone = warna tetap di grafik (blue = biru, gaya di summary.blade.php | warn oranye | teal hijau-aqua). Path yang tidak ada = project dilewati.
-    'projects' => [
-        'devlib' => ['label' => 'DevLib', 'path' => base_path('..'), 'sessions' => 'C--Users-iwanp-Herd-devlib', 'tone' => 'blue', 'position' => 'Shared library: rules and objects inherited by the other projects'],
-        'tmerp' => ['label' => 'tmerp', 'path' => 'C:\Users\iwanp\Herd\tmerp', 'sessions' => 'C--Users-iwanp-Herd-tmerp', 'tone' => 'warn', 'position' => 'Main ERP app: features proven in mockup, then applied'],
-        'sstock' => ['label' => 'sstock', 'path' => 'C:\Users\iwanp\Herd\sstock', 'sessions' => 'C--Users-iwanp-Herd-sstock', 'tone' => 'teal', 'position' => 'Stock app: just started'],
-    ],
+    // Portabel: project lain dicari di folder induk devlib (bersebelahan; env DEVLIB_PROJECTS_ROOT bila di tempat lain), dan nama folder sesi Claude
+    // dihitung dari jalurnya (semua karakter non-alfanumerik jadi "-", cara Claude menamai folder ~/.claude/projects). Tanpa jalur/nama pengguna di sini.
+    'projects' => (function () {
+        $self = realpath(base_path('..')) ?: base_path('..');
+        $root = env('DEVLIB_PROJECTS_ROOT', dirname($self));
+        $sessions = fn (string $path) => preg_replace('/[^A-Za-z0-9]/', '-', $path);
+        $sibling = fn (string $dir) => rtrim($root, '\/').DIRECTORY_SEPARATOR.$dir;
+
+        return [
+            'devlib' => ['label' => 'DevLib', 'path' => base_path('..'), 'sessions' => $sessions($self), 'tone' => 'blue', 'position' => 'Shared library: rules and objects inherited by the other projects'],
+            'tmerp' => ['label' => 'tmerp', 'path' => $sibling('tmerp'), 'sessions' => $sessions($sibling('tmerp')), 'tone' => 'warn', 'position' => 'Main ERP app: features proven in mockup, then applied'],
+            'sstock' => ['label' => 'sstock', 'path' => $sibling('sstock'), 'sessions' => $sessions($sibling('sstock')), 'tone' => 'teal', 'position' => 'Stock app: just started'],
+        ];
+    })(),
     'projects_json' => base_path('resources/data/projects.json'),
-    'claude_sessions_path' => env('CLAUDE_SESSIONS_PATH', 'C:\Users\iwanp\.claude\projects'),
+    'claude_sessions_path' => env('CLAUDE_SESSIONS_PATH', (getenv('USERPROFILE') ?: getenv('HOME') ?: '').DIRECTORY_SEPARATOR.'.claude'.DIRECTORY_SEPARATOR.'projects'),
 
     // Opening screen (x-dl::dashboard): profil per KODE JABATAN. Jabatan yang tidak terdaftar = 'general'
     // (mekanisme sama, isi KPI/aktivitas umum). Profil baru cukup ditambah di sini + App\Support\DashboardData.
