@@ -49,6 +49,8 @@ final class Lookup
             'choices' => $def['choices'] ?? [],
             'choice' => value($def['choice'] ?? null),
             'choice_url' => value($def['choice_url'] ?? null),
+            // Ruang cari (opsional, dipakai server-search): scopes [nilai => teks] tampil sebagai saklar di atas kotak; kosong = tidak tampil. Nilai terpilih dikirim ke server sebagai ?scope=.
+            'scopes' => value($def['scopes'] ?? null) ?: [],
         ];
     }
 

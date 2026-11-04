@@ -13,6 +13,17 @@
       // Opt-in data-server-search: server yang memutuskan baris mana cocok (kata bebas urutan), jadi klien tidak menyaring ulang,
       // panah/Enter memilih baris tanpa mengirim form, dan isian otomatis tidak menimpa ketikan pengguna dengan nilai kosong.
       const server = this.el.hasAttribute('data-server-search'), list = $(this.el, '[data-dl-dd-list]');
+      // Saklar ruang cari (def scopes): nilai terpilih ikut ke server sebagai ?scope=; klik mengganti ruang lalu mencari ulang. Tidak ada saklar = this.scope kosong.
+      const scopeEl = server ? $(this.el, '[data-dl-scope]') : null;
+      this.scope = scopeEl ? scopeEl.dataset.scope : null;
+      if (scopeEl) {
+        scopeEl.addEventListener('click', e => {
+          const b = e.target.closest('button[data-v]'); if (!b || b.classList.contains('is-on')) return;
+          this.scope = b.dataset.v;
+          $$(scopeEl, 'button').forEach(x => x.classList.toggle('is-on', x === b));
+          if (this.p.search) { this.p.search.dispatchEvent(new Event('input')); this.p.search.focus(); }
+        });
+      }
       // Mode remote (data-url): ketik min. 2 huruf -> cari ke server, baris diganti hasilnya.
       if (this.el.dataset.url && this.p.search) {
         const cols = JSON.parse(this.el.dataset.columns || '[]');
@@ -23,6 +34,7 @@
           const q = this.p.search.value.trim(); if (q.length < 2) return;
           timer = setTimeout(async () => {
             const my = ++seq, u = new URL(this.el.dataset.url, location.origin); u.searchParams.set('q', q);
+            if (this.scope) u.searchParams.set('scope', this.scope);
             const res = await fetch(u, {headers: {Accept: 'application/json'}, credentials: 'same-origin'}).then(x => x.ok ? x.json() : []).catch(() => []);
             if (my !== seq) return;
             this.rows = res;

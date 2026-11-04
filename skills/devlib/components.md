@@ -541,7 +541,7 @@ Menu panel kiri berlapis (layer 1 modul -> layer 2 menu -> layer 3 sub -> layer 
 ## `<x-dl::layer-shell>`
 Kerangka aplikasi setelah login: navigasi x-dl::layer-menu di kiri, TANPA top bar; tab MDI, Ctrl+K, laci, modal. Satu-satunya menu utama.
 - Berkas: `src/Components/LayerShell.php`, tampilan `resources/views/components/layer-shell.blade.php`
-- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[], deviceAction:?string=NULL
+- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[], deviceAction:?string=NULL, devicesUrl:?string=NULL
 
 ## `<x-dl::lines>`
 Tabel baris item dokumen (detail dari Master-Detail: PO, PR, CO, Stock In, ...).
