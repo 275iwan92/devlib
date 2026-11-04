@@ -48,7 +48,8 @@ class DevlibServiceProvider extends ServiceProvider
             ->where('name', '[A-Za-z0-9_-]+')->name('devlib.lookup');
 
         // Technical Guide semua object (opt-in): aktif bila config devlib.guide_middleware diisi (mis. ['web', 'auth']); null = tidak ada route.
-        if (config('devlib.guide_middleware') !== null) {
+        // Paket murni (tanpa resources/guide) tidak mendaftarkannya, supaya alamat itu tidak berujung 500.
+        if (config('devlib.guide_middleware') !== null && is_dir(__DIR__.'/../resources/guide')) {
             Route::middleware(config('devlib.guide_middleware'))
                 ->get('/_devlib-guide', fn () => view('devlib::guide', ['families' => Guide::byFamily()]))
                 ->name('devlib.guide');

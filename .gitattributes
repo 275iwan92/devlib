@@ -1,0 +1,10 @@
+# Paket murni (git archive / composer dist): kode yang dibutuhkan proyek pemakai saja.
+# Katalog (site/), panduan, dokumen, aturan kerja, dan tes tinggal di repo utama.
+/site export-ignore
+/docs export-ignore
+/skills export-ignore
+/resources/guide export-ignore
+/resources/views/guide.blade.php export-ignore
+/CLAUDE.md export-ignore
+/.claude export-ignore
+/.gitattributes export-ignore
