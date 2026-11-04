@@ -330,6 +330,10 @@
         const nextCol = this.cols[this.cols.indexOf(c) + 1]; $(this.el, `tr[data-i="${i}"] [data-k="${nextCol ? nextCol.key : c.key}"]`)?.focus();
       });
       document.body.appendChild(this.pop);
+      // Ruang di bawah kurang (baris terbawah) dan di atas lebih lega: daftar mencuat ke atas, tinggi dibatasi ke ruang yang ada.
+      const h = this.pop.offsetHeight, below = innerHeight - rc.bottom - 8, above = rc.top - 8;
+      if (h > below && above > below) { const mh = Math.min(h, above); this.pop.style.maxHeight = mh + 'px'; this.pop.style.top = (rc.top + scrollY - mh - 2) + 'px'; }
+      else if (h > below) this.pop.style.maxHeight = Math.max(below, 120) + 'px';
     }
 
     validate() {
