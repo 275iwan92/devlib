@@ -43,6 +43,7 @@ use Devlib\Lang;
 // Aturan Grid Transactional (user 2026-10-20, menggantikan aturan 2026-10-02): demi kecepatan memuat ribuan baris bentuknya PLAIN: tanpa kotak/avatar,
 //   baris selang-seling (zebra) warna lembut (kind="transactional"; zebra juga wajib di mode="report", user 2026-10-20), kolom pertama hanya teks tebal, hanya kolom Status yang boleh berwarna; baris induk 5-8 kolom tampil,
 //   tanpa kolom "jumlah item"; baris anak (detail) paling banyak 7 kolom dan SELALU memuat nama item / product.
+// cards 'style' => 'band' (+ 'icon','hue','big' = kolom, 'start' => true kartu jadi tampilan awal): kartu pita warna beranda master.
 // cards: ['image','title','sub','badge','tones','meta' => [kolom..], 'fallback' => kolom nama (inisial bila tanpa foto)] -> tombol Tabel/Kartu (CardView).
 // openUrl: alamat buka baris, {id} diganti nilai rowKey (klik 2x / tombol Buka / Edit langsung pindah layar);
 //   {kolom} lain diganti nilai kolom baris itu, mis. '{open_url}' bila tiap baris membawa alamatnya sendiri.
