@@ -225,10 +225,14 @@ window.Devlib = window.Devlib || {};
     // bila ruang di bawah kurang dan di atas lebih lega, panel dibuka ke atas.
     const place = () => {
       Object.assign(panel.style, {position: '', left: '', top: '', bottom: '', width: ''});
+      panel.querySelector('.dl-dd__list')?.style.removeProperty('max-height');
       const r = panel.getBoundingClientRect(), t = toggle.getBoundingClientRect();
       Object.assign(panel.style, {position: 'fixed', width: r.width + 'px', left: Math.max(8, Math.min(r.left, innerWidth - r.width - 8)) + 'px'});
-      const below = innerHeight - t.bottom - 8, above = t.top - 8;
-      if (panel.offsetHeight > below && above > below) Object.assign(panel.style, {top: 'auto', bottom: (innerHeight - t.top + 4) + 'px'});
+      const below = innerHeight - t.bottom - 8, above = t.top - 8, up = panel.offsetHeight > below && above > below, room = up ? above : below;
+      // Tidak muat di kedua sisi (daftar panjang / layar pendek): daftar dibatasi ke ruang yang ada dan menggulir di dalam panel, tidak terpotong tepi layar.
+      const list = panel.querySelector('.dl-dd__list');
+      if (list && panel.offsetHeight > room) list.style.maxHeight = Math.max(120, list.offsetHeight - (panel.offsetHeight - room) - 4) + 'px';
+      if (up) Object.assign(panel.style, {top: 'auto', bottom: (innerHeight - t.top + 4) + 'px'});
       else Object.assign(panel.style, {top: (t.bottom + 4) + 'px', bottom: 'auto'});
     };
     const follow = () => { if (panel.classList.contains('is-open')) place(); };
