@@ -22,3 +22,6 @@ Route::get('/ref/phone/inner/{name}', function (string $name) {
 
 // Edit profile di laptop/desktop (isi bagian sama dengan layar HP: partial ref/profile/*).
 Route::view('/ref/profile', 'ref.profile')->name('profile.ref');
+
+// Form Account (Security admin) untuk laptop: contoh tanpa penyimpanan.
+Route::view('/ref/account', 'ref.account')->name('account.ref');
