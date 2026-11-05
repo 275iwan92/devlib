@@ -121,6 +121,9 @@ Route::middleware('devlib.auth')->group(function () {
         ]);
     })->name('lib');
 
+    // Peta jalan: komponen yang belum dibuat (Catalog::PLANNED), tampil abu-abu di menu.
+    Route::get('/planned/{slug}', fn (string $slug) => view('planned', ['item' => Catalog::planned($slug) ?? abort(404)]))->name('planned');
+
     // "Lihat sebagai" (skills/devlib/views.md): halaman katalog yang sama di x-dl::device-frame berukuran perangkat; ?as= android | ios | tablet | laptop | desktop.
     Route::get('/lib/{slug}/as', function (Request $r, string $slug) {
         $page = Catalog::page($slug) ?? abort(404);

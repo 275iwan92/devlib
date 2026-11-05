@@ -38,7 +38,7 @@ class ProfilePageTest extends TestCase
 
     public function test_page_sits_in_profile_and_security_and_is_approved(): void
     {
-        $group = collect(Catalog::groups())->firstWhere('code', 'PS');
+        $group = collect(Catalog::groups())->firstWhere('code', 'AS');
         $this->assertArrayHasKey('p7-profile', $group['pages']);
         $this->assertArrayHasKey('p7-profile', Catalog::APPROVED);   // disetujui Jo 2026-10-21
     }

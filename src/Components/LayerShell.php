@@ -97,7 +97,7 @@ class LayerShell extends DevlibComponent
     // Modul Shell sebagai tree Layer Menu: modul -> item, grup = caption. Kunci daun = code item (= tab MDI).
     public function layerTree(): array
     {
-        $tone = ['partial' => 'warn', 'done' => 'success', 'danger' => 'danger'];
+        $tone = ['partial' => 'warn', 'done' => 'success', 'danger' => 'danger', 'planned' => 'muted'];
         // Item ber-'items' = submenu bertingkat (dibuka sebagai panel berikutnya), selain itu daun.
         $leaf = function (array $it, ?string $group) use (&$leaf, $tone) {
             if (isset($it['items'])) {

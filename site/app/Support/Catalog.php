@@ -309,6 +309,7 @@ final class Catalog
                 ['code' => 'DB', 'label' => 'Dashboard', 'icon' => 'fa-solid fa-gauge-high', 'pages' => ['p6-dashboard', 'p6-indicators', 'p6-greeting-card']],
                 ['code' => 'CH', 'label' => 'Charts', 'icon' => 'fa-solid fa-chart-pie', 'pages' => ['p6-charts']],
                 ['code' => 'CT', 'label' => 'Communication', 'icon' => 'fa-solid fa-comments', 'pages' => ['p7-chat', 'p7-chat-model', 'p7-assistant']],
+                ['code' => 'PW', 'label' => 'Offline & Install (PWA)', 'icon' => 'fa-solid fa-mobile-screen', 'pages' => []],
             ],
             // Basic: komponen kecil; rincian di dalam.
             'Basic' => [
@@ -318,8 +319,8 @@ final class Catalog
             ],
             'Shell & Account' => [
                 ['code' => 'SH', 'label' => 'Shell & Layout', 'icon' => 'fa-solid fa-table-columns', 'pages' => ['shell', 'screen-nav', 'p7-menus', 'p7-layer', 'p7-phone', 'p7-screen', 'p7-netline']],
-                ['code' => 'LG', 'label' => 'Login & Register', 'icon' => 'fa-solid fa-right-to-bracket', 'pages' => ['login-1', 'login-2', 'login-3', 'register', 'forgot-1', 'forgot-2']],
-                ['code' => 'PS', 'label' => 'Profile & Security', 'icon' => 'fa-solid fa-user-shield', 'pages' => ['p7-profile', 'p8-lock', 'p8-security']],
+                ['code' => 'SI', 'label' => 'Sign-in', 'icon' => 'fa-solid fa-right-to-bracket', 'pages' => ['login-1', 'login-2', 'login-3', 'register', 'forgot-1', 'forgot-2']],
+                ['code' => 'AS', 'label' => 'Account & Security', 'icon' => 'fa-solid fa-user-shield', 'pages' => ['p7-profile', 'p8-lock', 'p8-security']],
             ],
             'Foundations & Rules' => [
                 ['code' => 'BH', 'label' => 'Global Behaviors', 'icon' => 'fa-solid fa-sliders', 'pages' => $in('p4-', ['guard', 'shortcuts', 'permissions', 'i18n', 'metadata'])],
@@ -327,7 +328,15 @@ final class Catalog
                     'folders' => ['p5-override' => ['Develop & Coding']]],
             ],
             'Flow' => [['code' => 'FL', 'from' => ['FL']]],
-            'Engine' => [['code' => 'EG', 'from' => ['EG']]],
+            // Engine per bidang (user 2026-11-05): Overview = halaman yang ada; bidang lain berisi item peta jalan (Catalog::PLANNED).
+            'Engine' => [
+                ['code' => 'EG', 'label' => 'Overview', 'icon' => 'fa-solid fa-gears', 'from' => ['EG']],
+                ['code' => 'ED', 'label' => 'Documents', 'icon' => 'fa-solid fa-file-circle-check', 'pages' => []],
+                ['code' => 'EP', 'label' => 'Procurement', 'icon' => 'fa-solid fa-cart-flatbed', 'pages' => []],
+                ['code' => 'EI', 'label' => 'Inventory', 'icon' => 'fa-solid fa-boxes-stacked', 'pages' => []],
+                ['code' => 'ES', 'label' => 'Scheduling', 'icon' => 'fa-solid fa-calendar-check', 'pages' => []],
+                ['code' => 'EN', 'label' => 'Notification', 'icon' => 'fa-solid fa-bell', 'pages' => []],
+            ],
         ];
     }
 
@@ -497,6 +506,88 @@ final class Catalog
         return is_file($file) ? (json_decode(file_get_contents($file), true) ?: []) : [];
     }
 
+    // Komponen yang BELUM dibuat (peta jalan, user 2026-11-05): tampil abu-abu di menu, halamannya hanya menjelaskan tujuan dan kebutuhan.
+    // Kunci luar = kode grup menu. Elemen ke-5 (slug halaman katalog) = sudah ada, tampil biasa. Elemen ke-4 = butuh HTTPS (secure context).
+    public const PLANNED = [
+        'GP' => [
+            'geofence' => ['Geofence (work area)', 'fa-solid fa-draw-polygon', 'Area kerja berbentuk lingkaran atau poligon; absen hanya sah di dalam area.', true],
+            'live-tracking' => ['Live tracking', 'fa-solid fa-satellite-dish', 'Posisi petugas lapangan diperbarui berkala di peta.', true],
+            'distance-eta' => ['Distance & ETA', 'fa-solid fa-ruler-combined', 'Jarak dan perkiraan tiba dari posisi ke tujuan.', true],
+        ],
+        'MR' => [
+            'route-planner' => ['Route planner', 'fa-solid fa-route', 'Urutan kunjungan atau pengiriman dengan rute terpendek.', false],
+            'map-pins' => ['Map pins & areas', 'fa-solid fa-map-pin', 'Pin dan area di peta dengan warna status.', false],
+            'driver-live-map' => ['Driver live map', 'fa-solid fa-truck-fast', 'Posisi kendaraan langsung di peta pengiriman.', true],
+        ],
+        'CS' => [
+            'photo-proof' => ['Photo proof', 'fa-solid fa-camera-retro', 'Foto bukti (serah terima, kondisi barang) terlampir pada dokumen.', true],
+            'document-scan' => ['Document scan', 'fa-solid fa-file-image', 'Pindai dokumen dengan kamera menjadi lampiran.', true],
+            'selfie-checkin' => ['Selfie check-in', 'fa-solid fa-user-check', 'Foto saat absen. Menyentuh data wajah: aturan privasi harus diputuskan dulu.', true],
+        ],
+        'BD' => [
+            'shift-roster' => ['Shift roster', 'fa-solid fa-calendar-week', 'Jadwal shift per orang per minggu.', false],
+        ],
+        'OG' => [
+            'attendance-recap' => ['Attendance recap', 'fa-solid fa-clipboard-list', 'Rekap absensi per orang dan periode.', false],
+            'leave-request' => ['Leave request', 'fa-solid fa-umbrella-beach', 'Pengajuan dan persetujuan cuti.', false],
+        ],
+        'CT' => [
+            'push-notifications' => ['Push notifications', 'fa-solid fa-bell', 'Notifikasi Approval dan Chat sampai ke HP walau aplikasi tertutup.', true],
+            'announcements' => ['Announcements', 'fa-solid fa-bullhorn', 'Pengumuman dari manajemen ke seluruh pengguna.', false],
+        ],
+        'PW' => [
+            'install-home' => ['Install to home screen', 'fa-solid fa-mobile-screen', 'Pasang aplikasi ke layar utama HP (PWA).', true],
+            'offline-mode' => ['Offline mode', 'fa-solid fa-cloud-arrow-down', 'Layar tetap terbuka tanpa jaringan memakai cache.', true],
+            'background-sync' => ['Background sync', 'fa-solid fa-rotate', 'Data yang diisi saat offline terkirim otomatis ketika online.', true],
+        ],
+        'SI' => [
+            'passkey' => ['Passkey', 'fa-solid fa-fingerprint', 'Login tanpa sandi (WebAuthn). Terkait aturan login.', true],
+        ],
+        'AS' => [
+            'my-devices' => ['My devices', 'fa-solid fa-laptop', 'Daftar perangkat yang pernah masuk (opsi devices-url di profil).', false],
+            'active-sessions' => ['Active sessions', 'fa-solid fa-user-clock', 'Sesi yang sedang aktif dan tombol keluarkan.', false],
+        ],
+        'ED' => [
+            'cancel-adjust' => ['Cancel & Adjustment', 'fa-solid fa-ban', 'CANCEL dan ADJUSTMENT otomatis.', false, 'p9-engines'],
+            'doc-numbering' => ['Document numbering', 'fa-solid fa-hashtag', 'Penomoran dokumen per jenis, per periode.', false],
+            'status-workflow' => ['Status workflow', 'fa-solid fa-diagram-next', 'Aturan perpindahan status dokumen.', false],
+            'approval-routing' => ['Approval routing', 'fa-solid fa-stamp', 'Siapa menyetujui apa menurut jabatan dan nilai.', false],
+        ],
+        'EP' => [
+            'lead-time' => ['Lead Time', 'fa-solid fa-hourglass-half', 'Lead time pengadaan.', false, 'p9-engines'],
+            'reorder-point' => ['Reorder point', 'fa-solid fa-rotate-left', 'Titik pesan ulang per produk.', false],
+            'po-suggestion' => ['PO suggestion', 'fa-solid fa-lightbulb', 'Saran pembelian dari stok dan lead time.', false],
+        ],
+        'EI' => [
+            'fefo-batch' => ['FEFO & batch expiry', 'fa-solid fa-boxes-stacked', 'Urutan keluar berdasarkan kedaluwarsa.', false],
+            'stock-balance' => ['Stock balance', 'fa-solid fa-scale-balanced', 'Saldo stok per gudang, lokasi, dan batch.', false],
+            'unit-conversion' => ['Unit conversion', 'fa-solid fa-arrows-left-right', 'Konversi satuan stok, beli, dan pakai.', false],
+        ],
+        'ES' => [
+            'production-schedule' => ['Production schedule', 'fa-solid fa-calendar-check', 'Penjadwalan produksi.', false],
+            'capacity' => ['Capacity', 'fa-solid fa-gauge', 'Kapasitas mesin dan orang per periode.', false],
+        ],
+        'EN' => [
+            'triggers' => ['Triggers', 'fa-solid fa-bolt', 'Aturan: bila X terjadi, kirim pemberitahuan.', false],
+            'reminders' => ['Reminders', 'fa-solid fa-bell-concierge', 'Pengingat terjadwal.', false],
+        ],
+    ];
+
+    // Item peta jalan menurut slug (halaman /planned/{slug}); null bila tidak ada atau sudah punya halaman sendiri.
+    public static function planned(string $slug): ?array
+    {
+        foreach (self::PLANNED as $code => $items) {
+            if (isset($items[$slug]) && ! isset($items[$slug][4])) {
+                [$label, $icon, $purpose, $https] = $items[$slug];
+
+                return ['slug' => $slug, 'label' => $label, 'icon' => $icon, 'purpose' => $purpose, 'https' => $https,
+                    'group' => collect(self::groups())->firstWhere('code', $code)['label'] ?? $code];
+            }
+        }
+
+        return null;
+    }
+
     public static function page(string $slug): ?array
     {
         foreach (self::groups() as $g) {
@@ -552,10 +643,18 @@ final class Catalog
                 }
                 $items[$at]['items'][$sub]['items'][] = $item;
             }
+            foreach (self::PLANNED[$g['code']] ?? [] as $slug => $d) {
+                $items[] = ['code' => 'PL-'.$slug, 'label' => $d[0], 'icon' => $d[1], 'type' => 'form'] + (isset($d[4])
+                    ? ['url' => route('lib', ['slug' => $d[4]])]
+                    : ['url' => route('planned', ['slug' => $slug]), 'badge' => 'icon:fa-regular fa-clock', 'badgeTone' => 'planned', 'badgeTitle' => 'Planned']);
+            }
             $modules[] = ['code' => $g['code'], 'short' => $g['short'], 'section' => $g['section'] ?? null, 'label' => $g['label'], 'icon' => $g['icon'], 'children' => $items]; // langsung isi modul, tanpa lapis "Components" (user 2026-09-30: membingungkan)
         }
         // Generator (user 2026-10-05): form permintaan + daftar permintaan, isi dari database devlib.
-        $modules[] = Generator::menu() + ['section' => 'Tools'];
+        $gen = Generator::menu();
+        // Area abu-abu (user 2026-11-05): Generator belum final, tampil dipudarkan seperti item Planned.
+        $gen['children'] = array_map(fn ($c) => $c + ['badge' => 'icon:fa-regular fa-clock', 'badgeTone' => 'planned', 'badgeTitle' => 'Experimental'], $gen['children']);
+        $modules[] = $gen + ['section' => 'Tools'];
         // Menu kedua Layer Menu (ikon tukar Operational | Executive Summary): modul berkode MGMT.
         $modules[] = Summary::menu();
 
