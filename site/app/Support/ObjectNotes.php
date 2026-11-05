@@ -187,6 +187,7 @@ final class ObjectNotes
                 'span' => ['Not needed', 'Number of table columns, used for colspan of group, detail and empty rows.'],
                 'actFirst' => ['Rarely', 'Whether the Actions column sits at the left (entry grids with actions).'],
                 'actLast' => ['Rarely', 'Whether the Actions column sits at the right: only a grid that is not entry and still has actions, so it is rarely true (report grids have none).'],
+                'bandCard' => ['Not needed', 'Draws one band card (cards.style = band): colored band with icon, title and code, main figure and small meta lines; hue, icon, big and meta come from cards.'],
                 'sorted' => ['Rarely', 'Sorts a list by the clicked column: numbers by value, other columns as text.'],
                 'drawStats' => ['Rarely', 'Draws the count boxes with their counts.'],
                 'drawTabs' => ['Rarely', 'Draws the tab bar with counts; an All tab is hidden when the count boxes already have one.'],

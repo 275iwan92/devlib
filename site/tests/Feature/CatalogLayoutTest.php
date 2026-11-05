@@ -13,7 +13,7 @@ class CatalogLayoutTest extends TestCase
     {
         $groups = Catalog::groups();
         $this->assertNotContains('Unplaced', array_column($groups, 'section'), 'halaman belum ditempatkan di Catalog::layout()');
-        $this->assertSame(['Foundations & Rules', 'Components', 'Screen', 'Flow', 'Engine'], array_values(array_unique(array_column($groups, 'section'))));
+        $this->assertSame(['Foundations & Rules', 'Components', 'Screen', 'Operations', 'Shell & Account', 'Device & Secure (HTTPS)', 'Flow', 'Engine'], array_values(array_unique(array_column($groups, 'section'))));
     }
 
     public function test_page_slugs_are_unique_and_old_approved_slugs_still_exist(): void
@@ -39,7 +39,7 @@ class CatalogLayoutTest extends TestCase
     {
         $modules = Catalog::modules();
         $sections = array_values(array_unique(array_filter(array_column($modules, 'section'))));
-        $this->assertSame(['Foundations & Rules', 'Components', 'Screen', 'Flow', 'Engine', 'Tools'], $sections);
+        $this->assertSame(['Foundations & Rules', 'Components', 'Screen', 'Operations', 'Shell & Account', 'Device & Secure (HTTPS)', 'Flow', 'Engine', 'Tools'], $sections);
         $rules = collect($modules)->firstWhere('label', 'Rules');
         $this->assertSame(['Develop & Coding', 'Screens', 'Models', 'Reference'], array_column($rules['children'], 'label'));
         $doc = collect($rules['children'][0]['items'])->firstWhere('url', route('lib', ['slug' => 'rules-object']));

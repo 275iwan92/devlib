@@ -295,7 +295,7 @@ final class Catalog
 
         return [
             'Foundations & Rules' => [
-                ['code' => 'DT', 'label' => 'Basics & Themes', 'icon' => 'fa-solid fa-palette', 'pages' => $in('basic-', ['colors', 'typography', 'shape', 'density', 'icons', 'breakpoints', 'locale'])],
+                ['code' => 'DT', 'label' => 'Basics & Themes', 'icon' => 'fa-solid fa-palette', 'pages' => $in('basic-', ['themes', 'colors', 'typography', 'shape', 'density', 'icons', 'breakpoints', 'locale'])],
                 ['code' => 'BH', 'label' => 'Global Behaviors', 'icon' => 'fa-solid fa-sliders', 'pages' => $in('p4-', ['guard', 'shortcuts', 'permissions', 'i18n', 'metadata'])],
                 ['code' => 'DR', 'label' => 'Rules', 'icon' => 'fa-solid fa-code', 'pages' => [...array_keys(RulesDocs::pages()), 'p5-override'],
                     'folders' => ['p5-override' => ['Develop & Coding']]],
@@ -303,16 +303,26 @@ final class Catalog
             'Components' => [
                 ['code' => 'IN', 'label' => 'Inputs & Buttons', 'icon' => 'fa-solid fa-i-cursor', 'pages' => $in('p2-', ['inputs', 'numbers', 'datetime', 'choices', 'select-add', 'files', 'buttons'])],
                 ['code' => 'DF', 'label' => 'Display & Feedback', 'icon' => 'fa-solid fa-comment-dots', 'pages' => [...$in('p2-', ['display', 'containers', 'navigation']), ...$in('p3-', ['feedback', 'loading', 'notifications', 'idle-logout', 'errors'])]],
-                ['code' => 'WU', 'label' => 'Widgets & Utilities', 'icon' => 'fa-solid fa-puzzle-piece', 'pages' => ['p6-greeting-card', 'p6-floor-plan', 'p6-timer', 'p6-geo-clock', 'p6-codes']],
+                ['code' => 'WU', 'label' => 'Widgets & Utilities', 'icon' => 'fa-solid fa-puzzle-piece', 'pages' => ['p6-greeting-card', 'p6-floor-plan', 'p6-timer', 'p6-codes']],
             ],
             'Screen' => [
                 ['code' => 'GR', 'from' => ['GR', 'FM']],
                 ['code' => 'CH', 'label' => 'Charts & Dashboards', 'icon' => 'fa-solid fa-chart-pie', 'pages' => ['p6-charts', 'p6-indicators', 'p6-dashboard', 'p5-org']],
                 ['code' => 'SC', 'label' => 'Schedule', 'icon' => 'fa-solid fa-calendar-days', 'pages' => ['p5-kanban', 'p5-gantt', 'p5-calendar']],
                 ['code' => 'DK', 'label' => 'Print & Report', 'icon' => 'fa-solid fa-print', 'from' => ['DK'], 'pages' => ['p6-statement']],
-                ['code' => 'SP', 'label' => 'Special Screen', 'icon' => 'fa-solid fa-star', 'pages' => ['basic-themes', 'p7-profile', 'p6-wh-map', 'p6-wh-labels', 'p6-wh-scan', 'p6-delivery', 'p5-pick-queue', 'p7-chat', 'p7-chat-model', 'p7-assistant'],
-                    'folders' => ['p6-delivery' => ['Warehouse', 'fa-solid fa-warehouse'], 'p7-chat' => ['Chat', 'fa-solid fa-comments'], 'p7-chat-model' => ['Chat', 'fa-solid fa-comments'], 'p7-assistant' => ['Chat', 'fa-solid fa-comments']]],
-                ['code' => 'MA', 'label' => 'Shell, Account & Security', 'icon' => 'fa-solid fa-table-columns', 'pages' => ['shell', 'screen-nav', 'p7-menus', 'p7-layer', 'p7-phone', 'p7-screen', 'p7-netline', 'login-1', 'login-2', 'login-3', 'register', 'forgot-1', 'forgot-2', 'p8-lock', 'p8-security']],
+            ],
+            'Operations' => [
+                ['code' => 'WH', 'label' => 'Warehouse', 'icon' => 'fa-solid fa-warehouse', 'pages' => ['p6-wh-map', 'p6-wh-labels', 'p6-delivery', 'p5-pick-queue']],
+                ['code' => 'CT', 'label' => 'Chat & Assistant', 'icon' => 'fa-solid fa-comments', 'pages' => ['p7-chat', 'p7-chat-model', 'p7-assistant']],
+            ],
+            'Shell & Account' => [
+                ['code' => 'SH', 'label' => 'Shell & Layout', 'icon' => 'fa-solid fa-table-columns', 'pages' => ['shell', 'screen-nav', 'p7-menus', 'p7-layer', 'p7-phone', 'p7-screen', 'p7-netline']],
+                ['code' => 'LG', 'label' => 'Login & Register', 'icon' => 'fa-solid fa-right-to-bracket', 'pages' => ['login-1', 'login-2', 'login-3', 'register', 'forgot-1', 'forgot-2']],
+                ['code' => 'PS', 'label' => 'Profile & Security', 'icon' => 'fa-solid fa-user-shield', 'pages' => ['p7-profile', 'p8-lock', 'p8-security']],
+            ],
+            // Fitur yang butuh HTTPS (secure context): GPS, kamera; tempat notifikasi / passkey / PWA berikutnya.
+            'Device & Secure (HTTPS)' => [
+                ['code' => 'DV', 'label' => 'Device & Secure', 'icon' => 'fa-solid fa-lock', 'pages' => ['p6-geo-clock', 'p6-wh-scan']],
             ],
             'Flow' => [['code' => 'FL', 'from' => ['FL']]],
             'Engine' => [['code' => 'EG', 'from' => ['EG']]],
