@@ -6,6 +6,9 @@ return [
     // Isi DEVLIB_LOGIN_BYPASS=false untuk mencoba alur login contohnya (/login).
     'login_bypass' => (bool) env('DEVLIB_LOGIN_BYPASS', true),
 
+    // false = akun contoh di bawah (users) tidak bisa dipakai login; hanya akun sec_user (php artisan devlib:user). Untuk situs yang bisa dibuka publik.
+    'sample_login' => (bool) env('DEVLIB_SAMPLE_LOGIN', true),
+
     // Tema bawaan situs katalog (user 2026-10-21): hijau pastel dengan sidebar terang (Soft Hijau). Pilihan pengguna di browser (Themes / Setup & Security) tetap menang; kode tema: Devlib\Theme::ALL.
     'theme' => 'soft_green',
 

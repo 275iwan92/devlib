@@ -45,7 +45,7 @@ Route::post('/login', function (Request $r) {
     } catch (Throwable) {
         // database devlib belum ada / mati: akun contoh masih bisa masuk
     }
-    $user ??= collect(config('devlib.users'))->first(fn ($u) => strcasecmp($u['login'], $login) === 0 && hash_equals($u['password'], $password));
+    $user ??= ! config('devlib.sample_login') ? null : collect(config('devlib.users'))->first(fn ($u) => strcasecmp($u['login'], $login) === 0 && hash_equals($u['password'], $password));
 
     if (! $user) {
         return $fail('wrong');
