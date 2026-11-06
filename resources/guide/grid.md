@@ -68,6 +68,7 @@ Constructor of `Devlib\Components\Grid` (29 props). Blade names are kebab-case; 
 | `search` | string | `'Search...'` | Placeholder of the search box; say which columns are searched. Translated. |
 | `source` | ?string | `null` | Descriptive data-source label written to `data-dl-src` (default text `baris data grid`). Documentation only: **not a URL, nothing is fetched**. |
 | `open-url` | ?string | `null` | Address opened by double-click / Open / Edit. `{id}` = URL-encoded row key, `{field}` = that row field (not encoded). |
+| `open-on` | string | `'dblclick'` | How a row or card opens: `dblclick` (default, locked) or `click` (one click; for lists that pick a record whose side panel changes). With `click` a click on a button, input, label, link or cell action icon does not open the row. Same idea as `open-on` of the Kanban. |
 | `new-url` | ?string | `null` | Address opened by New Record (a literal URL, no placeholders). |
 | `new-modal` | ?string | `null` | `id` of an `x-dl::modal` opened by New Record (wizard). Wins over `new-url`. |
 | `toggle-url` | ?string | `null` | POST address for Active/Inactive (`{id}` placeholder). Without it the toggle is preview-only. |
@@ -213,6 +214,7 @@ Checkboxes only if `bulk` is non-empty. Click selects; Shift+click selects the r
 
 ### Opening a row
 
+- With `open-on="click"` a single click on a row or card (not on a button, input, label, link or cell action icon) emits the same event and double-click is ignored; the default stays double-click.
 - Double-click on a row or card (not on a button, input or label) emits `dl:grid-open` with `{id, action: 'open'}`. The Open icon (worklist) and the Edit icon (master) emit it with `action: 'open'` / `'edit'`.
 - If the event is not cancelled and `open-url` is set and the action is `open` or `edit`, the grid calls `keep()` (for `restore`) and assigns `location.href` with `{id}` replaced by `encodeURIComponent(id)` and every other `{field}` replaced by the raw row field value.
 - Without `open-url` the default is a preview toast ("Open: name (double-click)"). Cancel the event (`preventDefault`) to take over completely. Note that the toast text uses the row field `name`, falling back to the key.
