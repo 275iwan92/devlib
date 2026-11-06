@@ -5,4 +5,9 @@
         <x-slot:riwayat>Riwayat approval (Part 5: Approval).</x-slot:riwayat>
     </x-dl::tabs>
 
+    <x-dl::tabs switch :tabs="['dieline' => 'Dieline', 'preview' => '3D Preview', 'material' => 'Material']">
+        <x-slot:dieline>Satu baris pil; pil aksen bergeser ke tab yang diklik.</x-slot:dieline>
+        <x-slot:preview>Gerak mengikuti token --dl-dur-slide dan mati bila prefers-reduced-motion.</x-slot:preview>
+        <x-slot:material>Opt-in: prop switch.</x-slot:material>
+    </x-dl::tabs>
 </div>

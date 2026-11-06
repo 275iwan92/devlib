@@ -50,6 +50,8 @@
   --dl-font-scale:1; --dl-font-mono:ui-monospace,Consolas,monospace;
   /* ---- density: jarak baris & isi (compact | normal | comfortable) ---- */
   --dl-density:1;
+  /* ---- gerak: pil tab switch dan sejenisnya ---- */
+  --dl-dur-slide:.28s; --dl-ease-slide:cubic-bezier(.4,0,.2,1);
   /* ---- skala huruf & jarak bernama (untuk komponen baru) ---- */
   --dl-text-2xs:10px; --dl-text-xs:11px; --dl-text-sm:12px; --dl-text-md:13px; --dl-text-base:14px; --dl-text-lg:16px; --dl-text-xl:18px; --dl-text-2xl:24px; --dl-text-3xl:30px;
   --dl-space-1:2px; --dl-space-2:4px; --dl-space-3:6px; --dl-space-4:8px; --dl-space-5:12px; --dl-space-6:16px; --dl-space-7:24px; --dl-space-8:32px;
@@ -717,6 +719,15 @@ body.dl-page-body{overflow:auto;height:auto;min-height:100vh}
 .dl-tabs__tab.is-active{color:var(--dl-accent-ink);border-bottom-color:var(--dl-accent)}
 .dl-tabs__panel{display:none;padding:12px 2px}
 .dl-tabs__panel.is-active{display:block}
+/* Tab bergaya switch (opt-in prop switch): satu baris pil, pil aksen bergeser ke tab aktif; gerak = token --dl-dur-slide / --dl-ease-slide, mati bila prefers-reduced-motion. */
+.dl-tabs--switch > .dl-tabs__bar{position:relative;display:flex;width:fit-content;max-width:100%;gap:0;padding:4px;border:1px solid var(--dl-border);border-radius:999px;background:var(--dl-surface-alt)}
+.dl-tabs--switch > .dl-tabs__bar .dl-tabs__tab{position:relative;z-index:1;border-bottom:none;border-radius:999px;padding:9px 20px;transition:color var(--dl-dur-slide) var(--dl-ease-slide)}
+.dl-tabs--switch > .dl-tabs__bar .dl-tabs__tab:hover{color:var(--dl-ink-strong)}
+.dl-tabs--switch > .dl-tabs__bar .dl-tabs__tab.is-active{color:var(--dl-on-accent)}
+.dl-tabs__thumb{position:absolute;z-index:0;top:4px;bottom:4px;left:0;width:var(--dl-thumb-w,0);transform:translateX(var(--dl-thumb-x,0));border-radius:999px;background:var(--dl-accent)}
+.dl-tabs__thumb.is-ready{transition:transform var(--dl-dur-slide) var(--dl-ease-slide),width var(--dl-dur-slide) var(--dl-ease-slide)}
+.dl-tabs--switch > .dl-tabs__panel{padding:16px 0 0}
+@media (prefers-reduced-motion:reduce){.dl-tabs__thumb.is-ready,.dl-tabs--switch > .dl-tabs__bar .dl-tabs__tab{transition:none}}
 /* accordion */
 /* pagination */
 .dl-pager{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--dl-border-soft);font-size:calc(11.5px * var(--dl-font-scale));color:var(--dl-muted);background:var(--dl-surface)}
