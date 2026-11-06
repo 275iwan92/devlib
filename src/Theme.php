@@ -95,7 +95,7 @@ final class Theme
                 'f-ink' => $d['ink-strong'], 'f-label' => $d['ink'], 'f-muted' => $d['muted'], 'f-line-soft' => $d['border'], 'f-bg-soft' => $d['hover'],
                 'f-ro' => $d['hover'], 'f-badge' => "color-mix(in srgb, $primary 22%, {$d['surface']})", 'f-badge-ink' => $d['ink-strong'],
                 'info-soft' => "color-mix(in srgb, $primary 14%, {$d['surface']})", 'info-line' => "color-mix(in srgb, $primary 35%, {$d['surface']})",
-                'danger' => '#ff8a8a', 'danger-soft' => '#3a1d20', 'danger-line' => '#5c2a2e', 'code-bg' => $d['border'],
+                'danger' => '#ff8a8a', 'on-danger' => '#0b1220', 'danger-soft' => '#3a1d20', 'danger-line' => '#5c2a2e', 'code-bg' => $d['border'],
             ] + $t;
         }
 
