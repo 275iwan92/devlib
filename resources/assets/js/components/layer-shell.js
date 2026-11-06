@@ -16,6 +16,17 @@
   class LayerShell extends Devlib.Component {
     static selector = ".dl-shell";
     init() {
+      // Tema / kerapatan / ukuran huruf dari Setup berlaku juga di tab terbuka (iframe sama-origin); tab baru memuatnya dari localStorage (theme-boot).
+      document.addEventListener('dl:theme', () => {
+        const h = document.documentElement, scale = h.style.getPropertyValue('--dl-font-scale');
+        document.querySelectorAll('iframe').forEach(f => { try {
+          const d = f.contentDocument, e = d.documentElement; if (!e) return;
+          if (h.dataset.dlTheme) e.dataset.dlTheme = h.dataset.dlTheme;
+          if (h.dataset.dlDensity) e.dataset.dlDensity = h.dataset.dlDensity;
+          if (scale) e.style.setProperty('--dl-font-scale', scale);
+          d.dispatchEvent(new CustomEvent('dl:theme'));
+        } catch (_) {} });
+      });
       this.modules = JSON.parse(this.el.dataset.dlModules || '[]');
       this.items = [];
       // Item bisa bersarang (grup di dalam grup = submenu); yang didaftar hanya daun (punya url).

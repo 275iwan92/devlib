@@ -551,6 +551,7 @@ final class Lang
         'lm_close_chat' => ['Tutup chat', 'Close chat'],
         'lm_show_menu' => ['Tampilkan menu', 'Show menu'],
         'lm_show_chat' => ['Tampilkan chat', 'Show chat'],
+        'lm_saved' => ['Tersimpan', 'Saved'],
         'lm_undock' => ['Kembalikan ke panel kiri', 'Move back to the left panel'],
         'lm_undock_chat' => ['Kembalikan chat ke panel kiri', 'Move the chat back to the left panel'],
         'l_dup_row' => ['Duplikat baris', 'Duplicate row'],

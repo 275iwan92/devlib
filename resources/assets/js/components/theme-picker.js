@@ -1,7 +1,7 @@
 /* DevLib · ThemePicker */
 (function (Devlib) {
   'use strict';
-  const {$$} = Devlib.h;
+  const {$$, toast, T} = Devlib.h;
 
   class ThemePicker extends Devlib.Component {
     static selector = "[data-dl-themepick]";
@@ -12,7 +12,7 @@
       $$(this.el, '[data-scale]').forEach(b => b.addEventListener('click', () => { this.html.style.setProperty('--dl-font-scale', b.dataset.scale); this.save('dl-font-scale', b.dataset.scale); this.mark(); }));
       this.mark();
     }
-    save(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+    save(k, v) { try { localStorage.setItem(k, v); toast(T('lm_saved')); } catch (e) {} }
 
     mark() {
       $$(this.el, '[data-theme]').forEach(b => b.classList.toggle('is-active', b.dataset.theme === this.html.dataset.dlTheme));
