@@ -24,6 +24,7 @@
             </x-dl::action-bar>
         </x-dl::action-form>
 
+        <x-dl::location-kinds :kinds="$d['kinds'] ?? []">
         @if (! $m)
             <x-dl::empty-state :title="Lang::raw($d['title'])" message="This building has no size yet. Fill in its length and width (metres) in Buildings to draw the map." icon="fa-ruler-combined">
                 <x-dl::button label="Buildings" icon="fa-building" :href="$d['buildingsUrl']" />
@@ -49,6 +50,7 @@
                 <x-dl::alert tone="warn" :message="Lang::raw($m['unassigned'])" />
             @endif
         @endif
+        </x-dl::location-kinds>
 
         <x-dl::modal id="wh-generate" title="Generate Bins" icon="fa-wand-magic-sparkles" size="md">
             <x-dl::action-form action="{{ $g['action'] }}" id="wh-generate-form">
