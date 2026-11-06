@@ -268,10 +268,13 @@
         this.ptrack = this.$('[data-lm-ptrack]');
         this.pdet = this.$('[data-lm-pdet]');
         this.pstack = [];
+        // data-lm-in="induk": halaman ikut sebagai bagian di dalam halaman induk itu (tidak tampil di daftar).
+        this.pages.querySelectorAll(':scope > [data-lm-in]').forEach(x => { x.dataset.lmParent = x.dataset.lmIn; });
         // Halaman induk (data-lm-children="a,b") mendapat daftar anaknya di awal isi; anak tidak tampil di daftar utama, Back-nya kembali ke induk.
         this.pages.querySelectorAll(':scope > [data-lm-page][data-lm-children]').forEach(par => {
           const kids = par.dataset.lmChildren.split(',').map(k => this.page(k.trim())).filter(Boolean);
           kids.forEach(k => { k.dataset.lmParent = par.dataset.lmPage; });
+          if (par.hasAttribute('data-lm-modal')) return;
           par.insertAdjacentHTML('afterbegin', `<div class="dl-lm__plist">${kids.map(k => this.row(k)).join('')}</div>`);
         });
         // Daftar Profile = urutan aksi akun (LayerShell::actions, user 2026-10-03); data-sep = garis sebelum baris itu.
@@ -299,7 +302,7 @@
     }
 
     faOf(icon) { return !icon ? 'fa-solid fa-circle-dot' : icon.includes(' ') ? icon : 'fa-solid ' + icon; }
-    page(k) { return this.pages?.querySelector(`:scope > [data-lm-page="${CSS.escape(k)}"]`) || this.pdet?.querySelector(`[data-lm-page="${CSS.escape(k)}"]`); }
+    page(k) { return this.pages?.querySelector(`:scope > [data-lm-page="${CSS.escape(k)}"]`) || this.pdet?.querySelector(`[data-lm-page="${CSS.escape(k)}"]`) || this.drw?.querySelector(`[data-lm-page="${CSS.escape(k)}"]`); }
 
     chatVisible() { return this.st.chat && (this.st.dock || this.st.show === 'chat'); }
 
@@ -379,6 +382,7 @@
     // Dibuka dari halaman lain -> halaman itu dicatat (pstack) supaya Back kembali ke sana, bukan ke daftar.
     openPage(k, remember = true) {
       const s = this.page(k); if (!s) return;
+      if (s.hasAttribute('data-lm-modal')) return this.openModal(s);
       const cur = this.pdet.querySelector('[data-lm-page]');
       if (cur) { if (remember) this.pstack.push(cur.dataset.lmPage); this.pages.appendChild(cur); }
       this.pdet.innerHTML = BACK + `<div class="dl-lm__title"><i class="${esc(this.faOf(s.dataset.icon))}"></i><b>${esc(s.dataset.label)}</b></div>`;
@@ -387,7 +391,57 @@
       this.emit('dl:layer-menu-page', {key: k});
     }
 
+    // Halaman bertanda data-lm-modal (mis. Setup) dibuka sebagai dialog di tengah layar, masuk dari kanan ke kiri. Isinya = halaman anak
+    // (data-lm-children) + halaman lain bertanda data-lm-in="<kunci>", ditumpuk sebagai bagian bertajuk. Elemen DIPINDAH, bukan disalin.
+    openModal(par) {
+      this.closeModal(false);
+      const key = par.dataset.lmPage;
+      const secs = [...this.pages.querySelectorAll(':scope > [data-lm-page]')].filter(x => x.dataset.lmParent === key);
+      if (!this.drw) {
+        const d = this.drw = document.createElement('div');
+        d.className = 'dl-lm-drw';
+        d.innerHTML = '<div class="dl-lm-drw__sc" data-drw-x></div><section class="dl-lm-drw__p" role="dialog" aria-modal="true" tabindex="-1"><header class="dl-lm-drw__h"><i></i><b></b>'
+          + '<button type="button" class="dl-mbtn dl-mbtn--c" data-drw-x>' + esc(T('close')) + '</button></header><div class="dl-lm-drw__b"></div></section>';
+        document.body.appendChild(d);
+        d.addEventListener('click', e => { if (e.target.closest('[data-drw-x]')) this.closeModal(); });
+        d.addEventListener('keydown', e => {
+          if (e.key === 'Escape') { e.stopPropagation(); this.closeModal(); }
+          if (e.key === 'Tab') {
+            const f = [...d.querySelectorAll('a[href],button,input,select,textarea,[tabindex="0"]')].filter(x => !x.disabled && x.offsetParent);
+            if (!f.length) return;
+            const a = document.activeElement, first = f[0], last = f[f.length - 1];
+            if (e.shiftKey && (a === first || a === d.querySelector('section'))) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+          }
+        });
+      }
+      const d = this.drw, p = d.querySelector('.dl-lm-drw__p'), body = d.querySelector('.dl-lm-drw__b');
+      this.drwFrom = document.activeElement;
+      d.querySelector('header i').className = this.faOf(par.dataset.icon);
+      d.querySelector('header b').textContent = par.dataset.label;
+      p.setAttribute('aria-label', par.dataset.label);
+      body.innerHTML = '';
+      secs.forEach(x => {
+        const w = document.createElement('section'); w.className = 'dl-lm-drw__s';
+        w.innerHTML = `<h4 class="dl-lm-drw__t"><i class="${esc(this.faOf(x.dataset.icon))}"></i>${esc(x.dataset.label)}</h4>`;
+        w.appendChild(x); body.appendChild(w);
+      });
+      d.getBoundingClientRect();
+      d.classList.add('is-on');
+      setTimeout(() => p.focus(), 30);
+      this.emit('dl:layer-menu-page', {key});
+    }
+
+    closeModal(animate = true) {
+      const d = this.drw; if (!d || !d.classList.contains('is-on')) return;
+      d.classList.remove('is-on');
+      const back = () => { if (!d.classList.contains('is-on')) d.querySelectorAll('.dl-lm-drw__s > [data-lm-page]').forEach(x => this.pages.appendChild(x)); };
+      animate && !matchMedia('(prefers-reduced-motion: reduce)').matches ? setTimeout(back, 320) : back();
+      if (this.drwFrom?.isConnected) this.drwFrom.focus();
+    }
+
     closePage(animate = true) {
+      this.closeModal(false);
       if (!this.pdet) return;
       if (animate && this.pstack.length) return this.openPage(this.pstack.pop(), false);
       this.pstack = [];

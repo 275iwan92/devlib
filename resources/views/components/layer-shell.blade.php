@@ -3,7 +3,7 @@
         <x-slot:profile>
             {{-- Setup = rumah pengaturan tampilan yang akan bertambah (tema, bahasa, ...); Theme & Language anaknya (user 2026-10-03). --}}
             @unless (in_array('setup', $without) || in_array('theme', $without))
-                <section data-lm-page="setup" data-label="{{ \Devlib\Lang::text('Setup') }}" data-icon="fa-sliders" data-lm-children="theme,lang"></section>
+                <section data-lm-page="setup" data-lm-modal data-label="{{ \Devlib\Lang::text('Setup') }}" data-icon="fa-sliders" data-lm-children="theme,lang"></section>
                 <section data-lm-page="theme" data-label="{{ \Devlib\Lang::text('Theme') }}" data-icon="fa-palette"><x-dl::theme-picker /></section>
             @endunless
             @unless (in_array('setup', $without))<section data-lm-page="lang" data-label="{{ \Devlib\Lang::text('Language') }}" data-icon="fa-globe"><x-dl::lang-switch /></section>@endunless

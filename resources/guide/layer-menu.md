@@ -56,7 +56,7 @@ Constructor of `Devlib\Components\LayerMenu`: 19 props. Use `:prop="expr"` for a
 | Slot | Content |
 |---|---|
 | `chat` | One `<x-dl::chat compact ...>`. Enables the swap button, the dock button and the unread badges. Rendered inside `[data-lm-chathost]`; the SAME element moves between the left panel and the dock. |
-| `profile` | Profile pages: `<section data-lm-page="key" data-label="Text" data-icon="fa-...">content</section>` one per page. A section whose key equals an action key replaces that action row with a page row. Optional `data-lm-children="a,b"` makes the section a parent page that lists the pages `a` and `b` (they are hidden from the main list). Needed for the Profile panel to exist (without the slot there is no Profile overlay). |
+| `profile` | Profile pages: `<section data-lm-page="key" data-label="Text" data-icon="fa-...">content</section>` one per page. A section whose key equals an action key replaces that action row with a page row. Optional `data-lm-children="a,b"` makes the section a parent page that lists the pages `a` and `b` (they are hidden from the main list). `data-lm-modal` on the parent opens it as a centered dialog (slides in right to left, width fits content, max 90%, scrolls when tall, near full-screen on phones) whose body stacks the child pages as titled sections; an app can add its own section with `data-lm-in="parent-key"`. Close = Tutup button, outside click, Esc. Needed for the Profile panel to exist (without the slot there is no Profile overlay). |
 
 ### Item shape
 

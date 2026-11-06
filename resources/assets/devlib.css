@@ -2697,6 +2697,24 @@ html.dl-locked body{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.dl-netline [data-nl]{animation:none!important}}
 .dl-lm__user small{font-size:calc(11px * var(--dl-font-scale));color:var(--dl-side-muted)}
 [data-lm-pdet] > [data-lm-page]{padding:4px 6px}
+/* Dialog halaman profil (data-lm-modal): di tengah layar, masuk dari kanan ke kiri; lebar mengikuti isi (maks 90%), tinggi mengikuti isi dengan gulir, hampir penuh di HP. */
+.dl-lm-drw{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;visibility:hidden;transition:visibility 0s .3s}
+.dl-lm-drw.is-on{visibility:visible;transition:none}
+.dl-lm-drw__sc{position:absolute;inset:0;background:rgba(10,20,15,.4);opacity:0;transition:opacity .3s}
+.dl-lm-drw.is-on .dl-lm-drw__sc{opacity:1}
+.dl-lm-drw__p{position:relative;display:flex;flex-direction:column;width:max-content;min-width:min(380px,100%);max-width:min(560px,90vw);max-height:90dvh;box-sizing:border-box;background:var(--dl-surface);color:var(--dl-ink);border-radius:var(--dl-radius-lg);box-shadow:0 24px 70px rgba(15,22,45,.3);opacity:0;transform:translateX(110px);transition:transform .32s cubic-bezier(.2,.7,.2,1),opacity .25s;outline:none}
+.dl-lm-drw.is-on .dl-lm-drw__p{opacity:1;transform:none}
+.dl-lm-drw__h{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--dl-border);flex:none}
+.dl-lm-drw__h i{color:var(--dl-accent)}
+.dl-lm-drw__h b{flex:1;min-width:0;color:var(--dl-ink-strong);font-size:calc(16px * var(--dl-font-scale))}
+.dl-lm-drw__b{flex:1;min-height:0;overflow:auto;padding:4px 16px 12px}
+.dl-lm-drw__s{padding:14px 0;border-bottom:1px solid var(--dl-border)}
+.dl-lm-drw__s:last-child{border-bottom:0}
+.dl-lm-drw__t{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:calc(14px * var(--dl-font-scale));color:var(--dl-ink-strong)}
+.dl-lm-drw__t i{color:var(--dl-accent)}
+.dl-lm-drw [data-lm-page]{padding:0}
+@media (max-width:640px){.dl-lm-drw{padding:6px}.dl-lm-drw__p{width:100%;max-width:100%;max-height:96dvh}}
+@media (prefers-reduced-motion:reduce){.dl-lm-drw__p,.dl-lm-drw__sc,.dl-lm-drw{transition:none}.dl-lm-drw__p{transform:none}}
 /* Dok kanan: wadah di layout (prop dock) atau laci tetap di tepi kanan layar. Lebarnya beranimasi. */
 .dl-lm-dock{width:0;flex:none;overflow:hidden;display:flex;flex-direction:column;background:var(--dl-surface);border-radius:var(--dl-radius-lg);transition:width .3s cubic-bezier(.2,.7,.2,1)}
 .dl-lm-dock.is-on{width:var(--dl-lm-dock-w,320px);border:1px solid var(--dl-border)}
