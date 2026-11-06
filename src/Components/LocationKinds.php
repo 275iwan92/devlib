@@ -12,8 +12,8 @@
 
 namespace Devlib\Components;
 
-// Ubin kategori ukuran sedang (4 kolom). Klik ubin = terbuka selebar baris: ubin mengecil jadi bilah, kartu lokasi di bawahnya;
-// klik bilah terbuka = tutup; membuka kategori lain menutup yang lama (<details name>). Item aktif yang 'map' => true menampilkan
+// Layar lebar: ubin berderet vertikal di kolom kiri, isi kategori terbuka (kartu lokasi + denah) di panel kanan (side by side).
+// Layar sempit: ubin 2 kolom, isi terbuka selebar baris. Klik ubin terbuka = tutup; membuka kategori lain menutup yang lama (<details name>). Item aktif yang 'map' => true menampilkan
 // $slot (denah) sebagai bagian yang bisa di-expand lagi.
 //
 // $kinds = [['key', 'label', 'icon', 'tone' => violet|teal|amber|coral|neutral, 'open' => bool,
@@ -36,7 +36,7 @@ class LocationKinds extends DevlibComponent
     {
         return <<<'BLADE'
             @if (! $kinds){{ $slot }}@else
-            <div {{ $attributes->class('dl-lk') }} {!! $dl() !!}>
+            <div {{ $attributes->class('dl-lk')->merge(['style' => '--dl-lk-n:'.count($kinds)]) }} {!! $dl() !!}>
                 @foreach ($kinds as $k)
                     <details name="dl-lk" class="dl-lk__k dl-lk__k--{{ $k['tone'] ?? 'neutral' }}" @if (! empty($k['open'])) open @endif>
                         <summary class="dl-lk__sum">
