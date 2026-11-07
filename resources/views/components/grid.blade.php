@@ -39,6 +39,7 @@
             </div>
             @endunless
             @if ($cards)<div class="dl-segment" data-g-view><button type="button" class="dl-segment__opt is-active" data-value="table" title="{{ \Devlib\Lang::t('g_view_table') }}"><i class="fa-solid fa-table-list"></i></button><button type="button" class="dl-segment__opt" data-value="cards" title="{{ \Devlib\Lang::t('g_view_cards') }}"><i class="fa-solid fa-grip"></i></button></div>@endif
+            @if ($guide)<x-dl::button variant="secondary" size="sm" icon="fa-circle-play" :label="\Devlib\Lang::text('Guide')" data-dl-open="{{ $guide }}" />@endif
             <span class="dl-grid__export"><x-dl::button variant="secondary" size="sm" icon="export" label="Export" data-g-export :title="\Devlib\Lang::text('Export = the visible columns, as CSV or XLSX (set them first via Columns)')" /><span class="dl-grid__expmenu" data-g-expmenu hidden><button type="button" data-g-fmt="csv">CSV</button><button type="button" data-g-fmt="xlsx">XLSX</button></span></span>
             @if ($newRecord)<x-dl::button preset="new" size="sm" data-g-new :label="$newRecord" />@endif
         </div>

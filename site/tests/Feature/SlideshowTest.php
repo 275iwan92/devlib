@@ -47,6 +47,16 @@ class SlideshowTest extends TestCase
         $this->assertStringContainsString('is-on', $this->show('open'));
     }
 
+    public function test_grid_guide_prop_adds_a_toolbar_button_that_opens_the_slideshow(): void
+    {
+        $cols = [['key' => 'name', 'label' => 'Name']];
+        $with = Blade::render('<x-dl::grid id="g" :rows="[]" :columns="$c" guide="s1" />', ['c' => $cols]);
+        $plain = Blade::render('<x-dl::grid id="g" :rows="[]" :columns="$c" />', ['c' => $cols]);
+
+        $this->assertStringContainsString('data-dl-open="s1"', $with);
+        $this->assertStringNotContainsString('data-dl-open="s1"', $plain, 'tanpa prop guide toolbar tidak berubah');
+    }
+
     public function test_css_uses_tokens_only(): void
     {
         $css = file_get_contents(dirname(__DIR__, 3).'/resources/assets/devlib.css');

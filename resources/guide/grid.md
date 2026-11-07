@@ -49,6 +49,7 @@ Constructor of `Devlib\Components\Grid` (29 props). Blade names are kebab-case; 
 | `rows` | array | `[]` | List of associative arrays (one per row). Serialised to `data-rows`. |
 | `size` | string | `null` | `lg` = larger text for grids that are read all day (table text 15px, column titles 13px, 38px photo, bigger card text). `null` = normal size. Sets `data-size` on the grid. |
 | `layout` | string | `null` | Version of the default column layout. The saved column choice in the browser is keyed `dl-grid-<id>-<layout>`, so changing the value drops old saved choices that would hide a new default. |
+| `guide` | string | `null` | Id of an `x-dl::slideshow` on the same page. When set, the toolbar gets a Guide button (play icon, before Export) that opens it; empty = no button. PHP-side only, not in the config. |
 | `row-key` | string | `'id'` | Row field that identifies a row (selection, open/toggle URLs, highlight, events). |
 | `stats` | array | `[]` | Count boxes that act as filters, see [stats and tabs](#stats-and-tabs). |
 | `tabs` | array | `[]` | Second filter group, same shape as `stats`. |
@@ -287,7 +288,7 @@ Not stored: search, page, stat box, view (table/cards), collapsed groups, open d
 
 ### data-config keys (JSON on `data-config`)
 
-`id`, `columns`, `rowKey`, `size`, `layout`, `stats`, `tabs`, `filters`, `groups`, `bulk`, `expand`, `actions`, `activeKey`, `perPage`, `openUrl`, `newUrl`, `newModal`, `toggleUrl`, `csrf` (only when `toggle-url` is set), `detail` (or `null`), `cards` (or `null`), `quickAdd`, `groupBy`, `mode`, `rowTone`, `restore`, `pageSizes`. `kind`, `search` and `new-record` are not in the config (they only change PHP-side output: the `dl-grid--tx` class, the placeholder and the button). `data-rows` is the `rows` array.
+`id`, `columns`, `rowKey`, `size`, `layout`, `stats`, `tabs`, `filters`, `groups`, `bulk`, `expand`, `actions`, `activeKey`, `perPage`, `openUrl`, `newUrl`, `newModal`, `toggleUrl`, `csrf` (only when `toggle-url` is set), `detail` (or `null`), `cards` (or `null`), `quickAdd`, `groupBy`, `mode`, `rowTone`, `restore`, `pageSizes`. `kind`, `guide`, `search` and `new-record` are not in the config (they only change PHP-side output: the `dl-grid--tx` class, the placeholder and the buttons). `data-rows` is the `rows` array.
 
 ### Root and hook attributes
 

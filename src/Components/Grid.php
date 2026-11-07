@@ -104,6 +104,8 @@ class Grid extends DevlibComponent
         public ?string $size = null,
         // layout: versi susunan kolom bawaan; mengganti nilainya membuang pilihan kolom / urutan lama yang tersimpan di browser pengguna (kunci simpanan memuatnya).
         public ?string $layout = null,
+        // guide: id sebuah x-dl::slideshow di halaman yang sama; bila diisi, toolbar mendapat tombol Guide (ikon play) yang membukanya (panduan bergambar layar ini). Kosong = tanpa tombol.
+        public ?string $guide = null,
     ) {
         $this->applyKind();
         if ($this->isReport()) {
