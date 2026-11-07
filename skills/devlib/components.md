@@ -218,6 +218,11 @@ Grid Summary -> Detail (drill-down): slot "summary" = grid ringkasan, slot bawaa
 - Berkas: `src/Components/Drilldown.php`
 - Prop: link:string='', labelKey:string='name', title:string='Summary'
 
+## `<x-dl::eisenhower>`
+Daftar tugas bergaya Matriks Eisenhower: empat kuadran (1 Do first = penting dan mendesak, 2 Schedule = penting tidak mendesak, 3 Delegate = mendesak tidak penting, 4 Eliminate = tidak keduanya); tambah tugas per kuadran, centang selesai, pindah kuadran, hapus, bersihkan yang selesai.
+- Berkas: `src/Components/Eisenhower.php`
+- Prop: items:array=[], saveUrl:string='', csrf:?string=''
+
 ## `<x-dl::empty-state>`
 Tampilan saat data kosong: ikon, judul, keterangan, dan tombol aksi (slot).
 - Berkas: `src/Components/EmptyState.php`
@@ -472,6 +477,11 @@ Widget sapaan berdiri sendiri (user 2026-10-07, tampilan disetujui): salam + jab
 Grid induk (griduistandard + perilaku tabel Filament/PowerGrid yang dipilih user).
 - Berkas: `src/Components/Grid.php`, tampilan `resources/views/components/grid.blade.php`
 - Prop: id:string='grid', columns:array=[], rows:array=[], rowKey:string='id', stats:array=[], tabs:array=[], filters:array=[], groups:array=[], bulk:array=[], expand:array=[], actions:string='master', activeKey:?string='active', newRecord:?string='+ New Record', perPage:?int=NULL, detail:array=[], cards:array=[], phoneCards:array=[], quickAdd:array=[], groupBy:?string=NULL, search:string='Search...', source:?string=NULL, openUrl:?string=NULL, openOn:string='dblclick', newUrl:?string=NULL, newModal:?string=NULL, toggleUrl:?string=NULL, mode:string='entry', rowTone:?string=NULL, kind:?string=NULL, restore:bool=false, size:?string=NULL, layout:?string=NULL, guide:?string=NULL
+
+## `<x-dl::habit-tracker>`
+Pelacak kebiasaan pribadi (Change Habit): kartu per kebiasaan dengan tombol centang hari ini, deret hari beruntun (streak), kisi 14 hari terakhir yang bisa diklik untuk mengoreksi, hapus, dan form Tambah kebiasaan.
+- Berkas: `src/Components/HabitTracker.php`
+- Prop: items:array=[], saveUrl:string='', csrf:?string=''
 
 ## `<x-dl::headline>`
 Judul besar nama dokumen / produk di dalam isi form (22px tebal), dengan sub-teks kecil opsional.
@@ -873,6 +883,11 @@ Kartu status (mesin, dokumen, layanan): ikon + judul + badge status + nilai + ke
 - Berkas: `src/Components/StatusCard.php`
 - Prop: title:string='', status:string='', tone:string='accent', icon:string='info', value:?string=NULL, desc:?string=NULL, meta:?string=NULL, filter:bool=false, active:bool=false
 
+## `<x-dl::sticky-notes>`
+Dinding catatan tempel pribadi: kartu berwarna yang diedit langsung, pilih warna, hapus, tombol Tambah catatan; tersimpan otomatis.
+- Berkas: `src/Components/StickyNotes.php`
+- Prop: items:array=[], saveUrl:string='', csrf:?string=''
+
 ## `<x-dl::stopwatch>`
 Stopwatch pribadi: hh:mm:ss.cc, Start/Stop, Lap, Reset, dan daftar putaran (lap) dengan selisih dari putaran sebelumnya. Berjalan murni di browser; keadaan diingat di localStorage sehingga benar setelah pindah layar atau muat ulang.
 - Berkas: `src/Components/Stopwatch.php`
@@ -987,6 +1002,11 @@ Pembungkus daftar pilihan wizard (x-dl::wizard-option) di dalam modal.
 Satu langkah di dalam x-dl::wizard. icon = arti baku (Devlib\Icon) atau kelas fa-*.
 - Berkas: `src/Components/Wizard/Step.php`
 - Prop: title:string='', icon:?string=NULL, hint:?string=NULL
+
+## `<x-dl::world-clock>`
+Jam dunia pribadi: kartu per kota (jam berjalan, tanggal, hari/malam, selisih jam dari waktu perangkat), pilih kota dari daftar zona waktu IANA, hapus. Waktu dihitung browser (Intl), bukan server.
+- Berkas: `src/Components/WorldClock.php`
+- Prop: items:array=[], zones:array=[], saveUrl:string='', csrf:?string=''
 
 ## `<x-dl::year-calendar>`
 Kalender setahun (12 bulan sekaligus) untuk hari libur / hari kerja: tanggal bertanda diwarnai per tone,.
