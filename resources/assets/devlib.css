@@ -3177,6 +3177,20 @@ html[data-motion="off"] .dl-dash__fx{display:none}
 .dl-setup__seg span{display:block;padding:7px 12px;border:1px solid var(--dl-border);border-radius:var(--dl-radius);font-size:calc(13px * var(--dl-font-scale))}
 .dl-setup__seg input:checked + span{background:var(--dl-accent);color:var(--dl-on-accent);border-color:transparent}
 .dl-setup__seg input:focus-visible + span{outline:2px solid var(--dl-accent);outline-offset:2px}
+/* Dokumen terstruktur x-dl::doc-sections (mis. Job Description): baris ringkas (atasan, bawahan) di atas, lalu bagian bertajuk dengan paragraf dan daftar bernomor. */
+.dl-docsec{font-size:calc(14px * var(--dl-font-scale));line-height:1.65;color:var(--dl-ink)}
+.dl-docsec__plain{margin:0;white-space:pre-line}
+.dl-docsec__meta{display:grid;gap:6px;margin:0 0 18px;padding:12px 14px;border:1px solid var(--dl-border);border-radius:var(--dl-radius-lg);background:var(--dl-surface)}
+.dl-docsec__meta > div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 12px;align-items:baseline}
+.dl-docsec__meta dt{font-size:calc(12px * var(--dl-font-scale));font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--dl-muted)}
+.dl-docsec__meta dd{margin:0;color:var(--dl-ink-strong);font-weight:600}
+.dl-docsec__sec{margin:0 0 18px}
+.dl-docsec__sec:last-child{margin-bottom:0}
+.dl-docsec__sec h4{margin:0 0 6px;padding-bottom:5px;border-bottom:2px solid var(--dl-accent);display:inline-block;font-size:calc(15px * var(--dl-font-scale));color:var(--dl-ink-strong)}
+.dl-docsec__sec p{margin:6px 0 0;white-space:pre-line}
+.dl-docsec__list{margin:8px 0 0;padding-left:26px;display:grid;gap:7px}
+.dl-docsec__list li::marker{font-weight:700;color:var(--dl-accent-ink)}
+@media (max-width:560px){.dl-docsec__meta > div{grid-template-columns:minmax(0,1fr)}}
 .dl-dash__bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .dl-dash__bar h2{margin:0;font-size:calc(16px * var(--dl-font-scale));color:var(--dl-ink-strong)}
 .dl-dash__seg{margin-left:auto;display:inline-flex;flex-wrap:wrap;background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius-lg);padding:3px}

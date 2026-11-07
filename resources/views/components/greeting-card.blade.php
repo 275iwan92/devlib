@@ -54,7 +54,11 @@
     {{-- Job Description & SOP: HTML dari master jabatan (diisi HR Officer), tampil read-only --}}
     @if (! empty($d['jobdesc']))
         <x-dl::modal :id="$id.'-jd'" :title="'Job Description · '.\Devlib\Lang::raw($d['jobdesc']['title'] ?? '')" icon="fa-briefcase" size="lg">
-            <div class="dl-dash__doc">{!! $d['jobdesc']['html'] !!}</div>
+            @if (isset($d['jobdesc']['text']))
+                <x-dl::doc-sections :text="$d['jobdesc']['text']" :inline="$d['jobdesc']['inline'] ?? []" />
+            @else
+                <div class="dl-dash__doc">{!! $d['jobdesc']['html'] !!}</div>
+            @endif
             <x-slot:footer><small class="dl-dash__upd">{{ \Devlib\Lang::text('Last updated') }} {{ $d['jobdesc']['updated'] ?? '-' }}</small><x-dl::button preset="close" data-dl-close-modal /></x-slot:footer>
         </x-dl::modal>
     @endif

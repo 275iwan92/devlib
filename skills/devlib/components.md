@@ -183,6 +183,11 @@ Footer dokumen Master-Detail untuk layar yang totalnya dihitung SERVER (mis. CoO
 - Berkas: `src/Components/DocFooter.php`
 - Prop: tabs:array=[], summary:array=[], words:?string=NULL
 
+## `<x-dl::doc-sections>`
+Menampilkan dokumen teks (mis. Job Description, SOP singkat) yang tersimpan sebagai SATU string polos secara terstruktur: judul bagian, paragraf, daftar bernomor, dan baris ringkas di atas. Teks yang tidak dikenali tampil apa adanya.
+- Berkas: `src/Components/DocSections.php`
+- Prop: text:?string=NULL, sections:array=[], inline:array=[]
+
 ## `<x-dl::doc-share>`
 Print + Email untuk SETIAP form/dokumen (user 2026-09-29). Layar cukup menaruh 1 tag dan menunjuk area dokumennya:.
 - Berkas: `src/Components/DocShare.php`, tampilan `resources/views/components/doc-share.blade.php`
