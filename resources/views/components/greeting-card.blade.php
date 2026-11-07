@@ -4,7 +4,11 @@
     $id = $key();
 @endphp
 <div {{ $attributes }} {!! $dl() !!}>
-<section class="dl-dash__hero">
+@php($fx = ! empty($d['animate']))
+<section @class(['dl-dash__hero', 'dl-dash__hero--fx' => $fx]) @if ($fx) data-dl-hero-fx @endif>
+    @if ($fx)
+        <canvas class="dl-dash__fx" aria-hidden="true"></canvas>
+    @endif
     <div class="dl-dash__hello">
         <div class="dl-dash__eyebrow">{{ $d['profile_label'] ?? 'Dashboard' }}</div>
         <x-dl::greeting :name="$u['first'] ?? ''" />
@@ -26,6 +30,9 @@
             @endif
             @if (! empty($d['sops']))
                 <x-dl::button variant="ghost" icon="fa-book-open" label="SOP" data-dl-open="{{ $id }}-sop"><span class="dl-dash__count">{{ count($d['sops']) }}</span></x-dl::button>
+            @endif
+            @if (! empty($d['music']['tracks']))
+                <x-dl::music-player :tracks="$d['music']['tracks']" :base="$d['music']['base'] ?? '/audio'" :storage-key="$d['music']['key'] ?? 'dl-music'" :volume="$d['music']['volume'] ?? 25" />
             @endif
         </div>
     </div>

@@ -608,6 +608,11 @@ Jendela modal. Dibuka tombol ber-atribut data-dl-open="<id>" atau Devlib.modal.o
 - Berkas: `src/Components/Modal.php`
 - Prop: id:string='modal', title:?string=NULL, size:string='md', open:bool=false, icon:?string=NULL, tone:?string=NULL
 
+## `<x-dl::music-player>`
+Pemutar musik latar kecil (pil): tombol Play/Pause, bisukan, volume, dan kredit judul/pencipta/lisensi trek yang main. Bawaan DIAM; suara baru mulai setelah pengguna menekan Play (browser memblokir autoplay bersuara).
+- Berkas: `src/Components/MusicPlayer.php`
+- Prop: tracks:array=[], base:string='/audio', storageKey:string='dl-music', volume:int=25
+
 ## `<x-dl::net-line>`
 Satu baris sangat kecil dan pudar "IP client → IP server" (di bawah nama pengguna) dengan status koneksi ke server: IP server berkedip bila server tidak terjangkau, IP client berkedip bila perangkat offline; nama host lewat tooltip.
 - Berkas: `src/Components/NetLine.php`

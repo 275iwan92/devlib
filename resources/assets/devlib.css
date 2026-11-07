@@ -3144,6 +3144,26 @@ a.dl-ycal__d:hover{background:var(--dl-hover);outline:1px solid var(--dl-accent)
 .dl-dash__side .dl-clock .t{font-size:calc(34px * var(--dl-font-scale));color:var(--dl-white)}
 .dl-dash__att{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
 .dl-dash__att small{font-size:calc(11.5px * var(--dl-font-scale));color:var(--dl-on-dark-muted)}
+/* Gerak kotak sapaan (opt-in board['animate'] di x-dl::greeting-card): konstelasi titik di canvas (js hero-fx.js) + cahaya aurora pelan; mati total bila prefers-reduced-motion. */
+.dl-dash__fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.dl-dash__hero--fx .dl-dash__hello,.dl-dash__hero--fx .dl-dash__side{position:relative;z-index:1}
+.dl-dash__hero--fx::before{content:"";position:absolute;inset:-40%;pointer-events:none;background:radial-gradient(circle at 30% 40%,color-mix(in srgb,var(--dl-on-dark-link) 22%,transparent),transparent 40%),radial-gradient(circle at 70% 60%,color-mix(in srgb,var(--dl-on-dark-warn) 16%,transparent),transparent 38%)}
+@keyframes dl-aurora{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(4%,-3%) rotate(6deg)}}
+@media (prefers-reduced-motion:no-preference){.dl-dash__hero--fx::before{animation:dl-aurora 14s ease-in-out infinite}}
+@media (prefers-reduced-motion:reduce){.dl-dash__fx{display:none}}
+/* Pemutar musik latar x-dl::music-player: pil kecil; di dalam kotak sapaan memakai latar kaca gelap. */
+.dl-music{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:5px 12px 5px 5px;border-radius:999px;font-size:calc(12px * var(--dl-font-scale));line-height:1.3;background:var(--dl-surface);color:var(--dl-ink);border:1px solid var(--dl-border)}
+.dl-music[hidden],.dl-music [hidden]{display:none}
+.dl-music__btn{flex:none;width:30px;height:30px;border:0;border-radius:50%;cursor:pointer;background:var(--dl-accent);color:var(--dl-on-accent);display:inline-flex;align-items:center;justify-content:center}
+.dl-music__btn:hover,.dl-music__btn:focus-visible{background:var(--dl-accent-2);outline:2px solid var(--dl-accent-ink);outline-offset:1px}
+.dl-music__vol{width:72px;accent-color:var(--dl-accent)}
+.dl-music__credit{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
+.dl-music__credit a{color:inherit;text-decoration:underline}
+.dl-music.is-playing .dl-music__btn[data-dl-music-play]{box-shadow:0 0 0 3px color-mix(in srgb,var(--dl-accent) 30%,transparent)}
+.dl-dash__hero .dl-music{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:var(--dl-white)}
+.dl-dash__hero .dl-music__btn{background:rgba(255,255,255,.2);color:var(--dl-white)}
+.dl-dash__hero .dl-music__btn:hover,.dl-dash__hero .dl-music__btn:focus-visible{background:rgba(255,255,255,.34);outline-color:var(--dl-white)}
+.dl-dash__hero .dl-music__credit a{color:var(--dl-on-dark-link)}
 .dl-dash__bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .dl-dash__bar h2{margin:0;font-size:calc(16px * var(--dl-font-scale));color:var(--dl-ink-strong)}
 .dl-dash__seg{margin-left:auto;display:inline-flex;flex-wrap:wrap;background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius-lg);padding:3px}
