@@ -803,6 +803,11 @@ Kerangka abu-abu berdenyut selama data dimuat. type: text | table | card | form.
 - Berkas: `src/Components/Skeleton.php`
 - Prop: type:string='text', lines:int=3, rows:int=5, cols:int=4
 
+## `<x-dl::slideshow>`
+Slideshow gambar dalam jendela modal: satu gambar besar + keterangan, tombol Sebelumnya / Berikutnya, titik penunjuk, panah papan ketik. Untuk panduan langkah demi langkah berupa tangkapan layar.
+- Berkas: `src/Components/Slideshow.php`
+- Prop: id:string='slideshow', title:?string=NULL, items:array=[], size:string='xl', open:bool=false
+
 ## `<x-dl::spinner>`
 Tanda sedang memproses. overlay=true menutupi induknya (mis. kartu/grid) selama proses.
 - Berkas: `src/Components/Spinner.php`

@@ -444,7 +444,7 @@ final class Catalog
         $c = fn (...$cls) => array_map(fn ($x) => 'Devlib\\Components\\'.$x, $cls);
         $cats = [
             'p3-feedback' => ['Toast · Confirm · Modal · Drawer', 'fa-solid fa-comment-dots', [
-                'toast' => ['Toast', []], 'confirm' => ['Confirm modal', $c('Button', 'IconButton')], 'modal-drawer' => ['Modal · Drawer', $c('Modal', 'Drawer')],
+                'toast' => ['Toast', []], 'confirm' => ['Confirm modal', $c('Button', 'IconButton')], 'modal-drawer' => ['Modal · Drawer', $c('Modal', 'Drawer')], 'slideshow' => ['Slideshow: step-by-step screenshots in a window (Previous / Next, dots, arrow keys); opened like a modal', $c('Slideshow')],
             ]],
             'p3-loading' => ['Loading · Empty', 'fa-solid fa-spinner', [
                 'skeleton' => ['Skeleton', $c('Skeleton')], 'spinner' => ['Spinner', $c('Spinner')], 'empty-state' => ['Empty State', $c('EmptyState')],
