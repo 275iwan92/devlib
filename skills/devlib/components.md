@@ -43,6 +43,11 @@ Pengumuman bergantian (dari file teks lewat x-dl::frame announce="...").
 - Berkas: `src/Components/Announce.php`
 - Prop: lines:array=[], interval:int=6
 
+## `<x-dl::appointments>`
+Janji / agenda pribadi: x-dl::calendar (Day/Week/Month, buat, ubah, pindah, hapus) yang daftar acaranya disimpan otomatis ke server tiap perubahan.
+- Berkas: `src/Components/Appointments.php`
+- Prop: items:array=[], display:string='week', saveUrl:string='', csrf:?string=''
+
 ## `<x-dl::approval>`
 Approval Center (mockup pr/po_approval_center): daftar dokumen menunggu (kiri) + detail (kanan):.
 - Berkas: `src/Components/Approval.php`
