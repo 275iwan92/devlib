@@ -60,5 +60,6 @@
             <div class="dl-print__sign" style="--n:{{ count($signatures) }}">@foreach ($signatures as $s)<div><span>{{ $s[0] }}</span><i></i><b>( {{ $s[2] ?? '..............................' }} )</b><small>{{ $s[1] ?? '' }}</small></div>@endforeach</div>
         @endif
     </template>
-    <template data-p-foot><footer class="dl-print__foot"><span>{{ \Devlib\Lang::t('pr_printed_from') }}{{ $printedBy ? ' · '.$printedBy : '' }}</span><span>{{ \Devlib\Locale::dateTime(now()) }} · {{ \Devlib\Lang::t('pr_sheet') }} <span data-p-pg></span></span></footer></template>
+    {{-- footer berformat: satu baris token; {no} {status} dari prop (di-escape), {page} {pages} = span yang diisi print.js per lembar. --}}
+    <template data-p-foot>@if ($footer !== null)<footer class="dl-print__foot is-fmt"><span>{!! strtr(e($footer), ['{no}' => e($number), '{status}' => e($status), '{page}' => '<span data-p-pn></span>', '{pages}' => '<span data-p-pt></span>']) !!}</span></footer>@else<footer class="dl-print__foot"><span>{{ \Devlib\Lang::t('pr_printed_from') }}{{ $printedBy ? ' · '.$printedBy : '' }}</span><span>{{ \Devlib\Locale::dateTime(now()) }} · {{ \Devlib\Lang::t('pr_sheet') }} <span data-p-pg></span></span></footer>@endif</template>
 </div>

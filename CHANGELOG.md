@@ -9,6 +9,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **`x-dl::print-out` prop `footer` (opt-in, bawaan `null`)** (permintaan Jo 2026-11-07): kaki tiap lembar berformat token `{no}` `{status}` `{page}` `{pages}` (mis. `{no} · {status} · Hal. {page} / {pages}`); `{page}`/`{pages}` diisi `print.js` dari lembar yang terukur, ruang kaki sudah termasuk tinggi lembar. `null` = kaki bawaan lama. Demo `print-co`, panduan `print-out.md`.
 - **`x-dl::print-out` prop `watermark` (opt-in, bawaan `null`)** (permintaan Jo 2026-11-07): cap air diagonal besar di belakang isi tiap lembar (mis. `DRAFT`, `CANCELLED`), warna token `--dl-pr-neg` transparan, ukuran mengikuti lebar kertas (A4, A4 lanskap, A5), ikut tercetak; `null` = tanpa cap air. Demo `print-co`, panduan, tes.
 
 - **`x-dl::slideshow`: slideshow gambar dalam jendela modal (komponen baru, opt-in; tidak mengubah komponen lain)** (permintaan Jo 2026-11-07, panduan Deactivate / Delete pegawai): satu gambar besar + keterangan, tombol Sebelumnya / Berikutnya, titik penunjuk, panah papan ketik; dibuka seperti `x-dl::modal` (`data-dl-open="<id>"`), selalu mulai dari slide 1, gambar dimuat saat tampil. Prop: `id`, `title`, `items` (`src`, `caption`, `alt`), `size`, `open`. CSS `.dl-slides*` (token saja), JS `components/slideshow.js`, panduan `resources/guide/slideshow.md`, demo di halaman katalog `modal-drawer`, tes `SlideshowTest`.

@@ -451,7 +451,7 @@ Widget sapaan berdiri sendiri (user 2026-10-07, tampilan disetujui): salam + jab
 ## `<x-dl::grid>`
 Grid induk (griduistandard + perilaku tabel Filament/PowerGrid yang dipilih user).
 - Berkas: `src/Components/Grid.php`, tampilan `resources/views/components/grid.blade.php`
-- Prop: id:string='grid', columns:array=[], rows:array=[], rowKey:string='id', stats:array=[], tabs:array=[], filters:array=[], groups:array=[], bulk:array=[], expand:array=[], actions:string='master', activeKey:?string='active', newRecord:?string='+ New Record', perPage:?int=NULL, detail:array=[], cards:array=[], phoneCards:array=[], quickAdd:array=[], groupBy:?string=NULL, search:string='Search...', source:?string=NULL, openUrl:?string=NULL, openOn:string='dblclick', newUrl:?string=NULL, newModal:?string=NULL, toggleUrl:?string=NULL, mode:string='entry', rowTone:?string=NULL, kind:?string=NULL, restore:bool=false, size:?string=NULL, layout:?string=NULL
+- Prop: id:string='grid', columns:array=[], rows:array=[], rowKey:string='id', stats:array=[], tabs:array=[], filters:array=[], groups:array=[], bulk:array=[], expand:array=[], actions:string='master', activeKey:?string='active', newRecord:?string='+ New Record', perPage:?int=NULL, detail:array=[], cards:array=[], phoneCards:array=[], quickAdd:array=[], groupBy:?string=NULL, search:string='Search...', source:?string=NULL, openUrl:?string=NULL, openOn:string='dblclick', newUrl:?string=NULL, newModal:?string=NULL, toggleUrl:?string=NULL, mode:string='entry', rowTone:?string=NULL, kind:?string=NULL, restore:bool=false, size:?string=NULL, layout:?string=NULL, guide:?string=NULL
 
 ## `<x-dl::headline>`
 Judul besar nama dokumen / produk di dalam isi form (22px tebal), dengan sub-teks kecil opsional.
@@ -696,7 +696,7 @@ Cetakan dokumen transaksi (user 2026-10-01): A5 landscape untuk 1-5 baris, A4 po
 ## `<x-dl::print-out>`
 Dokumen cetak (nota_co_mockup, nota_pv_spb, printnotastandard). Layar cukup deklarasi isi dokumen.
 - Berkas: `src/Components/PrintOut.php`, tampilan `resources/views/components/print-out.blade.php`
-- Prop: title:string='', subtitle:?string=NULL, number:?string=NULL, date:?string=NULL, status:?string=NULL, company:array=[], companyPpn:array=[], ppn:bool=false, parties:array=[], columns:array=[], rows:array=[], totals:array=[], currency:string='IDR', signatures:array=[], paper:string='a4', prices:bool=true, printedBy:?string=NULL, criteria:array=[], summary:array=[], groups:array=[], groupBy:?string=NULL, opening:?float=NULL, source:?string=NULL, phoneList:bool=false
+- Prop: title:string='', subtitle:?string=NULL, number:?string=NULL, date:?string=NULL, status:?string=NULL, company:array=[], companyPpn:array=[], ppn:bool=false, parties:array=[], columns:array=[], rows:array=[], totals:array=[], currency:string='IDR', signatures:array=[], paper:string='a4', prices:bool=true, printedBy:?string=NULL, criteria:array=[], summary:array=[], groups:array=[], groupBy:?string=NULL, opening:?float=NULL, source:?string=NULL, phoneList:bool=false, footer:?string=NULL, watermark:?string=NULL, color:string='color'
 
 ## `<x-dl::print-sheet>`
 Cetakan lembar berbagian (laporan cetak / formulir lapangan): kop perusahaan, judul + kode formulir, baris info, bagian bernomor berisi tabel / kotak pihak / catatan, tanda tangan, kaki. Melengkapi x-dl::print-doc (dokumen transaksi satu tabel).
@@ -751,7 +751,7 @@ Isi kotak Daftar Akun (mockup register.html), dipasang di x-dl::frame seperti lo
 ## `<x-dl::report>`
 Laporan cetak (mockup_print_stock_card, mockup_print_master_stock): sama dengan x-dl::print-out.
 - Berkas: `src/Components/Report.php`
-- Prop: title:string='', subtitle:?string=NULL, number:?string=NULL, date:?string=NULL, status:?string=NULL, company:array=[], companyPpn:array=[], ppn:bool=false, parties:array=[], columns:array=[], rows:array=[], totals:array=[], currency:string='IDR', signatures:array=[], paper:string='a4', prices:bool=true, printedBy:?string=NULL, criteria:array=[], summary:array=[], groups:array=[], groupBy:?string=NULL, opening:?float=NULL, source:?string=NULL, phoneList:bool=false
+- Prop: title:string='', subtitle:?string=NULL, number:?string=NULL, date:?string=NULL, status:?string=NULL, company:array=[], companyPpn:array=[], ppn:bool=false, parties:array=[], columns:array=[], rows:array=[], totals:array=[], currency:string='IDR', signatures:array=[], paper:string='a4', prices:bool=true, printedBy:?string=NULL, criteria:array=[], summary:array=[], groups:array=[], groupBy:?string=NULL, opening:?float=NULL, source:?string=NULL, phoneList:bool=false, footer:?string=NULL, watermark:?string=NULL, color:string='color'
 
 ## `<x-dl::review-feed>`
 Umpan review gaya blog (user 2026-10-13): satu kartu per butir, huruf besar seperti WordPress, teks hitam, lalu tombol keputusan besar yang langsung tersimpan.

@@ -44,6 +44,7 @@ Constructor of `Devlib\Components\PrintOut`: **24 props**. Use `:prop="expr"` fo
 | `company-ppn` | `array`, `[]` | Header of the VAT (legal entity) variant, same keys plus `npwp` (printed as `NPWP <number>`, only in this header). When not empty a **VAT / Non VAT** switch appears in the preview bar and the header changes with it; when empty `company` is used for both and the switch is absent. Usually `config('devlib.company_ppn')`. |
 | `ppn` | `bool`, `false` | Initial state of the VAT switch (`data-ppn`): `true` starts with the VAT header and VAT line. Only meaningful together with `company-ppn`; without it the switch does not exist and VAT is decided only by `totals['ppn']`. |
 | `printed-by` | `?string`, `null` | Name added to the sheet footer (`Printed from DevLib . <name>`). |
+| `footer` | `?string`, `null` | Sheet footer as one formatted line with tokens `{no}` (the `number` prop), `{status}` (the `status` prop), `{page}` and `{pages}` (this sheet / total sheets, filled by `print.js` after the sheets are measured), for example `{no} · {status} · Hal. {page} / {pages}`. `number` and `status` are escaped. `null` keeps the default footer (`Printed from DevLib`, print time, `sheet n/N`; `printed-by` is then used). The footer takes its own space under the body, so it never overlaps rows. |
 | `source` | `?string`, `null` | Free text naming where the data comes from (catalog / Manifest). No visual or runtime effect. Default `dokumen cetak`. |
 
 ### Parties and criteria

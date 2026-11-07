@@ -1,4 +1,4 @@
-<x-dl::print-out title="Nota Customer Order" subtitle="Customer Order" number="CO2600011" date="2026-08-15" status="DRAFT" watermark="DRAFT"
+<x-dl::print-out title="Nota Customer Order" subtitle="Customer Order" number="CO2600011" date="2026-08-15" status="DRAFT" watermark="DRAFT" footer="{no} · {status} · Hal. {page} / {pages}"
     :company="config('devlib.company')" :company-ppn="config('devlib.company_ppn')" :ppn="true" printed-by="admin"
     :parties="['Customer' => ['PT Contoh Snackindo', 'Gudang Pusat, Malang'], 'Ref. Quotation' => 'QT2600007', 'No. PO Customer' => 'PO/TLM/VIII/2026-041', 'Syarat Bayar' => 'Net 30']"
     :columns="[

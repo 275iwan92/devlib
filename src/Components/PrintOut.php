@@ -53,6 +53,8 @@ class PrintOut extends DevlibComponent
         public ?string $source = null,
         // true = di layar phone (konteks body.dl-on-phone / .dl-phone) lembar cetak yang diperkecil diganti daftar baca berupa kartu dari data yang sama; saat dicetak lembar tetap dipakai. Bawaan false = perilaku lama.
         public bool $phoneList = false,
+        // Teks kaki tiap lembar berformat token {no} {status} {page} {pages} (mis. "{no} · {status} · Hal. {page} / {pages}"); {page}/{pages} diisi print.js setelah lembar diukur. null = kaki bawaan (Dicetak dari ... + waktu cetak + nomor lembar).
+        public ?string $footer = null,
         // Cap air diagonal besar di belakang isi tiap lembar (mis. 'DRAFT', 'CANCELLED'); teks apa adanya (tombol/status tetap English), warna token --dl-pr-neg. null = tanpa cap air (dokumen Confirmed).
         public ?string $watermark = null,
     ) {}

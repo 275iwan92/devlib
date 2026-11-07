@@ -182,7 +182,11 @@
       }
       this.fit(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.fit());
       const all = $$(this.pages, '.dl-print__sheet');
-      all.forEach((sh, i) => $$(sh, '[data-p-pg]').forEach(x => { x.textContent = `${i + 1}/${all.length}`; }));
+      all.forEach((sh, i) => {
+        $$(sh, '[data-p-pg]').forEach(x => { x.textContent = `${i + 1}/${all.length}`; });
+        $$(sh, '[data-p-pn]').forEach(x => { x.textContent = i + 1; });   // token {page} / {pages} pada kaki berformat (prop footer)
+        $$(sh, '[data-p-pt]').forEach(x => { x.textContent = all.length; });
+      });
       let st = document.getElementById('dl-print-page'); if (!st) { st = document.createElement('style'); st.id = 'dl-print-page'; document.head.appendChild(st); }
       st.textContent = `@page{size:${{a5: 'A5 landscape', a4l: 'A4 landscape'}[this.el.dataset.paper] || 'A4 portrait'};margin:0}`;
       const seg = (sel, v) => $$(this.el, `${sel} .dl-segment__opt`).forEach(b => b.classList.toggle('is-active', b.dataset.value === v));
