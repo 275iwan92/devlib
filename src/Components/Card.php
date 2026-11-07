@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Kotak berjudul untuk mengelompokkan isi (bagian form, panel info). Slot "actions" = tombol di kanan judul.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : title, description, variant, icon.
+ * Input        : title, description, variant, icon, tone.
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : button, card-actionbar, dev-mode, doc-share dan 12 lainnya (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -20,6 +20,7 @@ class Card extends DevlibComponent
         public ?string $description = null,
         public string $variant = 'section',
         public ?string $icon = null,
+        public ?string $tone = null,
     ) {}
 
     public function tag(): string
@@ -30,7 +31,7 @@ class Card extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <section {{ $attributes->class(['dl-card', 'dl-card--'.$variant]) }} {!! $dl() !!}>
+            <section {{ $attributes->class(['dl-card', 'dl-card--'.$variant, 'dl-card--tone' => $tone]) }} {!! $dl() !!} @if ($tone) data-tone="{{ $tone }}" @endif>
                 @if ($title || isset($actions))
                     <header class="dl-card__head">
                         <div>@if ($icon)<i class="fa-solid {{ \Devlib\Icon::fa($icon) }}"></i> @endif<b>{{ $title }}</b>@if ($description)<small>{{ $description }}</small>@endif</div>

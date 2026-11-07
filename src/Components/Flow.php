@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Diagram alur proses berupa blok bersambung (gaya pipeline approval), untuk menjelaskan alur antar modul/dokumen.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : steps, title, vertical, source.
+ * Input        : steps, title, vertical, vivid, source.
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : side-screen (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -23,6 +23,7 @@ class Flow extends DevlibComponent
         public array $steps = [],
         public string $title = '',
         public bool $vertical = false,
+        public bool $vivid = false,
         public ?string $source = null,
     ) {}
 
@@ -49,7 +50,7 @@ class Flow extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class(['dl-flow', 'is-vertical' => $vertical]) }} {!! $dl() !!} data-dl-flow>
+            <div {{ $attributes->class(['dl-flow', 'is-vertical' => $vertical, 'dl-flow--vivid' => $vivid]) }} {!! $dl() !!} data-dl-flow>
                 @if ($title !== '')<div class="dl-flow__title">{{ $title }}</div>@endif
                 <ol class="dl-flow__track">
                     @foreach ($steps as $i => $s)
