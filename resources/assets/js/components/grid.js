@@ -219,7 +219,9 @@
     sorted(list) {
       if (!this.st.sort) return list;
       const c = this.cols.find(x => x.key === this.st.sort), num = ['number', 'money', 'integer', 'link'].includes(c && c.type);
-      return [...list].sort((a, b) => { const x = this.val(a, this.st.sort), y = this.val(b, this.st.sort); return (num ? (+x - +y) : String(x).localeCompare(String(y), 'id', {numeric: true})) * this.st.dir; });
+      // blankLast (opsional per kolom): sel kosong selalu di akhir, naik maupun turun (mis. ID mesin finger yang belum diisi).
+      const blank = v => c && c.blankLast && (v === null || v === undefined || v === '');
+      return [...list].sort((a, b) => { const x = this.val(a, this.st.sort), y = this.val(b, this.st.sort); if (blank(x) || blank(y)) return blank(x) - blank(y); return (num ? (+x - +y) : String(x).localeCompare(String(y), 'id', {numeric: true})) * this.st.dir; });
     }
 
     drawStats() {

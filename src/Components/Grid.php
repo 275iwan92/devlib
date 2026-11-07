@@ -26,7 +26,7 @@ use Devlib\Lang;
 //            'code' => kolom kode (identity), 'avatar' => false (identity tanpa bulatan), 'box' => true (identity: tanpa inisial, nama + kode di dalam satu persegi panjang berwarna), 'hue' => kolom baris berisi sudut warna 0-359 (identity: warna kotak per kelompok, mis. kategori; kosong = dari nama), 'tones' => [nilai => tone] (badge),
 //            'toneKey' => kolom baris yang membawa tone badge (bila teks badge berubah-ubah, mis. "Late 3 days"); pada type date = tanggal tampil sebagai lencana bertone,
 //            'fallback' => kolom nama (image: tanpa foto -> inisial di kotak yang sama),
-//            'visible' => true, 'sortable' => true, 'sum' => false (money/number)]]
+//            'visible' => true, 'sortable' => true, 'sum' => false (money/number), 'blankLast' => true (urut: sel kosong selalu di akhir)]]
 // Sel hanya-tampil mengikuti objek field mode ReadOnly (user 2026-10-05): integer = bilangan bulat, number + 'decimals' => n = n digit
 //   desimal tetap, money = kode mata uang ('currency' => 'USD', bawaan IDR) + 'decimals', date / time / datetime = format DevLib.
 // stats/tabs: [['label', 'where' => [kolom => nilai|[nilai..]], 'tone']]  (tanpa where = total); stats 'default' => true = saringan awal
