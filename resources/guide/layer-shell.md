@@ -149,6 +149,7 @@ Example for a simple application with only a login name and password change: `:w
 ### AI Assistant
 
 `assistant = ['api' => ['ask' => url, 'feedback' => url, 'csrf' => token], 'hello', 'chips' => [...], 'history' => [['id', 'q', 'reply', 'feedback']], 'placeholder', 'thinking', 'failed']`. With `api.ask`, a question is posted as `{q, topic}` and the answer `{id, reply}` is drawn as a card: `reply = {kind, title, text, big, rows [[label, value]], steps [..], note, actions [{label, url, code, icon} | {label, topic} | {label, page}]}`. Thumbs up/down post `{id, value}` to `api.feedback` (clicking an active thumb sets `0`). `reply.refresh` fires `dl:refresh` on `document`. Without `api`, the assistant matches the words with menu names and opens the matching tab (preview).
+- The notification bell plays one soft tone (`Devlib.sound`, kind `notif`, off until the user turns it on in Setup > Sound) when its unread count goes UP after the page opened; the count at page load never rings. The shell has no live notification feed yet, so the tone fires only when the count is raised by code (`refreshCounts`).
 
 ## Data and events
 

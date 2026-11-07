@@ -392,6 +392,9 @@
       const c = $(this.el, '[data-dl-count="chat"]'), n = $(this.el, '[data-dl-count="notif"]'), dot = $(this.el, '[data-dl-avdot]');
       if (c) { c.textContent = this.chatCount; c.style.display = this.chatCount ? '' : 'none'; }
       if (n) { n.textContent = this.notifCount; n.style.display = this.notifCount ? '' : 'none'; }
+      // Lonceng naik = satu 'ding' (Devlib.sound 'notif', bawaan mati). Hitungan awal saat halaman dibuka tidak berbunyi; hanya kenaikan sesudahnya.
+      if (this.lastNotif !== undefined && this.notifCount > this.lastNotif) Devlib.sound?.play('notif');
+      this.lastNotif = this.notifCount;
       dot?.classList.toggle('is-hide', !(this.chatCount || this.notifCount));
     }
 
