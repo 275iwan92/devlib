@@ -396,7 +396,7 @@ final class Catalog
                 'field-display' => ['Display (text · mono · number · money · date)', $f('Display'), 'ro'], 'input-theme' => ['Input · Themes', $f('Text'), 'wide'],
             ]],
             'p2-numbers' => ['Numeric', 'fa-solid fa-calculator', [
-                'field-number' => ['Integer (spinner)', $f('Number')], 'field-decimal' => ['Decimal', $f('Decimal')], 'field-money' => ['Money', $f('Money')],
+                'field-number' => ['Integer (spinner)', $f('Number')], 'field-decimal' => ['Decimal', $f('Decimal')], 'field-tolerance' => ['Tolerance (direction · number · unit)', $f('Tolerance')], 'field-money' => ['Money', $f('Money')],
                 'field-slider' => ['Slider (range · vertical)', $f('Slider')], 'field-rating' => ['Rating (half)', $f('Rating')],
             ]],
             'p2-datetime' => ['Date & Time', 'fa-solid fa-calendar-days', [

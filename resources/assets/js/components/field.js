@@ -177,7 +177,9 @@
         // Dikirim ke server sebagai kanonik oleh core ('formdata', data-dl-num).
         const out = () => { const v = parseNum(this.dec.value); if (this.dec.value.trim() !== '' && !isNaN(v)) this.dec.value = n === null ? fmt.num(v, 4) : fmt.number(v, n); };
         this.dec.addEventListener('focus', () => { if (!this.dec.readOnly) { this.dec.value = numRaw(this.dec.value); this.dec.select(); } });
-        this.dec.addEventListener('input', () => { this.dec.value = this.dec.value.replace(/[^0-9.,-]/g, ''); });
+        // data-dl-maxint (opsional, mis. field.tolerance): bagian bulat dibatasi N digit, "12345" -> "1234".
+        const maxInt = +this.dec.dataset.dlMaxint || 0, cap = maxInt ? new RegExp('^(-?\\d{' + maxInt + '})\\d+') : null;
+        this.dec.addEventListener('input', () => { const t = this.dec.value.replace(/[^0-9.,-]/g, ''); this.dec.value = cap ? t.replace(cap, '$1') : t; });
         // Devlib.fill / Undo menulis nilai kanonik (1.250 = 1,25): jadikan tampilan, supaya tidak terbaca sebagai ribuan.
         this.dec.addEventListener('dl:set', () => { const t = this.dec.value.trim(); if (/^-?\d+(\.\d+)?$/.test(t)) this.dec.value = n === null ? fmt.num(+t, 4) : fmt.number(+t, n); });
         this.dec.addEventListener('blur', out);

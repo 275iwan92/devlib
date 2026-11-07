@@ -251,6 +251,14 @@ textarea.dl-input{resize:none;min-height:28px;line-height:1.3;overflow:hidden;di
 .dl-prefix.has-numtg{position:relative}.dl-prefix.has-numtg .dl-numtg{position:absolute;right:1px;top:50%;transform:translateY(-50%)}.dl-prefix.has-numtg .dl-input{padding-right:54px}
 .dl-form.is-view .dl-numtg{display:none}
 .dl-field__unit{position:absolute;right:10px;font-size:calc(11.5px * var(--dl-font-scale));font-weight:600;color:var(--dl-f-muted);pointer-events:none}
+.dl-tol{width:max-content;max-width:100%;overflow:hidden}
+.dl-tol__sw{position:relative;display:flex;align-self:stretch}
+.dl-tol__sw::after{content:"▾";position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:calc(10px * var(--dl-font-scale));color:var(--dl-f-muted);pointer-events:none}
+.dl-tol__sel{appearance:none;-webkit-appearance:none;border:none;outline:none;background:var(--dl-f-bg-soft);color:var(--dl-f-ink);font-family:inherit;font-size:calc(13px * var(--dl-font-scale));font-weight:600;padding:0 18px 0 9px;cursor:pointer;height:100%;min-height:calc(26px * var(--dl-density))}
+.dl-tol__sel:disabled{color:var(--dl-disabled);cursor:default}
+.dl-tol__dir{border-right:1px solid var(--dl-f-line)}.dl-tol__unit{border-left:1px solid var(--dl-f-line)}
+.dl-tol .dl-tol__num{flex:none;width:5.4em;text-align:right}
+.dl-form.is-view .dl-tol__sel{background:transparent;padding-right:9px}.dl-form.is-view .dl-tol__sw::after{display:none}
 .dl-field__error{font-size:calc(11px * var(--dl-font-scale));color:var(--dl-danger);margin-top:1px;display:none}
 .dl-field.is-invalid .dl-field__error:not(:empty){display:block}
 .dl-field.is-invalid .dl-field__box,.dl-field.is-invalid .dl-input--boxed{border-color:var(--dl-danger)}

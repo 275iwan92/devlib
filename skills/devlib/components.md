@@ -378,6 +378,11 @@ Pilihan tombol berderet (segmented), satu yang aktif. Mis. Harian / Mingguan / B
 - Berkas: `src/Components/Field/ToggleGroup.php`, tampilan `resources/views/components/field/toggle-group.blade.php`
 - Prop: options:array=[], name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
 
+## `<x-dl::field.tolerance>`
+Toleransi (selisih boleh) dalam SATU kontrol ringkas: dropdown arah (± + −) di depan, angka (maks 4 digit bulat) di tengah, dropdown satuan (% / pcs) di belakang.
+- Berkas: `src/Components/Field/Tolerance.php`, tampilan `resources/views/components/field/tolerance.blade.php`
+- Prop: dirName:string='', unitName:string='', dir:string='BOTH', unit:string='PCT', dirs:array=[…], units:array=[…], decimals:int=2, digits:int=4, name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
+
 ## `<x-dl::field.upload>`
 Unggah file (tarik-lepas / pilih) + pratinjau nama file.
 - Berkas: `src/Components/Field/Upload.php`, tampilan `resources/views/components/field/upload.blade.php`
@@ -446,7 +451,7 @@ Widget sapaan berdiri sendiri (user 2026-10-07, tampilan disetujui): salam + jab
 ## `<x-dl::grid>`
 Grid induk (griduistandard + perilaku tabel Filament/PowerGrid yang dipilih user).
 - Berkas: `src/Components/Grid.php`, tampilan `resources/views/components/grid.blade.php`
-- Prop: id:string='grid', columns:array=[], rows:array=[], rowKey:string='id', stats:array=[], tabs:array=[], filters:array=[], groups:array=[], bulk:array=[], expand:array=[], actions:string='master', activeKey:?string='active', newRecord:?string='+ New Record', perPage:?int=NULL, detail:array=[], cards:array=[], phoneCards:array=[], quickAdd:array=[], groupBy:?string=NULL, search:string='Search...', source:?string=NULL, openUrl:?string=NULL, newUrl:?string=NULL, newModal:?string=NULL, toggleUrl:?string=NULL, mode:string='entry', rowTone:?string=NULL, kind:?string=NULL, restore:bool=false, size:?string=NULL, layout:?string=NULL
+- Prop: id:string='grid', columns:array=[], rows:array=[], rowKey:string='id', stats:array=[], tabs:array=[], filters:array=[], groups:array=[], bulk:array=[], expand:array=[], actions:string='master', activeKey:?string='active', newRecord:?string='+ New Record', perPage:?int=NULL, detail:array=[], cards:array=[], phoneCards:array=[], quickAdd:array=[], groupBy:?string=NULL, search:string='Search...', source:?string=NULL, openUrl:?string=NULL, openOn:string='dblclick', newUrl:?string=NULL, newModal:?string=NULL, toggleUrl:?string=NULL, mode:string='entry', rowTone:?string=NULL, kind:?string=NULL, restore:bool=false, size:?string=NULL, layout:?string=NULL
 
 ## `<x-dl::headline>`
 Judul besar nama dokumen / produk di dalam isi form (22px tebal), dengan sub-teks kecil opsional.
@@ -547,6 +552,11 @@ Kerangka aplikasi setelah login: navigasi x-dl::layer-menu di kiri, TANPA top ba
 Tabel baris item dokumen (detail dari Master-Detail: PO, PR, CO, Stock In, ...).
 - Berkas: `src/Components/Lines.php`
 - Prop: name:string='items', columns:array=[], rows:array=[], title:string='Item', addLabel:string='+ Add Row', minRows:int=1, totals:array=[], totalKey:?string=NULL, countKey:?string=NULL, readonly:bool=false, source:?string=NULL, keyField:?string=NULL, removeField:?string=NULL, addable:bool=true, duplicable:bool=true, rowLock:?string=NULL, rowState:bool=false
+
+## `<x-dl::location-kinds>`
+Ubin kategori lokasi yang bisa di-expand (lemari, gudang tertutup, gudang terbuka, area luas); isi = kartu lokasi, dan lokasi terpilih bisa membuka slot (denah).
+- Berkas: `src/Components/LocationKinds.php`
+- Prop: kinds:array=[], empty:string='No location yet'
 
 ## `<x-dl::lock-screen>`
 Layar kunci: menutup aplikasi setelah tidak ada aktivitas `idle` menit (0 = hanya manual), atau lewat tombol.
@@ -851,7 +861,7 @@ Tabel sederhana (di dalam form/kartu). columns: key => label, atau key => [label
 ## `<x-dl::tabs>`
 Tab: judul di atas (vertical = daftar di kiri, seperti halaman Setup & Security), isi berganti.
 - Berkas: `src/Components/Tabs.php`
-- Prop: tabs:array=[], active:?string=NULL, vertical:bool=false
+- Prop: tabs:array=[], active:?string=NULL, vertical:bool=false, switch:bool=false, tones:array=[]
 
 ## `<x-dl::theme-boot>`
 Dipasang SEKALI di <head>: CSS 12 tema (dari Devlib\Theme) + skrip kecil yang.
