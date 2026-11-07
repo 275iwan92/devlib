@@ -221,7 +221,8 @@ abstract class Document
     }
 
     // Lembar untuk gaya Color / B&W: baris dipecah menurut TINGGI (nama panjang membungkus), bukan jumlah tetap; jatah tinggi = kapasitas
-    // baris x tinggi baris standar. Sisa jatah diisi baris kosong. Header tabel diulang tiap lembar; total + tanda tangan di lembar terakhir.
+    // baris x tinggi baris standar, tanpa baris kosong. Ini perkiraan awal: print-doc.js memecah ulang memakai tinggi yang TERUKUR di browser
+    // (header tabel diulang, total + tanda tangan hanya di lembar terakhir, sesudah item).
     private function wrappedSheets(): array
     {
         $budget = $this->capacity[$this->paper()] * $this->rowHeight;
@@ -241,9 +242,7 @@ abstract class Document
         $from = 0;
         $out = [];
         foreach ($chunks as $i => $rows) {
-            $mm = array_sum(array_map(fn ($r) => $this->rowMm($r), $rows));
-            $pad = max(0, (int) floor(($budget - $mm + 0.01) / $this->rowHeight));
-            $out[] = ['rows' => array_pad($rows, count($rows) + $pad, null), 'from' => $from, 'last' => $i === $n - 1, 'page' => $i + 1, 'pages' => $n];
+            $out[] = ['rows' => $rows, 'from' => $from, 'last' => $i === $n - 1, 'page' => $i + 1, 'pages' => $n];
             $from += count($rows);
         }
 

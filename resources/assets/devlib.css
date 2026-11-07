@@ -3052,6 +3052,13 @@ a.dl-ycal__d:hover{background:var(--dl-hover);outline:1px solid var(--dl-accent)
 .is-sty-color .dl-pdoc__f.is-big.is-st,.is-sty-bw .dl-pdoc__f.is-big.is-st{grid-template-columns:29mm 3mm auto 1fr}
 .is-sty-color .dl-pdoc__f.is-big>b,.is-sty-bw .dl-pdoc__f.is-big>b{overflow:visible}
 .is-sty-color .dl-pdoc__f.is-big .dl-pdoc__stamp,.is-sty-bw .dl-pdoc__f.is-big .dl-pdoc__stamp{justify-self:start;font-size:8pt!important;letter-spacing:.06em}
+.dl-pdoc__sheet.is-sty-color>*,.dl-pdoc__sheet.is-sty-bw>*{flex-shrink:0} /* blok lembar tidak boleh dipepatkan: luapan harus terukur oleh print-doc.js */
+.is-sty-color .dl-pdoc__items tr,.is-sty-bw .dl-pdoc__items tr{break-inside:avoid}
+.is-sty-color .dl-pdoc__sum,.is-sty-bw .dl-pdoc__sum{display:flex;gap:4mm;align-items:center;height:7mm;font-size:9pt;white-space:nowrap;overflow:hidden;border-bottom:.3mm solid var(--pd-ink)}
+.is-sty-color .dl-pdoc__sum{border-color:var(--pd-blue)}
+.is-sty-color .dl-pdoc__sum>b,.is-sty-bw .dl-pdoc__sum>b{font-size:10pt}
+.is-sty-color .dl-pdoc__sum>span:nth-child(2),.is-sty-bw .dl-pdoc__sum>span:nth-child(2){overflow:hidden;text-overflow:ellipsis;font-weight:700}
+.is-sty-color .dl-pdoc__sum .dl-pdoc__stamp,.is-sty-bw .dl-pdoc__sum .dl-pdoc__stamp{margin-left:auto}
 .is-sty-bw .dl-pdoc__kop{border-bottom:.8mm solid var(--pd-ink)}
 .is-sty-bw .dl-pdoc__logo{background:none;color:var(--pd-ink);border:.4mm solid var(--pd-ink)}
 .is-sty-bw .dl-pdoc__info{border-bottom:.3mm solid var(--pd-ink)}

@@ -25,6 +25,8 @@ final class Labels
         'Prepared By' => 'Pembuat',
         'Printed on' => 'Dicetak pada',
         'Sheet' => 'Lembar',
+        'Page' => 'Hal.',
+        '(continued)' => '(lanjutan)',
         'Scan for' => 'Scan untuk',
         'online document' => 'dokumen online',
         'Remarks' => 'Keterangan',
