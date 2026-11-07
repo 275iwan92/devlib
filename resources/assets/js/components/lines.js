@@ -47,7 +47,7 @@
       });
       this.el.addEventListener('change', e => { if (e.target.matches('[data-l-tx], [data-l-hpp], [data-l-alloc]')) this.refresh(); });
       // Kolom tolerance: arah dan satuan = <select data-l-tolsel> yang menulis ke kunci barisnya sendiri (dirKey / unitKey).
-      this.el.addEventListener('change', e => { if (e.target.matches('[data-l-tolsel]')) this.rowOf(e.target)[e.target.dataset.k] = e.target.value; });
+      this.el.addEventListener('change', e => { if (e.target.matches('[data-l-tolsel]')) { this.rowOf(e.target)[e.target.dataset.k] = e.target.value; this.refresh(); } });
       // Ganti mata uang di header (tab Finance) -> simbol & terbilang di footer ikut.
       const cf = (this.cfg.totals && this.cfg.totals.currencyField) || 'currency';
       (this.el.closest('form') || document).addEventListener('change', e => { if (e.target.name === cf) this.refresh(); });
