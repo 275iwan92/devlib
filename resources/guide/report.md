@@ -180,7 +180,7 @@ Everything travels in `data-config` (JSON from `PrintOut::config()`): `columns` 
 
 ### Markup hooks
 
-`data-dl-print` (root), `data-p-paper`, `data-p-group`, `data-p-prices`, `data-p-ppn` (segments; each button has `data-value`), `data-p-bw` (ink saver), `data-p-print`, `data-p-pages` (sheet container), `data-p-body` and `data-p-pg` (inside each sheet), `data-p-kop="0|1"` (non-VAT / VAT header), and the six `template[data-p-head|criteria|parties|notes|sign|foot]`. Classes: `dl-print`, `dl-print__sheet`, `dl-print__table`, `dl-print__criteria`, `dl-print__kpis`, `dl-print__tail`, `dl-print__grp` / `__sub` / `__grand` (group heading, subtotal, grand total rows), `dl-print__badge`, `is-row-danger` / `is-row-warn`, `is-pos` / `is-neg` / `is-zero`, `is-bw`. Colours are the `--dl-pr-*` tokens declared on `:root`.
+`data-dl-print` (root), `data-p-paper`, `data-p-group`, `data-p-prices`, `data-p-ppn` (segments; each button has `data-value`), `data-p-color` (segment Color | B&W), `data-p-print`, `data-p-pages` (sheet container), `data-p-body` and `data-p-pg` (inside each sheet), `data-p-kop="0|1"` (non-VAT / VAT header), and the six `template[data-p-head|criteria|parties|notes|sign|foot]`. Classes: `dl-print`, `dl-print__sheet`, `dl-print__table`, `dl-print__criteria`, `dl-print__kpis`, `dl-print__tail`, `dl-print__grp` / `__sub` / `__grand` (group heading, subtotal, grand total rows), `dl-print__badge`, `is-row-danger` / `is-row-warn`, `is-pos` / `is-neg` / `is-zero`, `is-bw`. Colours are the `--dl-pr-*` tokens declared on `:root`.
 
 ## Rules and pitfalls
 

@@ -17,14 +17,22 @@
       this.cols.filter(c => c.running).forEach(c => { const f = this.compile(c.running); let b = this.cfg.opening ?? 0; this.data.forEach(r => { if (c.prev) r[c.prev] = b; b = Math.round((b + f(r)) * 100) / 100; r[c.key] = b; }); });
       this.el.addEventListener('click', e => {
         const o = e.target.closest('.dl-segment__opt');
-        if (o) { const k = o.closest('[data-p-paper]') ? 'paper' : o.closest('[data-p-prices]') ? 'prices' : o.closest('[data-p-ppn]') ? 'ppn' : o.closest('[data-p-group]') ? 'group' : null; if (k) { this.el.dataset[k] = o.dataset.value; this.build(); } return; }
-        if (e.target.closest('[data-p-bw]')) { this.el.classList.toggle('is-bw'); e.target.closest('[data-p-bw]').classList.toggle('is-on'); return; }
+        if (o) { const k = o.closest('[data-p-color]') ? 'color' : o.closest('[data-p-paper]') ? 'paper' : o.closest('[data-p-prices]') ? 'prices' : o.closest('[data-p-ppn]') ? 'ppn' : o.closest('[data-p-group]') ? 'group' : null; if (k === 'color') { this.setColor(o.dataset.value); try { localStorage.setItem('dl-print-color', o.dataset.value); } catch (_) {} } else if (k) { this.el.dataset[k] = o.dataset.value; this.build(); } return; }
         if (e.target.closest('[data-p-print]')) window.print();
       });
+      let saved = null; try { saved = localStorage.getItem('dl-print-color'); } catch (_) {}
+      this.setColor(saved || this.el.dataset.color);   // pilihan pengguna (diingat) menang atas prop awal
       this.build();
       // Lembar diukur saat font web belum selesai dimuat -> baris bisa bertambah tinggi sesudahnya dan menimpa kaki halaman: ukur ulang sekali.
       if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(() => this.build());
       this.el.dlPrint = {build: this.build};
+    }
+
+    // Mode warna: kelas is-bw di akar (CSS: lembar grayscale + badge berbingkai) dan segmen Color | B&W ditandai aktif; hanya tampilan, tanpa build ulang.
+    setColor(v) {
+      const bw = v === 'bw';
+      this.el.classList.toggle('is-bw', bw);
+      $$(this.el, '[data-p-color] .dl-segment__opt').forEach(b => b.classList.toggle('is-active', b.dataset.value === (bw ? 'bw' : 'color')));
     }
 
     tpl(n) {

@@ -117,12 +117,11 @@
       const bar = d.querySelector('.dl-print__bar');
       if (bar) {
         const g = s => bar.querySelector(s), U = this.L.ui;
-        const print = g('[data-p-print]'), ink = g('[data-p-bw]'), root = bar.closest('.dl-print');
+        const print = g('[data-p-print]');
         return [
           print && this.item(print, {primary: true}),
           g('[data-p-paper]') && {label: U.paper, icon: 'fa-regular fa-file', panel: () => this.paperPanel(d)},
           g('[data-p-group]') && {label: U.group, icon: 'fa-solid fa-layer-group', panel: () => this.groupPanel(d)},
-          ink && this.item(ink, {label: U.ink, toggle: true, on: root.classList.contains('is-bw')}),
         ].filter(Boolean);
       }
       return [];
@@ -151,7 +150,7 @@
     }
 
     paperPanel(d) {
-      return () => ({title: this.L.ui.paper, sections: [this.seg(d, '[data-p-paper]'), this.seg(d, '[data-p-prices]'), this.seg(d, '[data-p-ppn]')].filter(Boolean)});
+      return () => ({title: this.L.ui.paper, sections: [this.seg(d, '[data-p-paper]'), this.seg(d, '[data-p-prices]'), this.seg(d, '[data-p-ppn]'), this.seg(d, '[data-p-color]')].filter(Boolean)});
     }
 
     groupPanel(d) {

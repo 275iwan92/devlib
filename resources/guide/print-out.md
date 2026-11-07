@@ -18,7 +18,7 @@ Use it for: customer-order nota with prices, VAT and amount in words; goods-rece
 ```html
 <div class="dl-print" data-dl="x-dl::print-out" data-dl-print data-config='{"columns":[...],"rows":[...],"totals":{...},"currency":[...],"hasPpnKop":true,"summary":[...],"groups":{...},"opening":null}'
      data-paper="a4" data-prices="1" data-ppn="0" data-group="">
-  <div class="dl-print__bar"> title | Paper [A4 portrait / A4 landscape / A5 landscape] | Group | Price | VAT | Ink Saver | Print </div>
+  <div class="dl-print__bar"> title | Paper [A4 portrait / A4 landscape / A5 landscape] | Group | Price | VAT | Color [Color / B&W] | Print </div>
   <div class="dl-print__pages" data-p-pages> ... generated <section class="dl-print__sheet"> per sheet ... </div>
   <template data-p-head> ... </template> <template data-p-criteria> ... </template> <template data-p-parties> ... </template>
   <template data-p-notes> ... </template> <template data-p-sign> ... </template> <template data-p-foot> ... </template>
@@ -65,6 +65,7 @@ Constructor of `Devlib\Components\PrintOut`: **24 props**. Use `:prop="expr"` fo
 | `group-by` | `?string`, `null` | Column key the table is grouped by from the start (`data-group`). Works even when `groups` is empty (then the user cannot change it); a value not in `groups` leaves no switch button active. |
 | `opening` | `?float`, `null` | Opening balance for `running` columns (null counts as 0). |
 | `phone-list` | `bool`, `false` | Phone view only (opt-in). `true` = in the phone context (page body has `dl-on-phone`, or inside `x-dl::phone-shell`) the sheets, which a phone shrinks to about a third so the text is unreadable, give way on screen to a reading list of cards built from the same data (`print.js` `list()`): criteria box and KPI tiles first, then one card per row (first column = title, a second text column = subtitle, the other visible columns as label / value pairs, badges, row tones), group headings with sub totals, and the grand total. The preview bar (paper, group, ink saver, Print) stays and the group switch rebuilds the list. When printing, the list is hidden and the sheets are used. Default `false` keeps the scaled sheets. |
+| `color` | `string`, `'color'` | Initial colour mode: `color` or `bw` (black-and-white, saves toner). The user's own choice (segment in the preview bar) is remembered and wins. |
 | `watermark` | `?string`, `null` | Big diagonal watermark behind the content of every sheet (`data-watermark`; `print.js` copies it to each sheet as `data-wm`, drawn by CSS `::before`), e.g. `DRAFT` for a Draft document and `CANCELLED` for a cancelled one. The text is printed as given (status stays English). Colour = token `--dl-pr-neg` at 13% opacity, size = 16% of the paper width, so it fits A4 portrait / A4 landscape / A5 landscape; it sits behind the text and does not block it, and it prints (text, not background). `null` = no watermark (Confirmed documents). |
 | `totals` | `array`, `[]` | Totals block, see below. Printed on the last sheet only and only while prices are shown. |
 | `currency` | `string`, `'IDR'` | Key of `Devlib\Terbilang::CURRENCIES` (`IDR`, `USD`, `EUR`, `SGD`, `MYR`, `AUD`, `JPY`, `CNY`, `GBP`). Decides the rounding of the VAT amount (IDR 0 decimals, most others 2) and the currency word of the amount in words. An unknown code is passed as null: VAT rounds to 2 decimals and the words have no currency. |
@@ -110,7 +111,7 @@ The amount in words (`# ... #`) is printed under the block for the final amount.
 
 ### Preview bar
 
-Sticky bar above the sheets: title and number; **Paper** (always); **Group** (only with `groups`); **Price** (only when a column has `price`); **VAT / Non VAT** (only with `company-ppn`); **Ink Saver** (toggle: sheets in grey, black-and-white logo, plain backgrounds) and **Print**. Each segment click rebuilds all sheets. The bar is hidden on paper.
+Sticky bar above the sheets: title and number; **Paper** (always); **Group** (only with `groups`); **Price** (only when a column has `price`); **VAT / Non VAT** (only with `company-ppn`); **Color** (segment Color | B&W: B&W shows the sheets in grey, black-and-white logo, plain backgrounds and outlined status badges; the choice is remembered per browser in `localStorage` key `dl-print-color` and overrides the `color` prop) and **Print**. Each segment click rebuilds all sheets. The bar is hidden on paper.
 
 ### Layout and pagination
 
@@ -144,7 +145,7 @@ All data travels in `data-config` (JSON): `columns` (each with `type` defaulted 
 
 ### Markup hooks
 
-`data-p-paper`, `data-p-group`, `data-p-prices`, `data-p-ppn` (segments, each button `data-value`), `data-p-bw` (ink saver), `data-p-print`, `data-p-pages` (sheet container), `data-p-body` and `data-p-pg` (inside each sheet), `data-p-kop="0|1"` (Non VAT / VAT header), the six `template[data-p-head|criteria|parties|notes|sign|foot]`. Classes `dl-print`, `dl-print__sheet`, `dl-print__table`, `dl-print__tail`, `dl-print__totals`, `dl-print__grp` / `__sub` / `__grand` (group, subtotal and grand-total rows), `is-bw`.
+`data-p-paper`, `data-p-group`, `data-p-prices`, `data-p-ppn` (segments, each button `data-value`), `data-p-color` (segment Color | B&W), `data-p-print`, `data-p-pages` (sheet container), `data-p-body` and `data-p-pg` (inside each sheet), `data-p-kop="0|1"` (Non VAT / VAT header), the six `template[data-p-head|criteria|parties|notes|sign|foot]`. Classes `dl-print`, `dl-print__sheet`, `dl-print__table`, `dl-print__tail`, `dl-print__totals`, `dl-print__grp` / `__sub` / `__grand` (group, subtotal and grand-total rows), `is-bw`.
 
 ### Slot
 

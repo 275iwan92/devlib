@@ -57,6 +57,8 @@ class PrintOut extends DevlibComponent
         public ?string $footer = null,
         // Cap air diagonal besar di belakang isi tiap lembar (mis. 'DRAFT', 'CANCELLED'); teks apa adanya (tombol/status tetap English), warna token --dl-pr-neg. null = tanpa cap air (dokumen Confirmed).
         public ?string $watermark = null,
+        // Mode warna awal: 'color' (bawaan) atau 'bw' (hitam-putih, hemat toner). Pilihan pengguna di bilah (segmen Color | B&W) diingat per browser (localStorage dl-print-color) dan menang atas nilai ini.
+        public string $color = 'color',
     ) {}
 
     public function tag(): string

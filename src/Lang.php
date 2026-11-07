@@ -168,7 +168,7 @@ final class Lang
         // x-dl::print-out
         'pr_preview' => ['Pratinjau Cetak', 'Print Preview'], 'pr_paper' => ['Ukuran', 'Paper'], 'pr_a4' => ['A4 potret', 'A4 portrait'], 'pr_a4l' => ['A4 lanskap', 'A4 landscape'],
         'pr_a5' => ['A5 lanskap', 'A5 landscape'], 'pr_group' => ['Kelompok', 'Group'], 'pr_none' => ['Tanpa', 'None'], 'pr_price' => ['Harga', 'Price'],
-        'pr_with_price' => ['Dengan Harga', 'With Price'], 'pr_without_price' => ['Tanpa Harga', 'Without Price'], 'pr_ink' => ['Hemat Tinta', 'Ink Saver'],
+        'pr_with_price' => ['Dengan Harga', 'With Price'], 'pr_without_price' => ['Tanpa Harga', 'Without Price'], 'pr_color' => ['Warna', 'Color'], 'pr_color_full' => ['Berwarna', 'Color'], 'pr_bw' => ['Hitam-putih', 'B&W'],
         'pr_page' => ['Hal', 'Page'], 'pr_sheet' => ['lembar', 'sheet'], 'pr_printed_from' => ['Dicetak dari DevLib', 'Printed from DevLib'], 'pr_rows' => ['baris', 'rows'],
         'pr_no' => ['No', 'No'], 'pr_subtotal' => ['Subtotal', 'Subtotal'], 'pr_total' => ['Total', 'Total'], 'pr_discount' => ['Diskon', 'Discount'], 'pr_dpp' => ['DPP', 'Tax Base'],
         'pr_vat' => ['PPN', 'VAT'], 'pr_total_due' => ['Total Tagihan', 'Total Due'], 'pr_words' => ['Terbilang', 'Amount in words'],
@@ -561,7 +561,7 @@ final class Lang
         'l_type_min' => ['Ketik min. 2 huruf...', 'Type at least 2 letters...'],
         'idle_title' => ['Sesi hampir berakhir', 'Your session is about to end'],
         'idle_msg' => ['Tidak ada aktivitas. Anda akan keluar otomatis dalam {time}.', 'No activity. You will be signed out automatically in {time}.'],
-        'phone_menu' => ['Menu', 'Menu'], 'phone_search' => ['Cari', 'Search'], 'phone_filter' => ['Saring', 'Filter'], 'phone_export' => ['Ekspor', 'Export'], 'phone_paper' => ['Kertas', 'Paper'], 'phone_group' => ['Grup', 'Group'], 'phone_ink' => ['Hemat tinta', 'Ink saver'], 'phone_view' => ['Tampilan', 'View'], 'phone_cols' => ['Atur kolom', 'Set columns'], 'phone_apply' => ['Terapkan', 'Apply'], 'phone_other' => ['Aksi lain', 'More actions'], 'phone_acts' => ['Aksi layar ini', 'Screen actions'], 'phone_main' => ['Menu utama', 'Main menu'], 'phone_dirty' => ['Perubahan belum disimpan', 'Unsaved changes'], 'phone_leave' => ['Perubahan yang belum disimpan akan hilang. Pindah layar?', 'Unsaved changes will be lost. Leave this screen?'],
+        'phone_menu' => ['Menu', 'Menu'], 'phone_search' => ['Cari', 'Search'], 'phone_filter' => ['Saring', 'Filter'], 'phone_export' => ['Ekspor', 'Export'], 'phone_paper' => ['Kertas', 'Paper'], 'phone_group' => ['Grup', 'Group'], 'phone_view' => ['Tampilan', 'View'], 'phone_cols' => ['Atur kolom', 'Set columns'], 'phone_apply' => ['Terapkan', 'Apply'], 'phone_other' => ['Aksi lain', 'More actions'], 'phone_acts' => ['Aksi layar ini', 'Screen actions'], 'phone_main' => ['Menu utama', 'Main menu'], 'phone_dirty' => ['Perubahan belum disimpan', 'Unsaved changes'], 'phone_leave' => ['Perubahan yang belum disimpan akan hilang. Pindah layar?', 'Unsaved changes will be lost. Leave this screen?'],
         'phone_offer' => ['Ingin tampilan yang lebih nyaman di smartphone?', 'Want better view from smartphone?'], 'phone_offer_go' => ['Ketuk di sini', 'Click here'], 'phone_offer_stay' => ['Tetap desktop', 'Stay on desktop'],
         'idle_stay' => ['Tetap masuk', 'Stay signed in'], 'idle_out' => ['Keluar sekarang', 'Sign out now'],
         'idle_ended' => ['Sesi berakhir', 'Your session has ended'], 'idle_done' => ['Mengalihkan ke halaman masuk…', 'Redirecting to the sign-in page…'],

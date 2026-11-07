@@ -1,5 +1,5 @@
 @php($cfg = $config())
-<div {{ $attributes->class('dl-print')->merge($phoneList ? ['data-phone-list' => ''] : []) }} {!! $dl() !!} data-dl-print data-config="{{ json_encode($cfg) }}" data-paper="{{ $paper }}" data-prices="{{ $prices ? 1 : 0 }}" data-ppn="{{ $ppn ? 1 : 0 }}" data-group="{{ $groupBy }}"@if ($watermark) data-watermark="{{ $watermark }}"@endif>
+<div {{ $attributes->class('dl-print')->merge($phoneList ? ['data-phone-list' => ''] : []) }} {!! $dl() !!} data-dl-print data-config="{{ json_encode($cfg) }}" data-paper="{{ $paper }}" data-prices="{{ $prices ? 1 : 0 }}" data-ppn="{{ $ppn ? 1 : 0 }}" data-group="{{ $groupBy }}" data-color="{{ $color === 'bw' ? 'bw' : 'color' }}"@if ($watermark) data-watermark="{{ $watermark }}"@endif>
     <div class="dl-print__bar">
         <b>{{ \Devlib\Lang::t('pr_preview') }}</b><span class="dl-print__doc">— {{ $title }}{{ $number ? ' · '.$number : '' }}</span>
         <span class="dl-print__spacer"></span>
@@ -16,7 +16,8 @@
         @if ($companyPpn)
             <div class="dl-segment" data-p-ppn><button type="button" class="dl-segment__opt" data-value="0">{{ \Devlib\Lang::text('Non VAT') }}</button><button type="button" class="dl-segment__opt" data-value="1">{{ \Devlib\Lang::text('VAT') }}</button></div>
         @endif
-        <x-dl::button variant="secondary" size="sm" icon="ink-saver" :label="\Devlib\Lang::t('pr_ink')" data-p-bw />
+        <span class="dl-print__lbl">{{ \Devlib\Lang::t('pr_color') }}</span>
+        <div class="dl-segment" data-p-color><button type="button" class="dl-segment__opt" data-value="color">{{ \Devlib\Lang::t('pr_color_full') }}</button><button type="button" class="dl-segment__opt" data-value="bw">{{ \Devlib\Lang::t('pr_bw') }}</button></div>
         <x-dl::button preset="print" size="sm" data-p-print />
     </div>
     <div class="dl-print__pages" data-p-pages></div>

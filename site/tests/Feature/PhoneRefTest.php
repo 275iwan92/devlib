@@ -44,7 +44,7 @@ class PhoneRefTest extends TestCase
             $this->assertStringContainsString($hook, $grid, $hook);
         }
         $report = $this->withSession(['devlib_user' => $this->user])->get('/ref/phone/inner/report')->getContent();
-        foreach (['data-p-print', 'data-p-paper', 'data-p-group', 'data-p-bw'] as $hook) {
+        foreach (['data-p-print', 'data-p-paper', 'data-p-group', 'data-p-color'] as $hook) {
             $this->assertStringContainsString($hook, $report, $hook);
         }
         $form = $this->withSession(['devlib_user' => $this->user])->get('/ref/phone/inner/form')->getContent();

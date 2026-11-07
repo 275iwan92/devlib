@@ -1807,7 +1807,8 @@ td.dl-print__no{text-align:center}
 .dl-print__foot{display:flex;justify-content:space-between;margin-top:8px;padding-top:4px;border-top:1px solid var(--dl-pr-line2);color:var(--dl-pr-faint);font-size:8.5px}
 .dl-print.is-bw .dl-print__sheet{filter:grayscale(1)}
 .dl-print.is-bw .dl-print__table th,.dl-print.is-bw .dl-print__words,.dl-print.is-bw .dl-print__notes{background:var(--dl-pr-paper)}
-[data-p-bw].is-on{outline:2px solid var(--dl-amber-2)}
+.dl-print.is-bw .dl-print__badge{background:var(--dl-pr-paper);color:var(--dl-pr-strong);box-shadow:inset 0 0 0 1px var(--dl-pr-strong)}
+.dl-print{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 @media print{
   body *{visibility:hidden}
   .dl-print__pages,.dl-print__pages *{visibility:visible}
