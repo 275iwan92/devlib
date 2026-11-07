@@ -22,7 +22,7 @@ class Slideshow extends DevlibComponent
         public array $items = [],
         public string $size = 'xl',
         public bool $open = false,
-        // moreUrl: tautan ke panduan lengkap (User's Guide) di bawah gambar, dibuka di tab baru; kosong = tanpa tautan.
+        // moreUrl: tautan ke panduan lengkap (User's Guide) di kepala jendela (selalu terlihat), dibuka di tab baru; kosong = tanpa tautan.
         public ?string $moreUrl = null,
         public string $moreLabel = 'Full guide',
     ) {}
@@ -42,10 +42,9 @@ class Slideshow extends DevlibComponent
         return <<<'BLADE'
             <div {{ $attributes->class(['dl-mov', 'dl-slides', 'is-on' => $open]) }} {!! $dl() !!} data-dl-modal-id="{{ $id }}" data-dl-slideshow data-items="{{ json_encode(array_values($items)) }}" role="dialog" aria-modal="true" aria-label="{{ \Devlib\Lang::text($title ?? 'Guide') }}">
                 <div class="dl-modal dl-modal--{{ $size }}">
-                    <div class="dl-modal__head"><h3><i class="fa-solid fa-images"></i> {{ \Devlib\Lang::text($title ?? 'Guide') }}</h3><span class="dl-slides__n" data-sl-n></span><button type="button" class="dl-modal__x" data-dl-close-modal aria-label="{{ \Devlib\Lang::text('Close') }}">&times;</button></div>
+                    <div class="dl-modal__head"><h3><i class="fa-solid fa-images"></i> {{ \Devlib\Lang::text($title ?? 'Guide') }}</h3>@if ($moreUrl)<span class="dl-slides__more"><x-dl::button variant="link" icon="fa-book-open-reader" :label="\Devlib\Lang::text($moreLabel)" :href="$moreUrl" target="_blank" /></span>@endif<span class="dl-slides__n" data-sl-n></span><button type="button" class="dl-modal__x" data-dl-close-modal aria-label="{{ \Devlib\Lang::text('Close') }}">&times;</button></div>
                     <div class="dl-modal__body">
                         <figure class="dl-slides__fig"><img data-sl-img alt=""><figcaption data-sl-cap></figcaption></figure>
-                        @if ($moreUrl)<div class="dl-slides__more"><x-dl::button variant="link" icon="fa-book-open-reader" :label="\Devlib\Lang::text($moreLabel)" :href="$moreUrl" target="_blank" /></div>@endif
                     </div>
                     <div class="dl-modal__foot dl-slides__foot">
                         <x-dl::button variant="secondary" size="sm" icon="fa-chevron-left" :label="\Devlib\Lang::t('g_prev')" data-sl-prev />
