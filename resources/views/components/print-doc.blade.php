@@ -7,24 +7,26 @@
     $paper = $doc->paper();
     $totals = $doc->totals();
     $sign = $doc->signatures();
+    $styled = $doc->styled();
+    $stamp = '<span class="dl-pdoc__stamp is-'.$doc->statusTone().'">'.e($doc->statusLabel()).'</span>';
     $field = fn (?array $def) => $def
         ? '<div class="dl-pdoc__f" data-pd-k="'.e($def['key']).'"><span>'.e($t($def['label'])).'</span><i>:</i><b>'.$doc->value($def).'</b></div>'
         : '<div class="dl-pdoc__f"></div>';
 @endphp
 <div {{ $attributes->class('dl-pdoc') }} {!! $dl() !!} data-dl-pdoc data-paper="{{ $paper }}">
     @foreach ($doc->sheets() as $sheet)
-        <section class="dl-pdoc__sheet is-{{ $paper }}" data-pd-sheet data-pd-type="{{ $doc->type }}"
+        <section @class(['dl-pdoc__sheet', 'is-'.$paper, 'is-sty-'.($d['style'] ?? '') => $styled]) data-pd-sheet data-pd-type="{{ $doc->type }}"
             style="--pd-info-rows:{{ $doc->infoRows }};--pd-rh:{{ $doc->rowHeight }}mm;--pd-tail:{{ $doc->tailHeight }}mm">
             @if ($wm = $doc->watermark())<div class="dl-pdoc__wm {{ mb_strlen($wm) > 9 ? 'is-long' : '' }}" aria-hidden="true">{{ $wm }}</div>@endif
             @include('devlib::partials.print-doc-kop', ['title' => $t($doc->title), 'subtitle' => $doc->subtitle ? $t($doc->subtitle) : null, 'compact' => $doc->titleCompact])
 
             <div class="dl-pdoc__info">
                 <div>
-                    <div class="dl-pdoc__f is-big" data-pd-k="number"><span>{{ $t($doc->numberLabel) }}</span><i>:</i><b>{{ $d['number'] ?? '' }}</b></div>
+                    <div @class(['dl-pdoc__f', 'is-big', 'is-st' => $styled]) data-pd-k="number"><span>{{ $t($doc->numberLabel) }}</span><i>:</i><b>{{ $d['number'] ?? '' }}</b>@if ($styled){!! $stamp !!}@endif</div>
                     @for ($i = 0; $i < $doc->infoRows - 1; $i++){!! $field($doc->refs[$i] ?? null) !!}@endfor
                 </div>
                 <div>
-                    <div class="dl-pdoc__f is-st" data-pd-k="date"><span>{{ $t('Date') }}</span><i>:</i><b>{{ \Devlib\Locale::d($d['date'] ?? null) ?? '—' }}</b><span class="dl-pdoc__stamp">{{ $doc->statusLabel() }}</span></div>
+                    <div class="dl-pdoc__f is-st" data-pd-k="date"><span>{{ $t('Date') }}</span><i>:</i><b>{{ \Devlib\Locale::d($d['date'] ?? null) ?? '—' }}</b>@unless ($styled)<span class="dl-pdoc__stamp">{{ $doc->statusLabel() }}</span>@endunless</div>
                     <div class="dl-pdoc__f" data-pd-k="party"><span>{{ $t($doc->partyLabel) }}</span><i>:</i><b><strong>{{ $party['name'] ?? '' }}</strong>@if (! empty($party['code'])) &middot; {{ $party['code'] }}@endif</b></div>
                     @for ($i = 0; $i < $doc->infoRows - 3; $i++)<div class="dl-pdoc__f is-addr"><span></span><i></i><b>{{ $party['lines'][$i] ?? '' }}</b></div>@endfor
                     {!! $field($doc->side) !!}
@@ -50,7 +52,7 @@
                             <td class="is-no">{{ $sheet['from'] + $i + 1 }}.</td>
                             @if ($r)
                                 <td @class(['is-name', 'is-two' => ! empty($r['sub'])])><div class="dl-pdoc__n1">{{ $r['name'] ?? '' }}</div>@if (! empty($r['sub']))<div class="dl-pdoc__n2">{{ $r['sub'] }}</div>@endif @if (! empty($r['sub2']))<div class="dl-pdoc__n3">{{ $r['sub2'] }}</div>@endif</td>
-                                @if ($doc->qtyCols)<td class="is-num">{{ $doc->qty($r['qty'] ?? null) }}</td><td>{{ $r['unit'] ?? '' }}</td>@endif
+                                @if ($doc->qtyCols)<td class="is-num is-qty">{{ $doc->qty($r['qty'] ?? null) }}</td><td>{{ $r['unit'] ?? '' }}</td>@endif
                                 @foreach ($cols as $c)<td class="{{ $doc->columnClass($c) }}" data-pd-c="{{ $c['key'] }}">@if (! empty($c['wrap']))<div class="dl-pdoc__w">{!! $doc->value($c, $r, '') !!}</div>@else{!! $doc->value($c, $r, '') !!}@endif</td>@endforeach
                             @else
                                 <td></td>@if ($doc->qtyCols)<td></td><td></td>@endif @foreach ($cols as $c)<td></td>@endforeach

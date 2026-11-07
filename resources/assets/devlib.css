@@ -3038,6 +3038,40 @@ a.dl-ycal__d:hover{background:var(--dl-hover);outline:1px solid var(--dl-accent)
 .dl-pdoc__chk{font-size:9pt;line-height:1.5;margin:1mm 0}
 .dl-pdoc__blk .dl-pdoc__sign{margin-top:4mm}
 /* Cetak langsung dari browser (Ctrl+P) dan halaman dokumen online: lembar saja, tanpa latar abu-abu */
+/* x-dl::print-doc gaya pilihan (data['style'] = color | bw; Jo 2026-11-07): nama produk membungkus, status di samping nomor. Token --pd-* = warna kertas cetak. */
+.dl-pdoc__sheet.is-sty-color,.dl-pdoc__sheet.is-sty-bw{--pd-ink:#000;--pd-blue:#1d4f91;--pd-blue-soft:#e3edf9;--pd-blue-dark:#12335f;--pd-green-soft:#e2f2e6;--pd-stripe:#f1f6fc;--pd-head:#ededed;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.is-sty-color .dl-pdoc__items td.is-name,.is-sty-bw .dl-pdoc__items td.is-name{white-space:normal;overflow:visible}
+.is-sty-color .dl-pdoc__n1,.is-sty-bw .dl-pdoc__n1,.is-sty-color .is-two .dl-pdoc__n1,.is-sty-bw .is-two .dl-pdoc__n1{max-height:none;overflow:visible;white-space:normal;overflow-wrap:anywhere;font-weight:700}
+.is-sty-color .dl-pdoc__items td[data-pd-c=due_date],.is-sty-bw .dl-pdoc__items td[data-pd-c=due_date],.is-sty-color .dl-pdoc__items td[data-pd-c=subtotal],.is-sty-bw .dl-pdoc__items td[data-pd-c=subtotal],.is-sty-color .dl-pdoc__items td.is-qty,.is-sty-bw .dl-pdoc__items td.is-qty{font-weight:700}
+.is-sty-color .dl-pdoc__items .is-num,.is-sty-bw .dl-pdoc__items .is-num{font-variant-numeric:tabular-nums}
+.is-sty-color .dl-pdoc__items td[data-pd-c=subtotal],.is-sty-bw .dl-pdoc__items td[data-pd-c=subtotal]{font-size:9pt}
+.is-sty-color .dl-pdoc__items th,.is-sty-bw .dl-pdoc__items th{letter-spacing:0;padding:0 .8mm}
+.is-sty-color .dl-pdoc__items td,.is-sty-bw .dl-pdoc__items td{padding:0 .8mm}
+.is-sty-color .dl-pdoc__stamp,.is-sty-bw .dl-pdoc__stamp{margin-left:3mm;border:.4mm solid var(--pd-ink);color:var(--pd-ink)!important;background:none;white-space:nowrap}
+.is-sty-color .dl-pdoc__info,.is-sty-bw .dl-pdoc__info{grid-template-columns:1.25fr 1fr}
+.is-sty-color .dl-pdoc__f.is-big.is-st,.is-sty-bw .dl-pdoc__f.is-big.is-st{grid-template-columns:29mm 3mm auto 1fr}
+.is-sty-color .dl-pdoc__f.is-big>b,.is-sty-bw .dl-pdoc__f.is-big>b{overflow:visible}
+.is-sty-color .dl-pdoc__f.is-big .dl-pdoc__stamp,.is-sty-bw .dl-pdoc__f.is-big .dl-pdoc__stamp{justify-self:start;font-size:8pt!important;letter-spacing:.06em}
+.is-sty-bw .dl-pdoc__kop{border-bottom:.8mm solid var(--pd-ink)}
+.is-sty-bw .dl-pdoc__logo{background:none;color:var(--pd-ink);border:.4mm solid var(--pd-ink)}
+.is-sty-bw .dl-pdoc__info{border-bottom:.3mm solid var(--pd-ink)}
+.is-sty-bw .dl-pdoc__items{border-top:0;border-bottom:0}
+.is-sty-bw .dl-pdoc__items th{background:var(--pd-head);color:var(--pd-ink);border-top:.5mm solid var(--pd-ink);border-bottom:.5mm solid var(--pd-ink)}
+.is-sty-bw .dl-pdoc__tot .is-grand{border-top:.6mm solid var(--pd-ink);border-bottom:1mm double var(--pd-ink);height:5.4mm;background:none}
+.is-sty-color .dl-pdoc__kop{border-bottom:.8mm solid var(--pd-blue)}
+.is-sty-color .dl-pdoc__kop h1{color:var(--pd-blue)}
+.is-sty-color .dl-pdoc__info{border-bottom:.3mm solid var(--pd-blue);padding-top:1.5mm}
+.is-sty-color .dl-pdoc__info>div{padding:0 2mm;border-radius:1mm}
+.is-sty-color .dl-pdoc__info>div:first-child{background:var(--pd-blue-soft)}
+.is-sty-color .dl-pdoc__info>div:last-child{background:var(--pd-green-soft)}
+.is-sty-color .dl-pdoc__items{border-top:0;border-bottom:.5mm solid var(--pd-blue)}
+.is-sty-color .dl-pdoc__items th{background:var(--pd-blue);color:#fff}
+.is-sty-color .dl-pdoc__items tbody tr:nth-child(even) td{background:var(--pd-stripe)}
+.is-sty-color .dl-pdoc__tot .is-grand{background:var(--pd-blue-dark);color:#fff;border:0;padding:0 2mm;height:5.4mm}
+.is-sty-color .dl-pdoc__stamp.is-ok{border-color:#1e7a3c;color:#1e7a3c!important;background:var(--pd-green-soft)}
+.is-sty-color .dl-pdoc__stamp.is-warn{border-color:#a86400;color:#8a5200!important;background:#fff1d6}
+.is-sty-color .dl-pdoc__stamp.is-bad{border-color:#b3261e;color:#b3261e!important;background:#fde4e2}
+.is-sty-color .dl-pdoc__stamp.is-idle{border-color:var(--pd-blue);color:var(--pd-blue)!important;background:var(--pd-blue-soft)}
 @media print{.dl-pdoc{background:none;padding:0;gap:0;border-radius:0;display:block}.dl-pdoc__sheet{box-shadow:none;break-after:page}}
 .dl-share-page__doc .dl-pdoc{background:none;padding:0}
 

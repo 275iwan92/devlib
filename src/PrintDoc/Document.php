@@ -170,19 +170,84 @@ abstract class Document
         return $this->data['rows'];
     }
 
+    // Gaya cetak pilihan pengguna ($data['style'] = color | bw): hanya bila diisi aplikasi; kosong = tampilan lama (tanpa opsi).
+    public function styled(): bool
+    {
+        return in_array($this->data['style'] ?? null, ['color', 'bw'], true);
+    }
+
+    // Kertas: pilihan pengguna ($data['paper'] = a5 | a4) mengalahkan aturan bawaan (1-5 baris A5, selebihnya A4).
     public function paper(): string
     {
-        return count($this->rows()) <= self::A5_MAX ? 'a5' : 'a4';
+        $p = $this->data['paper'] ?? null;
+
+        return in_array($p, ['a5', 'a4'], true) ? $p : (count($this->rows()) <= self::A5_MAX ? 'a5' : 'a4');
+    }
+
+    // Nada badge status: ok (sah), warn (menunggu / ditahan), bad (batal / ditolak), idle (draft). Dipakai gaya Color.
+    public function statusTone(): string
+    {
+        return match ($this->statusLabel()) {
+            'WAITING APPROVAL', 'HOLD' => 'warn',
+            'CANCELLED', 'REJECTED' => 'bad',
+            'DRAFT', '' => 'idle',
+            default => 'ok',
+        };
+    }
+
+    // Tinggi satu baris (mm) bila nama produk boleh membungkus (gaya Color / B&W): lebar kolom nama dikurangi kolom lain,
+    // ~1.95 mm per huruf tebal 9 pt, dikali 0.9 sebagai pengaman karena pembungkusan memotong di batas kata. Contoh: kolom nama 63 mm
+    // -> 29 huruf per baris; nama 70 huruf = 3 baris = 3 x 3.8 + 1.2 = 12.6 mm (baris satu garis tetap 7.6 mm).
+    private function rowMm(?array $r): float
+    {
+        $nameMm = 192 - 7 - ($this->qtyCols ? 36 : 0) - array_sum(array_column($this->columns(), 'width')) - 2;
+        $perLine = max(8, (int) floor($nameMm / 1.95 * 0.9));
+        $lines = max(1, (int) ceil(mb_strlen((string) ($r['name'] ?? '')) / $perLine)) + (empty($r['sub']) ? 0 : 1) + (empty($r['sub2']) ? 0 : 1);
+
+        return max($this->rowHeight, $lines * 3.8 + 1.2);
     }
 
     /** @return list<array{rows: array, from: int, last: bool}> lembar-lembar; total + tanda tangan hanya di lembar terakhir */
     public function sheets(): array
     {
+        if ($this->styled()) {
+            return $this->wrappedSheets();
+        }
         $per = $this->capacity[$this->paper()];
         $chunks = array_chunk($this->rows(), $per) ?: [[]];
         $n = count($chunks);
 
         return array_map(fn ($rows, $i) => ['rows' => array_pad($rows, $per, null), 'from' => $i * $per, 'last' => $i === $n - 1, 'page' => $i + 1, 'pages' => $n], $chunks, array_keys($chunks));
+    }
+
+    // Lembar untuk gaya Color / B&W: baris dipecah menurut TINGGI (nama panjang membungkus), bukan jumlah tetap; jatah tinggi = kapasitas
+    // baris x tinggi baris standar. Sisa jatah diisi baris kosong. Header tabel diulang tiap lembar; total + tanda tangan di lembar terakhir.
+    private function wrappedSheets(): array
+    {
+        $budget = $this->capacity[$this->paper()] * $this->rowHeight;
+        $chunks = [];
+        $used = 0.0;
+        foreach ($this->rows() as $r) {
+            $h = $this->rowMm($r);
+            if (! $chunks || $used + $h > $budget + 0.01) {
+                $chunks[] = [];
+                $used = 0.0;
+            }
+            $chunks[array_key_last($chunks)][] = $r;
+            $used += $h;
+        }
+        $chunks = $chunks ?: [[]];
+        $n = count($chunks);
+        $from = 0;
+        $out = [];
+        foreach ($chunks as $i => $rows) {
+            $mm = array_sum(array_map(fn ($r) => $this->rowMm($r), $rows));
+            $pad = max(0, (int) floor(($budget - $mm + 0.01) / $this->rowHeight));
+            $out[] = ['rows' => array_pad($rows, count($rows) + $pad, null), 'from' => $from, 'last' => $i === $n - 1, 'page' => $i + 1, 'pages' => $n];
+            $from += count($rows);
+        }
+
+        return $out;
     }
 
     /** @return list<array> kolom zona varian + (dokumen berharga) Harga dan Subtotal di posisi tetap */
