@@ -24,7 +24,7 @@ class Pomodoro extends DevlibComponent
         public bool $auto = true,
         public int $sessions = 0,
         public string $saveUrl = '',
-        public string $csrf = '',
+        public ?string $csrf = '',
         public string $storageKey = 'dl-pomodoro',
         public bool $compact = false,
     ) {
