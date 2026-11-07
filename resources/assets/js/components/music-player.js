@@ -1,6 +1,6 @@
 /* DevLib · MusicPlayer
  * Pemutar musik latar (pola proyek admin Jo): bawaan DIAM; Play memulai dengan fade 1 detik; trek berurutan; posisi dan pengaturan
- * diingat per perangkat (localStorage[data-key]: mute, vol, i, pos); jeda saat tab tersembunyi. Tiap muat halaman musik DIAM sampai
+ * diingat per perangkat (localStorage[data-key]: mute, vol, track, i, pos); jeda saat tab tersembunyi. Tiap muat halaman musik DIAM sampai
  * pengguna menekan Play (status "on" tidak dipulihkan). Elemen <audio> milik komponen. */
 (function (Devlib) {
   'use strict';
@@ -11,7 +11,7 @@
     init() {
       const d = this.el.dataset;
       this.key = d.key; this.base = d.base; this.tracks = JSON.parse(d.tracks || '[]');
-      this.s = {on: false, mute: false, vol: +d.volume || 25, i: 0, pos: 0};
+      this.s = {on: false, mute: false, vol: +d.volume || 25, track: 'all', i: 0, pos: 0};
       try { Object.assign(this.s, JSON.parse(localStorage.getItem(this.key) || '{}')); } catch (e) { /* tanpa penyimpanan: bawaan */ }
       this.s.on = false; // keputusan Jo 2026-11-07: tiap muat halaman DIAM; hanya Play dari pengguna yang menyalakan (volume, bisu, trek, posisi tetap diingat)
       this.audio = new Audio(); this.audio.preload = 'none';
@@ -21,8 +21,8 @@
 
       this.btnPlay.addEventListener('click', () => { this.s.on = !this.s.on; this.apply(); });
       this.btnMute.addEventListener('click', () => { this.s.mute = !this.s.mute; this.apply(); });
-      this.vol.addEventListener('input', () => { this.s.vol = +this.vol.value; this.save(); if (!this.audio.paused) this.audio.volume = this.gain(); });
-      this.audio.addEventListener('ended', () => { this.s.i = (this.idx() + 1) % this.tracks.length; this.s.pos = 0; this.save(); this.play(); });
+      this.vol.addEventListener('input', () => this.setVolume(+this.vol.value));
+      this.audio.addEventListener('ended', () => { if (this.s.track !== 'all') return; this.s.i = (this.idx() + 1) % this.tracks.length; this.s.pos = 0; this.save(); this.play(); });
       document.addEventListener('visibilitychange', () => { if (document.hidden) this.audio.pause(); else this.play(); });
       ['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, () => { if (this.blocked) this.play(); }, true));
       setInterval(() => { if (!this.audio.paused) { this.s.pos = Math.floor(this.audio.currentTime); this.save(); } }, 2000);
@@ -30,7 +30,7 @@
     }
 
     save() { try { localStorage.setItem(this.key, JSON.stringify(this.s)); } catch (e) { /* abaikan */ } }
-    idx() { return this.s.i % this.tracks.length; }
+    idx() { return this.s.track === 'all' ? this.s.i % this.tracks.length : Math.max(0, this.tracks.findIndex(t => t.file === this.s.track)); }
     want() { return this.s.on && !this.s.mute; }
     gain() { return Math.min(1, this.s.vol / 100); }
 
@@ -49,7 +49,7 @@
         this.audio.src = this.base + t.file;
         if (this.resumeAt) this.audio.addEventListener('loadedmetadata', () => { this.audio.currentTime = this.resumeAt; this.resumeAt = 0; }, {once: true});
       }
-      this.audio.loop = this.tracks.length === 1;
+      this.audio.loop = this.tracks.length === 1 || this.s.track !== 'all';
       this.credit.textContent = '';
       const link = (txt, href) => { if (!href) return document.createTextNode(txt); const a = document.createElement('a'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.textContent = txt; return a; };
       this.credit.append('♪ ', t.title, ' — ', link(t.author, t.url));
@@ -62,6 +62,11 @@
       this.load(); this.audio.volume = 0;
       this.audio.play().then(() => { this.blocked = false; this.ramp(this.gain()); }).catch(() => { this.blocked = true; });
     }
+
+    // Dipakai pengatur (x-dl::setup-media): nyala/mati, volume, pilihan trek ('all' = berurutan atau nama berkas). Semuanya lewat satu jalur apply().
+    setOn(on) { this.s.on = !!on; this.apply(); }
+    setVolume(v) { this.s.vol = Math.max(0, Math.min(100, v)); this.save(); if (!this.audio.paused) this.audio.volume = this.gain(); this.draw(); }
+    setTrack(t) { this.s.track = t; this.s.pos = 0; this.resumeAt = 0; this.audio.pause(); this.audio.removeAttribute('src'); this.apply(); }
 
     apply() {
       this.save(); this.draw();
@@ -78,6 +83,7 @@
       this.btnMute.firstElementChild.className = 'fa-solid ' + (this.s.mute ? 'fa-volume-xmark' : 'fa-volume-high');
       this.vol.value = this.s.vol;
       this.el.classList.toggle('is-playing', on && !this.s.mute);
+      document.dispatchEvent(new CustomEvent('dl:music', {detail: {on, mute: this.s.mute, vol: this.s.vol, track: this.s.track, tracks: this.tracks}}));
     }
   }
   Devlib.define("MusicPlayer", MusicPlayer);

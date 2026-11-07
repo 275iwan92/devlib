@@ -64,12 +64,28 @@ class MusicPlayerTest extends TestCase
         $css = file_get_contents(dirname(__DIR__, 3).'/resources/assets/devlib.css');
         $js = file_get_contents(dirname(__DIR__, 3).'/resources/assets/js/components/hero-fx.js');
 
-        $this->assertStringContainsString('@media (prefers-reduced-motion:reduce){.dl-dash__fx{display:none}}', $css);
+        $this->assertStringContainsString('html[data-motion="off"] .dl-dash__fx{display:none}', $css);
         $this->assertStringContainsString('prefers-reduced-motion: reduce', $js);
+        $this->assertStringContainsString('Devlib.motion.mode()', $js);
         preg_match_all('/^\.dl-music[^{]*\{[^}]*\}/m', $css, $rules);
         $this->assertNotEmpty($rules[0]);
         foreach ($rules[0] as $rule) {
             $this->assertDoesNotMatchRegularExpression('/#[0-9a-fA-F]{3,8}\b/', $rule, 'Warna literal di '.$rule);
         }
+    }
+
+    public function test_setup_media_has_music_and_motion_pages_for_the_setup_dialog(): void
+    {
+        $html = Blade::render('<x-dl::setup-media />');
+
+        $this->assertStringContainsString('data-lm-page="music" data-lm-in="setup"', $html);
+        $this->assertStringContainsString('data-lm-page="motion" data-lm-in="setup"', $html);
+        $this->assertStringContainsString('data-dl-setup-on', $html);
+        $this->assertStringContainsString('data-dl-setup-vol', $html);
+        $this->assertStringContainsString('data-dl-setup-track', $html);
+        foreach (['auto', 'on', 'off'] as $v) {
+            $this->assertStringContainsString('name="dl-motion" value="'.$v.'"', $html);
+        }
+        $this->assertStringContainsString('role="radiogroup"', $html);
     }
 }

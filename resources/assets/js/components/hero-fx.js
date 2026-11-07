@@ -1,15 +1,27 @@
-/* DevLib · HeroFx
+/* DevLib · HeroFx + Devlib.motion
  * Gerak kotak sapaan (x-dl::greeting-card, opt-in board['animate']): konstelasi titik di latar yang menjauh dari kursor dan
  * menyambung ke kursor (canvas), angka bulat di ringkasan menghitung naik. Pola dari proyek admin Jo. Berhenti total saat
- * tab tersembunyi, dan tidak berjalan sama sekali bila pengguna memilih "kurangi gerakan" (prefers-reduced-motion). Warna dari token --dl-*. */
+ * tab tersembunyi. Warna dari token --dl-*.
+ * Devlib.motion = pilihan gerak pengguna (pola admin Jo): 'auto' (ikuti perangkat: prefers-reduced-motion), 'on', 'off'; disimpan
+ * per browser di localStorage['dl-motion']; hasil efektif ('on' | 'off') ditulis ke <html data-motion> dan dikabarkan lewat event 'dl:motion'.
+ * CSS gerak hanya hidup di html[data-motion="on"]. Pengatur: x-dl::setup-media. */
 (function (Devlib) {
   'use strict';
   const {$, $$} = Devlib.h;
 
+  Devlib.motion = Devlib.motion || (() => {
+    const mq = matchMedia('(prefers-reduced-motion: reduce)'), KEY = 'dl-motion';
+    const pref = () => { try { const v = localStorage.getItem(KEY); return v === 'on' || v === 'off' ? v : 'auto'; } catch (e) { return 'auto'; } };
+    const mode = () => { const p = pref(); return p === 'auto' ? (mq.matches ? 'off' : 'on') : p; };
+    const apply = () => { document.documentElement.dataset.motion = mode(); document.dispatchEvent(new CustomEvent('dl:motion', {detail: mode()})); };
+    const set = p => { try { if (p === 'on' || p === 'off') localStorage.setItem(KEY, p); else localStorage.removeItem(KEY); } catch (e) { /* tanpa penyimpanan: hanya sesi ini */ } apply(); };
+    mq.addEventListener('change', apply); apply();
+    return {pref, mode, set};
+  })();
+
   class HeroFx extends Devlib.Component {
     static selector = "[data-dl-hero-fx]";
     init() {
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       this.cv = $(this.el, '.dl-dash__fx');
       if (!this.cv) return;
       this.ctx = this.cv.getContext('2d'); this.dots = []; this.mouse = {x: -999, y: -999}; this.raf = 0;
@@ -19,7 +31,9 @@
       this.el.addEventListener('pointerleave', () => { this.mouse.x = this.mouse.y = -999; });
       new ResizeObserver(this.run).observe(this.el);
       document.addEventListener('visibilitychange', this.run);
-      this.countUp(); this.run();
+      document.addEventListener('dl:motion', this.run);
+      if (Devlib.motion.mode() === 'on') this.countUp();
+      this.run();
     }
 
     size() {
@@ -31,7 +45,7 @@
 
     run() {
       cancelAnimationFrame(this.raf);
-      if (document.hidden) return;
+      if (document.hidden || Devlib.motion.mode() !== 'on') { this.ctx.clearRect(0, 0, this.cv.width, this.cv.height); return; }
       this.size(); this.raf = requestAnimationFrame(this.draw);
     }
 

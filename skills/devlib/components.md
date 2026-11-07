@@ -778,6 +778,11 @@ Halaman diagnostik layar: lebar x tinggi CSS, DPR, orientasi, tinggi svh/lvh/dvh
 - Berkas: `src/Components/ScreenInfo.php`
 - Prop: title:string='Screen info', note:string=''
 
+## `<x-dl::setup-media>`
+Dua halaman pengaturan di dialog Setup Layer Menu (bersama Theme dan Language): Music (putar musik latar, volume, pilihan trek) dan Motion (animasi layar: ikuti perangkat / nyala / kurangi gerak). Pola dari proyek admin Jo.
+- Berkas: `src/Components/SetupMedia.php`
+- Prop: (tanpa prop)
+
 ## `<x-dl::sheet>`
 Grid sel mirip spreadsheet; mendukung links (sel terhitung), reasonOnSave, reorderUrl.
 - Berkas: `src/Components/Sheet.php`

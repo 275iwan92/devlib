@@ -57,4 +57,4 @@ Reads no database. Writes only `localStorage[storage-key]`. No events are emitte
 
 ## Related
 
-`x-dl::greeting-card` (places the player), `x-dl::clock`, `x-dl::weather`.
+`x-dl::greeting-card` (places the player), `x-dl::setup-media` (Setup dialog pages that drive the player: on / off, volume, track), `x-dl::clock`, `x-dl::weather`.
