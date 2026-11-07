@@ -119,7 +119,14 @@
     }
 
     totals() {
-      if (!this.T.of || this.el.dataset.prices !== '1') return '';
+      if (this.el.dataset.prices !== '1') return '';
+      // Total yang sudah dihitung server (totals.lines [[label, angka, kelas?]] + totals.grand): dicetak apa adanya, tanpa hitung ulang di browser.
+      if (this.T.lines) {
+        const grand = +this.T.grand || 0;
+        return `<div class="dl-print__totals">${this.T.lines.map(([l, v, cls = '']) => `<div class="${cls}"><span>${esc(l)}</span><b>${v < 0 ? `(${this.num(-v)})` : this.num(v)}</b></div>`).join('')}</div>
+        <p class="dl-print__words"><span>${esc(T('pr_words'))}:</span> <i># ${esc(words(String(Math.round(grand * 100) / 100), this.cfg.currency))} #</i></p>`;
+      }
+      if (!this.T.of) return '';
       const sub = this.sumOf(this.data, this.T.of), disc = +this.T.discount || 0, dpp = sub - disc;
       const ppnOn = this.T.ppn && (!this.cfg.hasPpnKop || this.el.dataset.ppn === '1'), dec = 10 ** (this.cfg.currency ? this.cfg.currency[5] : 2), ppn = ppnOn ? Math.round(dpp * this.T.ppn / 100 * dec) / dec : 0, grand = dpp + ppn;
       const extra = (this.T.extra || []).reduce((t, [, v]) => t + (+v || 0), 0);
