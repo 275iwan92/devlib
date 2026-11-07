@@ -158,6 +158,11 @@ Dua (atau lebih) blok berdampingan yang otomatis bertumpuk di layar sempit (grid
 - Berkas: `src/Components/Cols.php`
 - Prop: (tanpa prop)
 
+## `<x-dl::countdown>`
+Timer hitung mundur pribadi: menit dapat diatur (- / +, 1-600), cincin progres, Start/Pause/Reset, daftar preset (klik = pakai, simpan preset baru dari menit sekarang, hapus). Selesai: bunyi 'timer' (Devlib.sound, bawaan mati), toast, judul tab.
+- Berkas: `src/Components/Countdown.php`
+- Prop: presets:array=[], minutes:int=5, saveUrl:string='', csrf:?string='', storageKey:string='dl-countdown'
+
 ## `<x-dl::coverage>`
 Matriks kelengkapan: satu baris per kelompok (mis. set mesin), kolom = jenis dokumen / item, tiap sel = chip status yang.
 - Berkas: `src/Components/Coverage.php`
@@ -867,6 +872,11 @@ Laporan keuangan baris demi baris (Neraca, Laba Rugi, Arus Kas): judul kelompok,
 Kartu status (mesin, dokumen, layanan): ikon + judul + badge status + nilai + keterangan + waktu.
 - Berkas: `src/Components/StatusCard.php`
 - Prop: title:string='', status:string='', tone:string='accent', icon:string='info', value:?string=NULL, desc:?string=NULL, meta:?string=NULL, filter:bool=false, active:bool=false
+
+## `<x-dl::stopwatch>`
+Stopwatch pribadi: hh:mm:ss.cc, Start/Stop, Lap, Reset, dan daftar putaran (lap) dengan selisih dari putaran sebelumnya. Berjalan murni di browser; keadaan diingat di localStorage sehingga benar setelah pindah layar atau muat ulang.
+- Berkas: `src/Components/Stopwatch.php`
+- Prop: storageKey:string='dl-stopwatch'
 
 ## `<x-dl::strip-kv>`
 Satu kotak "label kecil + nilai" di strip ringkasan Form dokumen (no. dokumen, total, status angka).

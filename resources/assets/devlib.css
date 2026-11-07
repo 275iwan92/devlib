@@ -3231,6 +3231,34 @@ html[data-motion=off] .dl-pomo__bar{transition:none}
 .dl-alarm__days span{display:block;padding:5px 8px;border:1px solid var(--dl-border);border-radius:var(--dl-radius);font-size:calc(12px * var(--dl-font-scale))}
 .dl-alarm__days input:checked + span{background:var(--dl-accent);color:var(--dl-on-accent);border-color:transparent}
 .dl-alarm__days input:focus-visible + span{outline:2px solid var(--dl-accent);outline-offset:2px}
+/* x-dl::countdown dan x-dl::stopwatch: hanya token */
+.dl-cd{display:grid;gap:14px;max-width:560px}
+.dl-cd__top{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.dl-cd__ring{position:relative;width:132px;height:132px;flex:none;--c:var(--dl-accent)}
+.dl-cd__ring svg{width:100%;height:100%}
+.dl-cd__bar{transition:stroke-dashoffset 1s linear}
+html[data-motion=off] .dl-cd__bar{transition:none}
+.dl-cd.is-running .dl-cd__ring{--c:var(--dl-tangerine)}
+.dl-cd__time{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(26px * var(--dl-font-scale));font-weight:800;font-variant-numeric:tabular-nums;color:var(--dl-ink-strong)}
+.dl-cd__ctl{display:grid;gap:12px}
+.dl-cd__set{display:flex;align-items:center;gap:8px;color:var(--dl-ink)}
+.dl-cd__set input{width:76px;border:1px solid var(--dl-border);border-radius:var(--dl-radius);padding:6px 8px;background:var(--dl-surface);color:var(--dl-ink);font:inherit;text-align:center}
+.dl-cd__step{border:1px solid var(--dl-border);background:var(--dl-surface);color:var(--dl-ink);border-radius:50%;width:30px;height:30px;cursor:pointer}
+.dl-cd__step:disabled{color:var(--dl-disabled);cursor:default}
+.dl-cd__btns,.dl-sw__btns{display:flex;gap:8px;flex-wrap:wrap}
+.dl-cd__presets{list-style:none;margin:0;padding:0;display:flex;gap:8px;flex-wrap:wrap}
+.dl-cd__presets li{display:flex;border:1px solid var(--dl-border);border-radius:var(--dl-radius);background:var(--dl-surface);overflow:hidden}
+.dl-cd__use,.dl-cd__del{border:0;background:transparent;color:var(--dl-ink);cursor:pointer;padding:6px 10px;font:inherit}
+.dl-cd__use:hover,.dl-cd__del:hover{background:var(--dl-hover)}
+.dl-cd__del{color:var(--dl-danger);padding:6px 8px}
+.dl-cd__add{display:flex;gap:8px;flex-wrap:wrap}
+.dl-cd__add input{border:1px solid var(--dl-border);border-radius:var(--dl-radius);padding:7px 10px;background:var(--dl-surface);color:var(--dl-ink);font:inherit}
+.dl-sw{display:grid;gap:14px;max-width:460px}
+.dl-sw__time{font-size:calc(44px * var(--dl-font-scale));font-weight:800;font-variant-numeric:tabular-nums;color:var(--dl-ink-strong)}
+.dl-sw.is-running .dl-sw__time{color:var(--dl-accent-ink)}
+.dl-sw__laps{margin:0;padding-left:28px;display:grid;gap:4px;color:var(--dl-ink);font-variant-numeric:tabular-nums}
+.dl-sw__laps li{padding-left:6px}
+.dl-sw__laps li span{margin-left:14px}
 /* Dokumen terstruktur x-dl::doc-sections (mis. Job Description): baris ringkas (atasan, bawahan) di atas, lalu bagian bertajuk dengan paragraf dan daftar bernomor. */
 .dl-docsec{font-size:calc(14px * var(--dl-font-scale));line-height:1.65;color:var(--dl-ink)}
 .dl-docsec__plain{margin:0;white-space:pre-line}
