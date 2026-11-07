@@ -23,6 +23,16 @@ Form aksi kecil: pembungkus <form> TANPA judul / panel / tombol sendiri -- untuk
 - Berkas: `src/Components/ActionForm.php`
 - Prop: method:string='post', action:?string=NULL
 
+## `<x-dl::alarm-list>`
+Daftar alarm pribadi: jam, label, hari ulang (kosong = sekali), saklar on/off, hapus, dan form Tambah. Perubahan dikirim ke server sebagai seluruh daftar.
+- Berkas: `src/Components/AlarmList.php`
+- Prop: items:array=[], saveUrl:string='', csrf:?string='', storageKey:string='dl-alarms'
+
+## `<x-dl::alarm-runner>`
+Pembunyi alarm yang tak terlihat: tiap beberapa detik memeriksa daftar alarm aktif terhadap jam browser; saat jam dan hari cocok memainkan bunyi 'alarm' (Devlib.sound, bawaan mati) dan menampilkan toast. Alarm sekali jalan dimatikan setelah berbunyi.
+- Berkas: `src/Components/AlarmRunner.php`
+- Prop: items:array=[], saveUrl:string='', csrf:?string='', storageKey:string='dl-alarms'
+
 ## `<x-dl::alert>`
 Kotak pesan sebaris. Kosong = tersembunyi (bisa diisi lewat JS). Slot = isi kaya (teks tebal + tombol aksi).
 - Berkas: `src/Components/Alert.php`
@@ -701,7 +711,7 @@ Grid Pivot: data datar -> tabel silang yang bisa diatur user di layar.
 ## `<x-dl::pomodoro>`
 Pewaktu Pomodoro: Focus lalu Break dengan cincin progres, Play/Pause/Reset, durasi dapat diubah (- dan +, 1-90 menit), segmen Focus | Break, penghitung sesi Focus hari ini, pindah otomatis ke Break (opsi), judul tab dan notifikasi browser (opt-in) saat selesai.
 - Berkas: `src/Components/Pomodoro.php`
-- Prop: focus:int=25, break:int=5, auto:bool=true, sessions:int=0, saveUrl:string='', csrf:string='', storageKey:string='dl-pomodoro', compact:bool=false
+- Prop: focus:int=25, break:int=5, auto:bool=true, sessions:int=0, saveUrl:string='', csrf:?string='', storageKey:string='dl-pomodoro', compact:bool=false
 
 ## `<x-dl::print-doc>`
 Cetakan dokumen transaksi (user 2026-10-01): A5 landscape untuk 1-5 baris, A4 portrait di atas itu, satu tata letak.

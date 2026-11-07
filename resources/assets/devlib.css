@@ -3213,6 +3213,24 @@ html[data-motion=off] .dl-pomo__bar{transition:none}
 .dl-pomo--compact .dl-pomo__clock{font-size:calc(26px * var(--dl-font-scale))}
 .dl-pomo--compact .dl-pomo__ring{width:60px;height:60px}
 .dl-pomo--compact .dl-pomo__play{inset:11px}
+/* x-dl::alarm-list: baris alarm (jam besar, label + hari, saklar, hapus) dan form Tambah; hanya token */
+.dl-alarm{display:grid;gap:14px;max-width:560px}
+.dl-alarm__list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.dl-alarm__row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:14px;align-items:center;padding:10px 14px;background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius-lg)}
+.dl-alarm__row.is-off .dl-alarm__time,.dl-alarm__row.is-off .dl-alarm__meta{color:var(--dl-disabled)}
+.dl-alarm__time{font-size:calc(26px * var(--dl-font-scale));font-variant-numeric:tabular-nums;color:var(--dl-ink-strong)}
+.dl-alarm__meta{font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink);overflow-wrap:anywhere}
+.dl-alarm__del{border:0;background:transparent;color:var(--dl-danger);cursor:pointer;padding:6px 8px;border-radius:var(--dl-radius)}
+.dl-alarm__del:hover{background:var(--dl-danger-soft)}
+.dl-alarm__empty{margin:0;color:var(--dl-ink)}
+.dl-alarm__add{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.dl-alarm__add input[type=time],.dl-alarm__add input[type=text]{border:1px solid var(--dl-border);border-radius:var(--dl-radius);padding:7px 10px;background:var(--dl-surface);color:var(--dl-ink);font:inherit}
+.dl-alarm__days{display:flex;gap:4px;border:0;margin:0;padding:0}
+.dl-alarm__days label{cursor:pointer}
+.dl-alarm__days input{position:absolute;opacity:0}
+.dl-alarm__days span{display:block;padding:5px 8px;border:1px solid var(--dl-border);border-radius:var(--dl-radius);font-size:calc(12px * var(--dl-font-scale))}
+.dl-alarm__days input:checked + span{background:var(--dl-accent);color:var(--dl-on-accent);border-color:transparent}
+.dl-alarm__days input:focus-visible + span{outline:2px solid var(--dl-accent);outline-offset:2px}
 /* Dokumen terstruktur x-dl::doc-sections (mis. Job Description): baris ringkas (atasan, bawahan) di atas, lalu bagian bertajuk dengan paragraf dan daftar bernomor. */
 .dl-docsec{font-size:calc(14px * var(--dl-font-scale));line-height:1.65;color:var(--dl-ink)}
 .dl-docsec__plain{margin:0;white-space:pre-line}
