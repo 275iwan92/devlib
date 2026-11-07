@@ -51,7 +51,7 @@ Slots:
 |---|---|---|
 | `key` | string | Field name in the row (also the posted key). A formula may use only these names. |
 | `label` | string | Heading (translated); red `*` when `required`. |
-| `type` | `text` (default), `number`, `money`, `select`, `lookup`, `date`, `display`, `primary`, `bool` | See the cell types below. |
+| `type` | `text` (default), `number`, `money`, `select`, `lookup`, `date`, `display`, `primary`, `bool`, `tolerance` | See the cell types below. |
 | `required` | `false` | Must be filled in every filled row; Save (or row Save with `row-state`) marks empty cells (`is-invalid`). |
 | `width` | CSS width | Width and min-width of the heading cell. |
 | `placeholder` | string | Placeholder of text/number inputs. |
@@ -78,6 +78,7 @@ Cell types:
 | `display` | read-only text (value supplied by the server) | whatever the row has |
 | `primary` | button; exactly one row is true (the first row becomes Primary automatically; deleting the Primary row moves it to the first remaining row) | boolean |
 | `bool` | Yes/No toggle button | boolean |
+| `tolerance` | the same control as `x-dl::field.tolerance` in the cell: [direction ▾][ number ][unit ▾]. Column keys: `key` = number, `dirKey` = direction, `unitKey` = unit; `dirs` / `units` = code => symbol maps. Read-only shows e.g. `± 5 %` | three values per row: `<key>` (canonical number), `<dirKey>`, `<unitKey>` |
 
 ### Totals
 

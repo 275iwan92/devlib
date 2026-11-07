@@ -46,6 +46,8 @@
         this.refresh();
       });
       this.el.addEventListener('change', e => { if (e.target.matches('[data-l-tx], [data-l-hpp], [data-l-alloc]')) this.refresh(); });
+      // Kolom tolerance: arah dan satuan = <select data-l-tolsel> yang menulis ke kunci barisnya sendiri (dirKey / unitKey).
+      this.el.addEventListener('change', e => { if (e.target.matches('[data-l-tolsel]')) this.rowOf(e.target)[e.target.dataset.k] = e.target.value; });
       // Ganti mata uang di header (tab Finance) -> simbol & terbilang di footer ikut.
       const cf = (this.cfg.totals && this.cfg.totals.currencyField) || 'currency';
       (this.el.closest('form') || document).addEventListener('change', e => { if (e.target.name === cf) this.refresh(); });
@@ -180,7 +182,7 @@
     }
 
     num(c) {
-      return ['number', 'money'].includes(c.type) || !!c.fn;
+      return ['number', 'money', 'tolerance'].includes(c.type) || !!c.fn;
     }
 
     show(c, v) {
@@ -205,14 +207,25 @@
         const on = !!v, [yes, no] = c.labels || (c.type === 'primary' ? [T('l_primary'), T('l_pick')] : [T('l_yes'), T('l_no')]);
         return `<td class="dl-lines__pick"><button type="button" class="dl-btn dl-btn--sm ${on ? 'dl-btn--primary' : 'dl-btn--secondary'}" data-l-${c.type}="${esc(c.key)}" ${frozen ? 'disabled' : ''}>${esc(on ? yes : no)}</button></td>`;
       }
-      if (c.fn || c.landed || c.type === 'display' || frozen) return `<td class="${this.num(c) ? 'num' : ''} dl-lines__ro" data-k="${esc(c.key)}">${esc(c.type === 'lookup' ? (r[c.key + '_label'] ?? v) : this.show(c, v))}</td>`;
+      if (c.fn || c.landed || c.type === 'display' || frozen) return `<td class="${this.num(c) ? 'num' : ''} dl-lines__ro" data-k="${esc(c.key)}">${esc(c.type === 'lookup' ? (r[c.key + '_label'] ?? v) : c.type === 'tolerance' ? this.tolText(c, r) : this.show(c, v))}</td>`;
       switch (c.type) {
         case 'select': return `<td${req}><select class="dl-lines__in" data-k="${esc(c.key)}"><option value=""></option>${Object.entries(c.options || {}).map(([k, l]) => `<option value="${esc(k)}" ${String(k) === String(v) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></td>`;
+        case 'tolerance': {
+          // Sama dengan x-dl::field.tolerance: [arah ▾][ angka ][satuan ▾]; angka di data-k = c.key, arah di c.dirKey, satuan di c.unitKey.
+          const sel = (k, o) => `<span class="dl-tol__sw"><select class="dl-tol__sel" data-k="${esc(k)}" data-l-tolsel>${Object.entries(o || {}).map(([a, l]) => `<option value="${esc(a)}" ${String(a) === String(r[k] ?? '') ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></span>`;
+          return `<td${req}><div class="dl-field__box dl-tol">${sel(c.dirKey, c.dirs)}<input type="text" inputmode="decimal" class="dl-lines__in dl-lines__num dl-tol__num" data-k="${esc(c.key)}" value="${esc(this.show(c, v))}"${ph}>${sel(c.unitKey, c.units)}</div></td>`;
+        }
         case 'date': return `<td${req}><input type="date" class="dl-lines__in" data-k="${esc(c.key)}" value="${esc(v)}"></td>`;
         case 'number': case 'money': return `<td class="num"${req}><input type="text" inputmode="decimal" class="dl-lines__in dl-lines__num" data-k="${esc(c.key)}" value="${esc(this.show(c, v))}"${ph}${lock}></td>`;
         case 'lookup': return `<td${req} class="dl-lines__lk"><input type="text" class="dl-lines__in" data-k="${esc(c.key)}" data-lk value="${esc(r[c.key + '_label'] ?? '')}" placeholder="${esc(T('l_search'))}" autocomplete="off"><i class="fa-solid fa-magnifying-glass"></i></td>`;
         default: return `<td${req} class="dl-lines__txt"><input type="text" class="dl-lines__in" data-k="${esc(c.key)}" value="${esc(v)}"${ph}${lock}><button type="button" class="dl-lines__case" data-l-case tabindex="-1" title="${esc(T('case_tip'))}">aa</button></td>`;
       }
+    }
+
+    // Teks baca-saja kolom tolerance: '± 5 %' (kosong bila angka kosong).
+    tolText(c, r) {
+      const v = r[c.key] ?? '';
+      return v === '' ? '' : [(c.dirs || {})[r[c.dirKey]], fmt.num(+v, 3), (c.units || {})[r[c.unitKey]]].filter(x => x != null).join(' ');
     }
 
     // Kolom kunci diam saat tabel digeser ke samping (freeze panes): # + kolom pertama di kiri, kolom rumus terakhir + aksi di kanan.
