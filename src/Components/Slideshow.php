@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Slideshow gambar dalam jendela modal: satu gambar besar + keterangan, tombol Sebelumnya / Berikutnya, titik penunjuk, panah papan ketik. Untuk panduan langkah demi langkah berupa tangkapan layar.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop (alamat gambar di public/ proyek), tanpa tabel/model proyek.
- * Input        : id, title, items [['src','caption','alt']], size, open.
+ * Input        : id, title, items [['src','caption','alt']], size, open, moreUrl, moreLabel.
  * Output       : Markup Blade inline (render() kelas ini) + perilaku resources/assets/js/components/slideshow.js.
  * Dipakai oleh : katalog modal-drawer (demo slideshow); proyek pewaris (tombol Guide di form dan grid).
  * Status       : Aktif (DevLib).
@@ -22,6 +22,9 @@ class Slideshow extends DevlibComponent
         public array $items = [],
         public string $size = 'xl',
         public bool $open = false,
+        // moreUrl: tautan ke panduan lengkap (User's Guide) di bawah gambar, dibuka di tab baru; kosong = tanpa tautan.
+        public ?string $moreUrl = null,
+        public string $moreLabel = 'Full guide',
     ) {}
 
     public function tag(): string
@@ -42,6 +45,7 @@ class Slideshow extends DevlibComponent
                     <div class="dl-modal__head"><h3><i class="fa-solid fa-images"></i> {{ \Devlib\Lang::text($title ?? 'Guide') }}</h3><span class="dl-slides__n" data-sl-n></span><button type="button" class="dl-modal__x" data-dl-close-modal aria-label="{{ \Devlib\Lang::text('Close') }}">&times;</button></div>
                     <div class="dl-modal__body">
                         <figure class="dl-slides__fig"><img data-sl-img alt=""><figcaption data-sl-cap></figcaption></figure>
+                        @if ($moreUrl)<div class="dl-slides__more"><x-dl::button variant="link" icon="fa-book-open-reader" :label="\Devlib\Lang::text($moreLabel)" :href="$moreUrl" target="_blank" /></div>@endif
                     </div>
                     <div class="dl-modal__foot dl-slides__foot">
                         <x-dl::button variant="secondary" size="sm" icon="fa-chevron-left" :label="\Devlib\Lang::t('g_prev')" data-sl-prev />

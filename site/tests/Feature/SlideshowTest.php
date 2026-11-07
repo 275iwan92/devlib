@@ -57,6 +57,15 @@ class SlideshowTest extends TestCase
         $this->assertStringNotContainsString('data-dl-open="s1"', $plain, 'tanpa prop guide toolbar tidak berubah');
     }
 
+    public function test_more_url_adds_a_link_to_the_full_guide(): void
+    {
+        $with = $this->show('more-url="/guides?doc=7" more-label="Full guide"');
+
+        $this->assertStringContainsString('href="/guides?doc=7"', $with);
+        $this->assertStringContainsString('target="_blank"', $with);
+        $this->assertStringNotContainsString('dl-slides__more', $this->show(), 'tanpa moreUrl tidak ada tautan');
+    }
+
     public function test_css_uses_tokens_only(): void
     {
         $css = file_get_contents(dirname(__DIR__, 3).'/resources/assets/devlib.css');

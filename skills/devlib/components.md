@@ -806,7 +806,7 @@ Kerangka abu-abu berdenyut selama data dimuat. type: text | table | card | form.
 ## `<x-dl::slideshow>`
 Slideshow gambar dalam jendela modal: satu gambar besar + keterangan, tombol Sebelumnya / Berikutnya, titik penunjuk, panah papan ketik. Untuk panduan langkah demi langkah berupa tangkapan layar.
 - Berkas: `src/Components/Slideshow.php`
-- Prop: id:string='slideshow', title:?string=NULL, items:array=[], size:string='xl', open:bool=false
+- Prop: id:string='slideshow', title:?string=NULL, items:array=[], size:string='xl', open:bool=false, moreUrl:?string=NULL, moreLabel:string='Full guide'
 
 ## `<x-dl::spinner>`
 Tanda sedang memproses. overlay=true menutupi induknya (mis. kartu/grid) selama proses.

@@ -20,7 +20,7 @@ Extra attributes (`class`, `id`, `data-*`) go on the root; `can="module.action"`
 
 ## Props
 
-Constructor of `Devlib\Components\Slideshow` (5 props).
+Constructor of `Devlib\Components\Slideshow` (7 props).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -29,6 +29,8 @@ Constructor of `Devlib\Components\Slideshow` (5 props).
 | `items` | `array`, `[]` | The slides: `[['src' => '/guide/a/01.png', 'caption' => 'Press Deactivate', 'alt' => '...'], ...]`. `alt` empty = the caption. An empty array shows an empty window. |
 | `size` | `string`, `'xl'` | Modal width class: `sm`, `md`, `lg` or `xl`. |
 | `open` | `bool`, `false` | Open when the page loads (rare; normally a button opens it). |
+| `moreUrl` | `?string`, `null` | Address of the full written guide. When set, a link button (book icon) under the picture opens it in a new tab; empty = no link. |
+| `moreLabel` | `string`, `'Full guide'` | Text of that link (translated through the dictionary). |
 
 ## Behavior
 
@@ -36,6 +38,7 @@ Constructor of `Devlib\Components\Slideshow` (5 props).
 - Previous is disabled on the first slide and Next on the last; the counter in the head shows `3 / 11`.
 - Keyboard: left and right arrow keys move between slides while the window is open; Esc and a click outside close it (the library modal rules).
 - Each dot jumps to its slide; the current dot is accent coloured.
+- With `moreUrl` the link stays under the picture on every slide and opens in a new tab (`target="_blank"`).
 
 ## Data and events
 
