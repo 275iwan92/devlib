@@ -374,7 +374,8 @@ abstract class Document
         $out = array_map(fn ($r) => [self::t($r[0]), self::t($r[1] ?? ''), null], $this->receivers);
         $out[] = $slot('approve', $d['approvedBy'] ?? $names['approve'] ?? null);
         $out[] = $slot('know', $d['knownBy'] ?? $names['know'] ?? null);
-        $out[] = $slot('make', $d['printedBy'] ?? null);
+        // Pembuat: madeBy / madeAt (nama pembuat dokumen + waktu dibuat, tercetak kecil di bawah nama) bila aplikasi mengisinya; selain itu pencetak.
+        $out[] = $slot('make', $d['madeBy'] ?? $d['printedBy'] ?? null) + [3 => isset($d['madeAt']) ? Locale::stamp($d['madeAt']) : null];
 
         return array_values(array_filter($out, fn (array $s) => $s[0] !== ''));
     }

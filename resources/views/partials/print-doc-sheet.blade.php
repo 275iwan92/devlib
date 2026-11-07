@@ -56,7 +56,7 @@
             <div class="dl-pdoc__tot">@foreach ($totals['lines'] as $l)<div @class(['is-grand' => $l[2]])><span>{{ $l[0] }}</span><b>{{ $l[1] }}</b></div>@endforeach</div>
         </div>
         <div class="dl-pdoc__sign" style="grid-template-columns:repeat({{ count($sign) }},1fr)">
-            @foreach ($sign as $s)<div><span>{{ $s[0] }}</span><small>{{ $s[1] }}</small><i></i><b>(@if ($s[2])<u class="is-name">{{ $s[2] }}</u>@else<u></u>@endif)</b></div>@endforeach
+            @foreach ($sign as $s)<div><span>{{ $s[0] }}</span><small>{{ $s[1] }}</small><i></i><b>(@if ($s[2])<u class="is-name">{{ $s[2] }}</u>@else<u></u>@endif)</b>@if (! empty($s[3]))<em class="dl-pdoc__at">{{ $s[3] }}</em>@endif</div>@endforeach
         </div>
     @endif
 

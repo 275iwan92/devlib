@@ -3016,6 +3016,7 @@ a.dl-ycal__d:hover{background:var(--dl-hover);outline:1px solid var(--dl-accent)
 .dl-pdoc__sign>div>i{display:block;height:7mm}
 .is-a4 .dl-pdoc__sign>div>i{height:14mm}
 .dl-pdoc__sign b{display:block;font-weight:400;font-size:9pt;white-space:nowrap}
+.dl-pdoc__sign em.dl-pdoc__at{display:block;font-style:normal;font-size:6.5pt;margin-top:.5mm;white-space:nowrap}
 .dl-pdoc__sign u{display:inline-block;width:27mm;border-bottom:.2mm dotted #333;text-decoration:none;margin:0 .6mm}
 .dl-pdoc__sign u.is-name{border-bottom-style:solid;width:auto;min-width:27mm;padding:0 1mm}
 /* 7. Kaki */
