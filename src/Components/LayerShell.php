@@ -26,6 +26,8 @@ use Devlib\Lang;
 //   ]],
 // ]
 // Grup (ITEM ber-'items') boleh membawa 'open' = url halaman pembuka grup: klik grup turun satu layer DAN membuka halaman itu sebagai tab.
+// Modul dan grup boleh membawa 'hub' = url halaman node itu: judul layernya (mis. "Sales" di atas daftar grupnya) jadi bisa diklik dan membuka halaman itu
+// sebagai tab (tab-nya = 'code' node). Beda dengan 'open': hub tidak membuka apa pun saat masuk layer; tampilan judul tidak berubah (hanya kursor tangan).
 // ITEM = ['code', 'label', 'url', 'type' => form|grid|report, 'icon'?, 'badge'?, 'badgeTone'?]
 // $chat = ['me', 'people', 'convos', 'api'] -> Chat (x-dl::chat, versi ringkas); 'api' kosong = pratinjau tanpa server.
 // $open = code item yang dibuka sebagai tab saat mulai (bila tidak ada tab yang dipulihkan dari sesi browser).
@@ -104,6 +106,7 @@ class LayerShell extends DevlibComponent
                 // 'open' = url halaman pembuka grup (opsional); grup ber-open perlu key (kode) untuk tab-nya.
                 return array_filter(['label' => $it['label'], 'icon' => $it['icon'] ?? null, 'group' => $it['group'] ?? $group,
                     'open' => $it['open'] ?? null, 'key' => isset($it['open']) ? ($it['code'] ?? null) : null,
+                    'hub' => $it['hub'] ?? null, 'hubKey' => isset($it['hub']) ? ($it['code'] ?? null) : null,
                     'items' => array_map(fn ($c) => $leaf($c, null), $it['items'])]);
             }
 
@@ -115,7 +118,8 @@ class LayerShell extends DevlibComponent
 
         // Grup menu = submenu (dibuka ke panel berikutnya, ada breadcrumb), bukan judul + daftar panjang (user 2026-09-26).
         // 'section' (opsional) pada modul = judul kelompok di layer akar: modul berurutan dengan section sama tampil di bawah satu judul.
-        return array_map(fn ($m) => ['label' => $m['label'], 'icon' => $m['icon'] ?? null, 'pin' => $m['pin'] ?? null, 'group' => $m['section'] ?? null, 'items' => collect($m['children'] ?? [])
+        return array_map(fn ($m) => ['label' => $m['label'], 'icon' => $m['icon'] ?? null, 'pin' => $m['pin'] ?? null, 'group' => $m['section'] ?? null,
+            'hub' => $m['hub'] ?? null, 'hubKey' => isset($m['hub']) ? ($m['code'] ?? null) : null, 'items' => collect($m['children'] ?? [])
             ->map(fn ($c) => $leaf(isset($c['items']) ? $c + ['icon' => 'fa-solid fa-folder'] : $c, null))
             ->values()->all()], $this->modules);
     }

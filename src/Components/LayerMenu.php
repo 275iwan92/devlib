@@ -29,6 +29,7 @@ use Devlib\Icon;
 //                 Kosong = judul tetap teks biasa. x-dl::layer-shell memakai 'accordion' otomatis bila ada modul ber-`section`.
 //   home        = logo + nama aplikasi bisa diklik -> event dl:layer-menu-action {key:'home'} (user 2026-10-02). Di
 //                 x-dl::layer-shell: semua tab ditutup dan opening screen tampil (Shell::goHome); posisi menu tetap.
+// Cabang boleh membawa `hub` (url) + `hubKey` (kunci tab): judul layer di atas daftar anaknya jadi bisa diklik -> event dl:layer-menu-open (halaman cabang terbuka, panel tidak bergeser).
 // items: [['label','icon'?,'key'?,'url'?,'badge'?,'tone'?,'group'?,'pin'? (akar saja: baris menempel di dasar panel, dekat baris pengguna),'items' => [ITEM..]]] — `group` = judul kelompok
 // di layer itu (item berurutan dengan group sama tampil di bawah satu judul). Tanpa `items` = layar akhir.
 // Klik layar akhir -> event dl:layer-menu {key,label,url,path} (cancelable). Posisi layer terakhir diingat per browser.
@@ -81,7 +82,7 @@ class LayerMenu extends DevlibComponent
     {
         return array_map(function ($it) {
             $n = ['label' => $it['label'], 'icon' => $this->fa($it['icon'] ?? 'fa-circle-dot')];
-            foreach (['key', 'url', 'open', 'badge', 'tone', 'group', 'pin'] as $k) {
+            foreach (['key', 'url', 'open', 'hub', 'hubKey', 'badge', 'tone', 'group', 'pin'] as $k) {
                 if (isset($it[$k])) {
                     $n[$k] = $it[$k];
                 }

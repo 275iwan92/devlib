@@ -2686,6 +2686,9 @@ html.dl-locked body{overflow:hidden}
 .dl-lm__badge--icon.is-muted{color:var(--dl-disabled)}.dl-lm__a:has(.dl-lm__badge.is-muted) .dl-lm__t{opacity:.55;font-style:italic}
 .dl-lm__badge.is-danger{background:var(--dl-danger)}.dl-lm__badge.is-warn{background:var(--dl-amber-2)}.dl-lm__badge.is-success{background:var(--dl-green)}
 .dl-lm__title{display:flex;align-items:center;gap:10px;padding:8px 10px 10px;margin-bottom:4px;border-bottom:1px solid var(--dl-side-hover);color:var(--dl-side-hot,var(--dl-white));font-size:calc(15px * var(--dl-font-scale))}
+.dl-lm__title.is-hub{cursor:pointer;transition:transform .18s ease}.dl-lm__title.is-hub i{transition:transform .18s ease}
+.dl-lm__title.is-hub:hover{transform:translateX(3px)}.dl-lm__title.is-hub:hover i{transform:scale(1.18)}
+@media (prefers-reduced-motion:reduce){.dl-lm__title.is-hub,.dl-lm__title.is-hub i{transition:none}.dl-lm__title.is-hub:hover,.dl-lm__title.is-hub:hover i{transform:none}}
 .dl-lm__title i{color:var(--dl-accent-ink);font-size:1.1em}
 .dl-lm__title b{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dl-lm__sep{height:1px;background:var(--dl-border);margin:4px 2px}
