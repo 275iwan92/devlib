@@ -226,7 +226,7 @@
     // Klik judul layer (node jalur yang punya hub): panel kanan membuka halaman node itu, menu kiri tidak bergeser.
     hub(t) {
       const p = this.path[[...this.track.children].indexOf(t.closest('.dl-lm__pane')) - 1];
-      if (p) this.emit('dl:layer-menu-open', {key: p.hubKey || p.key || p.label, label: p.label, url: p.hub, icon: p.icon}, true);
+      if (p) this.emit('dl:layer-menu-open', {key: p.hubKey || p.key || p.label, label: p.hubLabel || p.label, url: p.hub, icon: p.icon}, true);
     }
 
     click(e, t) {
