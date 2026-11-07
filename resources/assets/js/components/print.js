@@ -138,6 +138,7 @@
 
     sheet() {
       const s = document.createElement('section'); s.className = 'dl-print__sheet';
+      if (this.el.dataset.watermark) s.dataset.wm = this.el.dataset.watermark;   // cap air (prop watermark): digambar CSS ::before dari atribut ini
       s.innerHTML = `<div class="dl-print__inner">${this.tpl('head')}<div data-p-body></div>${this.tpl('foot')}</div>`;
       const ppn = this.el.dataset.ppn === '1';
       $$(s, '[data-p-kop]').forEach(k => { k.hidden = (k.dataset.pKop === '1') !== (ppn && this.cfg.hasPpnKop); });

@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Dokumen cetak (nota_co_mockup, nota_pv_spb, printnotastandard). Layar cukup deklarasi isi dokumen.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : title, subtitle, number, date, status, company, companyPpn, ppn, parties, columns, … (23 prop).
+ * Input        : title, subtitle, number, date, status, company, companyPpn, ppn, parties, columns, … (watermark = cap air DRAFT/CANCELLED).
  * Output       : Markup dari resources/views/components/print-out.blade.php.
  * Dipakai oleh : print-co, print-spb (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -53,6 +53,8 @@ class PrintOut extends DevlibComponent
         public ?string $source = null,
         // true = di layar phone (konteks body.dl-on-phone / .dl-phone) lembar cetak yang diperkecil diganti daftar baca berupa kartu dari data yang sama; saat dicetak lembar tetap dipakai. Bawaan false = perilaku lama.
         public bool $phoneList = false,
+        // Cap air diagonal besar di belakang isi tiap lembar (mis. 'DRAFT', 'CANCELLED'); teks apa adanya (tombol/status tetap English), warna token --dl-pr-neg. null = tanpa cap air (dokumen Confirmed).
+        public ?string $watermark = null,
     ) {}
 
     public function tag(): string
