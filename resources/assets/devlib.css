@@ -3171,12 +3171,48 @@ html[data-motion="off"] .dl-dash__fx{display:none}
 .dl-setup__col select,.dl-setup__col input[type=range]{width:100%}
 .dl-setup__col[hidden]{display:none}
 .dl-setup__note{margin:0;font-size:calc(12px * var(--dl-font-scale));color:var(--dl-muted)}
+.dl-setup__sound{display:grid;grid-template-columns:minmax(0,1fr) 110px auto;gap:10px;align-items:center}
+.dl-setup__sound .dl-setup__row{min-width:0}
 .dl-setup__seg{display:flex;gap:6px;flex-wrap:wrap}
 .dl-setup__seg label{cursor:pointer}
 .dl-setup__seg input{position:absolute;opacity:0}
 .dl-setup__seg span{display:block;padding:7px 12px;border:1px solid var(--dl-border);border-radius:var(--dl-radius);font-size:calc(13px * var(--dl-font-scale))}
 .dl-setup__seg input:checked + span{background:var(--dl-accent);color:var(--dl-on-accent);border-color:transparent}
 .dl-setup__seg input:focus-visible + span{outline:2px solid var(--dl-accent);outline-offset:2px}
+/* x-dl::pomodoro: kartu gelap (token latar gelap + teks terang), cincin Focus oranye / Break hijau, tombol Play bulat di tengah cincin */
+.dl-pomo{--c:var(--dl-tangerine);display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:var(--dl-navy);color:var(--dl-on-dark);border-radius:var(--dl-radius-xl);padding:16px 20px;width:max-content;max-width:100%;box-sizing:border-box}
+.dl-pomo[data-phase=break]{--c:var(--dl-green)}
+.dl-pomo__ring{position:relative;width:76px;height:76px;flex:none}
+.dl-pomo__ring svg{width:100%;height:100%}
+.dl-pomo .dl-ring__track{stroke:var(--dl-side-2)}
+.dl-pomo__bar{transition:stroke-dashoffset 1s linear}
+html[data-motion=off] .dl-pomo__bar{transition:none}
+.dl-pomo__play{position:absolute;inset:14px;border:0;border-radius:50%;background:var(--dl-on-dark);color:var(--dl-navy);cursor:pointer;font-size:calc(16px * var(--dl-font-scale));display:flex;align-items:center;justify-content:center}
+.dl-pomo__play:hover{background:var(--dl-on-dark-muted)}
+.dl-pomo__main{display:flex;flex-direction:column;gap:10px;min-width:0}
+.dl-pomo__time{display:flex;align-items:center;gap:12px}
+.dl-pomo__clock{font-size:calc(34px * var(--dl-font-scale));font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.dl-pomo__step{border:1px solid var(--dl-side-scroll);background:transparent;color:var(--dl-on-dark);border-radius:50%;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.dl-pomo__step:hover:not(:disabled){background:var(--dl-side-hover)}
+.dl-pomo__step:disabled{color:var(--dl-disabled);cursor:default}
+.dl-pomo__row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:calc(13px * var(--dl-font-scale))}
+.dl-pomo__seg{display:flex;gap:4px}
+.dl-pomo__seg label{cursor:pointer}
+.dl-pomo__seg input{position:absolute;opacity:0}
+.dl-pomo__seg span{display:block;padding:4px 12px;border-radius:var(--dl-radius);border:1px solid var(--dl-side-scroll)}
+.dl-pomo__seg input:checked + span{background:var(--dl-on-dark);color:var(--dl-navy);border-color:transparent;font-weight:700}
+.dl-pomo__seg input:focus-visible + span,.dl-pomo__play:focus-visible,.dl-pomo__step:focus-visible,.dl-pomo__menu summary:focus-visible{outline:2px solid var(--dl-on-dark-link);outline-offset:2px}
+.dl-pomo__menu{position:relative}
+.dl-pomo__menu summary{list-style:none;cursor:pointer;padding:4px 8px;border-radius:var(--dl-radius)}
+.dl-pomo__menu summary::-webkit-details-marker{display:none}
+.dl-pomo__menu summary:hover{background:var(--dl-side-hover)}
+.dl-pomo__pop{position:absolute;right:0;top:100%;z-index:5;display:grid;gap:8px;min-width:210px;padding:10px 12px;background:var(--dl-navy-2);border-radius:var(--dl-radius-md);box-shadow:var(--dl-shadow-pop)}
+.dl-pomo__pop button{background:transparent;border:0;color:var(--dl-on-dark);text-align:left;padding:2px 0;cursor:pointer;font:inherit}
+.dl-pomo__pop label{display:flex;gap:8px;align-items:center;cursor:pointer}
+.dl-pomo--compact{padding:12px 14px;gap:12px}
+.dl-pomo--compact .dl-pomo__clock{font-size:calc(26px * var(--dl-font-scale))}
+.dl-pomo--compact .dl-pomo__ring{width:60px;height:60px}
+.dl-pomo--compact .dl-pomo__play{inset:11px}
 /* Dokumen terstruktur x-dl::doc-sections (mis. Job Description): baris ringkas (atasan, bawahan) di atas, lalu bagian bertajuk dengan paragraf dan daftar bernomor. */
 .dl-docsec{font-size:calc(14px * var(--dl-font-scale));line-height:1.65;color:var(--dl-ink)}
 .dl-docsec__plain{margin:0;white-space:pre-line}

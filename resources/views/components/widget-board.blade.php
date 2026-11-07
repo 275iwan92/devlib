@@ -75,6 +75,9 @@
                             <x-dl::empty-state title="No data in this period" icon="fa-chart-column" />
                         </x-dl::card>
                     @endif
+                @elseif ($w['type'] === 'pomodoro')
+                    <x-dl::pomodoro compact :focus="$data['focus'] ?? 25" :break="$data['break'] ?? 5" :auto="$data['auto'] ?? true" :sessions="$data['sessions'] ?? 0"
+                        :save-url="$data['save_url'] ?? ''" :csrf="$data['csrf'] ?? ''" :storage-key="$data['key'] ?? 'dl-pomodoro'" />
                 @elseif ($w['type'] === 'quote')
                     <div class="dl-dash__quote">
                         <div class="dl-quote"><div class="qi">&#8220;</div><div class="q">{{ $data['text'] ?? '—' }}</div>@if (! empty($data['author']))<div class="a">{{ $data['author'] }}</div>@endif</div>
@@ -166,7 +169,7 @@
                             <input type="checkbox" data-wb-toggle="{{ $c['key'] }}" @checked($c['installed'])>
                             <span class="dl-wb__caticon"><i class="{{ str_contains($c['icon'] ?? '', ' ') ? $c['icon'] : 'fa-solid '.\Devlib\Icon::fa($c['icon'] ?? 'fa-chart-simple') }}"></i></span>
                             <span class="dl-wb__cattext"><b>{{ Lang::text($c['title']) }}</b><small>{{ Lang::text($c['description'] ?? '') }}</small></span>
-                            @if (! empty($c['type']))<span class="dl-wb__cattype">{{ ['kpi' => 'KPI', 'chart' => 'Chart', 'progress' => 'Target', 'ranking' => 'Ranking', 'list' => 'List', 'quote' => 'Text', 'text' => 'Text'][$c['type']] ?? $c['type'] }}</span>@endif
+                            @if (! empty($c['type']))<span class="dl-wb__cattype">{{ ['kpi' => 'KPI', 'chart' => 'Chart', 'progress' => 'Target', 'ranking' => 'Ranking', 'list' => 'List', 'quote' => 'Text', 'text' => 'Text', 'pomodoro' => 'Tool'][$c['type']] ?? $c['type'] }}</span>@endif
                         </label>
                     @endforeach
                 </div>

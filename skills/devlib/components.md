@@ -698,6 +698,11 @@ Grid Pivot: data datar -> tabel silang yang bisa diatur user di layar.
 - Berkas: `src/Components/Pivot.php`
 - Prop: rows:array=[], fields:array=[], measures:array=[], rowsBy:array=[], colBy:?string=NULL, value:?string=NULL, agg:string='sum', formats:array=[], title:string='', source:?string=NULL
 
+## `<x-dl::pomodoro>`
+Pewaktu Pomodoro: Focus lalu Break dengan cincin progres, Play/Pause/Reset, durasi dapat diubah (- dan +, 1-90 menit), segmen Focus | Break, penghitung sesi Focus hari ini, pindah otomatis ke Break (opsi), judul tab dan notifikasi browser (opt-in) saat selesai.
+- Berkas: `src/Components/Pomodoro.php`
+- Prop: focus:int=25, break:int=5, auto:bool=true, sessions:int=0, saveUrl:string='', csrf:string='', storageKey:string='dl-pomodoro', compact:bool=false
+
 ## `<x-dl::print-doc>`
 Cetakan dokumen transaksi (user 2026-10-01): A5 landscape untuk 1-5 baris, A4 portrait di atas itu, satu tata letak.
 - Berkas: `src/Components/PrintDoc.php`, tampilan `resources/views/components/print-doc.blade.php`
@@ -784,7 +789,7 @@ Halaman diagnostik layar: lebar x tinggi CSS, DPR, orientasi, tinggi svh/lvh/dvh
 - Prop: title:string='Screen info', note:string=''
 
 ## `<x-dl::setup-media>`
-Dua halaman pengaturan di dialog Setup Layer Menu (bersama Theme dan Language): Music (putar musik latar, volume, pilihan trek) dan Motion (animasi layar: ikuti perangkat / nyala / kurangi gerak). Pola dari proyek admin Jo.
+Tiga halaman pengaturan di dialog Setup Layer Menu (bersama Theme dan Language): Music (putar musik latar, volume, pilihan trek), Motion (animasi layar: ikuti perangkat / nyala / kurangi gerak) dan Sound (dering Pomodoro, alarm, timer, notifikasi, chat, facility: aktif, volume, Test). Pola dari proyek admin Jo.
 - Berkas: `src/Components/SetupMedia.php`
 - Prop: (tanpa prop)
 

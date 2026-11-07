@@ -1,9 +1,11 @@
 ## Overview
 
-`<x-dl::setup-media>` adds two pages to the Setup dialog of the Layer Menu (next to Theme and Language): **Music** and **Screen animation**. Place it in the `profilePages` slot of `x-dl::layer-shell`; the Layer Menu moves both sections into the Setup dialog.
+`<x-dl::setup-media>` adds three pages to the Setup dialog of the Layer Menu (next to Theme and Language): **Music**, **Screen animation** and **Sound**. Place it in the `profilePages` slot of `x-dl::layer-shell`; the Layer Menu moves both sections into the Setup dialog.
 
 - **Music**: a checkbox "Play background music", a volume slider and a track choice (only when the page's `x-dl::music-player` has more than one track). They drive the player on the same page; the checkbox is the same switch as the Play button.
 - **Screen animation**: three choices, "Follow device" (default), "On" and "Reduce motion". The choice is saved on this device (`localStorage['dl-motion']`) and decides whether the greeting box moves (`Devlib.motion`, `<html data-motion="on|off">`, event `dl:motion`).
+
+- **Sound**: one row per sound (Pomodoro, Alarm, Timer, ERP notifications, Chat, Facility alarm) with an on / off checkbox, a volume slider and a Test button. All sounds are OFF by default and are remembered on this device (`localStorage['dl-sound']`). Turning a sound on or pressing Test plays it once, which also lets the browser start sound. Code plays a sound with `Devlib.sound.play('chat' | 'notif' | 'pomodoro' | 'pomodoro_break' | 'alarm' | 'timer' | 'facility')`; it plays only when the user turned that sound on. Tones are soft Web Audio notes, played once, never repeated.
 
 Pick another object when you need the theme (`x-dl::theme-picker`), the language (`x-dl::lang-switch`), or a control that lives next to the music itself (`x-dl::music-player`).
 
@@ -35,7 +37,7 @@ None.
 
 ## Data and events
 
-Reads the player (`element.dlComponent`) and listens to `dl:music` (player state) and `dl:motion` (effective motion). Writes only `localStorage['dl-motion']` (and, through the player, its own key).
+Reads the player (`element.dlComponent`) and listens to `dl:music` (player state) and `dl:motion` (effective motion). Writes only `localStorage['dl-motion']` and `localStorage['dl-sound']` (and, through the player, its own key). `Devlib.sound` fires `dl:sound` (`{kind, on, vol}`) when a choice changes.
 
 ## Rules and pitfalls
 

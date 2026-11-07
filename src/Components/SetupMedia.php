@@ -2,17 +2,17 @@
 
 /*
  * REMARK
- * Tujuan       : Dua halaman pengaturan di dialog Setup Layer Menu (bersama Theme dan Language): Music (putar musik latar, volume, pilihan trek) dan Motion (animasi layar: ikuti perangkat / nyala / kurangi gerak). Pola dari proyek admin Jo.
- * Sumber hulu  : Komponen generik DevLib; mengendalikan x-dl::music-player (event dl:music) dan Devlib.motion (js hero-fx.js), tanpa tabel/model proyek.
+ * Tujuan       : Tiga halaman pengaturan di dialog Setup Layer Menu (bersama Theme dan Language): Music (putar musik latar, volume, pilihan trek), Motion (animasi layar: ikuti perangkat / nyala / kurangi gerak) dan Sound (dering Pomodoro, alarm, timer, notifikasi, chat, facility: aktif, volume, Test). Pola dari proyek admin Jo.
+ * Sumber hulu  : Komponen generik DevLib; mengendalikan x-dl::music-player (event dl:music), Devlib.motion (js hero-fx.js) dan Devlib.sound (js sound.js), tanpa tabel/model proyek.
  * Input        : -
- * Output       : Dua <section data-lm-page data-lm-in="setup"> + js/components/setup-media.js + CSS .dl-setup.
+ * Output       : Tiga <section data-lm-page data-lm-in="setup"> + js/components/setup-media.js + CSS .dl-setup.
  * Dipakai oleh : slot profilePages x-dl::layer-shell (layar proyek).
  * Status       : Aktif (DevLib).
  */
 
 namespace Devlib\Components;
 
-// Halaman Setup untuk musik dan gerak. Tempatkan di slot profilePages x-dl::layer-shell; Layer Menu memindahkan kedua <section> ke dialog Setup.
+// Halaman Setup untuk musik, gerak, dan bunyi. Tempatkan di slot profilePages x-dl::layer-shell; Layer Menu memindahkan ketiga <section> ke dialog Setup.
 // Halaman Music hanya berguna bila halaman memuat x-dl::music-player (daftar trek dan kendali diambil dari pemutar itu); tanpa pemutar, pilihan trek disembunyikan dan saklar tidak berefek.
 class SetupMedia extends DevlibComponent
 {
@@ -23,7 +23,7 @@ class SetupMedia extends DevlibComponent
 
     public function source(): string
     {
-        return 'x-dl::music-player (musik) dan Devlib.motion (gerak); pilihan gerak di localStorage dl-motion';
+        return 'x-dl::music-player (musik), Devlib.motion (gerak, localStorage dl-motion) dan Devlib.sound (bunyi, localStorage dl-sound)';
     }
 
     public function render()
@@ -45,6 +45,18 @@ class SetupMedia extends DevlibComponent
                         <label><input type="radio" name="dl-motion" value="off"><span>{{ \Devlib\Lang::text('Reduce motion') }}</span></label>
                     </div>
                     <p class="dl-setup__note">{{ \Devlib\Lang::text('Affects the movement of the greeting box. "Follow device" uses the reduce-motion setting of the system.') }}</p>
+                </div>
+            </section>
+            <section data-lm-page="sound" data-lm-in="setup" data-label="{{ \Devlib\Lang::text('Sound') }}" data-icon="fa-bell" data-dl-setup-sound>
+                <div class="dl-setup">
+                    @foreach ([['pomodoro', 'Pomodoro'], ['alarm', 'Alarm'], ['timer', 'Timer'], ['notif', 'ERP notifications (bell)'], ['chat', 'Chat'], ['facility', 'Facility alarm']] as [$k, $label])
+                        <div class="dl-setup__sound" data-kind="{{ $k }}">
+                            <label class="dl-setup__row"><input type="checkbox" data-dl-sound-on> <span>{{ \Devlib\Lang::text($label) }}</span></label>
+                            <input type="range" min="0" max="100" step="5" data-dl-sound-vol aria-label="{{ \Devlib\Lang::text('Volume') }}: {{ \Devlib\Lang::text($label) }}">
+                            <button type="button" class="dl-btn dl-btn--ghost" data-dl-sound-test>{{ \Devlib\Lang::text('Test') }}</button>
+                        </div>
+                    @endforeach
+                    <p class="dl-setup__note">{{ \Devlib\Lang::text('Off by default. Each sound is one soft tone, never repeated, and is remembered on this device. Turning a sound on or pressing Test plays it once.') }}</p>
                 </div>
             </section>
             BLADE;

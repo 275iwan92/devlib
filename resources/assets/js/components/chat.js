@@ -73,8 +73,6 @@
         this.realtime(false);
         this.poll();
         this.connect();
-        // Bunyi baru boleh setelah ada sentuhan user di halaman (aturan browser).
-        ['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, () => this.audio()?.resume(), {once: true, capture: true}));
       }
     }
 
@@ -393,25 +391,8 @@
     }
 
     /* ---------------- bunyi ---------------- */
-    audio() {
-      const C = window.AudioContext || window.webkitAudioContext;
-      try { return C ? (Chat.ctx ||= new C()) : null; } catch (e) { return null; }
-    }
-
-    // Dua nada pendek. Bila browser belum mengizinkan bunyi (belum ada sentuhan user), dilewati -- tidak ditumpuk untuk nanti.
-    ring() {
-      const ctx = this.audio(); if (!ctx) return;
-      const asked = Date.now(), play = () => {
-        if (Date.now() - asked > 1500) return;
-        [[880, 0], [1175, .14]].forEach(([hz, at]) => {
-          const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + at;
-          o.type = 'sine'; o.frequency.value = hz;
-          g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.3, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .4);
-          o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + .45);
-        });
-      };
-      ctx.state === 'running' ? play() : ctx.resume().then(play).catch(() => {});
-    }
+    // Dering lewat modul bunyi bersama (Devlib.sound, sound.js): bawaan MATI, diatur pengguna di Setup > Sound.
+    ring() { Devlib.sound?.play('chat'); }
   }
   Devlib.define("Chat", Chat);
 })(window.Devlib);
