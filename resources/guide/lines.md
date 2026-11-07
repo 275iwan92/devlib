@@ -78,7 +78,7 @@ Cell types:
 | `display` | read-only text (value supplied by the server) | whatever the row has |
 | `primary` | button; exactly one row is true (the first row becomes Primary automatically; deleting the Primary row moves it to the first remaining row) | boolean |
 | `bool` | Yes/No toggle button | boolean |
-| `tolerance` | the same control as `x-dl::field.tolerance` in the cell: [direction ▾][ number ][unit ▾]. Column keys: `key` = number, `dirKey` = direction, `unitKey` = unit; `dirs` / `units` = code => symbol maps. Read-only shows e.g. `± 5 %` | three values per row: `<key>` (canonical number), `<dirKey>`, `<unitKey>` |
+| `tolerance` | the same control as `x-dl::field.tolerance` in the cell: [direction ▾][ number ][unit ▾]. Column keys: `key` = number, `dirKey` = direction, `unitKey` = unit; `dirs` / `units` = code => symbol maps, optional `unitRow` = `{CODE: row key}` (the symbol of that unit is taken from that column of the row, e.g. `QTY => 'uom'` shows `RIM`). Read-only shows e.g. `± 5 %` | three values per row: `<key>` (canonical number), `<dirKey>`, `<unitKey>` |
 
 ### Totals
 

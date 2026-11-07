@@ -18,7 +18,7 @@ use Devlib\Lookup;
 // columns: [['key', 'label', 'type' => text|number|money|select|lookup|date|display,
 //            'required', 'width', 'options' (select), 'lookup' => nama Devlib\Lookup (fill -> kolom lain di baris),
 //            'placeholder', 'readonlyUnless' => kolom bool (sel terkunci sampai kolom itu true),
-//            type tolerance = x-dl::field.tolerance di sel ('key' = angka, 'dirKey' = kunci arah, 'unitKey' = kunci satuan, 'dirs' / 'units' = kode => simbol; tiga nilai terkirim name[id][kolom]),
+//            type tolerance = x-dl::field.tolerance di sel ('key' = angka, 'dirKey' = kunci arah, 'unitKey' = kunci satuan, 'dirs' / 'units' = kode => simbol, 'unitRow' = [KODE => kolom baris] simbol satuan dari kolom baris itu; tiga nilai terkirim name[id][kolom]),
 //            type primary = tepat 1 baris true (tier/bahan Utama; 'labels' => [on, off]), type bool = tombol Ya/Tidak,
 //            'formula' => 'qty * price' (hanya nama kolom + angka + - * / ( )), 'sum' => true, 'default']]
 // totals: ['of' => kolom, 'discount' => true|[...], 'ppn' => 11 | 'tax' => [...], 'costs' => ['freight' => 'Ongkos Kirim', ...]]

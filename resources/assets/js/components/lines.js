@@ -212,7 +212,7 @@
         case 'select': return `<td${req}><select class="dl-lines__in" data-k="${esc(c.key)}"><option value=""></option>${Object.entries(c.options || {}).map(([k, l]) => `<option value="${esc(k)}" ${String(k) === String(v) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></td>`;
         case 'tolerance': {
           // Sama dengan x-dl::field.tolerance: [arah ▾][ angka ][satuan ▾]; angka di data-k = c.key, arah di c.dirKey, satuan di c.unitKey.
-          const sel = (k, o) => `<span class="dl-tol__sw"><select class="dl-tol__sel" data-k="${esc(k)}" data-l-tolsel>${Object.entries(o || {}).map(([a, l]) => `<option value="${esc(a)}" ${String(a) === String(r[k] ?? '') ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></span>`;
+          const sel = (k, o) => `<span class="dl-tol__sw"><select class="dl-tol__sel" data-k="${esc(k)}" data-l-tolsel>${Object.entries(o || {}).map(([a, l]) => `<option value="${esc(a)}" ${String(a) === String(r[k] ?? '') ? 'selected' : ''}>${esc(k === c.unitKey ? this.tolUnit(c, r, a, l) : l)}</option>`).join('')}</select></span>`;
           return `<td${req}><div class="dl-field__box dl-tol">${sel(c.dirKey, c.dirs)}<input type="text" inputmode="decimal" class="dl-lines__in dl-lines__num dl-tol__num" data-k="${esc(c.key)}" value="${esc(this.show(c, v))}"${ph}>${sel(c.unitKey, c.units)}</div></td>`;
         }
         case 'date': return `<td${req}><input type="date" class="dl-lines__in" data-k="${esc(c.key)}" value="${esc(v)}"></td>`;
@@ -222,10 +222,16 @@
       }
     }
 
+    // Simbol satuan tolerance; 'unitRow' => {KODE: kolomBaris} memakai isi kolom baris itu (mis. QTY => satuan barang baris: 'RIM') sebagai simbolnya.
+    tolUnit(c, r, code, label) {
+      const k = (c.unitRow || {})[code];
+      return (k && r[k]) || label;
+    }
+
     // Teks baca-saja kolom tolerance: '± 5 %' (kosong bila angka kosong).
     tolText(c, r) {
-      const v = r[c.key] ?? '';
-      return v === '' ? '' : [(c.dirs || {})[r[c.dirKey]], fmt.num(+v, 3), (c.units || {})[r[c.unitKey]]].filter(x => x != null).join(' ');
+      const v = r[c.key] ?? '', u = r[c.unitKey];
+      return v === '' ? '' : [(c.dirs || {})[r[c.dirKey]], fmt.num(+v, 3), this.tolUnit(c, r, u, (c.units || {})[u])].filter(x => x != null).join(' ');
     }
 
     // Kolom kunci diam saat tabel digeser ke samping (freeze panes): # + kolom pertama di kiri, kolom rumus terakhir + aksi di kanan.
