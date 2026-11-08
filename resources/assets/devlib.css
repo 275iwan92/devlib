@@ -780,6 +780,10 @@ body.dl-page-body{overflow:auto;height:auto;min-height:100vh}
 .dl-grid[data-size="lg"] .dl-grid__table th{font-size:calc(13px * var(--dl-font-scale))}
 .dl-grid[data-size="lg"] .dl-avatar-id__txt b{font-size:calc(15px * var(--dl-font-scale))}
 .dl-grid[data-size="lg"] .dl-avatar-id__txt small{font-size:calc(13px * var(--dl-font-scale))}
+/* size lg pada grid mode report (mis. Data from TA Machine): tab status berwarna, huruf tab hitam, angka dalam lencana warna tab (--fb dari tone stat). Hanya report + lg, grid lain tidak berubah. */
+.dl-grid--report[data-size="lg"] .dl-fb{color:var(--dl-ink-strong);font-size:calc(15px * var(--dl-font-scale));padding:10px 12px}
+.dl-grid--report[data-size="lg"] .dl-fb .dl-grid__tabcount{background:color-mix(in srgb,var(--fb) 30%,transparent);color:var(--dl-ink-strong);font-size:calc(13px * var(--dl-font-scale));font-weight:700;padding:1px 8px}
+.dl-grid--report[data-size="lg"] .dl-grid__table .dl-badge{font-size:calc(14px * var(--dl-font-scale));padding:3px 12px}
 .dl-grid[data-size="lg"] .dl-grid__thumb img,.dl-grid[data-size="lg"] .dl-grid__noimg{width:38px;height:38px}
 .dl-grid[data-size="lg"] .dl-grid__imgcell{width:52px}
 .dl-grid[data-size="lg"] .dl-badge{font-size:calc(12.5px * var(--dl-font-scale))}
