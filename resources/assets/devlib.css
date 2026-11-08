@@ -784,6 +784,13 @@ body.dl-page-body{overflow:auto;height:auto;min-height:100vh}
 .dl-grid--report[data-size="lg"] .dl-fb{color:var(--dl-ink-strong);font-size:calc(15px * var(--dl-font-scale));padding:10px 12px}
 .dl-grid--report[data-size="lg"] .dl-fb .dl-grid__tabcount{background:color-mix(in srgb,var(--fb) 30%,transparent);color:var(--dl-ink-strong);font-size:calc(13px * var(--dl-font-scale));font-weight:700;padding:1px 8px}
 .dl-grid--report[data-size="lg"] .dl-grid__table .dl-badge{font-size:calc(14px * var(--dl-font-scale));padding:3px 12px}
+/* size lg + report: judul kolom berwarna aksen (huruf terang, tebal, garis bawah tebal) agar grid bacaan terus-menerus lebih menarik (Jo 2026-11-08). */
+.dl-grid--report[data-size="lg"] .dl-grid__table th{background:var(--dl-accent);color:var(--dl-on-accent);font-size:calc(14px * var(--dl-font-scale));letter-spacing:.02em;border-bottom:3px solid var(--dl-accent-2)}
+.dl-grid--report[data-size="lg"] .dl-grid__table th.is-sortable:hover,.dl-grid--report[data-size="lg"] .dl-grid__table th.is-sorted{color:var(--dl-on-accent)}
+.dl-grid--report[data-size="lg"] .dl-grid__table th i{opacity:.85}
+/* tombol aksi utama besar di barisan x-dl::cols (form berisi satu tombol lg + block): mengisi tinggi kolom, huruf tegas (Data from TA Machine: Process, Jo 2026-11-08). */
+.dl-cols > form:has(> .dl-btn--lg.dl-btn--block){display:flex}
+.dl-cols > form > .dl-btn--lg.dl-btn--block{flex:1;min-height:96px;font-size:calc(22px * var(--dl-font-scale));font-weight:700;letter-spacing:.02em;border-radius:var(--dl-radius-lg)}
 .dl-grid[data-size="lg"] .dl-grid__thumb img,.dl-grid[data-size="lg"] .dl-grid__noimg{width:38px;height:38px}
 .dl-grid[data-size="lg"] .dl-grid__imgcell{width:52px}
 .dl-grid[data-size="lg"] .dl-badge{font-size:calc(12.5px * var(--dl-font-scale))}
