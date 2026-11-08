@@ -4848,3 +4848,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-card--tone .dl-upload{border-color:var(--tc);background:color-mix(in srgb,var(--tc) 8%,var(--dl-surface));padding:10px 8px}
 .dl-card--tone .dl-upload__placeholder{font-size:calc(15.5px * var(--dl-font-scale));color:var(--dl-ink)}
 .dl-card--tone .dl-upload__icon{font-size:calc(22px * var(--dl-font-scale));color:var(--tc)}
+.dl-upload__progress{margin-top:6px;text-align:left;cursor:default}.dl-upload__progress[hidden]{display:none}
+.dl-upload__progress .dl-progress__label{font-size:calc(15px * var(--dl-font-scale));font-weight:600}
+.dl-upload__progress .dl-progress__track{height:12px}
+.dl-upload.is-sending{pointer-events:none}

@@ -13,13 +13,37 @@
       this.initial = this.list.innerHTML;  // daftar berkas tersimpan dari server: kembali ke sini saat reset
       this.el.classList.toggle('has-file', !!this.list.children.length);
       // Terkunci (disabled/readonly, atau dimatikan layar lewat input.disabled) = klik & drop ditolak.
-      this.el.addEventListener('click', e => { if (!this.file.disabled && !e.target.closest('button') && !e.target.closest('.dl-upload__file')) this.file.click(); });
+      this.el.addEventListener('click', e => { if (!this.file.disabled && !e.target.closest('button') && !e.target.closest('.dl-upload__file') && !e.target.closest('.dl-upload__progress')) this.file.click(); });
       this.file.addEventListener('click', e => e.stopPropagation());
       this.file.addEventListener('change', () => { if (this.file.files.length) this.take(this.file.files); });
       this.list.addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (b) { e.stopPropagation(); this.files.splice(+b.dataset.i, 1); this.draw(); } });
       ['dragover', 'dragenter'].forEach(ev => this.el.addEventListener(ev, e => { e.preventDefault(); if (!this.file.disabled) this.el.classList.add('is-drag'); }));
       ['dragleave', 'drop'].forEach(ev => this.el.addEventListener(ev, e => { e.preventDefault(); this.el.classList.remove('is-drag'); }));
       this.el.addEventListener('drop', e => { if (!this.file.disabled && e.dataTransfer.files.length) this.take(e.dataTransfer.files); });
+      if (this.el.hasAttribute('data-progress') && this.el.closest('form')) this.el.closest('form').addEventListener('submit', e => this.send(e));
+    }
+
+    // Prop progress: form dikirim lewat XMLHttpRequest supaya kemajuan unggah terukur (submit biasa tidak bisa).
+    // Jawaban server (halaman hasil redirect, lengkap dengan pesan flash) menggantikan halaman ini lewat document.write;
+    // window.DevlibReady dikosongkan dulu karena boot.js menggantinya dengan objek dan skrip baru mengharapkan antrean (array).
+    // Tanpa berkas dipilih: submit biasa jalan (server yang menolak). Contoh: 1754 KB, terkirim 877 KB = 50%.
+    send(e) {
+      if (!this.files.length || e.defaultPrevented) return;
+      e.preventDefault();
+      const form = e.target, box = $(this.el, '[data-dl-upload-progress]'), bar = $(box, '[data-dl-upload-bar]'), pct = $(box, '[data-dl-upload-pct]'), txt = $(box, '[data-dl-upload-pt]');
+      const lock = form.querySelectorAll('button,[type=submit]'); lock.forEach(b => { b.disabled = true; });
+      box.hidden = false; this.el.classList.add('is-sending');
+      const fail = () => { lock.forEach(b => { b.disabled = false; }); box.hidden = true; this.el.classList.remove('is-sending'); Devlib.toast(box.dataset.failed, 'danger'); };
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', form.action);
+      xhr.upload.onprogress = ev => {
+        const p = ev.lengthComputable ? Math.round(ev.loaded / ev.total * 100) : 0;
+        bar.style.width = p + '%'; pct.textContent = p + '%';
+        if (p >= 100) txt.textContent = box.dataset.processing;  // terkirim semua; server masih membaca berkas
+      };
+      xhr.onerror = fail;
+      xhr.onload = () => { const html = xhr.responseText; history.replaceState(null, '', xhr.responseURL || location.href); window.DevlibReady = undefined; document.open(); document.write(html); document.close(); };
+      xhr.send(new FormData(form));
     }
 
     draw() {

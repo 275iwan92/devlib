@@ -6,7 +6,7 @@ It extends the abstract `Devlib\Components\Field\Field` (label row, error line, 
 
 ### What it is not
 
-- Not an uploader: nothing is sent until the form is submitted. DevLib does no storing, no virus scan, no resizing and no progress bar.
+- Not an uploader: nothing is sent until the form is submitted. DevLib does no storing, no virus scan and no resizing. A progress bar exists only when you set `progress` (see Props).
 - Not a validator: `accept` is only a hint to the file dialog. There is no client-side size, type or count limit. The server decides.
 - Not a gallery or file manager: the box shows the files of this field only, plus (optionally) one already-saved file.
 
@@ -19,6 +19,8 @@ Own props (Blade names are kebab-case; use `:prop="expr"` for anything that is n
 | `accept` | `?string`, `null` | Written to the `accept` attribute of the file input (`image/*`, `application/pdf`, `.xlsx,.csv`). It filters the file dialog only. Files dropped on the box are not checked against it (`take()` never reads it). |
 | `multiple` | `bool`, `false` | Adds `multiple` to the input and makes the posted name an array: `name="foto[]"`. Chosen files are appended to the list (a second selection adds to the first); remove with the button on each row. Single mode keeps only the first file of each selection and replaces the previous one. |
 | `preview` | `bool`, `true` | Adds `data-preview` to the root. New image files (`type` starts with `image/`) show a 36px thumbnail made with `URL.createObjectURL`; other files show a document icon. For an already-saved file (`value`) it renders `<img src=url>` as the thumbnail whatever the type: use `:preview="false"` when the saved file is not an image. |
+
+| `progress` | `bool`, `false` | Shows a progress bar (`x-dl::progress` look: label "Uploading", percent, 12 px track) inside the box while the form is sent. With `progress` the enclosing form is posted by `XMLHttpRequest` (one file at least must be chosen; with no file the normal submit runs). At 100% the label turns to "Processing" until the server answers. The server answer (the page after its redirect, flash and errors included) replaces the current document through `document.write`, and `window.DevlibReady` is cleared first so DevLib boots again. The form buttons are disabled while sending; a network error re-enables them and shows a toast. Only the first form around the box is hooked; the form must be a plain POST form (do not combine with `x-dl::form` dirty or Undo logic that expects a page navigation). |
 
 ### Inherited props
 

@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Unggah file (tarik-lepas / pilih) + pratinjau nama file.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : accept, multiple, preview, name, label, tooltip, hint, error, value, placeholder, … (17 prop).
+ * Input        : accept, multiple, preview, progress (bilah kemajuan saat form dikirim, XHR), name, label, tooltip, hint, error, value, placeholder, … (17 prop).
  * Output       : Markup dari resources/views/components/field/upload.blade.php.
  * Dipakai oleh : field-upload, form-md-po, form-md (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -19,6 +19,7 @@ class Upload extends Field
         public ?string $accept = null,
         public bool $multiple = false,
         public bool $preview = true,
+        public bool $progress = false,
         string $name = '',
         string $label = '',
         ?string $tooltip = null,
