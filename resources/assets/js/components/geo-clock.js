@@ -41,6 +41,7 @@
       this.pos = null;
       this.enable(false);
       this.setMessage(this.t.waiting);
+      if (this.el.hasAttribute('data-demo-static')) return this.measure(0, 0);   // pratinjau statis: tanpa GPS peramban, jarak dari data-demo-distance
       if (!navigator.geolocation) return this.fail(this.t.unsupported);
       navigator.geolocation.getCurrentPosition(
         p => this.measure(p.coords.latitude, p.coords.longitude),

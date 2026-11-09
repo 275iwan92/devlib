@@ -124,6 +124,7 @@ The library ships no route for these URLs. The project provides two endpoints th
 
 ## Rules and pitfalls
 
+- `data-demo-static` (extra attribute, with empty `check-url`): a static preview. The browser is never asked for the GPS position; the distance comes from `data-demo-distance` at once (Jo 2026-11-10: laptop preview of the phone screen). Without it the widget still asks for the position first.
 - Always pass both URLs in a real screen. With an empty `check-url` the widget decides in the browser from `data-demo-distance` (default 80 m, which is inside the default radius), so every user looks "inside".
 - Never trust the page: the server recomputes the distance on `clock-url` and rejects or marks records outside the radius. The buttons being enabled outside the radius is by design (the server decides), not a permission.
 - Load the layout with `x-dl::theme-boot` (CSRF token) and serve over HTTPS.
