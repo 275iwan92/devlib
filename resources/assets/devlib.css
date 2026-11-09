@@ -3339,6 +3339,16 @@ html[data-motion=off] .dl-cd__bar{transition:none}
 .dl-eis__q li{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:8px;align-items:center;color:var(--dl-ink)}
 .dl-eis__q li span{overflow-wrap:anywhere}
 .dl-eis__q li.is-done span{text-decoration:line-through;color:var(--dl-disabled)}
+.dl-eis__q li{display:flex;flex-wrap:wrap}.dl-eis__q li span:not(.dl-eis__dueWrap){flex:1 1 120px}
+.dl-eis__dueWrap{position:relative}
+.dl-eis__dueIn{position:absolute;inset:0;opacity:0;pointer-events:none;width:100%}
+.dl-eis__due{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--dl-border);border-radius:var(--dl-radius);background:var(--dl-surface);color:var(--dl-ink);font:inherit;font-size:calc(12px * var(--dl-font-scale));padding:4px 8px;cursor:pointer;white-space:nowrap}
+.dl-eis__due.is-late{background:var(--dl-danger-soft);border-color:var(--dl-danger-line);color:var(--dl-danger);font-weight:700}
+.dl-eis__due.is-today{background:color-mix(in srgb,var(--dl-amber) 12%,var(--dl-surface));border-color:color-mix(in srgb,var(--dl-amber) 45%,var(--dl-surface));color:color-mix(in srgb,var(--dl-amber) 70%,var(--dl-ink));font-weight:700}
+.dl-eis__bell{border:0;background:transparent;color:var(--dl-disabled);cursor:pointer;padding:6px 8px;border-radius:var(--dl-radius)}
+.dl-eis__bell.is-on{color:color-mix(in srgb,var(--dl-amber) 70%,var(--dl-ink))}
+.dl-eis__bell:disabled{cursor:not-allowed;opacity:.5}
+.dl-eis__q li.is-done .dl-eis__due{text-decoration:line-through}
 .dl-eis__q li select{max-width:130px;font-size:calc(12px * var(--dl-font-scale));padding:4px 6px}
 .dl-eis__q form{display:flex;gap:6px}
 .dl-eis__q form input{flex:1;min-width:0}

@@ -21,6 +21,18 @@ class ToolsListsTest extends TestCase
         }
     }
 
+    public function test_eisenhower_has_due_and_alarm_hooks_and_the_runner_markup(): void
+    {
+        $html = Blade::render('<x-dl::eisenhower :items="$i" storage-key="k1" />', ['i' => [['id' => 'k1', 'text' => 'Report', 'q' => 1, 'done' => false, 'due' => '2026-11-09 14:00', 'alarm' => true]]]);
+        foreach (['data-key="k1"', 'data-l-months', 'data-l-due', 'data-l-alarm', '&quot;due&quot;:&quot;2026-11-09 14:00&quot;'] as $needle) {
+            $this->assertStringContainsString($needle, $html, $needle);
+        }
+        $run = Blade::render('<x-dl::task-alarm-runner :items="$i" storage-key="k1" />', ['i' => [['id' => 'k1', 'text' => 'Report', 'due' => '2026-11-09 14:00', 'alarm' => true]]]);
+        foreach (['hidden', 'data-dl-task-alarm', 'data-key="k1"', '&quot;alarm&quot;:true'] as $needle) {
+            $this->assertStringContainsString($needle, $run, $needle);
+        }
+    }
+
     public function test_sticky_notes_markup_lists_the_five_colors(): void
     {
         $html = Blade::render('<x-dl::sticky-notes :items="$i" />', ['i' => [['id' => 'n1', 'text' => 'Call', 'color' => 'green']]]);

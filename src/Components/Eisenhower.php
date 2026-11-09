@@ -2,9 +2,9 @@
 
 /*
  * REMARK
- * Tujuan       : Daftar tugas bergaya Matriks Eisenhower: empat kuadran (1 Do first = penting dan mendesak, 2 Schedule = penting tidak mendesak, 3 Delegate = mendesak tidak penting, 4 Eliminate = tidak keduanya); tambah tugas per kuadran, centang selesai, pindah kuadran, hapus, bersihkan yang selesai.
+ * Tujuan       : Daftar tugas bergaya Matriks Eisenhower: empat kuadran (1 Do first = penting dan mendesak, 2 Schedule = penting tidak mendesak, 3 Delegate = mendesak tidak penting, 4 Eliminate = tidak keduanya); tambah tugas per kuadran, centang selesai, due date + alarm on/off per tugas, pindah kuadran, hapus, bersihkan yang selesai.
  * Sumber hulu  : Komponen generik DevLib; daftar masuk lewat prop dan disimpan lewat saveUrl (JSON {items}) milik aplikasi.
- * Input        : items, saveUrl, csrf.
+ * Input        : items, saveUrl, csrf, storageKey.
  * Output       : Markup Blade inline (render() kelas ini) + js/components/eisenhower.js + CSS .dl-eis.
  * Dipakai oleh : layar proyek lewat x-dl::eisenhower (menu Tools > Task).
  * Status       : Aktif (DevLib).
@@ -12,7 +12,7 @@
 
 namespace Devlib\Components;
 
-// Matriks Eisenhower. items = [['id', 'text' (max 200), 'q' => 1..4, 'done' => bool]]. Pindah kuadran lewat <select> pada tiap tugas (tanpa seret, jadi bisa dipakai papan ketik).
+// Matriks Eisenhower. items = [['id', 'text' (max 200), 'q' => 1..4, 'done' => bool, 'due' => ?'Y-m-d H:i', 'alarm' => ?bool]]. Due date + alarm per tugas; alarm dibunyikan x-dl::task-alarm-runner. storageKey = salinan daftar di localStorage untuk pembunyi itu. Pindah kuadran lewat <select> pada tiap tugas (tanpa seret, jadi bisa dipakai papan ketik).
 // Seluruh daftar dikirim ke $saveUrl (POST JSON {items}) 300 ms setelah perubahan terakhir; kosong = pratinjau.
 class Eisenhower extends DevlibComponent
 {
@@ -20,6 +20,7 @@ class Eisenhower extends DevlibComponent
         public array $items = [],
         public string $saveUrl = '',
         public ?string $csrf = '',
+        public string $storageKey = '',
     ) {}
 
     public function tag(): string
@@ -35,8 +36,9 @@ class Eisenhower extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class('dl-eis') }} {!! $dl() !!} data-dl-eis data-save="{{ $saveUrl }}" data-csrf="{{ $csrf }}" data-items="{{ json_encode(array_values($items), JSON_UNESCAPED_UNICODE) }}"
+            <div {{ $attributes->class('dl-eis') }} {!! $dl() !!} data-dl-eis data-save="{{ $saveUrl }}" data-csrf="{{ $csrf }}" data-key="{{ $storageKey }}" data-items="{{ json_encode(array_values($items), JSON_UNESCAPED_UNICODE) }}"
                 data-l-q="{{ json_encode([1 => \Devlib\Lang::text('Do first'), 2 => \Devlib\Lang::text('Schedule'), 3 => \Devlib\Lang::text('Delegate'), 4 => \Devlib\Lang::text('Eliminate')], JSON_UNESCAPED_UNICODE) }}"
+                data-l-months="{{ json_encode(array_map(fn ($m) => \Devlib\Lang::text($m), \Devlib\Locale::spec()['months']), JSON_UNESCAPED_UNICODE) }}" data-l-due="{{ \Devlib\Lang::text('Due date') }}" data-l-alarm="{{ \Devlib\Lang::text('Alarm') }}"
                 data-l-delete="{{ \Devlib\Lang::text('Delete') }}" data-l-move="{{ \Devlib\Lang::text('Move to') }}" data-l-failed="{{ \Devlib\Lang::text('Could not save. Try again.') }}">
                 <div class="dl-eis__axis"><span></span><b>{{ \Devlib\Lang::text('Urgent') }}</b><b>{{ \Devlib\Lang::text('Not urgent') }}</b></div>
                 <div class="dl-eis__grid">

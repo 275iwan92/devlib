@@ -229,9 +229,9 @@ Grid Summary -> Detail (drill-down): slot "summary" = grid ringkasan, slot bawaa
 - Prop: link:string='', labelKey:string='name', title:string='Summary'
 
 ## `<x-dl::eisenhower>`
-Daftar tugas bergaya Matriks Eisenhower: empat kuadran (1 Do first = penting dan mendesak, 2 Schedule = penting tidak mendesak, 3 Delegate = mendesak tidak penting, 4 Eliminate = tidak keduanya); tambah tugas per kuadran, centang selesai, pindah kuadran, hapus, bersihkan yang selesai.
+Daftar tugas bergaya Matriks Eisenhower: empat kuadran (1 Do first = penting dan mendesak, 2 Schedule = penting tidak mendesak, 3 Delegate = mendesak tidak penting, 4 Eliminate = tidak keduanya); tambah tugas per kuadran, centang selesai, due date + alarm on/off per tugas, pindah kuadran, hapus, bersihkan yang selesai.
 - Berkas: `src/Components/Eisenhower.php`
-- Prop: items:array=[], saveUrl:string='', csrf:?string=''
+- Prop: items:array=[], saveUrl:string='', csrf:?string='', storageKey:string=''
 
 ## `<x-dl::empty-state>`
 Tampilan saat data kosong: ikon, judul, keterangan, dan tombol aksi (slot).
@@ -932,6 +932,11 @@ Tabel sederhana (di dalam form/kartu). columns: key => label, atau key => [label
 Tab: judul di atas (vertical = daftar di kiri, seperti halaman Setup & Security), isi berganti.
 - Berkas: `src/Components/Tabs.php`
 - Prop: tabs:array=[], active:?string=NULL, vertical:bool=false, switch:bool=false, tones:array=[]
+
+## `<x-dl::task-alarm-runner>`
+Pembunyi alarm tugas yang tak terlihat: tiap 5 detik mencocokkan jam browser dengan due date tugas Eisenhower yang beralarm dan belum selesai; due tiba (paling lama 12 jam lalu) = bunyi 'notif' (Devlib.sound, mengikuti Setup > Sound) + toast kecil, sekali per tugas dan due.
+- Berkas: `src/Components/TaskAlarmRunner.php`
+- Prop: items:array=[], storageKey:string='dl-tasks'
 
 ## `<x-dl::theme-boot>`
 Dipasang SEKALI di <head>: CSS 12 tema (dari Devlib\Theme) + skrip kecil yang.

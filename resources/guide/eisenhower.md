@@ -1,6 +1,6 @@
 ## Overview
 
-`<x-dl::eisenhower>` is a task list laid out as the Eisenhower matrix: four boxes, "Do first" (important and urgent), "Schedule" (important, not urgent), "Delegate" (urgent, not important) and "Eliminate" (neither). Each box has its own add field; a task can be ticked off, moved to another box with its drop-down, or deleted; "Clear completed" removes all ticked tasks.
+`<x-dl::eisenhower>` is a task list laid out as the Eisenhower matrix: four boxes, "Do first" (important and urgent), "Schedule" (important, not urgent), "Delegate" (urgent, not important) and "Eliminate" (neither). Each box has its own add field; a task can be ticked off, given a due date and an alarm, moved to another box with its drop-down, or deleted; "Clear completed" removes all ticked tasks.
 
 Pick `x-dl::kanban` for team work with stages, or `x-dl::habit-tracker` for repeating habits.
 
@@ -17,13 +17,16 @@ Pick `x-dl::kanban` for team work with stages, or `x-dl::habit-tracker` for repe
 
 | Prop | Type | Default | Meaning |
 |---|---|---|---|
-| `items` | array | `[]` | Tasks: `['id', 'text' (max 200), 'q' => 1..4 (1 Do first, 2 Schedule, 3 Delegate, 4 Eliminate), 'done' => bool]`. |
+| `items` | array | `[]` | Tasks: `['id', 'text' (max 200), 'q' => 1..4 (1 Do first, 2 Schedule, 3 Delegate, 4 Eliminate), 'done' => bool, 'due' => 'Y-m-d H:i' (optional), 'alarm' => bool (optional)]`. |
 | `save-url` | string | empty | POST address; the body is JSON `{items: [...]}` with the whole list. Empty = preview without a server. |
 | `csrf` | string | empty | Value for the `X-CSRF-TOKEN` header. |
+| `storage-key` | string | empty | `localStorage` key where every change is also copied, so `x-dl::task-alarm-runner` can ring the alarms. Empty = no copy. |
 
 ## Behavior
 
 - Moving uses a drop-down, not dragging, so the keyboard works.
+- Due date: the calendar button opens the browser date and time picker; the date shows as `dd-Mmm-yyyy HH:mm` (device time). Late tasks are red, tasks due today orange; ticked tasks lose the colour. Clearing the date also switches the alarm off.
+- Alarm: the bell button (only with a due date). On = `x-dl::task-alarm-runner` rings once when the due time arrives.
 - Text is shown with `textContent`, never as HTML. Every change saves 300 ms later; a failed save shows a red toast.
 
 ## Data and events
