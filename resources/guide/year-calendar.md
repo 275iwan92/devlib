@@ -13,7 +13,7 @@ Use it when the year view is the point: public and company holidays, collective 
 
 ## Props
 
-Constructor of `Devlib\Components\YearCalendar` (8 props). Blade names are kebab-case; arrays and numbers need the `:prop="expr"` form.
+Constructor of `Devlib\Components\YearCalendar` (9 props). Blade names are kebab-case; arrays and numbers need the `:prop="expr"` form.
 
 | Prop | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,6 +25,7 @@ Constructor of `Devlib\Components\YearCalendar` (8 props). Blade names are kebab
 | `source` | `?string` | `null` | Free text naming where the data comes from (developer catalog / Manifest); default `tanggal bertanda`. No visual effect. |
 | `span` | `int` | `12` | How many months are drawn: `1` (one large month), `3` (three consecutive months in one row) or `12` (the whole year, auto-fill grid). Any other value is treated as `12`. |
 | `from` | `int` | `1` | First month shown (1-12) when `span` is 1 or 3; clamped so the window never passes December (span 3 and from 11 shows October-December). Ignored for `12`. The screen owns the paging (previous / next links change `from`). |
+| `mark-off` | `bool` | `false` | `true` = a non-working weekday (`off-days`) with no mark gets the `off` tone outline (like the legend entry `off`), not only red text. Marked dates keep their own tone. |
 
 Common attributes: extra HTML attributes (`id`, `class`, `style`, `data-*`) go on the root `div`; `can="module.action"` hides the whole component when the user lacks the ability.
 

@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Kalender setahun (12 bulan sekaligus) untuk hari libur / hari kerja: tanggal bertanda diwarnai per tone,.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : year, marks, legend, offDays, newUrl, source, span (1|3|12 bulan), from (bulan awal 1-12).
+ * Input        : year, marks, legend, offDays, newUrl, source, span (1|3|12 bulan), from (bulan awal 1-12), markOff.
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : calendar-year (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -31,6 +31,7 @@ class YearCalendar extends DevlibComponent
         public ?string $source = null,
         public int $span = 12,
         public int $from = 1,
+        public bool $markOff = false, // true = hari non-kerja (offDays) tanpa tanda diberi garis tepi tone 'off' (bukan hanya huruf merah)
     ) {
         // span 1 = satu bulan, 3 = tiga bulan berurutan, selain itu = setahun; from dijepit agar jendela tidak melewati Desember.
         $this->span = in_array($span, [1, 3], true) ? $span : 12;
@@ -101,9 +102,9 @@ class YearCalendar extends DevlibComponent
                                     @if ($c === null)
                                         <span></span>
                                     @elseif ($c['url'])
-                                        <a href="{{ $c['url'] }}" title="{{ $c['title'] }}" @class(['dl-ycal__d', 'dl-ycal__d--'.($c['mark']['tone'] ?? 'neutral') => $c['mark'], 'is-off' => $c['off'], 'is-today' => $c['today']])>{{ $c['day'] }}</a>
+                                        <a href="{{ $c['url'] }}" title="{{ $c['title'] }}" @class(['dl-ycal__d', 'dl-ycal__d--'.($c['mark']['tone'] ?? 'neutral') => $c['mark'], 'dl-ycal__d--off' => $markOff && $c['off'] && ! $c['mark'], 'is-off' => $c['off'], 'is-today' => $c['today']])>{{ $c['day'] }}</a>
                                     @else
-                                        <span title="{{ $c['title'] }}" @class(['dl-ycal__d', 'dl-ycal__d--'.($c['mark']['tone'] ?? 'neutral') => $c['mark'], 'is-off' => $c['off'], 'is-today' => $c['today']])>{{ $c['day'] }}</span>
+                                        <span title="{{ $c['title'] }}" @class(['dl-ycal__d', 'dl-ycal__d--'.($c['mark']['tone'] ?? 'neutral') => $c['mark'], 'dl-ycal__d--off' => $markOff && $c['off'] && ! $c['mark'], 'is-off' => $c['off'], 'is-today' => $c['today']])>{{ $c['day'] }}</span>
                                     @endif
                                 @endforeach
                             </div>
