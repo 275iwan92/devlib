@@ -9,6 +9,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **`x-dl::profile-banner` props `progressLabel` dan `progressTone`** (permintaan Jo 2026-11-10, menu Permintaan tmerp): nama batang kemajuan (bawaan Profile) dan nadanya (bawaan auto; accent untuk batang alur dokumen agar tahap awal tidak tampak merah).
 - **Rel `x-dl::side-screen.layout` berwarna (opt-in)** (permintaan Jo 2026-11-10, Edit profile): prop `tones` (nada per bagian: ubin ikon dan kepala bagian); `links` boleh bernada dan membawa perintah Shell (`notif`, `clockin`, `logout`; postMessage `{dl: "command"}` ke `x-dl::layer-shell`), caption kosong = tanpa judul; nada kartu baru `pink`, `orange`, `danger`, `lime`; ikon aksi menu profil berubin warna per aksi.
 - **`x-dl::layer-shell` prop `links` (opt-in, bawaan `[]`)** (permintaan Jo 2026-11-10): aksi tambahan menu profil `[['key','label','icon','url']]` tepat sesudah Edit profile; membuka `url` sebagai tab (JS `command()` kini membuka tab untuk setiap aksi ber-`data-url`, termasuk My devices). Tanpa `links` markup sama seperti sebelumnya.
 - **`x-dl::print-out` prop `footer` (opt-in, bawaan `null`)** (permintaan Jo 2026-11-07): kaki tiap lembar berformat token `{no}` `{status}` `{page}` `{pages}` (mis. `{no} · {status} · Hal. {page} / {pages}`); `{page}`/`{pages}` diisi `print.js` dari lembar yang terukur, ruang kaki sudah termasuk tinggi lembar. `null` = kaki bawaan lama. Demo `print-co`, panduan `print-out.md`.
