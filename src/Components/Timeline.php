@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Garis waktu vertikal: peristiwa berurutan (terbaru di atas) dengan titik berwarna per jenis, judul, keterangan dan tanggal; bagian dari riwayat hubungan (customer, supplier, mesin).
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : items, empty.
+ * Input        : items, empty, source.
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : layar proyek lewat x-dl::timeline (mis. Customer 360); demo devlib.test > Status > Timeline.
  * Status       : Aktif (DevLib).
@@ -19,11 +19,17 @@ class Timeline extends DevlibComponent
     public function __construct(
         public array $items = [],
         public string $empty = 'Nothing has happened yet.',
+        public ?string $source = null,
     ) {}
 
     public function tag(): string
     {
         return 'x-dl::timeline';
+    }
+
+    public function source(): string
+    {
+        return $this->source ?? 'garis waktu';
     }
 
     public function render()

@@ -25,12 +25,13 @@ Generated markup:
 
 ## Props
 
-Constructor of `Devlib\Components\Timeline` (2 props). Use `:items="$items"` (array expression).
+Constructor of `Devlib\Components\Timeline` (3 props). Use `:items="$items"` (array expression).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
 | `items` | `array`, `[]` | Events in the order given (the screen sorts, newest first). Keys, all optional: `title` (bold line, data, not translated), `meta` (small text after the title, usually the date), `body` (one line under the title), `tone` (`accent`, `success`, `warn`, `danger`, `info`, `violet`, `neutral`; default `neutral`; colours the dot and the title on hover), `icon` (a Font Awesome class or an `Icon` meaning, shown in the dot), `url` (turns the title into a link). |
 | `empty` | `string`, `'Nothing has happened yet.'` | Text shown when `items` is empty; translated through the dictionary. |
+| `source` | `?string`, `null` | Data source label shown in Developer mode (F10); the screen names the tables the events come from. |
 
 Inherited from `DevlibComponent`: `can="module.action"` hides the whole timeline without the ability; extra attributes are merged onto the root `div`.
 
