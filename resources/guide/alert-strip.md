@@ -20,7 +20,7 @@ Use `x-dl::alert` for one message inside a form or page, and `x-dl::toast` for a
 
 | Prop | Type | Default | Meaning |
 |---|---|---|---|
-| `items` | array | `[]` | `['text', 'tone' => danger / warn / info / success, 'href' => link, 'label' => button text (single notification only), 'icon' => fa-xxx]`. Empty = nothing is drawn. |
+| `items` | array | `[]` | `['text', 'tone' => danger / warn / info / success, 'href' => link, 'open' => id of a modal (a click opens that modal instead of leaving the page; `href` stays as fallback), 'label' => button text (single notification only), 'icon' => fa-xxx]`. Empty = nothing is drawn. |
 
 ## Behavior
 

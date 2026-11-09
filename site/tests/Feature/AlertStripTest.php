@@ -17,6 +17,15 @@ class AlertStripTest extends TestCase
         $this->assertStringNotContainsString('dl-astrip', Blade::render('<x-dl::alert-strip :items="[]" />'));
     }
 
+    public function test_open_key_makes_the_item_open_a_modal(): void
+    {
+        $one = Blade::render('<x-dl::alert-strip :items="$i" />', ['i' => [['text' => 'T', 'tone' => 'warn', 'open' => 'm1', 'label' => 'Open']]]);
+        $many = Blade::render('<x-dl::alert-strip :items="$i" />', ['i' => [['text' => 'A', 'open' => 'm1'], ['text' => 'B']]]);
+
+        $this->assertStringContainsString('data-dl-open="m1"', $one);
+        $this->assertStringContainsString('data-dl-open="m1"', $many);
+    }
+
     public function test_single_notification_is_still_text_with_button(): void
     {
         $html = Blade::render('<x-dl::alert-strip :items="$i" />', ['i' => [['text' => 'Tasks: 4', 'tone' => 'warn', 'href' => '/t', 'label' => 'Open Task']]]);

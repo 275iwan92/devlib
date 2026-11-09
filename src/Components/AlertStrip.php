@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Strip notifikasi di atas dashboard: satu notifikasi = teks diam + tombol; dua atau lebih = teks BERJALAN (ticker) yang berhenti saat disentuh/di-hover, tiap notifikasi bisa diklik ke sumbernya. Warna strip mengikuti notifikasi paling genting (danger > warn > info > success); tiap notifikasi berwarna menurut jenisnya.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : items = [['text', 'tone' => danger|warn|info|success, 'href', 'label', 'icon']].
+ * Input        : items = [['text', 'tone' => danger|warn|info|success, 'href', 'open' => id modal (klik membuka modal itu, href jadi cadangan), 'label', 'icon']].
  * Output       : Markup Blade inline (render() kelas ini) + CSS .dl-astrip (tanpa JS; animasi CSS).
  * Dipakai oleh : layar proyek (opening screen Home).
  * Status       : Aktif (DevLib).
@@ -17,7 +17,7 @@ namespace Devlib\Components;
 class AlertStrip extends DevlibComponent
 {
     public function __construct(
-        public array $items = [], // [['text', 'tone' => danger|warn|info|success, 'href' => ?url, 'label' => ?teks tombol (satu notifikasi), 'icon' => ?fa-xxx]]
+        public array $items = [], // [['text', 'tone' => danger|warn|info|success, 'href' => ?url, 'open' => ?id modal, 'label' => ?teks tombol (satu notifikasi), 'icon' => ?fa-xxx]]
     ) {}
 
     public function tag(): string
@@ -41,7 +41,7 @@ class AlertStrip extends DevlibComponent
                         @php($one = $items[0])
                         <i class="fa-solid {{ \Devlib\Icon::fa($one['icon'] ?? 'fa-bell') }}" aria-hidden="true"></i>
                         <span class="dl-astrip__text">{{ $one['text'] ?? '' }}</span>
-                        @if (! empty($one['href']))<a class="dl-btn dl-btn--secondary dl-btn--sm" href="{{ $one['href'] }}">{{ $one['label'] ?? \Devlib\Lang::text('Open') }}</a>@endif
+                        @if (! empty($one['href']) || ! empty($one['open']))<a class="dl-btn dl-btn--secondary dl-btn--sm" href="{{ $one['href'] ?? '#' }}" @if (! empty($one['open'])) data-dl-open="{{ $one['open'] }}" @endif>{{ $one['label'] ?? \Devlib\Lang::text('Open') }}</a>@endif
                     @else
                         <i class="fa-solid fa-bell-concierge" aria-hidden="true"></i>
                         <div class="dl-astrip__view">
@@ -49,8 +49,8 @@ class AlertStrip extends DevlibComponent
                                 @foreach ([0, 1] as $copy)
                                     <div class="dl-astrip__set" @if ($copy) aria-hidden="true" @endif>
                                         @foreach ($items as $i)
-                                            @php($tag = ! empty($i['href']) ? 'a' : 'span')
-                                            <{{ $tag }} class="dl-astrip__item dl-astrip__item--{{ $i['tone'] ?? 'info' }}" @if (! empty($i['href'])) href="{{ $i['href'] }}" @if ($copy) tabindex="-1" @endif @endif><i class="fa-solid {{ \Devlib\Icon::fa($i['icon'] ?? 'fa-bell') }}" aria-hidden="true"></i> {{ $i['text'] ?? '' }}</{{ $tag }}>
+                                            @php($tag = ! empty($i['href']) || ! empty($i['open']) ? 'a' : 'span')
+                                            <{{ $tag }} class="dl-astrip__item dl-astrip__item--{{ $i['tone'] ?? 'info' }}" @if (! empty($i['href']) || ! empty($i['open'])) href="{{ $i['href'] ?? '#' }}" @if (! empty($i['open'])) data-dl-open="{{ $i['open'] }}" @endif @if ($copy) tabindex="-1" @endif @endif><i class="fa-solid {{ \Devlib\Icon::fa($i['icon'] ?? 'fa-bell') }}" aria-hidden="true"></i> {{ $i['text'] ?? '' }}</{{ $tag }}>
                                         @endforeach
                                     </div>
                                 @endforeach
