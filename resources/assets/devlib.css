@@ -3209,8 +3209,12 @@ html[data-motion="off"] .dl-dash__fx{display:none}
 .dl-dash__hero .dl-music__credit a{color:var(--dl-on-dark-link)}
 /* Kalkulator pop up x-dl::calculator (ala Windows 11): tombol ikon bulat + modal; huruf besar, tombol berwarna (angka biru muda, operator ungu, hapus merah, sama dengan biru tua). */
 .dl-wcalc-wrap{display:inline-flex}
-.dl-wcalc-btn{flex:none;width:40px;height:40px;border:0;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:calc(19px * var(--dl-font-scale));background:var(--dl-amber-2);color:var(--dl-ink-strong)}
-.dl-wcalc-btn:hover,.dl-wcalc-btn:focus-visible{background:var(--dl-yellow);outline:2px solid var(--dl-white);outline-offset:1px}
+.dl-wcalc-btn{flex:none;width:42px;height:42px;border:0;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:calc(17px * var(--dl-font-scale));text-decoration:none;background:var(--dl-accent);color:var(--dl-on-accent)}
+.dl-wcalc-btn:hover,.dl-wcalc-btn:focus-visible{background:var(--dl-accent-2);outline:2px solid var(--dl-accent-ink);outline-offset:1px}
+.dl-wcalc-btn:disabled{cursor:not-allowed;opacity:.6}
+/* Kotak sapaan (hero gelap): gaya kaca bulat yang sama dengan tombol Play */
+.dl-dash__hero .dl-wcalc-btn{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.12);color:var(--dl-white)}
+.dl-dash__hero .dl-wcalc-btn:hover,.dl-dash__hero .dl-wcalc-btn:focus-visible{background:rgba(255,255,255,.34);outline-color:var(--dl-white)}
 .dl-wcalc__tabs{display:flex;gap:6px;margin-bottom:10px}
 .dl-wcalc__tabs button{flex:1;padding:9px 6px;border:0;border-radius:var(--dl-radius);cursor:pointer;font:inherit;font-size:calc(16px * var(--dl-font-scale));font-weight:600;background:var(--dl-chip);color:var(--dl-ink)}
 .dl-wcalc__tabs button[data-wc-tab=hist]{flex:0 0 48px}

@@ -8,7 +8,7 @@
 
 Pick another object when you need a calculation inside a form field (the `+ − × ÷ %` mini calculator of `x-dl::field.decimal`) or a spreadsheet (`x-dl::sheet`).
 
-`x-dl::greeting-card` places the button in its button row (next to the music player) when `board['calculator']` is given.
+`x-dl::greeting-card` places the button in its button row when `board['calculator']` is given. Row order, left to right: Calendar (`board['calendar'] = ['url' => ?string]`; no url = disabled button with tooltip "Calendar · Coming soon"), Calculator, Play (music player). All three are round glass buttons on the dark hero (`.dl-wcalc-btn`, same look as the Play button); outside the hero the button uses the accent colour.
 
 ### Generated markup
 

@@ -41,6 +41,16 @@ class CalculatorTest extends TestCase
         $this->assertStringNotContainsString('dl-wcalc-btn', $without);
     }
 
+    public function test_greeting_card_button_order_is_calendar_calculator_play_and_calendar_without_url_is_disabled(): void
+    {
+        $b = ['user' => ['first' => 'Jo'], 'calendar' => ['url' => null], 'calculator' => ['quantities' => self::Q, 'currencies' => self::C], 'music' => ['tracks' => [['file' => 'a.mp3', 'title' => 'A', 'author' => 'B']]]];
+        $html = Blade::render('<x-dl::greeting-card :board="$b" />', ['b' => $b]);
+
+        $this->assertTrue(strpos($html, 'fa-calendar-days') < strpos($html, 'fa-calculator') && strpos($html, 'fa-calculator') < strpos($html, 'data-dl-music-play'));
+        $this->assertMatchesRegularExpression('/<button[^>]*dl-wcalc-btn[^>]*disabled[^>]*Coming soon/', $html);
+        $this->assertStringContainsString('href="/cal"', Blade::render('<x-dl::greeting-card :board="$b" />', ['b' => ['user' => ['first' => 'Jo'], 'calendar' => ['url' => '/cal']]]));
+    }
+
     public function test_script_follows_the_windows_rules_and_the_css_has_no_literal_colors(): void
     {
         $root = dirname(__DIR__, 3);

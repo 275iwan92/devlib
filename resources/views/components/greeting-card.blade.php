@@ -31,11 +31,15 @@
             @if (! empty($d['sops']))
                 <x-dl::button variant="ghost" icon="fa-book-open" label="SOP" data-dl-open="{{ $id }}-sop"><span class="dl-dash__count">{{ count($d['sops']) }}</span></x-dl::button>
             @endif
-            @if (! empty($d['music']['tracks']))
-                <x-dl::music-player :tracks="$d['music']['tracks']" :base="$d['music']['base'] ?? '/audio'" :storage-key="$d['music']['key'] ?? 'dl-music'" :volume="$d['music']['volume'] ?? 25" />
+            @if (isset($d['calendar']))
+                @if (! empty($d['calendar']['url']))<a class="dl-wcalc-btn" href="{{ $d['calendar']['url'] }}" aria-label="{{ \Devlib\Lang::text('Calendar') }}" title="{{ \Devlib\Lang::text('Calendar') }}"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></a>
+                @else<button type="button" class="dl-wcalc-btn" disabled aria-label="{{ \Devlib\Lang::text('Calendar') }}" title="{{ \Devlib\Lang::text('Calendar') }} · {{ \Devlib\Lang::text('Coming soon') }}"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></button>@endif
             @endif
             @if (! empty($d['calculator']))
                 <x-dl::calculator :quantities="$d['calculator']['quantities'] ?? []" :currencies="$d['calculator']['currencies'] ?? []" :featured="$d['calculator']['featured'] ?? []" :base="$d['calculator']['base'] ?? 'IDR'" :rate-url="$d['calculator']['rate_url'] ?? null" :id="$id.'-calc'" />
+            @endif
+            @if (! empty($d['music']['tracks']))
+                <x-dl::music-player :tracks="$d['music']['tracks']" :base="$d['music']['base'] ?? '/audio'" :storage-key="$d['music']['key'] ?? 'dl-music'" :volume="$d['music']['volume'] ?? 25" />
             @endif
         </div>
     </div>
