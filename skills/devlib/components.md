@@ -188,6 +188,11 @@ Opening screen setelah login (Beranda): salam + jam + cuaca, tombol Job Descript
 - Berkas: `src/Components/Dashboard.php`, tampilan `resources/views/components/dashboard.blade.php`
 - Prop: board:array=[], source:?string=NULL
 
+## `<x-dl::deck>`
+Presentasi slide di halaman (gaya "video" Panduan Pengguna): satu slide terlihat, butir muncul berurutan; tombol Previous / Play-Pause / Next / Full screen, batang kemajuan, titik, tombol panah; Play = maju sendiri tiap interval detik.
+- Berkas: `src/Components/Deck.php`
+- Prop: slides:array=[], title:?string=NULL, autoplay:bool=false, interval:int=7, source:?string=NULL
+
 ## `<x-dl::delivery-track>`
 Jejak pengiriman skematis (SVG, tanpa peta): gudang -> pelanggan, truk bergerak di sepanjang rute dan berhenti di titik.
 - Berkas: `src/Components/DeliveryTrack.php`
