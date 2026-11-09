@@ -118,6 +118,11 @@ Tombol baku. icon = arti baku (save, delete, print... lihat Devlib\Icon) atau em
 - Berkas: `src/Components/Button.php`
 - Prop: label:string='', variant:string='primary', size:string='md', type:?string=NULL, href:?string=NULL, icon:?string=NULL, block:bool=false, i18n:?string=NULL, preset:?string=NULL
 
+## `<x-dl::calculator>`
+Kalkulator pop up ala Windows 11: tombol ikon yang membuka jendela modal berisi tiga tab (Calculator = hitung biasa dengan eksekusi langsung kiri-ke-kanan; Converter = konversi satuan dan kurs; History = riwayat hitungan). Tombol angka besar berwarna.
+- Berkas: `src/Components/Calculator.php`
+- Prop: quantities:array=[], currencies:array=[], featured:array=[], base:string='IDR', rateUrl:?string=NULL, id:string='dl-calculator', storageKey:string='dl-calculator'
+
 ## `<x-dl::calendar>`
 Kalender acara (mockup_UIUX_calendar): kiri = Create Event + kalender mini + cari; tengah = Day/Week/Month;.
 - Berkas: `src/Components/Calendar.php`

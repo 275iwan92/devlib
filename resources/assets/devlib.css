@@ -3207,6 +3207,41 @@ html[data-motion="off"] .dl-dash__fx{display:none}
 .dl-dash__hero .dl-music__btn{background:rgba(255,255,255,.2);color:var(--dl-white)}
 .dl-dash__hero .dl-music__btn:hover,.dl-dash__hero .dl-music__btn:focus-visible{background:rgba(255,255,255,.34);outline-color:var(--dl-white)}
 .dl-dash__hero .dl-music__credit a{color:var(--dl-on-dark-link)}
+/* Kalkulator pop up x-dl::calculator (ala Windows 11): tombol ikon bulat + modal; huruf besar, tombol berwarna (angka biru muda, operator ungu, hapus merah, sama dengan biru tua). */
+.dl-wcalc-wrap{display:inline-flex}
+.dl-wcalc-btn{flex:none;width:40px;height:40px;border:0;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:calc(19px * var(--dl-font-scale));background:var(--dl-amber-2);color:var(--dl-ink-strong)}
+.dl-wcalc-btn:hover,.dl-wcalc-btn:focus-visible{background:var(--dl-yellow);outline:2px solid var(--dl-white);outline-offset:1px}
+.dl-wcalc__tabs{display:flex;gap:6px;margin-bottom:10px}
+.dl-wcalc__tabs button{flex:1;padding:9px 6px;border:0;border-radius:var(--dl-radius);cursor:pointer;font:inherit;font-size:calc(16px * var(--dl-font-scale));font-weight:600;background:var(--dl-chip);color:var(--dl-ink)}
+.dl-wcalc__tabs button[data-wc-tab=hist]{flex:0 0 48px}
+.dl-wcalc__tabs button.is-on{background:var(--dl-accent);color:var(--dl-on-accent)}
+.dl-wcalc__expr{min-height:1.4em;text-align:right;font-size:calc(14px * var(--dl-font-scale));color:var(--dl-ink)}
+.dl-wcalc__disp{text-align:right;font-size:calc(44px * var(--dl-font-scale));font-weight:600;line-height:1.15;padding:2px 4px 10px;color:var(--dl-ink-strong);overflow:hidden;text-overflow:clip;white-space:nowrap}
+.dl-wcalc__keys{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.dl-wcalc__k{padding:14px 0;border:0;border-radius:var(--dl-radius);cursor:pointer;font:inherit;font-size:calc(24px * var(--dl-font-scale));font-weight:600}
+.dl-wcalc__k:hover,.dl-wcalc__k:focus-visible{outline:2px solid var(--dl-accent-ink);outline-offset:-2px}
+.dl-wcalc__k--n{background:var(--dl-accent-soft-2);color:var(--dl-ink-strong)}
+.dl-wcalc__k--o{background:color-mix(in srgb,var(--dl-violet) 18%,var(--dl-surface));color:var(--dl-ink-strong)}
+.dl-wcalc__k--c{background:var(--dl-danger-soft);color:var(--dl-danger)}
+.dl-wcalc__k--e{grid-column:1/5;background:var(--dl-accent);color:var(--dl-on-accent)}
+.dl-wcalc__keys--conv .dl-wcalc__k{padding:10px 0;font-size:calc(22px * var(--dl-font-scale))}
+.dl-wcalc__cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.dl-wcalc__cats button,.dl-wcalc__cats select{padding:6px 12px;border:0;border-radius:999px;cursor:pointer;font:inherit;font-size:calc(14px * var(--dl-font-scale));font-weight:600;background:color-mix(in srgb,var(--dl-green) 20%,var(--dl-surface));color:var(--dl-ink-strong)}
+.dl-wcalc__cats .is-on{background:var(--dl-teal);color:var(--dl-white)}
+.dl-wcalc__pair{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.dl-wcalc__pair select{flex:1;min-width:0;padding:10px 8px;border:1px solid var(--dl-border-hover);border-radius:var(--dl-radius);font:inherit;font-size:calc(15px * var(--dl-font-scale));font-weight:600;background:var(--dl-surface);color:var(--dl-ink)}
+.dl-wcalc__swap{flex:none;width:40px;height:40px;border:0;border-radius:50%;cursor:pointer;background:var(--dl-accent);color:var(--dl-on-accent)}
+.dl-wcalc__res{text-align:right;font-size:calc(26px * var(--dl-font-scale));font-weight:600;padding:0 4px 4px;color:var(--dl-accent-ink);overflow-wrap:anywhere}
+.dl-wcalc__note{min-height:1.4em;text-align:right;font-size:calc(14px * var(--dl-font-scale));color:var(--dl-ink);margin-bottom:8px}
+.dl-wcalc__note a{color:var(--dl-accent-ink);font-weight:600}
+.dl-wcalc__warn{display:inline-block;padding:2px 8px;border-radius:var(--dl-radius-sm);font-weight:600;background:var(--dl-amber-2);color:var(--dl-ink-strong)}
+.dl-wcalc__hist{list-style:none;margin:0 0 10px;padding:0;max-height:340px;overflow:auto}
+.dl-wcalc__hist button{display:flex;flex-direction:column;align-items:flex-end;width:100%;padding:8px 10px;border:0;border-bottom:1px solid var(--dl-border);background:none;cursor:pointer;font:inherit;font-size:calc(14px * var(--dl-font-scale));color:var(--dl-ink)}
+.dl-wcalc__hist button:hover{background:var(--dl-hover)}
+.dl-wcalc__hist b{font-size:calc(24px * var(--dl-font-scale));color:var(--dl-ink-strong)}
+.dl-wcalc__none{padding:20px;text-align:center;color:var(--dl-ink)}
+.dl-wcalc__clear{display:block;margin-left:auto;padding:8px 14px;border:0;border-radius:var(--dl-radius);cursor:pointer;font:inherit;font-weight:600;background:var(--dl-danger-soft);color:var(--dl-danger)}
+.dl-wcalc [hidden]{display:none}
 /* Halaman Setup Music / Screen animation (x-dl::setup-media), di dialog Setup Layer Menu. */
 .dl-setup{display:grid;gap:14px;padding:4px 2px}
 .dl-setup__row{display:flex;gap:8px;align-items:center}
