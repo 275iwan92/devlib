@@ -79,6 +79,8 @@ class Form extends DevlibComponent
         public ?string $printUrl = null,
         public bool $strict = false,
         public bool $deletable = false,
+        // Form padat (opt-in): kartu berwarna dua per baris, kepala kartu ramping, tab berwarna (kelas dl-form--dense).
+        public bool $dense = false,
     ) {}
 
     public function lint(): array
@@ -273,7 +275,7 @@ class Form extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <form {{ $attributes->class(['dl-form', 'dl-form--panel' => $panel, 'is-view' => $panel && $locked(), 'dl-form--strict' => $strict, 'dl-form--tone-'.$tone() => $strict && $tone() && $panel && $locked()]) }} {!! $dl() !!} method="{{ $method === 'GET' ? 'GET' : 'POST' }}" @if ($action) action="{{ $action }}" @endif data-dl-form data-mode="{{ $mode }}" data-action-field="{{ $actionField }}" @if ($guard) data-dl-guard @endif @if ($strict) data-f-strict @endif novalidate>
+            <form {{ $attributes->class(['dl-form', 'dl-form--panel' => $panel, 'is-view' => $panel && $locked(), 'dl-form--strict' => $strict, 'dl-form--dense' => $dense, 'dl-form--tone-'.$tone() => $strict && $tone() && $panel && $locked()]) }} {!! $dl() !!} method="{{ $method === 'GET' ? 'GET' : 'POST' }}" @if ($action) action="{{ $action }}" @endif data-dl-form data-mode="{{ $mode }}" data-action-field="{{ $actionField }}" @if ($guard) data-dl-guard @endif @if ($strict) data-f-strict @endif novalidate>
                 @if ($method !== 'GET')
                     @csrf
                 @endif

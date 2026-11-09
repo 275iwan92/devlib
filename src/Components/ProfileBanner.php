@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Banner profil orang / objek: foto di kiri, nama besar + baris keterangan + chip berkelompok (berlabel) + batang kelengkapan di sampingnya, tile KPI selebar penuh di bawahnya, lalu satu baris pemberitahuan.
  * Sumber hulu  : Semua isi dari layar pemanggil (objek ini tidak membaca database).
- * Input        : name, subtitle, groups [[label, badges => [[label, tone, icon]]]], progress (0-100) + progressText; slot photo, kpis, notice.
+ * Input        : name, subtitle, groups [[label, badges => [[label, tone, icon]]]], progress (0-100) + progressText + progressLabel (nama batang, bawaan Profile) + progressTone (bawaan auto: merah/kuning/hijau menurut nilai; accent untuk batang alur dokumen); slot photo, kpis, notice.
  * Output       : <div class="dl-pbanner"> dengan grid dua kolom (foto | identitas) dan baris KPI; turun satu kolom di layar sempit.
  * Dipakai oleh : resources/views/v2/screens/hrm-employee-form.blade.php (slot strip x-dl::form); demo devlib.test > Status > Profile Banner.
  * Status       : Aktif.
@@ -23,6 +23,12 @@ class ProfileBanner extends DevlibComponent
         public array $groups = [],
         public ?float $progress = null,
         public ?string $progressText = null,
+        public ?string $progressLabel = null,
+        public string $progressTone = 'auto',
+        // Tampilan ringkas (opt-in): foto | identitas | KPI 2x2 berwarna dalam satu baris; hue = sudut warna latar 0-359; todo = daftar kekurangan data (chip kuning).
+        public bool $compact = false,
+        public ?int $hue = null,
+        public array $todo = [],
     ) {}
 
     public function tag(): string
@@ -43,7 +49,7 @@ class ProfileBanner extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class('dl-pbanner') }} {!! $dl() !!}>
+            <div {{ $attributes->class(['dl-pbanner', 'dl-pbanner--compact' => $compact]) }} @if ($hue !== null) style="--h:{{ $hue % 360 }}" @endif {!! $dl() !!}>
                 <div class="dl-pbanner__top">
                     @isset($photo)<div class="dl-pbanner__photo">{{ $photo }}</div>@endisset
                     <div class="dl-pbanner__id">
@@ -59,14 +65,15 @@ class ProfileBanner extends DevlibComponent
                         @endforeach
                         @if ($progress !== null)
                             <div class="dl-pbanner__grp">
-                                <span class="dl-pbanner__gl">{{ $groupLabel('Profile') }}</span>
-                                <span class="dl-pbanner__prog"><x-dl::progress :value="$progress" tone="auto" /></span>
+                                <span class="dl-pbanner__gl">{{ $groupLabel($progressLabel ?? 'Profile') }}</span>
+                                <span class="dl-pbanner__prog"><x-dl::progress :value="$progress" :tone="$progressTone" /></span>
                                 @if ($progressText)<span class="dl-pbanner__progtxt">{{ $progressText }}</span>@endif
                             </div>
                         @endif
                     </div>
                 </div>
                 @isset($kpis)<div class="dl-pbanner__kpis">{{ $kpis }}</div>@endisset
+                @if ($todo)<div class="dl-pbanner__todo"><b>{{ $groupLabel('To complete') }}</b>@foreach ($todo as $t)<span>{{ $t }}</span>@endforeach</div>@endif
                 @isset($notice)<div class="dl-pbanner__notice">{{ $notice }}</div>@endisset
             </div>
             BLADE;
