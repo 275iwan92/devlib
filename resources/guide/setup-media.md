@@ -27,7 +27,11 @@ Pick another object when you need the theme (`x-dl::theme-picker`), the language
 
 ## Props
 
-None.
+| Prop | Type | Default | Meaning |
+|---|---|---|---|
+| `part` | string | `all` | `all` renders the three pages for the `profilePages` slot. `music`, `motion` or `sound` renders only that page, for use as a normal screen (for example an Application Setup screen where the project groups them in its own `x-dl::card`). |
+
+When the object sits on a normal screen inside an iframe of the Layer Menu, the music player and the greeting box live in the parent window: the Music page then finds the player there and listens to its `dl:music` event, and the Screen animation choice is also applied in the parent so the movement changes at once. Sound needs nothing extra because `localStorage['dl-sound']` is read on every play.
 
 ## Behavior
 

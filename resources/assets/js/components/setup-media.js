@@ -4,17 +4,20 @@
 (function (Devlib) {
   'use strict';
   const {$, $$} = Devlib.h;
+  // Halaman induk bila pengaturan ini dipakai sebagai layar biasa di dalam iframe Layer Menu (pemutar musik dan kotak sapaan ada di halaman induk, satu asal-usul).
+  const parentWin = () => { try { return window.parent !== window && window.parent.document ? window.parent : null; } catch (e) { return null; } };
 
   class SetupMusic extends Devlib.Component {
     static selector = "[data-dl-setup-music]";
     init() {
       this.on = $(this.el, '[data-dl-setup-on]'); this.vol = $(this.el, '[data-dl-setup-vol]'); this.volv = $(this.el, '[data-dl-setup-volv]');
       this.track = $(this.el, '[data-dl-setup-track]'); this.row = $(this.el, '[data-dl-setup-trackrow]');
-      const player = () => document.querySelector('[data-dl-music]')?.dlComponent;
+      const doc = () => document.querySelector('[data-dl-music]') ? document : (parentWin()?.document ?? document);
+      const player = () => doc().querySelector('[data-dl-music]')?.dlComponent;
       this.on.addEventListener('change', () => player()?.setOn(this.on.checked));
       this.vol.addEventListener('input', () => player()?.setVolume(+this.vol.value));
       this.track.addEventListener('change', () => player()?.setTrack(this.track.value));
-      document.addEventListener('dl:music', e => this.sync(e.detail));
+      doc().addEventListener('dl:music', e => this.sync(e.detail));
       const p = player();
       if (p) { this.sync({on: p.s.on, vol: p.s.vol, track: p.s.track, tracks: p.tracks}); } else { this.on.disabled = this.vol.disabled = true; this.row.hidden = true; }
     }
@@ -33,7 +36,8 @@
     static selector = "[data-dl-setup-motion]";
     init() {
       this.radios = $$(this.el, 'input[name="dl-motion"]');
-      this.radios.forEach(r => r.addEventListener('change', () => { if (r.checked) Devlib.motion.set(r.value); }));
+      // Di iframe, kotak sapaan ada di halaman induk: pilihan ikut diterapkan di sana supaya gerak berubah seketika.
+      this.radios.forEach(r => r.addEventListener('change', () => { if (r.checked) { Devlib.motion.set(r.value); parentWin()?.Devlib?.motion?.set(r.value); } }));
       document.addEventListener('dl:motion', this.show); this.show();
     }
 

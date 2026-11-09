@@ -88,4 +88,13 @@ class MusicPlayerTest extends TestCase
         }
         $this->assertStringContainsString('role="radiogroup"', $html);
     }
+
+    public function test_setup_media_part_renders_only_that_page(): void
+    {
+        foreach (['music', 'motion', 'sound'] as $part) {
+            $html = Blade::render('<x-dl::setup-media part="'.$part.'" />');
+            $this->assertStringContainsString('data-lm-page="'.$part.'"', $html);
+            $this->assertSame(1, substr_count($html, 'data-lm-page='), $part);
+        }
+    }
 }

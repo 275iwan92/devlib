@@ -831,7 +831,7 @@ Halaman diagnostik layar: lebar x tinggi CSS, DPR, orientasi, tinggi svh/lvh/dvh
 ## `<x-dl::setup-media>`
 Tiga halaman pengaturan di dialog Setup Layer Menu (bersama Theme dan Language): Music (putar musik latar, volume, pilihan trek), Motion (animasi layar: ikuti perangkat / nyala / kurangi gerak) dan Sound (dering Pomodoro, alarm, timer, notifikasi, chat, facility: aktif, volume, Test). Pola dari proyek admin Jo.
 - Berkas: `src/Components/SetupMedia.php`
-- Prop: (tanpa prop)
+- Prop: part:string='all'
 
 ## `<x-dl::shared-calendar>`
 Kalender bersama: x-dl::calendar yang acaranya bisa mengundang peserta lewat @nama, dijawab Accept / Tentative / Decline, dilihat rekan sesuai izin, dengan ruang rapat dan pengingat; tiap perubahan dikirim ke server per acara.
