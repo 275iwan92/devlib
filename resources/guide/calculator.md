@@ -8,13 +8,13 @@
 
 Pick another object when you need a calculation inside a form field (the `+ − × ÷ %` mini calculator of `x-dl::field.decimal`) or a spreadsheet (`x-dl::sheet`).
 
-`x-dl::greeting-card` places the button in its button row when `board['calculator']` is given. Row order, left to right: Calendar (`board['calendar'] = ['url' => ?string]`; no url = disabled button with tooltip "Calendar · Coming soon"), Calculator, Play (music player). All three are round glass buttons on the dark hero (`.dl-wcalc-btn`, same look as the Play button); outside the hero the button uses the accent colour.
+`x-dl::greeting-card` places the button in its button row when `board['calculator']` is given. Row order, left to right: Calendar (`board['calendar'] = ['url' => ?string]`; no url = disabled button with tooltip "Calendar · Coming soon"), Calculator, Play (music player). All three are round glass buttons on the dark hero (`.dl-wcalc-btn`, same look as the Play button; the Calendar and Calculator glyphs are inline SVG, Tabler-style 24px stroke icons, not FontAwesome); outside the hero the button uses the accent colour.
 
 ### Generated markup
 
 ```html
 <span class="dl-wcalc-wrap" data-dl="x-dl::calculator id=dl-calculator">
-  <button type="button" class="dl-wcalc-btn" data-dl-open="dl-calculator" aria-label="Calculator"><i class="fa-solid fa-calculator"></i></button>
+  <button type="button" class="dl-wcalc-btn" data-dl-open="dl-calculator" aria-label="Calculator"><svg data-ic="calculator">...</svg></button>
   <div class="dl-mov" data-dl-modal-id="dl-calculator"> ... <div class="dl-wcalc" data-dl-wcalc data-quantities='[...]' data-currencies='[...]'> tabs, keys, converter, history </div> </div>
 </span>
 ```

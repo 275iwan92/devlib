@@ -3211,6 +3211,7 @@ html[data-motion="off"] .dl-dash__fx{display:none}
 .dl-wcalc-wrap{display:inline-flex}
 .dl-wcalc-btn{flex:none;width:42px;height:42px;border:0;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:calc(17px * var(--dl-font-scale));text-decoration:none;background:var(--dl-accent);color:var(--dl-on-accent)}
 .dl-wcalc-btn:hover,.dl-wcalc-btn:focus-visible{background:var(--dl-accent-2);outline:2px solid var(--dl-accent-ink);outline-offset:1px}
+.dl-wcalc-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .dl-wcalc-btn:disabled{cursor:not-allowed;opacity:.6}
 /* Kotak sapaan (hero gelap): gaya kaca bulat yang sama dengan tombol Play */
 .dl-dash__hero .dl-wcalc-btn{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.12);color:var(--dl-white)}

@@ -41,7 +41,7 @@ class Calculator extends DevlibComponent
     {
         return <<<'BLADE'
             <span {{ $attributes->class(['dl-wcalc-wrap']) }} {!! $dl() !!}>
-                <button type="button" class="dl-wcalc-btn" data-dl-open="{{ $id }}" aria-label="{{ \Devlib\Lang::text('Calculator') }}" title="{{ \Devlib\Lang::text('Calculator') }}"><i class="fa-solid fa-calculator" aria-hidden="true"></i></button>
+                <button type="button" class="dl-wcalc-btn" data-dl-open="{{ $id }}" aria-label="{{ \Devlib\Lang::text('Calculator') }}" title="{{ \Devlib\Lang::text('Calculator') }}"><svg viewBox="0 0 24 24" data-ic="calculator" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><rect x="8" y="7" width="8" height="3" rx="1"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01M16 17h.01"/></svg></button>
                 <x-dl::modal :id="$id" :title="\Devlib\Lang::text('Calculator')" icon="fa-calculator" size="sm">
                     <div class="dl-wcalc" data-dl-wcalc data-key="{{ $storageKey }}" data-base="{{ $base }}" data-rate-url="{{ $rateUrl }}"
                         data-quantities="{{ json_encode(array_values($quantities), JSON_UNESCAPED_UNICODE) }}" data-currencies="{{ json_encode(array_values($currencies), JSON_UNESCAPED_UNICODE) }}" data-featured="{{ json_encode(array_values($featured)) }}"

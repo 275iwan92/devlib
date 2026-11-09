@@ -32,8 +32,8 @@
                 <x-dl::button variant="ghost" icon="fa-book-open" label="SOP" data-dl-open="{{ $id }}-sop"><span class="dl-dash__count">{{ count($d['sops']) }}</span></x-dl::button>
             @endif
             @if (isset($d['calendar']))
-                @if (! empty($d['calendar']['url']))<a class="dl-wcalc-btn" href="{{ $d['calendar']['url'] }}" aria-label="{{ \Devlib\Lang::text('Calendar') }}" title="{{ \Devlib\Lang::text('Calendar') }}"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></a>
-                @else<button type="button" class="dl-wcalc-btn" disabled aria-label="{{ \Devlib\Lang::text('Calendar') }}" title="{{ \Devlib\Lang::text('Calendar') }} · {{ \Devlib\Lang::text('Coming soon') }}"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></button>@endif
+                @if (! empty($d['calendar']['url']))<a class="dl-wcalc-btn" href="{{ $d['calendar']['url'] }}" aria-label="{{ \Devlib\Lang::text('Calendar') }}" title="{{ \Devlib\Lang::text('Calendar') }}"><svg viewBox="0 0 24 24" data-ic="calendar" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M16 3v4M8 3v4M4 11h16M11 15h1M12 15v3"/></svg></a>
+                @else<button type="button" class="dl-wcalc-btn" disabled aria-label="{{ \Devlib\Lang::text('Calendar') }}" title="{{ \Devlib\Lang::text('Calendar') }} · {{ \Devlib\Lang::text('Coming soon') }}"><svg viewBox="0 0 24 24" data-ic="calendar" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M16 3v4M8 3v4M4 11h16M11 15h1M12 15v3"/></svg></button>@endif
             @endif
             @if (! empty($d['calculator']))
                 <x-dl::calculator :quantities="$d['calculator']['quantities'] ?? []" :currencies="$d['calculator']['currencies'] ?? []" :featured="$d['calculator']['featured'] ?? []" :base="$d['calculator']['base'] ?? 'IDR'" :rate-url="$d['calculator']['rate_url'] ?? null" :id="$id.'-calc'" />
