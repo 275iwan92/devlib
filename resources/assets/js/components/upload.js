@@ -66,7 +66,8 @@
     // Undo / Devlib.fill: buang berkas yang dipilih sesudah form dibuka, daftar tersimpan kembali.
     reset() { this.files = []; this.draw(); this.list.innerHTML = this.initial; this.el.classList.toggle('has-file', !!this.list.children.length); }
 
-    take(incoming) { this.files = this.file.multiple ? this.files.concat([...incoming]) : [...incoming].slice(0, 1); this.draw(); }
+    // Prop auto: begitu file dipilih / dilepas, form dikirim (requestSubmit menjalankan juga validasi required dan jalur progress).
+    take(incoming) { this.files = this.file.multiple ? this.files.concat([...incoming]) : [...incoming].slice(0, 1); this.draw(); if (this.el.hasAttribute('data-auto') && this.files.length) this.el.closest('form')?.requestSubmit(); }
   }
   Devlib.define("Upload", Upload);
 })(window.Devlib);

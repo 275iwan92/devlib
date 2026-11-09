@@ -1,4 +1,4 @@
-<div class="dl-upload" data-dl-upload @if ($preview) data-preview @endif @if ($progress) data-progress @endif>
+<div class="dl-upload" data-dl-upload @if ($preview) data-preview @endif @if ($progress) data-progress @endif @if ($auto) data-auto @endif>
     <input id="{{ $uid }}" type="file" name="{{ $name }}{{ $multiple ? '[]' : '' }}" class="dl-upload__input" @if ($accept) accept="{{ $accept }}" @endif @if ($multiple) multiple @endif @disabled($disabled || $readonly)>
     <div class="dl-upload__placeholder" data-dl-upload-empty><span class="dl-upload__icon">📁</span><span>{{ \Devlib\Lang::text('Drag a file') }} / <strong>{{ \Devlib\Lang::text('Choose File') }}</strong>{{ $multiple ? ' '.\Devlib\Lang::text('(more than one allowed)') : '' }}</span></div>
     {{-- value = file yang sudah tersimpan: ['url' => ..., 'name' => ...]; diganti begitu user memilih file baru. --}}

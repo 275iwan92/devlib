@@ -22,6 +22,8 @@ Own props (Blade names are kebab-case; use `:prop="expr"` for anything that is n
 
 | `progress` | `bool`, `false` | Shows a progress bar (`x-dl::progress` look: label "Uploading", percent, 12 px track) inside the box while the form is sent. With `progress` the enclosing form is posted by `XMLHttpRequest` (one file at least must be chosen; with no file the normal submit runs). At 100% the label turns to "Processing" until the server answers. The server answer (the page after its redirect, flash and errors included) replaces the current document through `document.write`, and `window.DevlibReady` is cleared first so DevLib boots again. The form buttons are disabled while sending; a network error re-enables them and shows a toast. Only the first form around the box is hooked; the form must be a plain POST form (do not combine with `x-dl::form` dirty or Undo logic that expects a page navigation). |
 
+| `auto` | `bool`, `false` | Submits the enclosing form (`form.requestSubmit()`) as soon as a file is chosen or dropped, so the user does not have to find the submit button; the normal submit button stays as a fallback. Combine with `progress` to see the bar. Not fired by remove, Undo or reset. |
+
 ### Inherited props
 
 All 14 props come from `Field` (full reference: `x-dl::field.text`). Where this control differs:
