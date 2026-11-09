@@ -25,6 +25,17 @@ class LayerShellWithoutTest extends TestCase
         return array_values(array_unique($m[1]));
     }
 
+    // Prop links: aksi tambahan tepat sesudah Edit profile, membawa url (dibuka sebagai tab).
+    public function test_links_prop_adds_an_action_right_after_edit_profile(): void
+    {
+        $account = ['csrf' => 't', 'profile' => ['url' => '/p'], 'password' => ['url' => '/pw']];
+        $without = ['chat', 'ai', 'help', 'setup'];
+        $links = [['key' => 'clockin', 'label' => 'GPS Clock-In', 'icon' => 'fa-location-dot', 'url' => '/s/clock']];
+        $html = Blade::render('<x-dl::layer-shell :without="$without" :account="$account" :links="$links" :user="$user" logout-action="/out" />', ['account' => $account, 'without' => $without, 'links' => $links, 'user' => ['name' => 'Ann', 'email' => 'a@x.test', 'role' => 'Dev']]);
+        $this->assertSame(['notif', 'edit', 'clockin', 'pass', 'logout'], $this->acts($html));
+        $this->assertStringContainsString('data-url="/s/clock"', $html);
+    }
+
     public function test_default_keeps_every_profile_item(): void
     {
         $html = $this->render([]);

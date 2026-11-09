@@ -9,6 +9,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **`x-dl::layer-shell` prop `links` (opt-in, bawaan `[]`)** (permintaan Jo 2026-11-10): aksi tambahan menu profil `[['key','label','icon','url']]` tepat sesudah Edit profile; membuka `url` sebagai tab (JS `command()` kini membuka tab untuk setiap aksi ber-`data-url`, termasuk My devices). Tanpa `links` markup sama seperti sebelumnya.
 - **`x-dl::print-out` prop `footer` (opt-in, bawaan `null`)** (permintaan Jo 2026-11-07): kaki tiap lembar berformat token `{no}` `{status}` `{page}` `{pages}` (mis. `{no} · {status} · Hal. {page} / {pages}`); `{page}`/`{pages}` diisi `print.js` dari lembar yang terukur, ruang kaki sudah termasuk tinggi lembar. `null` = kaki bawaan lama. Demo `print-co`, panduan `print-out.md`.
 - **`x-dl::print-out` prop `watermark` (opt-in, bawaan `null`)** (permintaan Jo 2026-11-07): cap air diagonal besar di belakang isi tiap lembar (mis. `DRAFT`, `CANCELLED`), warna token `--dl-pr-neg` transparan, ukuran mengikuti lebar kertas (A4, A4 lanskap, A5), ikut tercetak; `null` = tanpa cap air. Demo `print-co`, panduan, tes.
 

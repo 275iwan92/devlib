@@ -74,6 +74,9 @@ class LayerShell extends DevlibComponent
         public ?string $deviceAction = null,
         // Alamat layar "My devices" (opt-in; null = tanpa aksi): menambah aksi di menu profil, antara Edit profile dan Help & support, yang membuka alamat itu sebagai tab.
         public ?string $devicesUrl = null,
+        // Aksi tambahan menu profil (opt-in; [] = tanpa aksi): [['key', 'label', 'icon' => 'fa-...', 'url']]; dipasang tepat sesudah Edit profile
+        // (sebelum My devices dan Help & support) dan membuka url sebagai tab biasa (Jo 2026-11-10: Absen GPS (Mobile) sejajar Edit profile).
+        public array $links = [],
     ) {
         $identity = Brand::identity();
         $this->brand ??= $identity['name'];
@@ -175,6 +178,7 @@ class LayerShell extends DevlibComponent
             $has('chat') ? ['key' => 'chat', 'label' => 'Chat', 'icon' => 'fa-comment-dots'] : null,
             $has('ai') ? ['key' => 'ai', 'label' => Lang::text('AI Assistant'), 'icon' => 'ai'] : null,
             $has('edit') ? ['key' => 'edit', 'label' => Lang::text('Edit profile'), 'icon' => 'fa-user-pen'] + $mark() : null,
+            ...array_map(fn (array $l) => ['key' => $l['key'], 'label' => Lang::text($l['label']), 'icon' => $l['icon'] ?? 'fa-link', 'url' => $l['url']] + $mark(), $this->links),
             $this->devicesUrl ? ['key' => 'devices', 'label' => Lang::text('My devices'), 'icon' => 'fa-laptop', 'url' => $this->devicesUrl] + $mark() : null,
             $has('help') ? ['key' => 'help', 'label' => Lang::text('Help & support'), 'icon' => 'help'] + $mark() : null,
             $this->deviceAction ? ['key' => 'device', 'label' => Lang::text('Phone view'), 'icon' => 'fa-mobile-screen'] + $mark() : null,
