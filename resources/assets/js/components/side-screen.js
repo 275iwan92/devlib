@@ -113,6 +113,11 @@
     static selector = '[data-dl-ss-layout]';
     init() {
       this.on('click', '[data-dl-ss-nav]', (e, b) => this.show(b.dataset.dlSsNav));
+      // Tautan perintah Shell (Notifications, Absen GPS, Sign out): dikirim ke jendela induk (Layer Shell menjalankan aksi menu profil yang sama).
+      // Berdiri sendiri (tanpa induk) = tautan berurl diikuti biasa, tautan tanpa url disembunyikan.
+      const embedded = window.parent !== window;
+      $$(this.el, '[data-dl-embedded-only]').forEach(a => { a.hidden = !embedded; });
+      this.on('click', '[data-dl-ss-cmd]', (e, a) => { if (embedded) { e.preventDefault(); window.parent.postMessage({dl: 'command', key: a.dataset.dlSsCmd}, location.origin); } });
       window.addEventListener('message', e => { if (e.data && e.data.dl === 'ss-search') this.filter(e.data.q); });
       // Esc di dalam iframe = tutup jendela induk (Side Screen mendengarkan pesan ini).
       document.addEventListener('keydown', e => { if (e.key === 'Escape' && window.name === 'dl-wide' && window.parent !== window) window.parent.postMessage({dl: 'ss-close'}, '*'); });
@@ -143,7 +148,10 @@
       $$(this.el, '[data-dl-ss-nav]').forEach(b => b.classList.toggle('is-on', b.dataset.dlSsNav === key));
       $$(this.el, '[data-dl-ss-panel]').forEach(p => p.classList.toggle('is-active', p.dataset.dlSsPanel === key));
       const b = $(this.el, `[data-dl-ss-nav="${key}"]`), p = $(this.el, `[data-dl-ss-panel="${key}"]`);
-      if (b) { $(this.el, '[data-dl-ss-sec-title]').textContent = b.dataset.label; const i = $(this.el, '[data-dl-ss-sec-icon]'); if (i) i.className = 'fa-solid ' + (b.dataset.icon || 'fa-circle'); }
+      if (b) {
+        $(this.el, '[data-dl-ss-sec-title]').textContent = b.dataset.label; const i = $(this.el, '[data-dl-ss-sec-icon]'); if (i) i.className = 'fa-solid ' + (b.dataset.icon || 'fa-circle');
+        const sec = $(this.el, '.dl-ssl__sec'); if (b.dataset.tone) sec.dataset.tone = b.dataset.tone; else delete sec.dataset.tone;   // kepala bagian ikut nada rel
+      }
       if (p) $(this.el, '[data-dl-ss-sec-hint]').textContent = p.dataset.hint || '';
       $(this.el, '[data-dl-ss-body]').scrollTop = 0;
       try { const u = new URL(location.href); u.searchParams.set(this.el.dataset.dlSsParam || 'tab', key); history.replaceState(history.state, '', u); } catch (e) {}

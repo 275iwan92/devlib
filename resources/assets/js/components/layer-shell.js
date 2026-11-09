@@ -1,7 +1,7 @@
 /* REMARK
  * Tujuan       : Kerangka aplikasi (satu-satunya menu utama): Layer Menu di kiri, tab kerja (iframe) per layar, palet Ctrl+K, laci Help / Chat; menerima pesan dari layar di dalam tab (help, open-item, open-tab, menu).
  * Sumber hulu  : Data menu x-dl::layer-shell; pesan postMessage dari layar (core.js, help-map.js).
- * Input        : Klik menu, tombol data-dl-tab-url, pesan {dl: 'help' | 'open-item' | 'open-tab' | 'menu'}.
+ * Input        : Klik menu, tombol data-dl-tab-url, pesan {dl: 'help' | 'open-item' | 'open-tab' | 'menu' | 'command'}.
  * Output       : Tab terbuka / aktif, menu kiri menyorot layar.
  * Dipakai oleh : x-dl::layer-shell (LayerShell.php) dan layar v2.
  * Status       : Aktif.
@@ -48,6 +48,11 @@
       window.addEventListener('message', e => {
         if (e.origin !== location.origin) return;
         if (e.data?.dl === 'help') this.openHelp(e.data.hash);
+        // Menu akun di dalam layar lebar (rel Edit profile: Notifications, Absen GPS, Sign out): jendela lebar ditutup lalu aksi menu profil yang sama dijalankan.
+        else if (e.data?.dl === 'command' && ['notif', 'clockin', 'logout'].includes(e.data.key)) {
+          $$(this.el, '[data-dl-side-screen]').forEach(w => w.dlComponent?.isOpen?.() && w.dlComponent.close());
+          this.command(e.data.key);
+        }
         // Help map "Open screen": open the item as a work tab and keep the Help window open, floating so both are visible.
         else if (e.data?.dl === 'open-item') {
           const w = this.wideDrawer('help')?.dlComponent, d = e.data;

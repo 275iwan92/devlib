@@ -553,6 +553,20 @@ fieldset:disabled .dl-selectadd__btn,.dl-form.is-view .dl-selectadd__btn{display
 .dl-ssl.is-narrow .dl-ssl__crumb{display:none}
 .dl-ssl.is-narrow .dl-ssl__panel{padding:12px 14px 24px}
 .dl-ssl.is-narrow .dl-ssl__foot{margin:auto -14px -24px;padding:10px 14px}
+/* Rel berwarna (Jo 2026-11-10): tiap bagian = ubin ikon bernada (prop tones); nada yang sama mewarnai kepala bagian dan kartu bertone. Teks tetap hitam. */
+.dl-ssl [data-tone]{--tc:var(--dl-accent)}
+.dl-ssl [data-tone=violet]{--tc:var(--dl-violet)}.dl-ssl [data-tone=success]{--tc:var(--dl-green)}.dl-ssl [data-tone=warn]{--tc:var(--dl-tangerine)}.dl-ssl [data-tone=teal]{--tc:var(--dl-ch-teal)}
+.dl-ssl [data-tone=pink]{--tc:var(--dl-pink)}.dl-ssl [data-tone=orange]{--tc:var(--dl-orange)}.dl-ssl [data-tone=danger]{--tc:var(--dl-danger)}.dl-ssl [data-tone=lime]{--tc:var(--dl-lime)}
+.dl-ssl__nav[data-tone]{padding:5px 8px;border-radius:10px}
+.dl-ssl__nav[data-tone] i{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--tc);color:var(--dl-on-accent);font-size:14px}
+.dl-ssl__nav[data-tone]:hover{background:color-mix(in srgb,var(--tc) 12%,var(--dl-surface))}
+.dl-ssl__nav[data-tone].is-on{background:color-mix(in srgb,var(--tc) 20%,var(--dl-surface));color:var(--dl-ink-strong);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tc) 45%,transparent)}
+.dl-ssl__nav[data-tone].is-on i{color:var(--dl-on-accent)}
+.dl-ssl__nav[data-tone].is-on::before{background:var(--tc);top:6px;bottom:6px}
+.dl-ssl__nav[hidden]{display:none}
+.dl-ssl__panel>.dl-pbanner{flex:none}
+.dl-ssl__sec[data-tone]{background:color-mix(in srgb,var(--tc) 14%,var(--dl-surface));border-left:5px solid var(--tc);padding:8px 26px 8px 16px}
+.dl-ssl__sec[data-tone]>i{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--tc);color:var(--dl-on-accent);font-size:17px}
 @media (max-width:900px){.dl-ss__search{display:none}.dl-ss__esc{display:none}}
 .dl-dr-head{height:56px;display:flex;align-items:center;gap:9px;padding:0 16px;border-bottom:1px solid var(--dl-border);flex-shrink:0}
 .dl-dr-ico{color:var(--dl-accent-ink)}.dl-dr-ico--ai{color:var(--dl-violet)}
@@ -2752,6 +2766,11 @@ html.dl-locked body{overflow:hidden}
 .dl-lm__ov .dl-lm__a:hover,.dl-lm__ov .dl-lm__back:hover{background:var(--dl-hover);color:var(--dl-ink-strong)}
 .dl-lm__ov .dl-lm__ico,.dl-lm__ov .dl-lm__back,.dl-lm__ov .dl-lm__chev{color:var(--dl-muted)}
 .dl-lm__ov .dl-lm__a.is-danger,.dl-lm__ov .dl-lm__a.is-danger .dl-lm__ico{color:var(--dl-danger)}
+/* Menu profil berwarna (Jo 2026-11-10): tiap aksi akun = ubin ikon bernada (notif, edit, clockin, pass, logout); teks tidak berubah. */
+.dl-lm__ov .dl-lm__a[data-lm-act]{--tc:var(--dl-accent);padding:6px 10px;border-radius:10px}
+.dl-lm__ov .dl-lm__a[data-lm-act=notif]{--tc:var(--dl-tangerine)}.dl-lm__ov .dl-lm__a[data-lm-act=clockin]{--tc:var(--dl-green)}.dl-lm__ov .dl-lm__a[data-lm-act=pass]{--tc:var(--dl-violet)}.dl-lm__ov .dl-lm__a[data-lm-act=logout]{--tc:var(--dl-danger)}.dl-lm__ov .dl-lm__a[data-lm-act=edit]{--tc:var(--dl-accent)}
+.dl-lm__ov .dl-lm__a[data-lm-act] .dl-lm__ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--tc);color:var(--dl-on-accent)}
+.dl-lm__ov .dl-lm__a[data-lm-act]:hover{background:color-mix(in srgb,var(--tc) 14%,var(--dl-surface))}
 .dl-lm__ov .dl-lm__title{color:var(--dl-ink-strong);border-color:var(--dl-border)}
 .dl-lm__ov .dl-lm__ib{color:var(--dl-muted)}.dl-lm__ov .dl-lm__ib:hover{background:var(--dl-hover);color:var(--dl-ink-strong)}
 .dl-lm__ovbar{display:flex;justify-content:flex-end}
@@ -4966,6 +4985,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 /* Upload: tahap Processing = warna lain (violet) + garis bergerak, karena lama pembacaan di server tak terukur. */
 .dl-upload__progress.is-processing .dl-progress__bar{width:100% !important;background:repeating-linear-gradient(45deg,var(--dl-violet) 0 12px,color-mix(in srgb,var(--dl-violet) 70%,var(--dl-surface)) 12px 24px);background-size:34px 34px;animation:dl-upload-stripes 1s linear infinite}
 @keyframes dl-upload-stripes{to{background-position:34px 0}}
+.dl-card--tone[data-tone=pink]{--tc:var(--dl-pink)}.dl-card--tone[data-tone=orange]{--tc:var(--dl-orange)}.dl-card--tone[data-tone=danger]{--tc:var(--dl-danger)}.dl-card--tone[data-tone=lime]{--tc:var(--dl-lime)}
 [data-dl-upload-fallback][hidden]{display:none !important}
 
 /* ================= TIMELINE (garis waktu: titik berwarna per jenis, terbaru di atas) ================= */

@@ -137,6 +137,7 @@ As the Shell uses it (iframe mode; one per entry of the `drawers` prop of `x-dl:
 ## Related
 
 - `x-dl::side-screen.layout`: the content: vertical section rail, sticky section title, one slot per section.
+  - Colored rail (opt-in, Jo 2026-11-10): prop `tones` `[sectionKey => accent|violet|success|warn|teal|pink|orange|danger|lime]` turns each rail item into a colored icon tile and tints the section head in the same tone. `links` `[caption => [[label, icon, url|null, target, tone, command]]]` add rail links (an empty caption adds no heading); `command` (`notif`, `clockin`, `logout`) is sent to the Shell with `postMessage({dl: "command", key})`, which closes the wide windows and runs the same profile-menu action; a link without `url` is shown only when the page runs inside the Shell.
 - `x-dl::side-screen.foot`: the sticky action row at the bottom of a section.
 - `x-dl::layer-shell`: the Shell that renders side screens from its `drawers` prop and opens them from the profile menu.
 - `x-dl::drawer`: the narrow side panel (opened with `data-dl-open`); `x-dl::modal`: the centered dialog.

@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Kotak berjudul untuk mengelompokkan isi (bagian form, panel info). Slot "actions" = tombol di kanan judul.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : title, description, variant, icon, tone (accent, success, violet, warn, teal).
+ * Input        : title, description, variant, icon, tone (accent, success, violet, warn, teal, pink, orange, danger, lime).
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : button, card-actionbar, dev-mode, doc-share dan 12 lainnya (layar katalog/proyek).
  * Status       : Aktif (DevLib).
