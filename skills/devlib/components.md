@@ -38,6 +38,11 @@ Kotak pesan sebaris. Kosong = tersembunyi (bisa diisi lewat JS). Slot = isi kaya
 - Berkas: `src/Components/Alert.php`
 - Prop: tone:string='danger', message:?string=NULL, items:array=[]
 
+## `<x-dl::alert-strip>`
+Strip notifikasi di atas dashboard: satu notifikasi = teks diam + tombol; dua atau lebih = teks BERJALAN (ticker) yang berhenti saat disentuh/di-hover, tiap notifikasi bisa diklik ke sumbernya. Warna strip mengikuti notifikasi paling genting (danger > warn > info > success); tiap notifikasi berwarna menurut jenisnya.
+- Berkas: `src/Components/AlertStrip.php`
+- Prop: items:array=[]
+
 ## `<x-dl::announce>`
 Pengumuman bergantian (dari file teks lewat x-dl::frame announce="...").
 - Berkas: `src/Components/Announce.php`
@@ -121,7 +126,7 @@ Kalender acara (mockup_UIUX_calendar): kiri = Create Event + kalender mini + car
 ## `<x-dl::card>`
 Kotak berjudul untuk mengelompokkan isi (bagian form, panel info). Slot "actions" = tombol di kanan judul.
 - Berkas: `src/Components/Card.php`
-- Prop: title:?string=NULL, description:?string=NULL, variant:string='section', icon:?string=NULL
+- Prop: title:?string=NULL, description:?string=NULL, variant:string='section', icon:?string=NULL, tone:?string=NULL
 
 ## `<x-dl::chart>`
 Grafik SVG tanpa library luar. Satu format data untuk semua tipe:.
@@ -416,7 +421,7 @@ Toleransi (selisih boleh) dalam SATU kontrol ringkas: dropdown arah (± + −) d
 ## `<x-dl::field.upload>`
 Unggah file (tarik-lepas / pilih) + pratinjau nama file.
 - Berkas: `src/Components/Field/Upload.php`, tampilan `resources/views/components/field/upload.blade.php`
-- Prop: accept:?string=NULL, multiple:bool=false, preview:bool=true, name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
+- Prop: accept:?string=NULL, multiple:bool=false, preview:bool=true, progress:bool=false, auto:bool=false, name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
 
 ## `<x-dl::floor-plan>`
 Denah dengan titik objek (floor plan): persegi ruang berlabel "KODE Nama" (atau gambar denah sebagai latar) dengan titik bulat berwarna menurut status (success | warn | danger | neutral) dan bernomor; titik dipilih dengan klik, ketuk, atau papan ketik; kartu detail di bawah diisi layar pemanggil.
@@ -426,7 +431,7 @@ Denah dengan titik objek (floor plan): persegi ruang berlabel "KODE Nama" (atau 
 ## `<x-dl::flow>`
 Diagram alur proses berupa blok bersambung (gaya pipeline approval), untuk menjelaskan alur antar modul/dokumen.
 - Berkas: `src/Components/Flow.php`
-- Prop: steps:array=[], title:string='', vertical:bool=false, source:?string=NULL
+- Prop: steps:array=[], title:string='', vertical:bool=false, vivid:bool=false, source:?string=NULL
 
 ## `<x-dl::forgot-box>`
 Isi kotak Lupa Password. mode="email" (mockup forgot-password.html): isi email -> pesan selalu sama.
@@ -1016,5 +1021,5 @@ Jam dunia pribadi: kartu per kota (jam berjalan, tanggal, hari/malam, selisih ja
 ## `<x-dl::year-calendar>`
 Kalender setahun (12 bulan sekaligus) untuk hari libur / hari kerja: tanggal bertanda diwarnai per tone,.
 - Berkas: `src/Components/YearCalendar.php`
-- Prop: year:int=(wajib), marks:array=[], legend:array=[], offDays:array=[…], newUrl:?string=NULL, source:?string=NULL
+- Prop: year:int=(wajib), marks:array=[], legend:array=[], offDays:array=[…], newUrl:?string=NULL, source:?string=NULL, span:int=12, from:int=1, markOff:bool=false
 
