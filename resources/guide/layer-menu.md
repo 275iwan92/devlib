@@ -86,6 +86,7 @@ Constructor of `Devlib\Components\LayerMenu`: 19 props. Use `:prop="expr"` for a
 - Back: the `Back` button, the key `Escape` or `ArrowLeft` while the focus is inside the track and the menu is shown. There is no breadcrumb in the panel; breadcrumbs belong to screens.
 - Clicking a final screen: marks it `is-active`, stores it, closes the floating (peek) menu in mini mode, fires `dl:layer-menu` (cancelable) and, when the leaf has no `url`, shows a preview toast (`Open: A › B (preview)`).
 - Layer title (the name above the list of a branch, e.g. "Sales"): when the branch item carries `hub` (url), `hubKey` (tab key) and optionally `hubLabel` (tab name, default the item label; set it when the page belongs to a parent branch) the title is clickable (`is-hub`, `data-lm-hub`, Enter works) and fires `dl:layer-menu-open`; the look does not change and the panel does not move. Unlike `open`, `hub` does nothing when the layer is entered. `x-dl::layer-shell` passes `hub` from modules and groups (`hubKey` = their `code`).
+- Layer-1 section caption (e.g. "Operational", a `group` caption that is not a fold button): with `home` on it works like the logo (`data-lm-cap-home`, Enter works) and fires `dl:layer-menu-action` key `home`; in the shell this closes all tabs and shows the opening screen. Look unchanged, small hover nudge.
 - The position (opened path labels, selected key, current view) is saved in `localStorage` `dl-lm-<id>` and restored on load; `active` and the view that contains it take priority.
 
 ### Group folding (`fold-groups`)

@@ -25,8 +25,8 @@
       } catch (e) {}
       this.st = {chat: false, dock: false, show: 'menu'};   // show = menu | chat | profile (yang tampil di panel kiri)
       this.initViews();
-      this.track.addEventListener('click', e => { const t = e.target.closest('button, a'); if (t) this.click(e, t); else if (e.target.closest('[data-lm-hub]')) this.hub(e.target.closest('[data-lm-hub]')); });
-      this.track.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('[data-lm-hub]')) this.hub(e.target); });
+      this.track.addEventListener('click', e => { const t = e.target.closest('button, a'); if (t) this.click(e, t); else if (e.target.closest('[data-lm-hub]')) this.hub(e.target.closest('[data-lm-hub]')); else if (e.target.closest('[data-lm-cap-home]')) this.goHome(); });
+      this.track.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('[data-lm-hub]')) this.hub(e.target); else if (e.key === 'Enter' && e.target.matches('[data-lm-cap-home]')) this.goHome(); });
       this.el.addEventListener('keydown', e => {
         if (e.key === 'Escape' && this.peek && this.st.show === 'menu') { this.setPeek(false); return; }
         if ((e.key === 'Escape' || e.key === 'ArrowLeft') && this.st.show === 'menu' && this.path.length && e.target.closest('[data-lm-track]')) { e.preventDefault(); this.back(); }
@@ -42,7 +42,7 @@
       this.miniBtn = this.$('[data-lm-mini]');
       this.$('[data-lm-search]')?.addEventListener('click', () => this.emit('dl:layer-menu-action', {key: 'palette'}, true));
       // Logo + nama aplikasi (prop home) = kembali ke opening screen; yang menutup tab adalah pemakai event (Shell::goHome).
-      const home = this.$('[data-lm-home]'), goHome = () => { this.setPeek(false); this.emit('dl:layer-menu-action', {key: 'home'}, true); };
+      const home = this.$('[data-lm-home]'), goHome = () => this.goHome();
       home?.addEventListener('click', goHome);
       home?.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHome(); } });
       if (!this.miniBtn) return;
@@ -147,12 +147,14 @@
 
     pane(d) {
       const counts = this.el.dataset.counts === '1';
+      // Judul seksi layer 1 (mis. OPERATIONAL) = pintu ke opening screen seperti logo, bila prop home aktif (tampilan tetap, hanya hover kecil).
+      const cap = this.$('[data-lm-home]') ? ' data-lm-cap-home role="button" tabindex="0"' : '';
       let h = '';
       if (d) {
         const p = this.path[d - 1];
         // p.hub = url halaman modul / grup: judul layer jadi pintu kembali ke halaman itu (tampilan tetap, hanya kursor tangan).
         h += BACK + `<div class="dl-lm__title${p.hub ? ' is-hub' : ''}" title="${esc(p.label)}"${p.hub ? ' data-lm-hub role="button" tabindex="0"' : ''}><i class="${esc(p.icon)}"></i><b>${esc(p.label)}</b></div>`;
-      } else h += `<div class="dl-lm__cap">${esc(this.views.length ? this.views[this.view].label : this.el.dataset.root)}</div>`;
+      } else h += `<div class="dl-lm__cap"${cap}>${esc(this.views.length ? this.views[this.view].label : this.el.dataset.root)}</div>`;
       let g = null, open = false;
       const foldable = !d && this.foldMode !== '0', shut = () => { if (open) { h += '</div></div>'; open = false; } };
       const nodes = this.nodes(d), size = {};
@@ -167,7 +169,7 @@
       nodes.forEach((n, x) => {
         if (n.group && n.group !== g) {
           g = n.group; shut();
-          if (!foldable) h += `<div class="dl-lm__cap">${esc(g)}</div>`;
+          if (!foldable) h += `<div class="dl-lm__cap"${d ? '' : cap}>${esc(g)}</div>`;
           else {
             // Judul = tombol lipat; anak menunya dalam satu pembungkus yang menggulung ke atas di belakang judul.
             const folded = this.isFolded(g), tally = counts ? `<em class="dl-lm__cap-n">${size[g] || 0}</em>` : '';
@@ -222,6 +224,9 @@
       });
       try { localStorage.setItem('dl-lm-' + this.el.dataset.id + '-fold', JSON.stringify(this.foldMode === 'accordion' ? {open: this.open} : [...this.fold])); } catch (e) {}
     }
+
+    // Kembali ke opening screen (logo + nama aplikasi, dan judul seksi layer 1 bila prop home aktif); yang menutup tab adalah pemakai event (Shell::goHome).
+    goHome() { this.setPeek(false); this.emit('dl:layer-menu-action', {key: 'home'}, true); }
 
     // Klik judul layer (node jalur yang punya hub): panel kanan membuka halaman node itu, menu kiri tidak bergeser.
     hub(t) {
