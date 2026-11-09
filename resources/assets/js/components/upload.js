@@ -33,13 +33,14 @@
       const form = e.target, box = $(this.el, '[data-dl-upload-progress]'), bar = $(box, '[data-dl-upload-bar]'), pct = $(box, '[data-dl-upload-pct]'), txt = $(box, '[data-dl-upload-pt]');
       const lock = form.querySelectorAll('button,[type=submit]'); lock.forEach(b => { b.disabled = true; });
       box.hidden = false; this.el.classList.add('is-sending');
-      const fail = () => { lock.forEach(b => { b.disabled = false; }); box.hidden = true; this.el.classList.remove('is-sending'); Devlib.toast(box.dataset.failed, 'danger'); };
+      const fail = () => { lock.forEach(b => { b.disabled = false; }); box.hidden = true; this.el.classList.remove('is-sending'); form.querySelectorAll('[data-dl-upload-fallback]').forEach(e => { e.hidden = false; }); Devlib.toast(box.dataset.failed, 'danger'); };
       const xhr = new XMLHttpRequest();
       xhr.open('POST', form.action);
       xhr.upload.onprogress = ev => {
         const p = ev.lengthComputable ? Math.round(ev.loaded / ev.total * 100) : 0;
         bar.style.width = p + '%'; pct.textContent = p + '%';
-        if (p >= 100) txt.textContent = box.dataset.processing;  // terkirim semua; server masih membaca berkas
+        // Terkirim semua; server masih membaca / memeriksa berkas (lamanya tak terukur): bar berganti warna dan bergaris bergerak.
+        if (p >= 100) { box.classList.add('is-processing'); txt.textContent = box.dataset.processing; pct.textContent = '…'; }
       };
       xhr.onerror = fail;
       xhr.onload = () => { const html = xhr.responseText; history.replaceState(null, '', xhr.responseURL || location.href); window.DevlibReady = undefined; document.open(); document.write(html); document.close(); };

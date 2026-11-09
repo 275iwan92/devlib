@@ -4863,3 +4863,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-upload__progress .dl-progress__label{font-size:calc(15px * var(--dl-font-scale));font-weight:600}
 .dl-upload__progress .dl-progress__track{height:12px}
 .dl-upload.is-sending{pointer-events:none}
+/* Upload: tahap Processing = warna lain (violet) + garis bergerak, karena lama pembacaan di server tak terukur. */
+.dl-upload__progress.is-processing .dl-progress__bar{width:100% !important;background:repeating-linear-gradient(45deg,var(--dl-violet) 0 12px,color-mix(in srgb,var(--dl-violet) 70%,var(--dl-surface)) 12px 24px);background-size:34px 34px;animation:dl-upload-stripes 1s linear infinite}
+@keyframes dl-upload-stripes{to{background-position:34px 0}}
+[data-dl-upload-fallback][hidden]{display:none !important}
