@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Isi Side Screen (user 2026-10-04): rel bagian VERTIKAL di kiri (menggantikan tab mendatar; 4 bagian Help / 11 bagian.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : sections, active, groups, hints, links, crumbs, param.
+ * Input        : sections, active, groups, hints, links, crumbs, param, rail.
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : side-screen (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -31,6 +31,8 @@ class Layout extends Tabs
         public array $crumbs = [],
         // Nama parameter query yang menyimpan bagian aktif (dipakai form yang kembali ke bagian yang sama).
         public string $param = 'tab',
+        // false = tanpa rel (Jo 2026-11-10): bagian dipilih lewat menu panel kiri (satu item per bagian, ?<param>=<kunci>), isi melebar penuh.
+        public bool $rail = true,
     ) {
         parent::__construct(tabs: $sections, active: $active, vertical: true);
     }
@@ -49,8 +51,8 @@ class Layout extends Tabs
     {
         return <<<'BLADE'
             @php $cur = $active ?? array_key_first($sections); @endphp
-            <div {{ $attributes->class(['dl-ssl']) }} {!! $dl() !!} data-dl-ss-layout data-dl-ss-param="{{ $param }}" data-l-back="{{ \Devlib\Lang::text('Back') }}">
-                <nav class="dl-ssl__rail" aria-label="{{ \Devlib\Lang::text('Sections') }}">
+            <div {{ $attributes->class(['dl-ssl', 'dl-ssl--norail' => ! $rail]) }} {!! $dl() !!} data-dl-ss-layout data-dl-ss-param="{{ $param }}" data-l-back="{{ \Devlib\Lang::text('Back') }}">
+                @if ($rail)<nav class="dl-ssl__rail" aria-label="{{ \Devlib\Lang::text('Sections') }}">
                     @php $first = true; @endphp
                     @foreach ($sections as $key => $s)
                         @if (isset($groups[$key]))<div class="dl-ssl__cap">{{ $groups[$key] }}</div>@elseif ($first)<div class="dl-ssl__cap">{{ \Devlib\Lang::text('Sections') }}</div>@endif
@@ -66,7 +68,7 @@ class Layout extends Tabs
                             <a class="dl-ssl__nav" href="{{ $l[2] }}" title="{{ \Devlib\Lang::text($l[0]) }}" @if (! empty($l[3])) target="{{ $l[3] }}" @endif><i class="fa-solid {{ \Devlib\Icon::fa($l[1]) }}"></i><span>{{ \Devlib\Lang::text($l[0]) }}</span></a>
                         @endforeach
                     @endforeach
-                </nav>
+                </nav>@endif
                 <div class="dl-ssl__body" data-dl-ss-body>
                     <div class="dl-ssl__sec">
                         <i class="fa-solid {{ ($sections[$cur][1] ?? null) ? \Devlib\Icon::fa($sections[$cur][1]) : 'fa-circle' }}" data-dl-ss-sec-icon></i>

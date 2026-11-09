@@ -546,6 +546,7 @@ fieldset:disabled .dl-selectadd__btn,.dl-form.is-view .dl-selectadd__btn{display
 .dl-ssl__foot{position:sticky;bottom:-30px;margin:auto -26px -30px;padding:10px 26px;background:var(--dl-surface);border-top:1px solid var(--dl-border);display:flex;gap:8px;align-items:center;z-index:4}
 .dl-ssl__foot-acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .dl-ssl__foot-hint{margin-left:auto;font-size:calc(11.5px * var(--dl-font-scale));color:var(--dl-muted)}
+.dl-ssl--norail,.dl-ssl.dl-ssl--norail.is-narrow{grid-template-columns:1fr}.dl-ssl--norail .dl-ssl__back{display:none}
 .dl-ssl.is-narrow{grid-template-columns:56px 1fr}
 .dl-ssl.is-narrow .dl-ssl__cap,.dl-ssl.is-narrow .dl-ssl__nav span,.dl-ssl.is-narrow .dl-ssl__n{display:none}
 .dl-ssl.is-narrow .dl-ssl__nav{justify-content:center;padding:10px 0}
@@ -4841,6 +4842,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl{display:block;height:auto;scroll-margin-top:64px}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl[data-ss-view=list] .dl-ssl__body{display:none}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl[data-ss-view=detail] .dl-ssl__rail{display:none}
+:is(body.dl-on-phone,.dl-phone) .dl-ssl--norail[data-ss-view=list] .dl-ssl__body{display:flex}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__rail{border-right:0;background:none;padding:0;gap:0;overflow:visible}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__cap{font-size:calc(12px * var(--dl-font-scale));padding:16px 4px 6px}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__nav{min-height:52px;padding:8px 12px;font-size:16px;background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:0;margin-top:-1px}
