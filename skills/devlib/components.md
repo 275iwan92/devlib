@@ -171,7 +171,7 @@ Pembuat kode QR dan barcode: pilih jenis, ketik isinya, hasil tampil langsung, l
 ## `<x-dl::cols>`
 Dua (atau lebih) blok berdampingan yang otomatis bertumpuk di layar sempit (grid auto-fit 320px, jarak 12px).
 - Berkas: `src/Components/Cols.php`
-- Prop: (tanpa prop)
+- Prop: ratio:string=''
 
 ## `<x-dl::countdown>`
 Timer hitung mundur pribadi: menit dapat diatur (- / +, 1-600), cincin progres, Start/Pause/Reset, daftar preset (klik = pakai, simpan preset baru dari menit sekarang, hapus). Selesai: bunyi 'timer' (Devlib.sound, bawaan mati), toast, judul tab.

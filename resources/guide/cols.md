@@ -19,7 +19,7 @@ Extra attributes (`id`, `class`, `style`, `data-*`) are merged onto the `div`; a
 
 ## Props
 
-`Devlib\Components\Cols` has no constructor and therefore no props (the Manifest lists none). There is no `cols` / `gap` / `min` prop: the number of columns follows from the width. To change the gap or the minimum width, override the rule in the project CSS (`.dl-cols { gap: ...; grid-template-columns: ... }`) or pass a `style` attribute (use theme tokens, not hex colors).
+`Devlib\Components\Cols` has one optional prop, `ratio` (string, default empty = the auto-fit grid below). `ratio="2:1"` or `"1:2"` gives two columns of that proportion from a 700px wide container up (stacked below); `ratio="1"` forces one column (a vertical stack of cards, e.g. the right half of a 2:1 row). There is no `cols` / `gap` / `min` prop: otherwise the number of columns follows from the width. To change the gap or the minimum width, override the rule in the project CSS (`.dl-cols { gap: ...; grid-template-columns: ... }`) or pass a `style` attribute (use theme tokens, not hex colors).
 
 The only input is the default slot: each direct child becomes one grid cell.
 
