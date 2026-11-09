@@ -41,6 +41,9 @@ namespace Devlib\Components;
 //    'route' => [id bin, ...]  garis putus-putus melewati bin berurutan (bin di lantai lain dilewati),
 //    'end' => id bin tujuan (mis. staging) bertanda panah, 'title' / 'rows' => [['no', 'bin', 'sub', 'qty'], ...] / 'notes' => [teks]  isi panel kanan sebelum ada bin dipilih].
 // $restackUrl = alamat POST untuk menukar urutan tumpukan: '{id}' = id satuan, '{dir}' = up | down (null = tanpa tombol tukar).
+// $moveUrl = alamat POST {from, to, lines: [{key, qty}]} (JSON) untuk mode Move Stock: bin berisi diseret ke bin lain (lantai lain: seret ke tab lantai),
+//   pop up meminta qty per item (bawaan = seluruh stok), server memposting dan menjawab {message, undo: alamat POST pembatal} atau 422 {message}; null = tanpa mode itu.
+//   Item bin harus memuat 'key' (kunci posisi stok) dan 'qtyIn' (qty penuh, teks siap input) supaya pop up tahu apa yang dipindah.
 // $saveUrl = alamat POST {zone, x, y, w, h} saat area digeser / diubah ukurannya di mode Edit Layout (null = peta hanya-baca).
 // Warna: kosong = putih, terisi = biru, penuh = kuning, lebih dari kapasitas = oranye, diblokir = arsir, DEAD STOCK = merah
 // (merah menang atas warna isi). Event: dl:whmap-select {id, code}.
@@ -70,6 +73,7 @@ class WhMap extends DevlibComponent
         public ?string $restackUrl = null,
         public ?string $source = null,
         public array $layer = [],
+        public ?string $moveUrl = null,
     ) {
         $this->floor ??= $this->floors[0]['no'] ?? 1;
         if (! $this->outline) {
@@ -178,7 +182,7 @@ class WhMap extends DevlibComponent
     public function config(): array
     {
         return ['id' => $this->id, 'bins' => (object) $this->bins, 'actions' => $this->actions, 'selected' => $this->selected, 'floor' => $this->floor,
-            'saveUrl' => $this->saveUrl, 'restackUrl' => $this->restackUrl, 'csrf' => $this->saveUrl || $this->actions || $this->restackUrl ? csrf_token() : null, 'scale' => self::SCALE, 'status' => self::STATUS, 'empty' => $this->empty];
+            'saveUrl' => $this->saveUrl, 'restackUrl' => $this->restackUrl, 'moveUrl' => $this->moveUrl, 'csrf' => $this->saveUrl || $this->actions || $this->restackUrl || $this->moveUrl ? csrf_token() : null, 'scale' => self::SCALE, 'status' => self::STATUS, 'empty' => $this->empty];
     }
 
     public function render()

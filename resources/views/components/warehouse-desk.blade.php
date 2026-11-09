@@ -31,7 +31,7 @@
             </x-dl::empty-state>
         @else
             <x-dl::wh-map id="wh-map-{{ $d['wh'] }}" :title="Lang::raw($d['title'])" :width="$m['width']" :height="$m['height']" :outline="$m['outline']"
-                :floors="$m['floors']" :bins="$m['bins']" :floor="$m['floor']" :selected="$m['selected']" :save-url="$m['saveUrl']" :restack-url="$m['restackUrl']"
+                :floors="$m['floors']" :bins="$m['bins']" :floor="$m['floor']" :selected="$m['selected']" :save-url="$m['saveUrl']" :restack-url="$m['restackUrl']" :move-url="$m['moveUrl'] ?? null"
                 :source="$srcFor('map')"
                 :actions="$m['actions']" :layer="$m['layer'] ?? []" />
             <x-dl::card title="Capacity per Floor" icon="fa-ruler-combined" description="Floor area and clear height give the room volume. Storage volume = area of the storage areas x their stacking height. In use = estimated volume and weight of the stock (paper: sheets x size x thickness).">

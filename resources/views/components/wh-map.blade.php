@@ -9,7 +9,7 @@
     $cfg['status'] = array_map(fn ($s) => Lang::text($s), WhMap::STATUS);
     $cfg['text'] = array_map(fn ($s) => Lang::text($s), ['bin' => 'Bin', 'capacity' => 'Capacity', 'item' => 'Item', 'qty' => 'Qty', 'idle' => 'Idle', 'dead' => 'Dead stock',
         'level' => 'Level', 'nostock' => 'No stock in this bin.', 'saved' => 'Layout saved.', 'failed' => 'Could not save the layout.', 'nomatch' => 'No bin matches the search.',
-        'matches' => 'bins match', 'label' => 'Label', 'stack' => 'Stack — top to bottom', 'up' => 'Move up', 'down' => 'Move down', 'area' => 'Area', 'bins' => 'bins in use']);
+        'matches' => 'bins match', 'label' => 'Label', 'moveTitle' => 'Move Stock', 'moveFrom' => 'From', 'moveTo' => 'To', 'moveOnHand' => 'On hand', 'moveHelp' => 'Set the quantity to move per item. The default is everything in the bin. Leave 0 to skip an item.', 'moveNone' => 'Enter a quantity for at least one item.', 'moveBusy' => 'Moving...', 'undo' => 'Undo', 'undoDone' => 'Move undone.', 'moveDone' => 'Moved', 'moveHint' => 'Move Stock: drag a bin with stock onto another bin. Drop on a floor tab to switch floors.', 'moveLevel' => 'Level', 'moveClick' => 'Now click the destination bin.', 'stack' => 'Stack — top to bottom', 'up' => 'Move up', 'down' => 'Move down', 'area' => 'Area', 'bins' => 'bins in use']);
     $pad = 1.5;   // meter kosong di sekeliling gedung (tempat tulisan ukuran)
     $vb = (-$pad * $S).' '.(-$pad * $S).' '.(($width + 2 * $pad) * $S).' '.(($height + 2 * $pad) * $S);
     $hatch = 'dl-whmap-hatch-'.$id;
@@ -29,8 +29,10 @@
         <span class="dl-whmap__found" data-wm-found></span>
         <span class="dl-whmap__spacer"></span>
         {{ $tools ?? '' }}
+        @if ($moveUrl)<button type="button" class="dl-btn dl-btn--secondary dl-btn--sm" data-wm-movemode title="{{ Lang::text('Drag a bin with stock onto another bin to move it. Drop on a floor tab to switch floors.') }}"><i class="fa-solid fa-hand"></i> {{ Lang::text('Move Stock') }}</button>@endif
         @if ($saveUrl)<button type="button" class="dl-btn dl-btn--secondary dl-btn--sm" data-wm-edit><i class="fa-solid fa-up-down-left-right"></i> {{ Lang::text('Edit Layout') }}</button>@endif
     </div>
+    <div class="dl-whmap__undo" data-wm-undo hidden></div>
     <div class="dl-whmap__legend">
         @foreach (WhMap::STATUS as $key => $label)
             <button type="button" data-wm-only="{{ $key }}"><i class="dl-whmap__swatch dl-whmap__swatch--{{ strtolower($key) }}"></i>{{ Lang::text($label) }} <b>{{ $counts[$key] }}</b></button>
@@ -110,4 +112,17 @@
             @endif
         </aside>
     </div>
+    @if ($moveUrl)
+        <x-dl::modal :id="$id.'-move'" title="Move Stock" icon="fa-right-left" size="lg">
+            <p class="dl-whmap__hint" data-wm-mv-help></p>
+            <div class="dl-whmap__mvroute" data-wm-mv-route></div>
+            <div data-wm-mv-lines></div>
+            <template data-wm-mv-row><x-dl::field.decimal name="qty" label="Quantity" /></template>
+            <div class="dl-alert dl-alert--danger" data-wm-mv-err role="alert"></div>
+            <x-slot:footer>
+                <x-dl::button variant="secondary" label="Cancel" data-dl-close-modal />
+                <x-dl::button label="Confirm" icon="fa-check" data-wm-mv-ok />
+            </x-slot:footer>
+        </x-dl::modal>
+    @endif
 </div>
