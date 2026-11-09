@@ -958,6 +958,11 @@ Pemilih tampilan: 12 tema (keluarga x corak) + density + skala huruf.
 - Berkas: `src/Components/ThemePicker.php`
 - Prop: (tanpa prop)
 
+## `<x-dl::timeline>`
+Garis waktu vertikal: peristiwa berurutan (terbaru di atas) dengan titik berwarna per jenis, judul, keterangan dan tanggal; bagian dari riwayat hubungan (customer, supplier, mesin).
+- Berkas: `src/Components/Timeline.php`
+- Prop: items:array=[], empty:string='Nothing has happened yet…'
+
 ## `<x-dl::timer>`
 Stopwatch display (hh:mm:ss). The server gives the seconds already elapsed when the page was made; the browser keeps counting while running.
 - Berkas: `src/Components/Timer.php`

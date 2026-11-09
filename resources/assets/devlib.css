@@ -4956,3 +4956,16 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-upload__progress.is-processing .dl-progress__bar{width:100% !important;background:repeating-linear-gradient(45deg,var(--dl-violet) 0 12px,color-mix(in srgb,var(--dl-violet) 70%,var(--dl-surface)) 12px 24px);background-size:34px 34px;animation:dl-upload-stripes 1s linear infinite}
 @keyframes dl-upload-stripes{to{background-position:34px 0}}
 [data-dl-upload-fallback][hidden]{display:none !important}
+
+/* ================= TIMELINE (garis waktu: titik berwarna per jenis, terbaru di atas) ================= */
+.dl-timeline{display:flex;flex-direction:column;padding:4px 0}
+.dl-timeline__item{--tl:var(--dl-ink);position:relative;display:flex;gap:12px;padding-bottom:14px}
+.dl-timeline__item:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--dl-border)}
+.dl-timeline__item--accent{--tl:var(--dl-accent)}.dl-timeline__item--success{--tl:var(--dl-green)}.dl-timeline__item--warn{--tl:var(--dl-amber)}.dl-timeline__item--danger{--tl:var(--dl-danger)}.dl-timeline__item--info{--tl:var(--dl-accent-2)}.dl-timeline__item--violet{--tl:var(--dl-violet)}
+.dl-timeline__dot{flex:none;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:calc(12px * var(--dl-font-scale));color:var(--dl-on-accent);background:var(--tl)}
+.dl-timeline__main{min-width:0;flex:1;padding-top:3px}
+.dl-timeline__title{font-size:calc(15px * var(--dl-font-scale));font-weight:600;color:var(--dl-ink-strong)}
+.dl-timeline__title a{color:inherit;text-decoration:none}.dl-timeline__title a:hover{color:var(--tl);text-decoration:underline}
+.dl-timeline__meta{margin-left:8px;font-size:calc(12px * var(--dl-font-scale));font-weight:400;color:var(--dl-ink)}
+.dl-timeline__body{font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink)}
+.dl-timeline__empty{color:var(--dl-ink);margin:0}
