@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Kalender setahun (12 bulan sekaligus) untuk hari libur / hari kerja: tanggal bertanda diwarnai per tone,.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : year, marks, legend, offDays, newUrl, source.
+ * Input        : year, marks, legend, offDays, newUrl, source, span (1|3|12 bulan), from (bulan awal 1-12).
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : calendar-year (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -29,7 +29,13 @@ class YearCalendar extends DevlibComponent
         public array $offDays = [0],
         public ?string $newUrl = null,
         public ?string $source = null,
-    ) {}
+        public int $span = 12,
+        public int $from = 1,
+    ) {
+        // span 1 = satu bulan, 3 = tiga bulan berurutan, selain itu = setahun; from dijepit agar jendela tidak melewati Desember.
+        $this->span = in_array($span, [1, 3], true) ? $span : 12;
+        $this->from = $this->span === 12 ? 1 : max(1, min(13 - $this->span, $from));
+    }
 
     public function tag(): string
     {
@@ -61,7 +67,7 @@ class YearCalendar extends DevlibComponent
 
             return ['name' => $first->locale($lang)->translatedFormat('F'), 'cells' => $cells,
                 'count' => count(array_filter($this->marks, fn ($k) => str_starts_with($k, $first->format('Y-m')), ARRAY_FILTER_USE_KEY))];
-        }, range(1, 12));
+        }, range($this->from, $this->from + $this->span - 1));
     }
 
     public function weekdays(): array
@@ -85,7 +91,7 @@ class YearCalendar extends DevlibComponent
                         @endforeach
                     </div>
                 @endif
-                <div class="dl-ycal__grid">
+                <div @class(['dl-ycal__grid', 'dl-ycal__grid--'.$span => $span !== 12])>
                     @foreach ($months() as $m)
                         <div class="dl-ycal__m">
                             <div class="dl-ycal__mh"><b>{{ $m['name'] }}</b>@if ($m['count'])<span class="dl-ycal__n">{{ $m['count'] }}</span>@endif</div>

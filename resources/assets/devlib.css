@@ -2919,6 +2919,10 @@ html.dl-locked body{overflow:hidden}
 .dl-ycal__legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;font-size:calc(12.5px * var(--dl-font-scale));color:var(--dl-ink)}
 .dl-ycal__sw{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:6px}
 .dl-ycal__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.dl-ycal__grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.dl-ycal__grid--1{grid-template-columns:minmax(0,560px)}
+.dl-ycal__grid--1 .dl-ycal__d{padding:12px 0}
+@media(max-width:700px){.dl-ycal__grid--3{grid-template-columns:minmax(0,1fr)}}
 .dl-ycal__mh{display:flex;align-items:center;gap:6px;margin-bottom:6px}
 .dl-ycal__mh b{font-size:calc(13.5px * var(--dl-font-scale));color:var(--dl-ink-strong)}
 .dl-ycal__n{font-size:calc(11px * var(--dl-font-scale));padding:0 7px;border-radius:999px;background:var(--dl-danger-soft);color:var(--dl-danger)}

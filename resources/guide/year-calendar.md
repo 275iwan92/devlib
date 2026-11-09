@@ -13,7 +13,7 @@ Use it when the year view is the point: public and company holidays, collective 
 
 ## Props
 
-Constructor of `Devlib\Components\YearCalendar` (6 props). Blade names are kebab-case; arrays and numbers need the `:prop="expr"` form.
+Constructor of `Devlib\Components\YearCalendar` (8 props). Blade names are kebab-case; arrays and numbers need the `:prop="expr"` form.
 
 | Prop | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,6 +23,8 @@ Constructor of `Devlib\Components\YearCalendar` (6 props). Blade names are kebab
 | `off-days` | `array` | `[0]` | Weekdays written in red on every date cell, as integers with `0` = Sunday ... `6` = Saturday (the comparison is strict, so write `[0, 6]`, not `['0', '6']`). `[]` = none. |
 | `new-url` | `?string` | `null` | Link template for dates: `{date}` is replaced by `YYYY-MM-DD`, for example `/holidays/create?date={date}` or `#new={date}`. When set, every date that has no mark URL becomes a link to it (see Behavior). `null` = such dates are plain text. |
 | `source` | `?string` | `null` | Free text naming where the data comes from (developer catalog / Manifest); default `tanggal bertanda`. No visual effect. |
+| `span` | `int` | `12` | How many months are drawn: `1` (one large month), `3` (three consecutive months in one row) or `12` (the whole year, auto-fill grid). Any other value is treated as `12`. |
+| `from` | `int` | `1` | First month shown (1-12) when `span` is 1 or 3; clamped so the window never passes December (span 3 and from 11 shows October-December). Ignored for `12`. The screen owns the paging (previous / next links change `from`). |
 
 Common attributes: extra HTML attributes (`id`, `class`, `style`, `data-*`) go on the root `div`; `can="module.action"` hides the whole component when the user lacks the ability.
 
@@ -40,7 +42,7 @@ Common attributes: extra HTML attributes (`id`, `class`, `style`, `data-*`) go o
 
 ### Rendering
 
-- Twelve months in an auto-fill grid (cells at least 220px wide, so 4 / 3 / 2 / 1 columns depending on the width). Each month has its localized full name (`F`, in the display language from `Devlib\Locale`), the weekday initials (two letters, week starts on Monday, fixed), and the dates. The first date is placed on its ISO weekday with empty `span`s before it.
+- Twelve months (`span` 12) in an auto-fill grid (cells at least 220px wide, so 4 / 3 / 2 / 1 columns depending on the width). Each month has its localized full name (`F`, in the display language from `Devlib\Locale`), the weekday initials (two letters, week starts on Monday, fixed), and the dates. The first date is placed on its ISO weekday with empty `span`s before it.
 - The count badge (`dl-ycal__n`, red) after the month name is the number of keys in `marks` that start with that month (`YYYY-MM`); it is hidden when zero. It counts marks of every tone.
 - A date cell gets: `dl-ycal__d`, `dl-ycal__d--<tone>` when marked, `is-off` when its weekday is in `off-days`, `is-today` when it is today (server date, outlined).
 - Mark colours win over the red off-day text: a `danger` day on a Sunday is a red tile with white text; a `neutral` or `info` tile keeps its own text colour.
