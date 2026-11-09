@@ -3,6 +3,28 @@
   'use strict';
   const {$, $$, esc, toast, confirmBox, T, Tf, TZ, emit, NUM} = Devlib.h;
   /* ============================ CALENDAR ============================ */
+  // Peserta berformat @nama (opt-in lewat data-people): chip + kolom ketik; ketik @ni -> saran dari daftar orang, Enter / klik menambah, Backspace / klik chip membuang.
+  const chipsHtml = picked => picked.map(p => `<span class="dl-mention__chip" data-m-del="${esc(p.id)}">@${esc(p.name)}${p.rsvp ? ` <small class="dl-mention__rsvp is-${esc(String(p.rsvp).toLowerCase())}">${esc(T('c_rsvp_' + String(p.rsvp).toLowerCase()))}</small>` : ''} &times;</span>`).join('');
+  const mentionBox = (label, ph, picked) => `<div class="dl-mention" data-m><span class="dl-kpop__lbl">${esc(label)}</span><div class="dl-mention__chips" data-m-chips>${chipsHtml(picked)}</div><input data-m-in autocomplete="off" placeholder="${esc(ph)}"><div class="dl-mention__pop" data-m-pop hidden></div></div>`;
+  const mention = (root, people, picked, changed) => {
+    const pop = () => $(root, '[data-m-pop]'), inp = () => $(root, '[data-m-in]'), chips = () => { $(root, '[data-m-chips]').innerHTML = chipsHtml(picked); if (changed) changed(); };
+    const matches = q => people.filter(p => !picked.some(x => String(x.id) === String(p.id)) && (!q || p.name.toLowerCase().includes(q))).slice(0, 6);
+    const query = () => inp().value.replace(/^@/, '').trim().toLowerCase();
+    const show = () => { const list = matches(query()), p = pop(); p.innerHTML = list.map(x => `<button type="button" data-m-pick="${esc(x.id)}"><b>@${esc(x.name)}</b>${x.role ? `<small>${esc(x.role)}</small>` : ''}</button>`).join(''); p.hidden = !list.length; };
+    const add = id => { const p = people.find(x => String(x.id) === String(id)); if (!p) return; picked.push({id: p.id, name: p.name}); chips(); inp().value = ''; pop().hidden = true; inp().focus(); };
+    root.addEventListener('input', e => { if (e.target.matches('[data-m-in]')) show(); });
+    root.addEventListener('focusin', e => { if (e.target.matches('[data-m-in]')) show(); });
+    root.addEventListener('focusout', e => { if (e.target.matches('[data-m-in]')) setTimeout(() => { const p = pop(); if (p) p.hidden = true; }, 150); });
+    root.addEventListener('keydown', e => {
+      if (!e.target.matches('[data-m-in]')) return;
+      if (e.key === 'Enter') { e.preventDefault(); const f = matches(query())[0]; if (f) add(f.id); } else if (e.key === 'Backspace' && !e.target.value && picked.length) { picked.pop(); chips(); } else if (e.key === 'Escape') pop().hidden = true;
+    });
+    root.addEventListener('mousedown', e => {
+      const b = e.target.closest('[data-m-pick]'); if (b) { e.preventDefault(); return add(b.dataset.mPick); }
+      const d = e.target.closest('[data-m-del]'); if (d) { const i = picked.findIndex(x => String(x.id) === d.dataset.mDel); if (i >= 0) { picked.splice(i, 1); chips(); } }
+    });
+  };
+  Devlib.h.mention = mention; Devlib.h.mentionBox = mentionBox;
   class Calendar extends Devlib.Component {
     static selector = "[data-dl-calendar]";
     init() {
@@ -20,7 +42,9 @@
       this.sel = new Date(this.cur);
       this.q = '';
       this.drag = null;
-      this.events.forEach(e => { e.s = this.parse(e.start); e.e = e.end ? this.parse(e.end) : e.allDay ? new Date(e.s) : new Date(e.s.getTime() + 3600000); e.tone = e.tone || 'accent'; });
+      this.people = this.el.dataset.people ? JSON.parse(this.el.dataset.people) : null; // opt-in: peserta @, ruang, pengingat, visibilitas di dialog acara
+      this.rooms = this.el.dataset.rooms ? JSON.parse(this.el.dataset.rooms) : null;
+      this.events.forEach(e => this.hydrate(e));
       this.HPX = 44;
 
       this.el.addEventListener('click', e => {
@@ -36,7 +60,8 @@
         const day = x.closest('[data-c-day],[data-c-col]'); if (day) { this.sel = this.parse(day.dataset.cDay || day.dataset.cCol); this.mini(); this.side(); $$(this.el, '.dl-cal2__cell.is-sel').forEach(c => c.classList.remove('is-sel')); if (day.classList.contains('dl-cal2__cell')) day.classList.add('is-sel'); }
       });
       this.el.addEventListener('dblclick', e => {
-        const ev = e.target.closest('[data-c-ev]'); if (ev) return this.editor(this.byId(ev.dataset.cEv), false);
+        const ev = e.target.closest('[data-c-ev]');
+        if (ev) { const x = this.byId(ev.dataset.cEv); return x.ro ? this._emit('open', x) : x.invite ? this.rsvpBox(x) : this.editor(x, false); }
         const col = e.target.closest('[data-c-col]');
         if (col) { const r = col.getBoundingClientRect(), hr = Math.floor((e.clientY - r.top) / this.HPX); return this.editor(this.blank(this.parse(col.dataset.cCol), Math.min(23, Math.max(0, hr))), true); }
         const cell = e.target.closest('[data-c-day]'); if (cell) this.editor(this.blank(this.parse(cell.dataset.cDay), 9, cell.hasAttribute('data-c-allday')), true);
@@ -55,7 +80,7 @@
       });
       this.sIn = $(this.el, '[data-c-search]');
       if (this.sIn) this.sIn.addEventListener('input', () => { this.q = this.sIn.value.trim().toLowerCase(); this.render(); });
-      this.el.dlCalendar = {events: this.events, render: this.render, go: (d, v) => { this.cur = this.parse(d); this.sel = new Date(this.cur); if (v) this.view = v; this.render(); }};
+      this.el.dlCalendar = {events: this.events, render: () => this.render(), go: (d, v) => { this.cur = this.parse(d); this.sel = new Date(this.cur); if (v) this.view = v; this.render(); }, setTeam: list => this.setTeam(list), replace: (id, ev) => this.replace(id, ev), remove: id => this.remove(id)};
       this.render();
       setInterval(() => { const nl = $(this.main, '.dl-cal2__now'), n = this.nowW(); if (nl) nl.style.top = (n.getHours() + n.getMinutes() / 60) * this.HPX + 'px'; }, 60000);
     }
@@ -98,8 +123,44 @@
       return !this.q || (e.title + ' ' + (e.desc || '')).toLowerCase().includes(this.q);
     }
 
+    // Detail dl:calendar: type create | update | move | delete | open (acara baca-saja diklik 2x) | rsvp (jawaban undangan); bidang peserta hanya bila data-people ada.
     _emit(type, e) {
-      return this.el.dispatchEvent(new CustomEvent('dl:calendar', {bubbles: true, detail: {type, event: {id: e.id, title: e.title, start: e.allDay ? this.ymd(e.s) : this.str(e.s), end: e.allDay ? this.ymd(e.e) : this.str(e.e), allDay: !!e.allDay, tone: e.tone, desc: e.desc || ''}}}));
+      const d = {id: e.id, title: e.title, start: e.allDay ? this.ymd(e.s) : this.str(e.s), end: e.allDay ? this.ymd(e.e) : this.str(e.e), allDay: !!e.allDay, tone: e.tone, desc: e.desc || ''};
+      if (this.people) { d.people = (e.people || []).map(p => ({id: p.id, name: p.name})); d.room = e.room || ''; d.remind = e.remind === '' || e.remind == null ? null : +e.remind; d.vis = e.vis || 'BUSY'; }
+      if (type === 'rsvp') d.rsvp = e.invite.rsvp;
+      if (type === 'open') d.kind = e.kind || '';
+      return this.el.dispatchEvent(new CustomEvent('dl:calendar', {bubbles: true, detail: {type, event: d}}));
+    }
+
+    hydrate(e) {
+      e.s = this.parse(e.start); e.e = e.end ? this.parse(e.end) : e.allDay ? new Date(e.s) : new Date(e.s.getTime() + 3600000); e.tone = e.tone || 'accent';
+      if (this.people && !e.people) e.people = [];
+      return e;
+    }
+
+    // Acara orang lain (kalender tim) = baca-saja, diganti seluruhnya tiap pemanggilan; replace / remove: ganti id sementara dengan hasil server / buang.
+    setTeam(list) {
+      for (let i = this.events.length - 1; i >= 0; i--) if (this.events[i].team) this.events.splice(i, 1);
+      list.forEach(e => this.events.push(this.hydrate({...e, ro: true, team: true})));
+      this.render();
+    }
+
+    replace(id, ev) {
+      const i = this.events.findIndex(x => String(x.id) === String(id)); if (i < 0) return;
+      this.events[i] = this.hydrate({...ev}); this.render();
+    }
+
+    remove(id) {
+      const i = this.events.findIndex(x => String(x.id) === String(id)); if (i < 0) return;
+      this.events.splice(i, 1); this.render();
+    }
+
+    cls(e) {
+      return `${this.match(e) ? '' : 'is-dim'}${e.ro ? ' is-ro' : ''}${e.invite && e.invite.rsvp === 'INVITED' ? ' is-inv' : ''}${e.invite && e.invite.rsvp === 'TENTATIVE' ? ' is-tent' : ''}`;
+    }
+
+    drg(e) {
+      return e.ro || e.invite ? 'false' : 'true';
     }
 
     weekStartOf(d) {
@@ -107,7 +168,7 @@
     }
 
     chip(e) {
-      return `<div class="dl-cal2__ev dl-cal2--${esc(e.tone)} ${this.match(e) ? '' : 'is-dim'}" draggable="true" data-c-ev="${esc(e.id)}" title="${esc(e.title)} · ${esc(this.when(e))}">${e.allDay ? '' : `<small>${this.hhmm(e.s)}</small> `}${esc(e.title)}</div>`;
+      return `<div class="dl-cal2__ev dl-cal2--${esc(e.tone)} ${this.cls(e)}" draggable="${this.drg(e)}" data-c-ev="${esc(e.id)}" title="${esc(e.title)} · ${esc(this.when(e))}">${e.invite && e.invite.rsvp === 'INVITED' ? '<i class="fa-regular fa-envelope"></i> ' : ''}${e.allDay ? '' : `<small>${this.hhmm(e.s)}</small> `}${esc(e.title)}</div>`;
     }
 
     mini() {
@@ -153,7 +214,7 @@
         <div class="dl-cal2__allday"><span class="dl-cal2__tz">${T('c_all_day_br')}</span>${days.map(d => `<div data-c-drop="${this.ymd(d)}" data-c-allday data-c-day="${this.ymd(d)}">${this.onDay(d).filter(e => e.allDay || !this.same(e.s, e.e)).map(this.chip).join('')}</div>`).join('')}</div>
         <div class="dl-cal2__scroll" data-c-scroll><div class="dl-cal2__grid" style="height:${24 * this.HPX}px">
           <div class="dl-cal2__hours">${Array.from({length: 24}, (_, h) => `<span style="top:${h * this.HPX}px">${h ? this.pad(h) + '.00' : ''}</span>`).join('')}</div>
-          ${days.map(d => `<div class="dl-cal2__col ${this.same(d, today) ? 'is-today' : ''}" data-c-col="${this.ymd(d)}" data-c-drop="${this.ymd(d)}">${lanes(d).map(e => { const top = (e.s.getHours() + e.s.getMinutes() / 60) * this.HPX, hgt = Math.max(this.HPX / 2, (e.e - e.s) / 3600000 * this.HPX); return `<div class="dl-cal2__blk dl-cal2--${esc(e.tone)} ${this.match(e) ? '' : 'is-dim'}" draggable="true" data-c-ev="${esc(e.id)}" style="top:${top}px;height:${hgt - 2}px;left:calc(${e._c} * 100% / ${e._n});width:calc(100% / ${e._n} - 4px)"><b>${esc(e.title)}</b><small>${esc(this.when(e))}</small></div>`; }).join('')}
+          ${days.map(d => `<div class="dl-cal2__col ${this.same(d, today) ? 'is-today' : ''}" data-c-col="${this.ymd(d)}" data-c-drop="${this.ymd(d)}">${lanes(d).map(e => { const top = (e.s.getHours() + e.s.getMinutes() / 60) * this.HPX, hgt = Math.max(this.HPX / 2, (e.e - e.s) / 3600000 * this.HPX); return `<div class="dl-cal2__blk dl-cal2--${esc(e.tone)} ${this.cls(e)}" draggable="${this.drg(e)}" data-c-ev="${esc(e.id)}" title="${esc(e.title)} · ${esc(this.when(e))}" style="top:${top}px;height:${hgt - 2}px;left:calc(${e._c} * 100% / ${e._n});width:calc(100% / ${e._n} - 4px)"><b>${esc(e.title)}</b><small>${esc(this.when(e))}</small></div>`; }).join('')}
             ${this.same(d, n) ? `<div class="dl-cal2__now" style="top:${(n.getHours() + n.getMinutes() / 60) * this.HPX}px"></div>` : ''}</div>`).join('')}
         </div></div></div>`;
       const sc = $(this.main, '[data-c-scroll]'); sc.scrollTop = +this.el.dataset.scroll * this.HPX;
@@ -190,13 +251,15 @@
           <label><span>${esc(T('c_start'))}</span><input type="${e.allDay ? 'date' : 'datetime-local'}" data-e-start value="${v(e.s)}"></label>
           <label><span>${esc(T('c_end'))}</span><input type="${e.allDay ? 'date' : 'datetime-local'}" data-e-end value="${v(e.e)}"></label>
           <div><span class="dl-kpop__lbl">${esc(T('c_colour'))}</span><div class="dl-cal2__tones">${this.TONES.map(t => `<button type="button" class="dl-cal2--${t} ${t === e.tone ? 'is-on' : ''}" data-e-tone="${t}" aria-label="${t}"></button>`).join('')}</div></div>
+          ${this.people ? this.extras(e) : ''}
           <label><span>${esc(T('k_description'))}</span><textarea rows="3" data-e-desc>${esc(e.desc || '')}</textarea></label>
           <p class="dl-lines__err" data-e-err></p>
         </div>
         <div class="dl-modal__foot">${isNew ? '' : '<button type="button" class="dl-btn dl-btn--danger dl-btn--md" data-e-del><i class="fa-solid fa-trash-can"></i> Delete</button><span class="dl-kcard__spacer"></span>'}<button type="button" class="dl-btn dl-btn--ghost dl-btn--md" data-x>Cancel</button><button type="button" class="dl-btn dl-btn--primary dl-btn--md" data-e-save><i class="fa-solid fa-floppy-disk"></i> Save</button></div></div>`;
       };
-      const read = () => { e.title = $(ov, '[data-e-title]').value.trim(); e.desc = $(ov, '[data-e-desc]').value.trim(); e.allDay = $(ov, '[data-e-allday]').checked; const a = $(ov, '[data-e-start]').value, b = $(ov, '[data-e-end]').value; if (a) e.s = this.parse(a); if (b) e.e = this.parse(b); };
+      const read = () => { e.title = $(ov, '[data-e-title]').value.trim(); e.desc = $(ov, '[data-e-desc]').value.trim(); e.allDay = $(ov, '[data-e-allday]').checked; const a = $(ov, '[data-e-start]').value, b = $(ov, '[data-e-end]').value; if (a) e.s = this.parse(a); if (b) e.e = this.parse(b); if (this.people) { const q = k => { const x = $(ov, k); return x ? x.value : ''; }; e.room = q('[data-e-room]'); e.remind = q('[data-e-remind]'); e.vis = q('[data-e-vis]') || 'BUSY'; } };
       draw();
+      if (this.people) mention(ov, this.people, e.people);
       ov.addEventListener('click', ev => {
         const x = ev.target;
         if (x === ov || x.closest('[data-x]')) return ov.remove();
@@ -213,7 +276,35 @@
       document.body.appendChild(ov); $(ov, '[data-e-title]').focus();
     }
 
-    blank(d, h = 9, allDay = false) { const s = new Date(d.getFullYear(), d.getMonth(), d.getDate(), allDay ? 0 : h, 0); return {id: 'n' + (++this.seq), title: '', s, e: allDay ? new Date(s) : new Date(s.getTime() + 3600000), allDay, tone: 'accent', desc: ''}; }
+    // Bagian tambahan dialog acara (hanya bila data-people ada): peserta @, ruang (data-rooms), pengingat, visibilitas bagi orang lain.
+    extras(e) {
+      const o = (v, l, cur) => `<option value="${esc(v)}" ${String(cur) === String(v) ? 'selected' : ''}>${esc(l)}</option>`;
+      const room = this.rooms ? `<label><span>${esc(T('c_room'))}</span><select data-e-room>${o('', '—', e.room || '')}${Object.entries(this.rooms).map(([k, v]) => o(k, v, e.room || '')).join('')}</select></label>` : '';
+      const rem = [['', T('c_none')], [5, Tf('c_remind_n', {n: 5})], [10, Tf('c_remind_n', {n: 10})], [15, Tf('c_remind_n', {n: 15})], [30, Tf('c_remind_n', {n: 30})], [60, Tf('c_remind_n', {n: 60})], [1440, T('c_remind_day')]];
+      return `${mentionBox(T('c_people'), T('c_people_ph'), e.people)}${room}
+        <label><span>${esc(T('c_remind'))}</span><select data-e-remind>${rem.map(([v, l]) => o(v, l, e.remind == null ? '' : e.remind)).join('')}</select></label>
+        <label><span>${esc(T('c_vis'))}</span><select data-e-vis>${['PRIVATE', 'BUSY', 'DETAIL'].map(v => o(v, T('c_vis_' + v.toLowerCase()), e.vis || 'BUSY')).join('')}</select></label>`;
+    }
+
+    // Undangan dari orang lain: baca detail lalu Accept / Tentative / Decline (Decline = acara hilang dari kalender ini).
+    rsvpBox(e) {
+      const ov = document.createElement('div'), cur = e.invite.rsvp; ov.className = 'dl-mov is-on';
+      const B = (k, ic) => `<button type="button" class="dl-btn ${cur === k ? 'dl-btn--primary' : 'dl-btn--ghost'} dl-btn--md" data-r="${k}"><i class="fa-solid ${ic}"></i> ${esc(T('c_rsvp_' + k.toLowerCase()))}</button>`;
+      ov.innerHTML = `<div class="dl-modal dl-modal--sm" role="dialog" aria-modal="true"><div class="dl-modal__head"><h3>${esc(e.title)}</h3><button type="button" class="dl-modal__x" data-x>&times;</button></div>
+        <div class="dl-modal__body dl-gantt__edit"><p><i class="fa-regular fa-clock"></i> <b>${e.s.getDate()} ${this.MON[e.s.getMonth()]} ${e.s.getFullYear()}</b> · ${esc(this.when(e))}</p>
+          <p>${esc(T('c_from'))} <b>${esc(e.invite.by)}</b>${e.roomName ? ` · <i class="fa-solid fa-door-open"></i> ${esc(e.roomName)}` : ''}</p>
+          ${(e.people || []).length ? `<div class="dl-mention__chips">${chipsHtml(e.people)}</div>` : ''}${e.desc ? `<p>${esc(e.desc)}</p>` : ''}</div>
+        <div class="dl-modal__foot">${B('ACCEPTED', 'fa-check')}${B('TENTATIVE', 'fa-question')}${B('DECLINED', 'fa-xmark')}</div></div>`;
+      ov.addEventListener('click', ev => {
+        const x = ev.target; if (x === ov || x.closest('[data-x]')) return ov.remove();
+        const r = x.closest('[data-r]'); if (!r) return;
+        e.invite.rsvp = r.dataset.r; if (e.invite.rsvp === 'DECLINED') this.events.splice(this.events.indexOf(e), 1);
+        ov.remove(); this.render(); this._emit('rsvp', e);
+      });
+      document.body.appendChild(ov);
+    }
+
+    blank(d, h = 9, allDay = false) { const s = new Date(d.getFullYear(), d.getMonth(), d.getDate(), allDay ? 0 : h, 0); return {id: 'n' + (++this.seq), title: '', s, e: allDay ? new Date(s) : new Date(s.getTime() + 3600000), allDay, tone: 'accent', desc: '', people: [], room: '', remind: '', vis: 'BUSY'}; }
   }
   Devlib.define("Calendar", Calendar);
 })(window.Devlib);

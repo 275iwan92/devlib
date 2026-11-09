@@ -126,7 +126,7 @@ Kalkulator pop up ala Windows 11: tombol ikon yang membuka jendela modal berisi 
 ## `<x-dl::calendar>`
 Kalender acara (mockup_UIUX_calendar): kiri = Create Event + kalender mini + cari; tengah = Day/Week/Month;.
 - Berkas: `src/Components/Calendar.php`
-- Prop: events:array=[], display:string='week', date:?string=NULL, weekStart:int=0, scrollHour:int=7, sidebar:bool=true, source:?string=NULL
+- Prop: events:array=[], display:string='week', date:?string=NULL, weekStart:int=0, scrollHour:int=7, sidebar:bool=true, source:?string=NULL, people:?array=NULL, rooms:?array=NULL
 
 ## `<x-dl::card>`
 Kotak berjudul untuk mengelompokkan isi (bagian form, panel info). Slot "actions" = tombol di kanan judul.
@@ -833,6 +833,11 @@ Tiga halaman pengaturan di dialog Setup Layer Menu (bersama Theme dan Language):
 - Berkas: `src/Components/SetupMedia.php`
 - Prop: (tanpa prop)
 
+## `<x-dl::shared-calendar>`
+Kalender bersama: x-dl::calendar yang acaranya bisa mengundang peserta lewat @nama, dijawab Accept / Tentative / Decline, dilihat rekan sesuai izin, dengan ruang rapat dan pengingat; tiap perubahan dikirim ke server per acara.
+- Berkas: `src/Components/SharedCalendar.php`
+- Prop: events:array=[], people:array=[], rooms:array=[], display:string='week', saveUrl:string='', deleteUrl:string='', rsvpUrl:string='', teamUrl:string='', openUrl:string='', csrf:?string=''
+
 ## `<x-dl::sheet>`
 Grid sel mirip spreadsheet; mendukung links (sel terhitung), reasonOnSave, reorderUrl.
 - Berkas: `src/Components/Sheet.php`
@@ -941,7 +946,7 @@ Tab: judul di atas (vertical = daftar di kiri, seperti halaman Setup & Security)
 ## `<x-dl::task-alarm-runner>`
 Pembunyi alarm tugas yang tak terlihat: tiap 5 detik mencocokkan jam browser dengan due date tugas Eisenhower yang beralarm dan belum selesai; due tiba (paling lama 12 jam lalu) = bunyi 'notif' (Devlib.sound, mengikuti Setup > Sound) + toast kecil, sekali per tugas dan due.
 - Berkas: `src/Components/TaskAlarmRunner.php`
-- Prop: items:array=[], storageKey:string='dl-tasks'
+- Prop: items:array=[], storageKey:string='dl-tasks', label:string='Task due'
 
 ## `<x-dl::theme-boot>`
 Dipasang SEKALI di <head>: CSS 12 tema (dari Devlib\Theme) + skrip kecil yang.

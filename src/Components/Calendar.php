@@ -17,7 +17,8 @@ namespace Devlib\Components;
 // events: [['id', 'title', 'start' => 'YYYY-MM-DD HH:MM' | 'YYYY-MM-DD', 'end', 'allDay' => bool, 'tone', 'desc']]
 // display: day | week | month (bukan $view: nama itu dipakai Blade Component).
 // Klik 2x acara = edit; klik 2x slot kosong = acara baru; drag = pindah hari/jam (snap 30 menit).
-// Perubahan -> event dl:calendar (detail: {type: create|update|delete|move, event}).
+// Perubahan -> event dl:calendar (detail: {type: create|update|delete|move|open|rsvp, event}).
+// Opt-in berbagi (people / rooms): acara baca-saja 'ro' (tak bisa digeser; klik 2x = type open), undangan 'invite' => ['rsvp' INVITED|ACCEPTED|TENTATIVE, 'by'] (klik 2x = Accept / Tentative / Decline = type rsvp).
 class Calendar extends DevlibComponent
 {
     public function __construct(
@@ -28,6 +29,8 @@ class Calendar extends DevlibComponent
         public int $scrollHour = 7,
         public bool $sidebar = true,
         public ?string $source = null,
+        public ?array $people = null, // [['id', 'name', 'role']]: bila ada, dialog acara memuat peserta @, pengingat, visibilitas (acara membawa people, room, remind, vis)
+        public ?array $rooms = null, // [id => nama ruang]: bila ada bersama people, dialog acara memuat pilihan ruang
     ) {}
 
     public function tag(): string
@@ -43,7 +46,7 @@ class Calendar extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class(['dl-cal2', 'no-side' => ! $sidebar]) }} {!! $dl() !!} data-dl-calendar data-events="{{ json_encode($events) }}" data-view="{{ $display }}" data-date="{{ $date }}" data-week-start="{{ $weekStart }}" data-scroll="{{ $scrollHour }}">
+            <div {{ $attributes->class(['dl-cal2', 'no-side' => ! $sidebar]) }} {!! $dl() !!} data-dl-calendar data-events="{{ json_encode($events) }}" data-view="{{ $display }}" data-date="{{ $date }}" data-week-start="{{ $weekStart }}" data-scroll="{{ $scrollHour }}" @if ($people !== null) data-people="{{ json_encode($people, JSON_UNESCAPED_UNICODE) }}" @endif @if ($rooms !== null) data-rooms="{{ json_encode($rooms, JSON_UNESCAPED_UNICODE) }}" @endif>
                 <div class="dl-cal2__top">
                     <x-dl::button variant="secondary" size="sm" :label="\Devlib\Lang::text('Today')" data-c-today />
                     <x-dl::icon-button icon="prev" title="Previous" data-c-prev />
