@@ -47,6 +47,7 @@
       window.addEventListener('pointermove', e => { if (!this.pan) return; this.canvas.scrollLeft = this.pan.l - (e.clientX - this.pan.x); this.canvas.scrollTop = this.pan.t - (e.clientY - this.pan.y); });
       window.addEventListener('pointerup', () => { this.pan = null; this.canvas.classList.remove('is-pan'); });
       this.canvas.addEventListener('scroll', () => this.miniView());
+      this.canvas.addEventListener('wheel', e => this.wheelZoom(e), {passive: false});
       const search = $(this.el, '[data-o-search]');
       search.addEventListener('input', e => { this.q = e.target.value.trim().toLowerCase(); this.focus(); });
       document.addEventListener('keydown', e => { if (e.key === '/' && !e.target.closest('input,textarea,select,[contenteditable]')) { e.preventDefault(); search.focus(); } });
@@ -81,7 +82,7 @@
 
     // Zoom Fit: muat lebar kanvas, tidak di atas 100% dan tidak di bawah 50% (di bawah itu teks tak terbaca; sisanya digeser).
     fit() {
-      this.tree.style.transform = 'scale(1)';
+      this.tree.style.zoom = 1;
       this.zoom = Math.max(0.5, Math.min(1, Math.round(this.canvas.clientWidth / this.tree.scrollWidth * 10) / 10));
     }
 
@@ -141,11 +142,30 @@
 
     render() {
       this.tree.innerHTML = `<ul>${this.group(this.kids(null))}</ul>`;
-      this.tree.style.transform = `scale(${this.zoom})`; $(this.el, '[data-o-zoomval]').textContent = Math.round(this.zoom * 100) + '%';
       this.el.classList.toggle('has-q', !!(this.q || this.dept));
       $$(this.el, '[data-o-dept]').forEach(b => b.classList.toggle('is-on', b.dataset.oDept === this.dept));
       const u = $(this.el, '[data-o-undo]'); if (u) u.disabled = !this.undo.length;
+      this.applyZoom();
+    }
+
+    // Zoom = CSS zoom (ukuran tata letak ikut berubah, jadi area gulir benar di semua arah); angka persen dan minimap ikut.
+    applyZoom() {
+      this.tree.style.zoom = this.zoom;
+      $(this.el, '[data-o-zoomval]').textContent = Math.round(this.zoom * 100) + '%';
       this.miniDraw();
+    }
+
+    // Roda mouse di kanvas = zoom yang berpusat di kursor (titik bagan di bawah kursor tetap di tempatnya); di luar kanvas halaman bergulir seperti biasa.
+    wheelZoom(e) {
+      e.preventDefault();
+      const c = this.canvas, r = c.getBoundingClientRect(), pad = parseFloat(getComputedStyle(c).paddingLeft) || 0;
+      const cx = e.clientX - r.left, cy = e.clientY - r.top, old = this.zoom;
+      this.zoom = Math.min(1.6, Math.max(0.3, Math.round(old * (e.deltaY < 0 ? 1.1 : 1 / 1.1) * 100) / 100));
+      if (this.zoom === old) return;
+      const px = (c.scrollLeft + cx - pad) / old, py = (c.scrollTop + cy - pad) / old;
+      this.applyZoom();
+      c.scrollLeft = px * this.zoom + pad - cx;
+      c.scrollTop = py * this.zoom + pad - cy;
     }
 
     // Minimap: titik per kartu (posisi dalam ruang gulir kanvas) + kotak area yang sedang terlihat; klik = loncat ke sana.
@@ -178,7 +198,7 @@
     // Halaman HTML mandiri untuk Download HTML dan Print (bagan apa adanya; tombol lipat dan pegangan disembunyikan).
     page() {
       const css = [...document.querySelectorAll('link[rel=stylesheet]')].map(l => `<link rel="stylesheet" href="${l.href}">`).join('');
-      return `<!doctype html><html lang="id"><head><meta charset="utf-8"><title>${esc(this.el.dataset.title)}</title>${css}<style>body{margin:24px;font-family:sans-serif}.dl-org__grip,.dl-org__fold{display:none}.dl-org__tree{transform:none!important}@page{size:landscape}</style></head><body><h1>${esc(this.el.dataset.title)}</h1><div class="dl-org"><div class="dl-org__tree">${this.tree.innerHTML}</div></div></body></html>`;
+      return `<!doctype html><html lang="id"><head><meta charset="utf-8"><title>${esc(this.el.dataset.title)}</title>${css}<style>body{margin:24px;font-family:sans-serif}.dl-org__grip,.dl-org__fold{display:none}.dl-org__tree{zoom:1!important}@page{size:landscape}</style></head><body><h1>${esc(this.el.dataset.title)}</h1><div class="dl-org"><div class="dl-org__tree">${this.tree.innerHTML}</div></div></body></html>`;
     }
 
     move(id, to) {

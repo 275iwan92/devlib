@@ -1956,7 +1956,7 @@ td.dl-print__no{text-align:center}
 .dl-org__zoom b{min-width:40px;text-align:center;font-size:calc(12px * var(--dl-font-scale));color:var(--dl-muted)}
 .dl-org__tip{font-size:calc(11.5px * var(--dl-font-scale));color:var(--dl-accent-ink);background:var(--dl-info-soft);border:1px solid var(--dl-info-line);border-radius:var(--dl-radius-sm);padding:5px 10px}
 .dl-org__canvas{overflow:auto;border:1px solid var(--dl-border);border-radius:var(--dl-radius-lg);background:var(--dl-surface-alt);min-height:480px;max-height:calc(100vh - 240px);padding:24px;cursor:grab;user-select:none}
-.dl-org__tree{transform-origin:top center;width:max-content;min-width:100%;transition:transform .15s}
+.dl-org__tree{width:max-content;min-width:100%}
 .dl-org__tree ul{display:flex;justify-content:center;padding:24px 0 0;margin:0;position:relative;list-style:none}
 .dl-org__tree > ul{padding-top:0}
 .dl-org__tree li{position:relative;padding:24px 8px 0;display:flex;flex-direction:column;align-items:center}
