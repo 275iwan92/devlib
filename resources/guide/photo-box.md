@@ -23,7 +23,7 @@ The modal is rendered inside the root (so inside the form), but its controls hav
 
 ## Props
 
-Constructor of `Devlib\Components\PhotoBox` (7 props).
+Constructor of `Devlib\Components\PhotoBox` (8 props).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -34,6 +34,7 @@ Constructor of `Devlib\Components\PhotoBox` (7 props).
 | `out-w` | `int`, `600` | Width in pixels of the cropped JPEG. Together with `out-h` it sets the frame ratio: the box CSS `aspect-ratio`, the crop canvas height (`round(240 * out-h / out-w)`, canvas width is fixed at 240), and `data-out-w`. Must be greater than 0 (0 causes a division by zero in PHP). |
 | `out-h` | `int`, `800` | Height in pixels of the cropped JPEG (see `out-w`). The 3 : 4 ratio is the default only; any ratio can be set, but the hint text in the dialog is always the 3 : 4 sentence (see Rules and pitfalls). |
 | `size` | `string`, `'md'` | Display size of the box: `sm` (width 90px), `md` (120px) or `lg` (150px); the height follows the ratio. Written as the class `dl-photobox--<size>`; any other string is not validated and has no style, which falls back to the 120px default. |
+| `submit` | `?string`, `null` | `null` = the cropped photo waits for the parent form's Save. Any string = the dialog button reads Save Photo and, after the crop, the parent form is sent at once: a non-empty value is the name of the DevLib form action to run (`x-dl::form` runs it as `action=<name>` without validating the other fields, e.g. `save_photo`); `''` submits a plain form as it is. Written as `data-submit`. |
 
 ## Behavior
 

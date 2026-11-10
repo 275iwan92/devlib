@@ -81,7 +81,14 @@
         this.el.classList.add('has-photo');
         this.result.dispatchEvent(new Event('change', {bubbles: true}));
         closeLayer(this.layer);
+        if (this.el.dataset.submit !== undefined) this.save();
       }, 'image/jpeg', 0.9);
+    }
+    // data-submit (prop submit): Use Photo sekaligus menyimpan. Form DevLib menjalankan aksi bernama itu (tombol bayangan -> Form.act, kirim tanpa validasi isian lain); form biasa dikirim apa adanya.
+    save() {
+      const act = this.el.dataset.submit, form = this.el.closest('[data-dl-form]');
+      if (form && act) { const b = document.createElement('button'); b.type = 'button'; b.hidden = true; b.dataset.fAct = act; this.el.appendChild(b); b.click(); b.remove(); }
+      else this.el.closest('form')?.requestSubmit();
     }
   }
   Devlib.define("PhotoBox", PhotoBox);

@@ -726,7 +726,7 @@ Pembungkus grid dua kolom untuk x-dl::phone-tile di layar HP.
 ## `<x-dl::photo-box>`
 Kotak pas foto 3 x 4 yang bisa diklik: membuka dialog crop (bingkai tetap 3:4, geser dan zoom) lalu menaruh hasil JPEG 600 x 800 px ke input file milik form.
 - Berkas: `src/Components/PhotoBox.php`
-- Prop: name:string='photo', photo:?string=NULL, label:string='', caption:?string=NULL, outW:int=600, outH:int=800, size:string='md'
+- Prop: name:string='photo', photo:?string=NULL, label:string='', caption:?string=NULL, outW:int=600, outH:int=800, size:string='md', submit:?string=NULL
 
 ## `<x-dl::pick-matrix>`
 Matriks pilih pemenang: baris = kebutuhan (mis. baris PR), kolom = penawar (mis. supplier), tiap sel = satu radio.
