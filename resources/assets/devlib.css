@@ -2973,7 +2973,7 @@ html.dl-locked body{overflow:hidden}
 .dl-split{display:grid;grid-template-columns:minmax(0,1fr) var(--dl-aside,320px);gap:12px;align-items:start}
 .dl-split--left{grid-template-columns:var(--dl-aside,320px) minmax(0,1fr)}.dl-split--left .dl-split__aside{order:-1}
 .dl-split__main,.dl-split__aside{min-width:0;display:flex;flex-direction:column;gap:12px}
-@media (max-width:900px){.dl-split{grid-template-columns:1fr}}
+@media (max-width:900px){.dl-split,.dl-split--left{grid-template-columns:minmax(0,1fr)}}
 /* PickMatrix: pilih pemenang per baris (mis. bandingkan penawaran supplier) */
 .dl-pick__table th small,.dl-pick__table td small{display:block;font-size:calc(10.5px * var(--dl-font-scale));color:var(--dl-muted);font-weight:400;text-transform:none;letter-spacing:0}
 .dl-pick__cell{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-variant-numeric:tabular-nums}
@@ -4262,7 +4262,7 @@ label.dl-wb__catitem.is-on{border-color:var(--dl-accent);background:var(--dl-acc
 
 /* Review Feed (x-dl::review-feed): review = membaca lalu memutuskan. Satu kolom, huruf besar ala blog WordPress, teks HITAM,
    tombol keputusan besar. Tanpa abu-abu: warna teks selalu --dl-ink / --dl-ink-strong (abu-abu hanya --dl-disabled). */
-.dl-rfeed{max-width:1080px;margin:0 auto;padding:6px 0 60px;color:var(--dl-ink);font-family:var(--dl-font)}
+.dl-rfeed{width:100%;min-width:0;box-sizing:border-box;max-width:1080px;margin:0 auto;padding:6px 0 60px;color:var(--dl-ink);font-family:var(--dl-font)}
 .dl-rfeed__bar{position:sticky;top:47px;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;background:var(--dl-bg);border-bottom:1px solid var(--dl-border-hover)}
 .dl-rfeed__q{flex:0 1 160px;min-width:0;font-size:calc(16px * var(--dl-font-scale));padding:6px 12px}
 .dl-rfeed__chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -4273,6 +4273,8 @@ label.dl-wb__catitem.is-on{border-color:var(--dl-accent);background:var(--dl-acc
 .dl-rfeed__chip:focus-visible,.dl-rfeed__btn:focus-visible{outline:3px solid var(--dl-accent);outline-offset:2px}
 .dl-rfeed__count{margin-left:auto;font-size:calc(14px * var(--dl-font-scale));color:var(--dl-ink)}
 .dl-rfeed__list{display:flex;flex-direction:column;gap:28px;margin:22px auto 0;max-width:900px}
+.dl-rfeed__post{min-width:0;overflow-wrap:anywhere}
+.dl-rfeed__body.dl-prose table{display:block;max-width:100%;overflow-x:auto}
 .dl-rfeed__post{background:var(--dl-surface);border:1px solid var(--dl-border-hover);border-left:6px solid var(--dl-ink-strong);border-radius:var(--dl-radius-lg);padding:30px clamp(18px,4vw,44px);box-shadow:0 1px 3px var(--dl-overlay-soft)}
 .dl-rfeed__post[hidden],.dl-rfeed__none[hidden]{display:none}
 .dl-rfeed__post.is-decided{border-left-color:var(--dl-success)}
