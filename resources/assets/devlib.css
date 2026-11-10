@@ -8,7 +8,7 @@
  *                (di atas latar gelap), tanpa abu-abu; abu-abu HANYA --dl-disabled; read-only dibedakan lewat latar.
  *                Sheet: judul kolom, nomor baris, sel baca-saja = token --dl-sheet-head / --dl-sheet-ro (satu tempat, semua layar).
  * Dipakai oleh : Semua layar v2 (devlib.test dan situs proyek pemakai) lewat _devlib/devlib.css.
- * Status       : Aktif.
+ * Status       : Aktif. Redesign grid / sheet / form 2026-11-10: blok REDESIGN di akhir berkas.
  * ===================================================================== */
 :root{
   /* warna */
@@ -5144,3 +5144,50 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-tour__win b{color:var(--dl-ink-strong)}
 .dl-tour__next{border:0;border-radius:999px;padding:7px 14px;background:var(--dl-accent);color:var(--dl-on-accent);font:inherit;font-weight:700;cursor:pointer}
 @media (max-width:900px){.dl-tour__play{grid-template-columns:1fr}.dl-tour__pop{width:min(240px,80%)}}
+/* ===================================================================
+ * REDESIGN grid / sheet / form (Jo 2026-11-10: "lebih elegan, berwarna, langsung intuitif, ramah pengguna").
+ * Satu tempat untuk SEMUA layar: layar pemakai tidak menulis gaya sendiri. Hanya token; teks tetap hitam di latar terang.
+ *  - Grid: tab status jadi pil berwarna (garis penanda .dl-grid__find dimatikan), header tebal berlatar --dl-sheet-head,
+ *    baris disorot aksen saat disentuh, tombol aksi baris jadi tombol bulat berwarna.
+ *  - Sheet: bar atas dan header selaras dengan grid, baris aktif ditandai bilah aksen pada nomor barisnya.
+ *  - Form: kartu seksi memakai warna bergilir (aksen, violet, hijau, jeruk, pink, teal), input lebih tinggi dengan cincin fokus.
+ * =================================================================== */
+.dl-grid__fbar{padding:10px 12px;column-gap:8px;row-gap:6px}
+.dl-grid__find{display:none}
+.dl-fb{padding:5px 14px;border-radius:999px;background:var(--dl-chip);color:var(--dl-ink);transition:background .15s,color .15s}
+.dl-fb:hover{background:color-mix(in srgb,var(--fb) 16%,var(--dl-chip));color:var(--dl-ink-strong)}
+.dl-fb.is-active{background:var(--fb);color:var(--dl-on-accent)}
+.dl-fb--yellow.is-active,.dl-fb--warn.is-active{color:var(--dl-ink-strong)}
+.dl-fb .dl-grid__tabcount{margin-left:4px;background:color-mix(in srgb,var(--fb) 22%,var(--dl-surface));color:var(--dl-ink-strong)}
+.dl-fb.is-active .dl-grid__tabcount{background:color-mix(in srgb,var(--dl-on-accent) 28%,transparent);color:inherit}
+.dl-grid__table th{background:var(--dl-sheet-head);color:var(--dl-ink-strong);text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--dl-border-hover)}
+.dl-grid__table th.is-sorted{background:color-mix(in srgb,var(--dl-accent) 14%,var(--dl-sheet-head));color:var(--dl-accent-ink)}
+.dl-grid__row:hover td{background:color-mix(in srgb,var(--dl-accent) 6%,var(--dl-surface))}
+.dl-grid__row:hover td:first-child{box-shadow:inset 3px 0 0 var(--dl-accent)}
+.dl-grid--entry .dl-grid__act .dl-iconbtn{width:28px;height:28px;border-radius:50%;background:color-mix(in srgb,var(--dl-accent) 12%,var(--dl-surface));color:var(--dl-accent-ink)}
+.dl-grid--entry .dl-grid__act .dl-iconbtn:hover{background:var(--dl-accent);color:var(--dl-on-accent)}
+.dl-grid--entry .dl-grid__act .dl-iconbtn--danger{background:var(--dl-danger-soft);color:var(--dl-danger)}
+.dl-grid--entry .dl-grid__act .dl-iconbtn--danger:hover{background:var(--dl-danger);color:var(--dl-on-accent)}
+.dl-grid--entry .dl-grid__act .dl-iconbtn--success{background:color-mix(in srgb,var(--dl-green) 14%,var(--dl-surface));color:var(--dl-success)}
+.dl-grid--entry .dl-grid__act .dl-iconbtn--success:hover{background:var(--dl-green);color:var(--dl-on-accent)}
+.dl-grid__search{border-radius:999px;padding:0 14px}
+.dl-sheet__bar{padding:10px 12px;background:var(--dl-surface-alt)}
+.dl-sheet__table th{padding:9px 10px;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--dl-border-hover)}
+.dl-sheet__table td{padding:6px 10px;height:36px}
+.dl-sheet__table tr:has(td.is-cur) .dl-sheet__no{background:color-mix(in srgb,var(--dl-accent) 22%,var(--dl-sheet-head));box-shadow:inset 3px 0 0 var(--dl-accent)}
+.dl-sheet__table tr:hover td:not(.dl-sheet__no):not(.is-ro):not(.is-sel):not(.is-cur):not(.is-bad):not(.is-empty){background:color-mix(in srgb,var(--dl-accent) 5%,var(--dl-surface))}
+.dl-card--section:not(.dl-card--tone){--tc:var(--dl-accent);border-radius:var(--dl-radius-lg);overflow:hidden}
+.dl-card--section:not(.dl-card--tone):nth-of-type(6n+2){--tc:var(--dl-violet)}
+.dl-card--section:not(.dl-card--tone):nth-of-type(6n+3){--tc:var(--dl-green)}
+.dl-card--section:not(.dl-card--tone):nth-of-type(6n+4){--tc:var(--dl-tangerine)}
+.dl-card--section:not(.dl-card--tone):nth-of-type(6n+5){--tc:var(--dl-pink)}
+.dl-card--section:not(.dl-card--tone):nth-of-type(6n){--tc:var(--dl-ch-teal)}
+.dl-card--section:not(.dl-card--tone) > .dl-card__head{background:color-mix(in srgb,var(--tc) 12%,var(--dl-surface));box-shadow:inset 4px 0 0 var(--tc);padding:12px 16px}
+.dl-card--section:not(.dl-card--tone) > .dl-card__head b{font-size:calc(13px * var(--dl-font-scale));letter-spacing:.06em}
+.dl-form--panel .dl-field__label{font-size:calc(12.5px * var(--dl-font-scale));font-weight:700;color:var(--dl-ink-strong)}
+.dl-form--panel .dl-field__box{border-radius:var(--dl-radius);min-height:38px}
+.dl-form--panel .dl-field__box:focus-within{box-shadow:0 0 0 3px var(--dl-accent-ring)}
+.dl-grid__table .dl-badge{font-size:calc(12px * var(--dl-font-scale));padding:3px 11px}
+.dl-form__title{font-size:calc(20px * var(--dl-font-scale))}
+.dl-form__heading .dl-badge{font-size:calc(12px * var(--dl-font-scale));padding:3px 11px}
+.dl-form__heading .dl-badge--neutral{background:color-mix(in srgb,var(--dl-amber-2) 22%,var(--dl-surface));color:var(--dl-ink-strong)}

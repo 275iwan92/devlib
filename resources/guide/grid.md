@@ -109,7 +109,7 @@ Types (all handled in `cell()` of `grid.js`):
 | `money` | Right-aligned `CUR 1.234`. | `currency` (default `IDR`), `decimals` (default 0) |
 | `date` | Date as `dd-Mmm-yyyy` (`fmt.gridDate`). | `toneKey` = row field with a tone; the date then appears as a coloured pill |
 | `time`, `datetime` | Formatted with `DlTime` / `DlDateTime` (rendered through the default text cell). | |
-| `badge` | Pill. Tone from `tones[value]`, or from the row field `toneKey`; fallback `neutral`. | `tones => [value => tone]`, `toneKey` (use for varying text such as "Late 3 days") |
+| `badge` | Pill. Tone from `tones[value]`, or from the row field `toneKey`; fallback `neutral`. | `tones => [value => tone]`, `toneKey` (use for varying text such as "Late 3 days"), `auto => true` (no map: a stable colour is picked from the text, same value = same colour; for categories such as department or level) |
 | `link` | Read-only value from another entity (e.g. "Valued transactions"), right-aligned, with an arrow icon. | `format => money|number` (default `number`, plus `currency`/`decimals`), `url` (only `{id}` is replaced; without `url` the link is `#` and click emits `dl:grid-link`) |
 | `image` | Thumbnail button that opens a lightbox. | `fallback` = row field whose initials are shown when there is no image |
 | `progress` | Bar 0-100, tone by value (>=100 success, >=60 accent, >=30 warn, else danger). | |
