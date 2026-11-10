@@ -3,6 +3,8 @@
   'use strict';
   const {$, $$, esc, toast, T, Tf} = Devlib.h;
   /* ============================ ORG CHART ============================ */
+  // Peningkatan 2026-11-10 (Jo): warna kartu per departemen (hue dari teks), chip departemen, tombol level (1/2/3/All), geser (pan) dengan drag,
+  // minimap, kartu "N lowong" (lowong tanpa bawahan dalam satu induk digabung; hanya mode baca), kartu terkunci (people[].locked), Print, tombol "/" untuk cari.
   class OrgChart extends Devlib.Component {
     static selector = "[data-dl-org]";
     init() {
@@ -10,12 +12,15 @@
       this.edit = this.el.dataset.editable === '1';
       this.tree = $(this.el, '[data-o-tree]');
       this.canvas = $(this.el, '[data-o-canvas]');
+      this.mini = $(this.el, '[data-o-mini]');
       this.undo = [];
       this.collapsed = new Set();
       this.zoom = 1;
       this.q = '';
       this.dept = '';
       this.drag = null;
+      this.pan = null;
+      $$(this.el, '[data-o-dept]').forEach(b => b.dataset.oDept && b.style.setProperty('--dh', this.hue(b.dataset.oDept)));
       this.el.addEventListener('dragstart', e => { const g = e.target.closest('[data-o-grip]'); if (!g) return; this.drag = g.closest('[data-o-node]').dataset.oNode; g.closest('.dl-org__card').classList.add('is-drag'); e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', this.drag); e.dataTransfer.setDragImage(g.closest('.dl-org__card'), 20, 20); } catch (x) {} });
       this.el.addEventListener('dragend', () => { this.drag = null; $$(this.el, '.is-drag,.is-target,.is-deny').forEach(x => x.classList.remove('is-drag', 'is-target', 'is-deny')); });
       this.el.addEventListener('dragover', e => { const t = e.target.closest('[data-o-drop]'); if (!t || this.drag == null) return; e.preventDefault(); $$(this.el, '.is-target,.is-deny').forEach(x => x.classList.remove('is-target', 'is-deny')); const bad = t.dataset.oNode === this.drag || this.isUnder(t.dataset.oNode, this.drag); t.classList.add(bad ? 'is-deny' : 'is-target'); e.dataTransfer.dropEffect = bad ? 'none' : 'move'; });
@@ -26,18 +31,29 @@
         if (x.closest('[data-o-undo]')) { const u = this.undo.pop(); if (u) { this.byId(u[0]).parent = u[1]; this.render(); toast(T('oc_undone')); } return; }
         if (x.closest('[data-o-save]')) { this.el.dispatchEvent(new CustomEvent('dl:orgchart-save', {bubbles: true, detail: {nodes: this.nodes.map(n => ({id: n.id, parent: n.parent ?? null}))}})); toast(Tf('oc_saved', {n: this.undo.length}), 'success'); this.undo.length = 0; return this.render(); }
         const z = x.closest('[data-o-zoom]');
-        if (z) { const k = +z.dataset.oZoom; if (k) this.zoom = Math.min(1.6, Math.max(0.4, Math.round((this.zoom + k * 0.1) * 10) / 10)); else { this.tree.style.transform = 'scale(1)'; this.zoom = Math.max(0.4, Math.min(1, this.canvas.clientWidth / this.tree.scrollWidth)); } return this.render(); }
-        if (x.closest('[data-o-html]')) {
-          const css = [...document.querySelectorAll('link[rel=stylesheet]')].map(l => `<link rel="stylesheet" href="${l.href}">`).join('');
-          const html = `<!doctype html><html lang="id"><head><meta charset="utf-8"><title>${esc(this.el.dataset.title)}</title>${css}<style>body{margin:24px;font-family:sans-serif}.dl-org__grip,.dl-org__fold{display:none}</style></head><body><h1>${esc(this.el.dataset.title)}</h1><div class="dl-org"><div class="dl-org__tree">${this.tree.innerHTML}</div></div></body></html>`;
-          const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], {type: 'text/html'})); a.download = 'struktur-organisasi.html'; a.click();
-        }
+        if (z) { const k = +z.dataset.oZoom; if (k) this.zoom = Math.min(1.6, Math.max(0.3, Math.round((this.zoom + k * 0.1) * 10) / 10)); else this.fit(); return this.render(); }
+        const lv = x.closest('[data-o-level]'); if (lv) { this.levelTo(+lv.dataset.oLevel); this.render(); this.fit(); return this.render(); }
+        const dp = x.closest('[data-o-dept]'); if (dp) { this.dept = this.dept === dp.dataset.oDept ? '' : dp.dataset.oDept; return this.focus(); }
+        const mm = x.closest('[data-o-mini]'); if (mm) return this.miniJump(e, mm);
+        if (x.closest('[data-o-html]')) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([this.page()], {type: 'text/html'})); a.download = 'struktur-organisasi.html'; a.click(); }
+        if (x.closest('[data-o-print]')) { const w = window.open(URL.createObjectURL(new Blob([this.page()], {type: 'text/html'}))); if (w) w.addEventListener('load', () => w.print()); }
       });
-      $(this.el, '[data-o-search]').addEventListener('input', e => { this.q = e.target.value.trim().toLowerCase(); this.focus(); });
-      const dept = $(this.el, '[data-o-dept]');
-      if (dept) dept.addEventListener('change', e => { this.dept = e.target.value; this.focus(); });
+      // Geser kanvas dengan drag pada latar (bukan pada tombol / pegangan kartu).
+      this.canvas.addEventListener('pointerdown', e => {
+        if (e.button !== 0 || e.target.closest('button,input,select,[data-o-grip]')) return;
+        this.pan = {x: e.clientX, y: e.clientY, l: this.canvas.scrollLeft, t: this.canvas.scrollTop};
+        this.canvas.classList.add('is-pan');
+      });
+      window.addEventListener('pointermove', e => { if (!this.pan) return; this.canvas.scrollLeft = this.pan.l - (e.clientX - this.pan.x); this.canvas.scrollTop = this.pan.t - (e.clientY - this.pan.y); });
+      window.addEventListener('pointerup', () => { this.pan = null; this.canvas.classList.remove('is-pan'); });
+      this.canvas.addEventListener('scroll', () => this.miniView());
+      const search = $(this.el, '[data-o-search]');
+      search.addEventListener('input', e => { this.q = e.target.value.trim().toLowerCase(); this.focus(); });
+      document.addEventListener('keydown', e => { if (e.key === '/' && !e.target.closest('input,textarea,select,[contenteditable]')) { e.preventDefault(); search.focus(); } });
       this.el.dlOrg = {nodes: this.nodes, move: this.move, render: this.render};
+      // Pohon besar (hanya baca): mulai dari level 3 dan zoom yang masih terbaca; "Level All" membuka semuanya.
       this.render();
+      if (!this.edit && this.nodes.length > 40) { this.levelTo(3); this.render(); this.fit(); this.render(); }
       this.canvas.scrollLeft = (this.canvas.scrollWidth - this.canvas.clientWidth) / 2;  // mulai dari puncak (tengah)
     }
 
@@ -54,6 +70,20 @@
     }
 
     isUnder(id, anc) { for (let n = this.byId(id); n && n.parent != null; n = this.byId(n.parent)) if (String(n.parent) === String(anc)) return true; return false; }
+
+    // Kedalaman kartu (puncak = 0); batas 200 langkah supaya relasi atasan yang berputar tidak menggantung.
+    depth(id) { let d = 0; for (let n = this.byId(id); n && n.parent != null && d < 200; n = this.byId(n.parent)) d++; return d; }
+
+    // Level 1/2/3 = lipat semua kartu pada kedalaman >= level-1 yang punya bawahan; 0 (All) = buka semua.
+    levelTo(n) {
+      this.collapsed = new Set(n ? this.nodes.filter(k => this.depth(k.id) >= n - 1 && this.kids(k.id).length).map(k => String(k.id)) : []);
+    }
+
+    // Zoom Fit: muat lebar kanvas, tidak di atas 100% dan tidak di bawah 50% (di bawah itu teks tak terbaca; sisanya digeser).
+    fit() {
+      this.tree.style.transform = 'scale(1)';
+      this.zoom = Math.max(0.5, Math.min(1, Math.round(this.canvas.clientWidth / this.tree.scrollWidth * 10) / 10));
+    }
 
     // Sorot kartu yang cocok dengan pencarian (jabatan / departemen / nama) DAN departemen terpilih; struktur garis tidak berubah.
     hit(n) {
@@ -77,25 +107,78 @@
     }
 
     av(p) {
-      return p.photo ? `<img src="${esc(p.photo)}" alt="">` : esc(this.ini(p.name));
+      return p.locked ? '<i class="fa-solid fa-lock"></i>' : p.photo ? `<img src="${esc(p.photo)}" alt="">` : esc(this.ini(p.name));
     }
 
+    // Warna departemen = hue dari nama departemen (stabil); tanpa departemen = hue bawaan CSS.
+    dh(n) { return n.dept ? `--dh:${this.hue(n.dept)}` : ''; }
+
     card(n) {
-      const P = this.ppl(n), c = this.kids(n.id);
-      return `<div class="dl-org__card ${P.length ? '' : 'is-vacant'} ${this.hit(n) ? 'is-hit' : ''}" data-o-node="${esc(n.id)}" ${this.edit ? 'data-o-drop' : ''}>
+      const P = this.ppl(n), c = this.kids(n.id), lock = P.some(p => p.locked);
+      return `<div class="dl-org__card ${P.length ? '' : 'is-vacant'} ${lock ? 'is-locked' : ''} ${this.hit(n) ? 'is-hit' : ''}" style="${this.dh(n)}" data-o-node="${esc(n.id)}" ${this.edit ? 'data-o-drop' : ''}>
         ${this.edit ? `<span class="dl-org__grip" draggable="true" data-o-grip title="${esc(T('oc_drag'))}"><i class="fa-solid fa-grip-vertical"></i></span>` : ''}
-        <div class="dl-org__who">${P.length ? `<span class="dl-org__avs">${P.slice(0, 3).map(p => `<span class="dl-org__av" style="--h:${this.hue(p.name)}" title="${esc(p.name)}">${this.av(p)}</span>`).join('')}</span>` : '<span class="dl-org__av is-empty"><i class="fa-solid fa-user-plus"></i></span>'}
+        <div class="dl-org__who">${P.length ? `<span class="dl-org__avs">${P.slice(0, 3).map(p => `<span class="dl-org__av ${p.locked ? 'is-locked' : ''}" style="--h:${this.hue(p.name)}" title="${esc(p.name)}">${this.av(p)}</span>`).join('')}</span>` : '<span class="dl-org__av is-empty"><i class="fa-solid fa-user-plus"></i></span>'}
           <span class="dl-org__txt"><b>${P.length ? esc(P.map(p => p.name).slice(0, 2).join(', ')) + (P.length > 2 ? ` +${P.length - 2}` : '') : esc(T('oc_vacant'))}</b><small>${esc(n.title)}</small>${n.dept ? `<em>${esc(n.dept)}</em>` : ''}</span></div>
         ${c.length ? `<button type="button" class="dl-org__fold" data-o-fold title="${esc(T(this.collapsed.has(String(n.id)) ? 'oc_expand' : 'oc_collapse'))}">${this.collapsed.has(String(n.id)) ? `+${c.length}` : '−'}</button>` : ''}
       </div>`;
     }
 
-    branch(n) { const c = this.kids(n.id), open = !this.collapsed.has(String(n.id)); return `<li>${this.card(n)}${c.length && open ? `<ul>${c.map(this.branch).join('')}</ul>` : ''}</li>`; }
+    // Beberapa lowong tanpa bawahan di bawah induk yang sama = satu kartu "N Lowong" (judul jabatan unik digabung).
+    vacantCard(v) {
+      const titles = [...new Set(v.map(k => k.title))];
+      return `<div class="dl-org__card is-vacant is-group ${v.some(k => this.hit(k)) ? 'is-hit' : ''}" style="${this.dh(v[0])}" title="${esc(titles.join(', '))}">
+        <div class="dl-org__who"><span class="dl-org__av is-empty"><i class="fa-solid fa-user-plus"></i></span>
+          <span class="dl-org__txt"><b>${v.length} ${esc(T('oc_vacant'))}</b><small>${esc(titles.join(' · '))}</small>${v[0].dept ? `<em>${esc(v[0].dept)}</em>` : ''}</span></div></div>`;
+    }
+
+    group(c) {
+      const v = this.edit ? [] : c.filter(k => !this.ppl(k).length && !this.kids(k.id).length);
+      if (v.length < 2) return c.map(k => this.branch(k)).join('');
+      return c.filter(k => !v.includes(k)).map(k => this.branch(k)).join('') + `<li>${this.vacantCard(v)}</li>`;
+    }
+
+    branch(n) { const c = this.kids(n.id), open = !this.collapsed.has(String(n.id)); return `<li>${this.card(n)}${c.length && open ? `<ul>${this.group(c)}</ul>` : ''}</li>`; }
 
     render() {
-      this.tree.innerHTML = `<ul>${this.kids(null).map(this.branch).join('')}</ul>`;
+      this.tree.innerHTML = `<ul>${this.group(this.kids(null))}</ul>`;
       this.tree.style.transform = `scale(${this.zoom})`; $(this.el, '[data-o-zoomval]').textContent = Math.round(this.zoom * 100) + '%';
+      this.el.classList.toggle('has-q', !!(this.q || this.dept));
+      $$(this.el, '[data-o-dept]').forEach(b => b.classList.toggle('is-on', b.dataset.oDept === this.dept));
       const u = $(this.el, '[data-o-undo]'); if (u) u.disabled = !this.undo.length;
+      this.miniDraw();
+    }
+
+    // Minimap: titik per kartu (posisi dalam ruang gulir kanvas) + kotak area yang sedang terlihat; klik = loncat ke sana.
+    miniDraw() {
+      if (!this.mini) return;
+      const c = this.canvas, W = c.scrollWidth, H = c.scrollHeight;
+      this.mini.hidden = W <= c.clientWidth * 1.05 && H <= c.clientHeight * 1.05;
+      if (this.mini.hidden) return;
+      const k = Math.min(160 / W, 100 / H), cr = c.getBoundingClientRect();
+      this.miniK = k;
+      this.mini.innerHTML = $$(this.tree, '.dl-org__card').map(el => {
+        const r = el.getBoundingClientRect();
+        return `<i style="left:${(r.left - cr.left + c.scrollLeft) * k}px;top:${(r.top - cr.top + c.scrollTop) * k}px;width:${Math.max(3, r.width * k)}px;${el.style.cssText}"></i>`;
+      }).join('') + '<b data-o-view></b>';
+      this.miniView();
+    }
+
+    miniView() {
+      const v = this.mini && $(this.mini, '[data-o-view]'); if (!v) return;
+      const c = this.canvas, k = this.miniK;
+      Object.assign(v.style, {left: c.scrollLeft * k + 'px', top: c.scrollTop * k + 'px', width: c.clientWidth * k + 'px', height: c.clientHeight * k + 'px'});
+    }
+
+    miniJump(e, mm) {
+      const r = mm.getBoundingClientRect(), c = this.canvas;
+      c.scrollLeft = (e.clientX - r.left) / this.miniK - c.clientWidth / 2;
+      c.scrollTop = (e.clientY - r.top) / this.miniK - c.clientHeight / 2;
+    }
+
+    // Halaman HTML mandiri untuk Download HTML dan Print (bagan apa adanya; tombol lipat dan pegangan disembunyikan).
+    page() {
+      const css = [...document.querySelectorAll('link[rel=stylesheet]')].map(l => `<link rel="stylesheet" href="${l.href}">`).join('');
+      return `<!doctype html><html lang="id"><head><meta charset="utf-8"><title>${esc(this.el.dataset.title)}</title>${css}<style>body{margin:24px;font-family:sans-serif}.dl-org__grip,.dl-org__fold{display:none}.dl-org__tree{transform:none!important}@page{size:landscape}</style></head><body><h1>${esc(this.el.dataset.title)}</h1><div class="dl-org"><div class="dl-org__tree">${this.tree.innerHTML}</div></div></body></html>`;
     }
 
     move(id, to) {
