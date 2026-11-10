@@ -5,9 +5,6 @@
   /* ============================ GRID ============================ */
   // Mesin grid sisi-browser (DevLib, tanpa DB). Di aplikasi pemakai, versi server (Livewire) memakai
   // markup & kelas yang sama; hanya sumber data & query-nya yang berpindah ke server.
-  // Nada chip kolom 'badge' ber-'auto' (tanpa danger: merah berarti masalah).
-  const AUTO_TONES = ['accent', 'violet', 'success', 'tangerine', 'yellow', 'info'];
-
   class Grid extends Devlib.Component {
     static selector = "[data-dl-grid]";
     init() {
@@ -284,7 +281,7 @@
           return `<td><span class="dl-avatar-id"><span class="dl-avatar-id__txt"><b>${esc(v)}</b>${party ? `<small>${esc(party)}</small>` : ''}</span></span></td>`;
         }
         // 'auto' => true: tanpa peta 'tones', warna chip dipilih stabil dari teksnya (kategori seperti departemen / level tampil berwarna, nilai sama = warna sama).
-        case 'badge': { const tone = (c.toneKey ? r[c.toneKey] : (c.tones || {})[v]) || (c.auto && v ? AUTO_TONES[[...String(v)].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7) % AUTO_TONES.length] : 'neutral'); return `<td>${v === '' || v == null ? '' : `<span class="dl-badge dl-badge--pill dl-badge--${esc(tone)}">${esc(v)}</span>`}</td>`; }
+        case 'badge': { const tone = (c.toneKey ? r[c.toneKey] : (c.tones || {})[v]) || (c.auto && v ? Devlib.h.autoTone(v) : 'neutral'); return `<td>${v === '' || v == null ? '' : `<span class="dl-badge dl-badge--pill dl-badge--${esc(tone)}">${esc(v)}</span>`}</td>`; }
         case 'money': case 'number': case 'integer': return `<td class="num">${esc(this.fmtCell(c, v))}</td>`;
         // 'toneKey' pada kolom date: kolom baris yang membawa tone (danger | warn | ...) -> tanggal tampil sebagai lencana berwarna, kosong = biasa.
         case 'date': { const tone = c.toneKey ? r[c.toneKey] : null; const txt = esc(this.fmtCell(c, v)); return `<td class="dl-grid__date">${tone ? `<span class="dl-badge dl-badge--pill dl-badge--${esc(tone)}">${txt}</span>` : txt}</td>`; }
