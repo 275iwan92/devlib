@@ -130,8 +130,46 @@
           return out;
         };
         watchServerErr(this.mask);
+        const D = this.mask.dataset, nikMode = !!(D.nikBirth || D.nikGender);
         this.mask.addEventListener('input', () => { this.mask.value = applyMask(pat, typed(this.mask.value)); });
-        this.mask.addEventListener('blur', () => { if (holdsServerErr(this.mask)) return; const n = typed(this.mask.value).length; fieldErr(this.mask, n > 0 && n < digits ? this.mask.dataset.invalid : ''); });
+        // Mode NIK (prop nikBirth / nikGender): 16 digit = 6 wilayah, 6 tanggal lahir DDMMYY (perempuan: hari + 40), 4 urut. Mengetik NIK lengkap mengisi tanggal lahir dan jenis kelamin;
+        // pesan langsung tampil tepat di bawah kolom bila belum benar (kurang digit, tanggal tidak sah, atau beda dengan isian tanggal lahir / jenis kelamin).
+        if (nikMode) {
+          const scope = this.mask.closest('form') || document;
+          const birthHidden = D.nikBirth ? scope.querySelector(`[name="${D.nikBirth}"]`) : null, gSel = D.nikGender ? scope.querySelector(`[name="${D.nikGender}"]`) : null;
+          const birthText = birthHidden ? birthHidden.closest('[data-dl-date]')?.querySelector('[data-dl-date-text]') : null;
+          // Tahun 2 digit: 20yy bila pemilik NIK sudah 17 tahun ke atas (usia kerja), selain itu 19yy.
+          const read = d => {
+            let dd = +d.slice(6, 8); const mm = +d.slice(8, 10), yy = +d.slice(10, 12), female = dd > 40; if (female) dd -= 40;
+            const cur = new Date().getFullYear(), y = 2000 + yy <= cur - 17 ? 2000 + yy : 1900 + yy, t = new Date(y, mm - 1, dd);
+            if (t.getFullYear() !== y || t.getMonth() !== mm - 1 || t.getDate() !== dd) return null;
+            return {iso: `${y}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`, female};
+          };
+          let filling = false;
+          const check = fill => {
+            if (filling || holdsServerErr(this.mask) && !fill) return;
+            const d = typed(this.mask.value);
+            if (!d) return fieldErr(this.mask, '');
+            if (d.length < digits) return fieldErr(this.mask, D.nikCount.replace(':n', d.length).replace(':t', digits));
+            const r = read(d);
+            if (!r) return fieldErr(this.mask, D.nikDate);
+            const sex = r.female ? D.nikFemale : D.nikMale, sexLabel = r.female ? D.nikFemaleLabel : D.nikMaleLabel;
+            if (fill) {
+              filling = true;
+              if (birthText) { birthText.value = r.iso; birthText.dispatchEvent(new Event('change', {bubbles: true})); }
+              if (gSel) { gSel.value = sex; gSel.dispatchEvent(new Event('change', {bubbles: true})); }
+              filling = false;
+            }
+            const diff = [];
+            if (birthHidden && birthHidden.value && birthHidden.value !== r.iso) diff.push(DlDate.of(r.iso).display());
+            if (gSel && gSel.value && gSel.value !== sex) diff.push(sexLabel);
+            fieldErr(this.mask, diff.length ? D.nikDiffers.replace(':v', diff.join(', ')) : '');
+          };
+          this.mask.addEventListener('input', () => check(true));
+          [birthHidden, gSel].forEach(el => el && el.addEventListener('change', () => check(false)));
+          check(false);
+        }
+        this.mask.addEventListener('blur', () => { if (nikMode || holdsServerErr(this.mask)) return; const n = typed(this.mask.value).length; fieldErr(this.mask, n > 0 && n < digits ? this.mask.dataset.invalid : ''); });
       }
 
       this.pre = $(this.el, '[data-dl-prefix]');

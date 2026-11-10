@@ -329,9 +329,9 @@ Pilih dari data master (bukan ketik bebas) + isi otomatis field lain.
 - Prop: lookup:string='', fill:array=[], create:bool=false, params:array=[], serverSearch:bool=false, name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
 
 ## `<x-dl::field.masked>`
-Input bermask angka, mis. NIK 6.6.4 digit.
+Input bermask angka, mis. NIK 6.6.4 digit. Mode NIK (nikBirth / nikGender): NIK lengkap mengisi tanggal lahir dan jenis kelamin (perempuan = hari + 40) dan pesan langsung tampil di bawah kolom bila belum benar.
 - Berkas: `src/Components/Field/Masked.php`, tampilan `resources/views/components/field/masked.blade.php`
-- Prop: mask:string='999999.999999.9999', invalidText:?string=NULL, name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
+- Prop: mask:string='999999.999999.9999', invalidText:?string=NULL, nikBirth:?string=NULL, nikGender:?string=NULL, nikMale:string='M', nikFemale:string='F', name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
 
 ## `<x-dl::field.money>`
 Nominal uang + pilihan mata uang. words = tampilkan terbilang di bawahnya, mengikuti mata uang terpilih.
