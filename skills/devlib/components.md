@@ -983,6 +983,11 @@ Keterangan saat kursor diarahkan ke isi slot.
 - Berkas: `src/Components/Tooltip.php`
 - Prop: text:string='', position:string='top'
 
+## `<x-dl::tour>`
+Tur interaktif ala misi (Panduan Pengguna): daftar misi per kelompok; satu misi = tangkapan layar nyata dengan titik berdenyut, klik titik memunculkan popup penjelas, daftar langkah dan batang kemajuan ikut terisi, selesai = misi tercentang dan skor naik.
+- Berkas: `src/Components/Tour.php`
+- Prop: missions:array=[], title:?string=NULL, key:string='default', source:?string=NULL
+
 ## `<x-dl::traffic-light>`
 Lampu status (scorecard): green | amber | red (+ label & keterangan). Dipakai di baris KPI / scorecard.
 - Berkas: `src/Components/TrafficLight.php`
