@@ -12,7 +12,10 @@
 
 namespace Devlib\Components;
 
-// Deck: $slides = [['title', 'lead' (satu kalimat, opsional), 'items' => [butir, ...] (muncul berurutan), 'image' => url (opsional)], ...].
+// Deck: $slides = [['title', 'lead' (satu kalimat, opsional), 'items' => [butir, ...] (muncul berurutan), 'image' => url (opsional),
+// 'tag' => teks kecil di atas judul, 'hero' => true (slide pembuka bergradasi dengan bola melayang), 'flow' => true (butir jadi alur bernomor mendatar),
+// 'shot' => ['src', 'x', 'y'] (tangkapan layar di bingkai peramban, zoom pelan dari titik x%,y%; 'kb' => 'out' = zoom keluar),
+// 'walk' => ['src', 'steps' => [[x%, y%, judul, teks], ...]] (kamera menyusuri langkah di tangkapan layar: zoom ke titik, cincin, keterangan)], ...].
 // Judul, lead, dan butir adalah DATA (tidak diterjemahkan); label tombol diterjemahkan. autoplay = mulai Play saat halaman dibuka;
 // interval = detik per slide. Beda dengan x-dl::slideshow: itu jendela modal untuk tangkapan layar; ini slide teks yang bisa jalan sendiri.
 class Deck extends DevlibComponent
@@ -41,10 +44,21 @@ class Deck extends DevlibComponent
             <section {{ $attributes->class('dl-deck') }} {!! $dl() !!} data-dl-deck data-interval="{{ max(2, $interval) }}" data-autoplay="{{ $autoplay ? 1 : 0 }}" tabindex="0" aria-roledescription="carousel" aria-label="{{ $title ?? \Devlib\Lang::text('Presentation') }}">
                 <div class="dl-deck__stage">
                     @foreach ($slides as $s)
-                        <article class="dl-deck__slide {{ $loop->first ? 'is-on' : '' }}">
+                        @php $walk = $s['walk'] ?? null; $shot = $s['shot'] ?? null; @endphp
+                        <article class="dl-deck__slide {{ $loop->first ? 'is-on' : '' }} {{ ! empty($s['hero']) ? 'dl-deck__slide--hero' : '' }} {{ ($walk || $shot) ? 'dl-deck__slide--shot '.(($s['kb'] ?? 'in') === 'out' ? 'is-out' : 'is-in') : '' }}"
+                            @if ($walk) data-dk-walk data-ms="{{ count($walk['steps']) * 3400 + 1500 }}" data-steps="{{ json_encode(array_map(fn ($w) => ['x' => $w[0], 'y' => $w[1], 't' => $w[2], 'd' => $w[3]], $walk['steps']), JSON_UNESCAPED_UNICODE) }}" @endif>
+                            @if (! empty($s['hero']))<i class="dl-deck__orb dl-deck__orb--a" aria-hidden="true"></i><i class="dl-deck__orb dl-deck__orb--b" aria-hidden="true"></i>@endif
+                            @if (! empty($s['tag']))<p class="dl-deck__tag">{{ $s['tag'] }}</p>@endif
                             <h2>{{ $s['title'] ?? '' }}</h2>
                             @if (! empty($s['lead']))<p class="dl-deck__lead">{{ $s['lead'] }}</p>@endif
-                            @if (! empty($s['items']))<ol class="dl-deck__items">@foreach ($s['items'] as $k => $t)<li style="--i: {{ $k }}">{{ $t }}</li>@endforeach</ol>@endif
+                            @if (! empty($s['items']))<ol class="dl-deck__items {{ ! empty($s['flow']) ? 'dl-deck__items--flow' : '' }}">@foreach ($s['items'] as $k => $t)<li style="--i: {{ $k }}">{{ $t }}</li>@endforeach</ol>@endif
+                            @if ($shot)<div class="dl-deck__frame"><div class="dl-deck__bt"><i></i><i></i><i></i></div><div class="dl-deck__clip"><img src="{{ $shot['src'] }}" alt="" style="transform-origin: {{ $shot['x'] ?? 50 }}% {{ $shot['y'] ?? 30 }}%" loading="lazy"></div></div>@endif
+                            @if ($walk)
+                                <div class="dl-deck__frame"><div class="dl-deck__bt"><i></i><i></i><i></i></div>
+                                    <div class="dl-deck__clip"><div class="dl-deck__cam" data-dk-cam><img src="{{ $walk['src'] }}" alt="" loading="lazy"><i class="dl-deck__ring" data-dk-ring></i></div></div>
+                                    <div class="dl-deck__cap" aria-live="polite"><b data-dk-ct></b><span data-dk-cd></span></div>
+                                </div>
+                            @endif
                             @if (! empty($s['image']))<img class="dl-deck__img" src="{{ $s['image'] }}" alt="" loading="lazy">@endif
                         </article>
                     @endforeach

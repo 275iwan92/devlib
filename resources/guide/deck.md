@@ -25,7 +25,7 @@ Constructor of `Devlib\Components\Deck` (5 props). Use `:slides="$slides"` (arra
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
-| `slides` | `array`, `[]` | `[['title', 'lead' (optional sentence), 'items' => [text, ...] (appear in order), 'image' => url (optional)], ...]`. Text is data: it is not translated. Empty = the text "No slides." |
+| `slides` | `array`, `[]` | `[['title', 'lead' (optional sentence), 'items' => [text, ...] (appear in order), 'image' => url (optional), 'tag' => small text above the title, 'hero' => true (opening slide: gradient and floating orbs), 'flow' => true (items become a row of numbered boxes), 'shot' => ['src', 'x', 'y'] (screenshot in a browser frame that zooms slowly from the point; 'kb' => 'out' zooms out instead), 'walk' => ['src', 'steps' => [[x%, y%, title, text], ...]] (a camera that walks through the steps on a screenshot)], ...]`. Text is data: it is not translated. Empty = the text "No slides." |
 | `title` | `?string`, `null` | The accessible name of the deck. Empty = "Presentation". |
 | `autoplay` | `bool`, `false` | `true` = starts playing when the page opens. |
 | `interval` | `int`, `7` | Seconds per slide while playing (minimum 2). |
@@ -38,3 +38,10 @@ Constructor of `Devlib\Components\Deck` (5 props). Use `:slides="$slides"` (arra
 - Going to a slide by hand while playing restarts the timer of that slide.
 - Slide change uses a short slide-and-fade; the items of the visible slide appear one by one.
 - Language: only the button labels are translated (Previous, Play, Pause, Next, Full screen, Presentation, No slides.).
+
+## Picture slides
+
+- `shot`: the slide becomes two columns, text on the left and the screenshot in a browser frame on the right. While the slide is visible the picture zooms slowly (in by default, out with `'kb' => 'out'`).
+- `walk`: the camera starts on the whole picture, then every 3.4 seconds zooms to the next step, moves the ring and shows the step title and text under the picture, and repeats. While playing, the slide stays long enough for all steps (3.4 seconds per step plus 1.5 seconds).
+- `hero` can be combined with `shot`. `flow` needs `items`.
+- With reduced motion the zoom, the orbs and the ring do not animate.

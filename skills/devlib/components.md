@@ -133,6 +133,11 @@ Kotak berjudul untuk mengelompokkan isi (bagian form, panel info). Slot "actions
 - Berkas: `src/Components/Card.php`
 - Prop: title:?string=NULL, description:?string=NULL, variant:string='section', icon:?string=NULL, tone:?string=NULL
 
+## `<x-dl::chapters>`
+Panduan gaya blog / Pinterest: papan kartu (tangkapan layar yang diperbesar di titik langkah pertama, pencarian, saringan kelompok, kartu alur) dan satu bab bergambar per tugas (judul, alur beranimasi, langkah demi langkah dengan potongan layar bercincin, tips, bacaan berikutnya, tombol Present / Try / Detail).
+- Berkas: `src/Components/Chapters.php`
+- Prop: tasks:array=[], groups:array=[], title:?string=NULL, presentUrl:?string=NULL, tryUrl:?string=NULL, source:?string=NULL
+
 ## `<x-dl::chart>`
 Grafik SVG tanpa library luar. Satu format data untuk semua tipe:.
 - Berkas: `src/Components/Chart.php`
@@ -847,6 +852,11 @@ Kalender bersama: x-dl::calendar yang acaranya bisa mengundang peserta lewat @na
 Grid sel mirip spreadsheet; mendukung links (sel terhitung), reasonOnSave, reorderUrl.
 - Berkas: `src/Components/Sheet.php`
 - Prop: columns:array=[], rows:array=[], rowKey:string='id', title:string='', source:?string=NULL, lookup:bool=false, saveUrl:?string=NULL, stats:array=[], addRows:bool=true, reorderUrl:?string=NULL, reasonOnSave:?string=NULL, links:array=[], autoSave:bool=false, addLabel:?string=NULL, deleteUrl:?string=NULL, searchable:bool=true, showCount:bool=true, deleteLabel:?string=NULL, resetUrl:?string=NULL, resetLabel:?string=NULL, rowTone:?string=NULL
+
+## `<x-dl::shot>`
+Potongan tangkapan layar: gambar penuh diperbesar di sekitar satu titik (x%, y%) dengan cincin penanda berdenyut. Dipakai kartu, langkah artikel, dan slide Panduan Pengguna supaya tiap langkah punya gambar yang fokus.
+- Berkas: `src/Components/Shot.php`
+- Prop: src:string='', x:float=50.0, y:float=50.0, zoom:float=2.2, ring:bool=true, ratio:string='16/10', alt:string='', source:?string=NULL
 
 ## `<x-dl::side-menu>`
 Menu panel samping (kiri ATAU kanan). Mode lebar: akordeon bertingkat (grup -> sub -> item), cari (buka otomatis.
