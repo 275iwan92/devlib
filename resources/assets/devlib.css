@@ -5206,3 +5206,13 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-form__title{font-size:calc(20px * var(--dl-font-scale))}
 .dl-form__heading .dl-badge{font-size:calc(12px * var(--dl-font-scale));padding:3px 11px}
 .dl-form__heading .dl-badge--neutral{background:color-mix(in srgb,var(--dl-amber-2) 22%,var(--dl-surface));color:var(--dl-ink-strong)}
+/* x-dl::approval berwarna (Jo 2026-11-10: "hanya tambahkan warna di approval"): kepala, antrian, detail, ringkasan, tabel baris, judul tahap. Struktur tidak berubah. */
+.dl-appr__head{padding:12px 16px;border-radius:var(--dl-radius-lg);background:color-mix(in srgb,var(--dl-accent) 10%,var(--dl-surface));box-shadow:inset 4px 0 0 var(--dl-accent)}
+.dl-appr__item{background:color-mix(in srgb,var(--dl-amber-2) 8%,var(--dl-surface))}
+.dl-appr__item:hover{background:color-mix(in srgb,var(--dl-amber-2) 16%,var(--dl-surface))}
+.dl-appr__item.is-active{background:var(--dl-accent-soft)}
+.dl-appr__detail{border-top:4px solid var(--dl-accent)}
+.dl-appr__summary{background:color-mix(in srgb,var(--dl-accent) 7%,var(--dl-surface));border-color:var(--dl-accent-ring)}
+.dl-appr__summary b{color:var(--dl-accent-ink)}
+.dl-appr__lines th{background:color-mix(in srgb,var(--dl-accent) 14%,var(--dl-sheet-head));color:var(--dl-ink-strong);text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--dl-accent)}
+.dl-appr__cap{color:var(--dl-accent-ink)}
