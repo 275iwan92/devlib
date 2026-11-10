@@ -38,6 +38,10 @@
             @if (! empty($d['calculator']))
                 <x-dl::calculator :quantities="$d['calculator']['quantities'] ?? []" :currencies="$d['calculator']['currencies'] ?? []" :featured="$d['calculator']['featured'] ?? []" :base="$d['calculator']['base'] ?? 'IDR'" :rate-url="$d['calculator']['rate_url'] ?? null" :id="$id.'-calc'" />
             @endif
+            {{-- Pintasan (Jo 2026-11-10): ikon garis putih di kiri tombol Play, bentuk sama dengan Calendar / Calculator; tiap isi ['label', 'url', 'code', 'paths' => isi <svg> 24x24 bergaya garis], klik membuka url sebagai tab kerja. --}}
+            @foreach ($d['shortcuts'] ?? [] as $sc)
+                <a class="dl-wcalc-btn" href="{{ $sc['url'] }}" data-dl-tab-url="{{ $sc['url'] }}" data-dl-tab-code="{{ $sc['code'] ?? $sc['url'] }}" data-dl-tab-label="{{ $sc['label'] }}" aria-label="{{ $sc['label'] }}" title="{{ $sc['label'] }}"><svg viewBox="0 0 24 24" aria-hidden="true">{!! $sc['paths'] !!}</svg></a>
+            @endforeach
             @if (! empty($d['music']['tracks']))
                 <x-dl::music-player :tracks="$d['music']['tracks']" :base="$d['music']['base'] ?? '/audio'" :storage-key="$d['music']['key'] ?? 'dl-music'" :volume="$d['music']['volume'] ?? 25" />
             @endif
