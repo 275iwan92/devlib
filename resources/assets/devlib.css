@@ -4410,6 +4410,7 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-pbanner{flex:1 1 100%;min-width:0;display:flex;flex-direction:column;gap:12px;padding:6px 0}
 .dl-pbanner__top{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
 .dl-pbanner__photo{flex:none}
+.dl-pbanner__photo > img{width:72px;height:72px;object-fit:contain}
 .dl-pbanner__id{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:7px}
 .dl-pbanner__name{font-size:calc(22px * var(--dl-font-scale));font-weight:700;line-height:1.2;color:var(--dl-ink-strong)}
 .dl-pbanner__sub{font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink)}
