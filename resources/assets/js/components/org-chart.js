@@ -118,7 +118,7 @@
       return `<div class="dl-org__card ${P.length ? '' : 'is-vacant'} ${lock ? 'is-locked' : ''} ${this.hit(n) ? 'is-hit' : ''}" style="${this.dh(n)}" data-o-node="${esc(n.id)}" ${this.edit ? 'data-o-drop' : ''}>
         ${this.edit ? `<span class="dl-org__grip" draggable="true" data-o-grip title="${esc(T('oc_drag'))}"><i class="fa-solid fa-grip-vertical"></i></span>` : ''}
         <div class="dl-org__who">${P.length ? `<span class="dl-org__avs">${P.slice(0, 3).map(p => `<span class="dl-org__av ${p.locked ? 'is-locked' : ''}" style="--h:${this.hue(p.name)}" title="${esc(p.name)}">${this.av(p)}</span>`).join('')}</span>` : '<span class="dl-org__av is-empty"><i class="fa-solid fa-user-plus"></i></span>'}
-          <span class="dl-org__txt"><b>${P.length ? esc(P.map(p => p.name).slice(0, 2).join(', ')) + (P.length > 2 ? ` +${P.length - 2}` : '') : esc(T('oc_vacant'))}</b><small>${esc(n.title)}</small>${n.dept ? `<em>${esc(n.dept)}</em>` : ''}</span></div>
+          <span class="dl-org__txt"><b>${P.length ? esc(P.map(p => p.name).slice(0, 2).join(', ')) + (P.length > 2 ? ` +${P.length - 2}` : '') : esc(T('oc_vacant'))}</b><small>${esc(n.title)}</small>${n.dept && n.showDept !== false ? `<em>${esc(n.dept)}</em>` : ''}</span></div>
         ${c.length ? `<button type="button" class="dl-org__fold" data-o-fold title="${esc(T(this.collapsed.has(String(n.id)) ? 'oc_expand' : 'oc_collapse'))}">${this.collapsed.has(String(n.id)) ? `+${c.length}` : '−'}</button>` : ''}
       </div>`;
     }
@@ -128,7 +128,7 @@
       const titles = [...new Set(v.map(k => k.title))];
       return `<div class="dl-org__card is-vacant is-group ${v.some(k => this.hit(k)) ? 'is-hit' : ''}" style="${this.dh(v[0])}" title="${esc(titles.join(', '))}">
         <div class="dl-org__who"><span class="dl-org__av is-empty"><i class="fa-solid fa-user-plus"></i></span>
-          <span class="dl-org__txt"><b>${v.length} ${esc(T('oc_vacant'))}</b><small>${esc(titles.join(' · '))}</small>${v[0].dept ? `<em>${esc(v[0].dept)}</em>` : ''}</span></div></div>`;
+          <span class="dl-org__txt"><b>${v.length} ${esc(T('oc_vacant'))}</b><small>${esc(titles.join(' · '))}</small>${v[0].dept && v[0].showDept !== false ? `<em>${esc(v[0].dept)}</em>` : ''}</span></div></div>`;
     }
 
     group(c) {
