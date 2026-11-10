@@ -5159,7 +5159,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 /* x-dl::shot: potongan tangkapan layar diperbesar di satu titik + cincin berdenyut */
 .dl-shot{position:relative;aspect-ratio:var(--ratio,16/10);overflow:hidden;border-radius:10px;background:var(--dl-surface-alt);border:1px solid var(--dl-border)}
 .dl-shot>img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(var(--z,2));transition:transform .6s cubic-bezier(.2,.7,.2,1)}
-.dl-shot__ring{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--dl-accent);border:3px solid var(--dl-on-accent);animation:dl-tour-pulse 1.6s ease-out infinite;pointer-events:none}
+.dl-shot__ring{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:transparent;border:3px solid var(--dl-accent);animation:dl-tour-pulse 1.6s ease-out infinite;pointer-events:none}
 @media (prefers-reduced-motion:reduce){.dl-shot>img{transition:none}.dl-shot__ring{animation:none}}
 /* x-dl::chapters: papan kartu (masonry) + bab bergambar */
 .dl-ch{font-family:var(--dl-font);color:var(--dl-ink)}
@@ -5247,7 +5247,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-deck__slide--shot.is-out.is-on .dl-deck__clip>img{animation:dl-deck-zout 9s ease-out both}
 .dl-deck__cam{position:absolute;inset:0;transition:transform 1.1s cubic-bezier(.4,0,.2,1)}
 .dl-deck__cam.is-zoom{transform:scale(2.2)}
-.dl-deck__ring{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--dl-accent);border:2px solid var(--dl-on-accent);opacity:0;transition:opacity .4s;animation:dl-tour-pulse 1.4s ease-out infinite}
+.dl-deck__ring{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:transparent;border:3px solid var(--dl-accent);opacity:0;transition:opacity .4s;animation:dl-tour-pulse 1.4s ease-out infinite}
 .dl-deck__cam.is-zoom .dl-deck__ring{opacity:1}
 .dl-deck__cap{display:grid;gap:2px;min-height:64px;padding:10px 14px;border-top:1px solid var(--dl-border);background:var(--dl-surface)}
 .dl-deck__cap b{color:var(--dl-ink-strong);font-size:calc(15px * var(--dl-font-scale))}
