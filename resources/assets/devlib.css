@@ -445,7 +445,6 @@ fieldset:disabled .dl-selectadd__btn,.dl-form.is-view .dl-selectadd__btn{display
 .dl-main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
 .dl-tabbar{height:var(--dl-tab-h);background:var(--dl-tabbar);display:flex;align-items:flex-end;gap:2px;padding:0 8px;flex-shrink:0;overflow-x:auto}
 .dl-tabbar::-webkit-scrollbar{height:0}
-.dl-tabbar:empty::before{content:"Belum ada menu terbuka";color:var(--dl-muted);font-size:calc(12.5px * var(--dl-font-scale));align-self:center;padding:0 8px}
 .dl-tab{display:flex;align-items:center;gap:8px;height:34px;padding:0 10px 0 13px;background:var(--dl-tab);color:var(--dl-tab-ink);border-radius:9px 9px 0 0;cursor:pointer;font-size:calc(13px * var(--dl-font-scale));white-space:nowrap;max-width:230px}
 .dl-tab:hover{background:var(--dl-tab-hover)}
 .dl-tab.is-active{background:var(--dl-surface);color:var(--dl-ink-strong);font-weight:600;box-shadow:0 -2px 0 var(--dl-accent) inset}
