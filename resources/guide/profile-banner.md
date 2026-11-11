@@ -26,7 +26,7 @@ Extra HTML attributes (`id`, `class`, `style`, `data-*`) are merged into the roo
 
 ## Props
 
-Constructor of `Devlib\Components\ProfileBanner` (5 props). Use `:prop="expr"` for arrays and numbers.
+Constructor of `Devlib\Components\ProfileBanner` (10 props). Use `:prop="expr"` for arrays and numbers.
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -35,6 +35,11 @@ Constructor of `Devlib\Components\ProfileBanner` (5 props). Use `:prop="expr"` f
 | `groups` | `array`, `[]` | Labelled chip groups, one row each: `[['label' => 'Status', 'badges' => [['label' => 'Working', 'tone' => 'success', 'icon' => 'fa-lock']]]]`. `label` (required key) is the row label, translated (shown upper-case, 84px column). Each badge needs `label`; `tone` is optional (default `neutral`; `neutral`, `accent`, `success`, `warn`, `danger`, `info`, `violet`), `icon` is optional (a Font Awesome class such as `fa-lock`). A group with no `badges` (missing or empty) is skipped, so the screen can pass groups unconditionally. Badge labels are data and are not translated (badge terms stay English). |
 | `progress` | `?float`, `null` | Completeness 0 to 100. `null` hides the whole row; `0` shows an empty bar. Drawn by `x-dl::progress` with `tone="auto"`: 80 and above green, 50 and above yellow, below 50 red (the bar width is clamped to 0..100, the colour uses the raw value). The row label is the fixed text `Profile`. The bar has no number of its own: put the text in `progress-text`. |
 | `progress-text` | `?string`, `null` | Text after the bar, for example `46% complete · 7 items to go`. Shown only when `progress` is not `null` and the text is not empty. Not a translated prop (write it already in the display language, or translate it in the screen). |
+| `progress-label` | `?string`, `null` | Name of the progress row (the small upper-case label before the bar). `null` uses "Profile". Translated through the dictionary, so a data value needs `raw()`. Only shown when `progress` is set. |
+| `progress-tone` | `string`, `'auto'` | Colour of the bar, passed to `x-dl::progress`: `auto` (80 and above green, 50 and above yellow, below red) or a fixed tone such as `accent` (use `accent` for a document-flow bar that is not a percentage of quality). |
+| `compact` | `bool`, `false` | Compact layout (class `dl-pbanner--compact`): photo, identity and the KPI tiles in one row, the KPIs as a coloured 2x2 block. Off keeps the full-width KPI row below. |
+| `hue` | `?int`, `null` | Background colour angle 0-359 (written as `--h`, taken modulo 360). `null` = the default colour. Mainly for the compact layout, to give each record kind its own colour. |
+| `todo` | `array`, `[]` | List of missing-data texts, drawn as yellow chips after a bold "To complete" label under the identity block. Empty = nothing is drawn. The texts are printed as given (not translated). |
 
 Slots (named slots, not props):
 

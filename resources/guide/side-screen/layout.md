@@ -32,7 +32,7 @@ All panels are rendered on the server at once; the script only toggles `is-activ
 
 ## Props
 
-Constructor of `Devlib\Components\SideScreen\Layout` (8 props; it extends `Devlib\Components\Tabs`, whose `tabs` and `vertical` props are fed internally with `sections` and `true` and are not props of this object). Blade names are kebab-case; use `:prop="expr"` for arrays.
+Constructor of `Devlib\Components\SideScreen\Layout` (9 props; it extends `Devlib\Components\Tabs`, whose `tabs` and `vertical` props are fed internally with `sections` and `true` and are not props of this object). Blade names are kebab-case; use `:prop="expr"` for arrays.
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -42,6 +42,7 @@ Constructor of `Devlib\Components\SideScreen\Layout` (8 props; it extends `Devli
 | `hints` | `array`, `[]` | `key => sentence`: the grey line under the section name in the sticky heading (and `data-hint` of the panel). Switching sections replaces it. Translated; missing key = no line. |
 | `links` | `array`, `[]` | `caption => [[label, icon, url, target?], ...]`: a block of plain links under the rail (for example a list of guides). The caption and each label are translated; `target` is optional (`_blank`). These are real `<a>` links, not sections. |
 | `crumbs` | `array`, `[]` | Items for the breadcrumb on the right of the sticky heading, in the format of `x-dl::breadcrumb`: `label => url|null` (or `[[label, url|null, openUrl|null], ...]`), rendered as `<x-dl::breadcrumb menu :items="$crumbs" />`. Because `menu` is on, an item without url (except the last) is a link that opens the Layer Menu on that branch when the page runs inside the Shell; the last item is the current page (marked `is-current` when it has a url). Empty = no breadcrumb. Hidden in the narrow layout. |
+| `tones` | `array`, `[]` | Coloured rail: `section key => tone` (`accent`, `violet`, `success`, `warn`, `teal`, `pink`, `orange`, `danger` or `lime`). A tone gives the rail item and the section heading a coloured icon tile (`data-tone`); empty = the plain rail. It is passed on to `x-dl::tabs`. An entry of `links` may carry a tone as its 5th element and a Shell command as its 6th. |
 | `rail` | `bool`, `true` | `false` = the left rail is not rendered (root gets `dl-ssl--norail`, one column) and the body fills the width. Use it when the sections are chosen from another menu, for example one dark-sidebar menu item per section pointing at `?<param>=<key>` (Help & Support in tmerp). The section heading, panels and `?<param>` handling are unchanged; the phone list view is skipped (the body is always shown). |
 | `param` | `string`, `'tab'` | Name of the URL query parameter that `show()` writes (`?tab=<key>`, through `history.replaceState`) so a reload or a form that returns to this URL can reopen the same section. The layout itself does NOT read it: the server must read the parameter and pass `active`. Change it when the same page has an `x-dl::tabs` whose keys could equal your section keys, because `x-dl::tabs` also reads `?tab=`. |
 

@@ -29,8 +29,8 @@ Constructor of `Devlib\Components\Slideshow` (7 props).
 | `items` | `array`, `[]` | The slides: `[['src' => '/guide/a/01.png', 'caption' => 'Press Deactivate', 'alt' => '...'], ...]`. `alt` empty = the caption. An empty array shows an empty window. |
 | `size` | `string`, `'xl'` | Modal width class: `sm`, `md`, `lg` or `xl`. |
 | `open` | `bool`, `false` | Open when the page loads (rare; normally a button opens it). |
-| `moreUrl` | `?string`, `null` | Address of the full written guide. When set, a link button (book icon) in the window head, always visible, opens it in a new tab; empty = no link. |
-| `moreLabel` | `string`, `'Full guide'` | Text of that link (translated through the dictionary). |
+| `more-url` | `?string`, `null` | Address of the full written guide. When set, a link button (book icon) in the window head, always visible, opens it in a new tab; empty = no link. |
+| `more-label` | `string`, `'Full guide'` | Text of that link (translated through the dictionary). |
 
 ## Behavior
 

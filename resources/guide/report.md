@@ -49,7 +49,7 @@ The templates carry the server-rendered pieces (company header, criteria box, pa
 
 ## Props
 
-Constructor of `Devlib\Components\PrintOut` (inherited by `Report`): 24 props. Blade names are kebab-case; use `:prop="expr"` for anything that is not a plain string (`:rows="$rows"`, `:opening="450"`, `:prices="false"`).
+Constructor of `Devlib\Components\PrintOut` (inherited by `Report`): 27 props. Blade names are kebab-case; use `:prop="expr"` for anything that is not a plain string (`:rows="$rows"`, `:opening="450"`, `:prices="false"`).
 
 ### Phone reading list
 
@@ -68,6 +68,9 @@ Constructor of `Devlib\Components\PrintOut` (inherited by `Report`): 24 props. B
 | `company-ppn` | `array` | `[]` | Header of the VAT variant, same keys plus `npwp` (printed as `NPWP <number>`, only in this header). When not empty a **Non VAT / VAT** switch appears and the header changes with it; when empty `company` serves both and there is no switch. Rarely needed for a report. |
 | `ppn` | `bool` | `false` | Initial state of the VAT switch (`data-ppn`). Meaningful only together with `company-ppn`. |
 | `printed-by` | `?string` | `null` | Name added to the footer of every sheet (`Printed from DevLib · <name>`). Data, not translated. |
+| `footer` | `?string` | `null` | Footer line of every sheet as one text with tokens `{no}` (the `number`), `{status}` (the `status`), `{page}` and `{pages}` (filled per sheet by the script after the sheets are measured), for example `{no} · {status} · Page {page} / {pages}`. `number` and `status` are escaped. `null` keeps the standard footer (`Printed from DevLib`, `printed-by`, print time and sheet number). Data, not translated. |
+| `watermark` | `?string` | `null` | Large diagonal stamp behind the content of every sheet, for example `DRAFT` or `CANCELLED` (written to `data-watermark`, drawn by CSS in the negative colour token). Printed as given, not translated. `null` = no stamp (a confirmed document). |
+| `color` | `string` | `'color'` | Starting colour mode: `color` or `bw` (black and white, saves toner); any other value counts as `color`. The user's choice in the Color / B&W segment is remembered in the browser (`localStorage` key `dl-print-color`) and wins over this value. |
 | `source` | `?string` | `null` | Free text naming the data source for the catalog / Manifest (`data-dl-src`). Default for `Report`: `laporan`. No visual or runtime effect. |
 
 ### Criteria, summary and parties
@@ -206,7 +209,7 @@ Everything travels in `data-config` (JSON from `PrintOut::config()`): `columns` 
 - In a two-level header (`columns[].group`) `print.js` writes the hard-coded word `No` instead of the dictionary key `pr_no`.
 - `print.js` writes `data-paper-now` on the root; nothing reads it.
 - `print-out.blade.php` falls back to `mb_substr($c['name'] ?? 'TM', 0, 2)` for the logo initials, so a company array without `initials` and `name` shows `TM` (a project abbreviation inside the library).
-- The footer text `Printed from DevLib` is the dictionary key `pr_printed_from`; it cannot be changed by a prop.
+- The footer text `Printed from DevLib` is the dictionary key `pr_printed_from`; it is replaced only by the `footer` prop (a token line) and `printed-by` adds a name to it.
 - The header cell class is `num` for every type except `text`, so `badge` headers also get the numeric class.
 
 ## Example

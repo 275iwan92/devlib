@@ -17,7 +17,7 @@ Root: `<div class="dl-cal2 [no-side]" data-dl-calendar ...>`. The calendar is a 
 
 ## Props
 
-Constructor of `Devlib\Components\Calendar` (7 props, none inherited from a field). Blade names are kebab-case; use `:prop="expr"` for arrays, integers and booleans.
+Constructor of `Devlib\Components\Calendar` (9 props, none inherited from a field). Blade names are kebab-case; use `:prop="expr"` for arrays, integers and booleans.
 
 | Prop | Type | Default | Meaning |
 |---|---|---|---|
@@ -27,6 +27,8 @@ Constructor of `Devlib\Components\Calendar` (7 props, none inherited from a fiel
 | `week-start` | `int` | `0` | First day of the week for the week view, the month grid and the mini calendar: `0` = Sunday, `1` = Monday ... `6` = Saturday. Not validated (use 0 to 6). |
 | `scroll-hour` | `int` | `7` | In the Day and Week views the hour grid (24 rows of 44px) is scrolled so that this hour is at the top. Applied every time the time grid is drawn (see pitfalls). Ignored by the Month view. |
 | `sidebar` | `bool` | `true` | `false` removes both side panels and adds `no-side` to the root: only the toolbar and the main area remain. Without the sidebar there is no "Create Event" button and no search box; new events can then only be made by double-clicking a slot. |
+| `people` | `?array` | `null` | Opt-in sharing. Who can be mentioned as a participant: `[['id' => 1, 'name' => 'Nisa', 'role' => 'Sales'], ...]`. When it is not `null` the event editor gains Participants (type `@` and pick), Reminder and Visibility, and events may carry `people`, `room`, `remind` and `vis`. Written to `data-people`. Never include the signed-in user. Normally supplied by `x-dl::shared-calendar`, which adds the server calls. |
+| `rooms` | `?array` | `null` | Meeting rooms as `[id => name]`. Used together with `people`: the editor then also shows a Room field. `null` or empty = no Room field. Written to `data-rooms`. |
 | `source` | `?string` | `null` | Free text naming where the data comes from, shown by the developer catalog / Manifest; default `acara kalender`. No visual or runtime effect. |
 
 Common attributes: any extra HTML attribute (`id`, `class`, `style`, `data-*`) is merged onto the root `div`; `can="module.action"` hides the whole calendar when the user lacks the ability (inherited from `DevlibComponent`).

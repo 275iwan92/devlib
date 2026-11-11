@@ -49,3 +49,15 @@ Each change is one request, not the whole list. The inner calendar keeps emittin
 ```blade
 <x-dl::shared-calendar :events="$events" :people="$people" :rooms="$rooms" :save-url="route('calendar.save')" :delete-url="route('calendar.delete', ':id')" :rsvp-url="route('calendar.rsvp', ':id')" :team-url="route('calendar.team')" :csrf="csrf_token()" />
 ```
+
+## Related
+
+- `x-dl::calendar`: the inner Day / Week / Month calendar this object wraps; use it alone when nothing is shared.
+- `x-dl::appointments`: a private list saved as a whole.
+- `x-dl::eisenhower` and `x-dl::task-alarm-runner`: tasks whose due times can appear here as read-only events.
+
+## Related
+
+- `x-dl::calendar`: the inner Day / Week / Month calendar this object wraps; use it alone when nothing is shared.
+- `x-dl::appointments`: a private list saved as a whole.
+- `x-dl::eisenhower` and `x-dl::task-alarm-runner`: tasks whose due times can appear here as read-only events.

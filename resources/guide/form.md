@@ -81,6 +81,7 @@ All constructor props of `Devlib\Components\Form` (34). Blade names are kebab-ca
 | `can-reopen` | `bool`, `false` | Legacy cycle: shows Back to Draft next to Cancel on a Confirmed document. Set it only for users allowed to reopen; the server must check the same right. Ignored by the strict cycle. |
 | `can-input` | `bool`, `true` | `false` = the user is a checker who may not input: the content is locked in every status and the buttons Save, Undo, Delete, Confirm, New, Duplicate, Cancel and Edit are removed. |
 | `deletable` | `bool`, `false` | Strict master only: shows Delete on an Active master. Pass `true` only for an administrator and only when the data is not used by any transaction; the server checks again. |
+| `dense` | `bool`, `false` | Compact form (opt-in): adds the class `dl-form--dense`. Cards get a coloured top border and a slim header, are laid out two per row, the card body is tighter and the tabs are coloured. It changes the look only: fields, validation, buttons and posted data are the same. Off keeps the normal form. |
 | `hide` | `array`, `[]` | Action keys removed from the panel: `save`, `undo`, `delete`, `new`, `print`, `confirm`, `cancel`, `draft` (Back to Draft), `email`, `duplicate`, `edit`, `deactivate`, `activate`, `approve`, `reject`, `hold`. Back cannot be hidden. Use it only for actions a module truly does not support; hiding a mandatory action is lint F105 (error). |
 
 ### History

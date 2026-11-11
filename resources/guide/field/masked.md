@@ -2,17 +2,21 @@
 
 `<x-dl::field.masked>` is a digits-only input with a fixed display pattern, for identifiers whose length and grouping never change: a national ID number (NIK, 16 digits as `6.6.4`), a tax number (NPWP, 15 digits), a postal code, a bank account written in groups. While the user types, the script keeps only digits, cuts them to the number of digit slots and re-inserts the pattern's punctuation. When the field is left with fewer digits than the pattern needs, it shows an error line.
 
-It is a thin control on the shared field frame: two own props (`mask`, `invalid-text`) and the 14 inherited ones (full reference: `x-dl::field.text`). It is not a general mask engine: only `9` means "one digit"; letters cannot be typed.
+It is a thin control on the shared field frame: six own props (`mask`, `invalid-text` and the four NIK-mode props) and the 14 inherited ones (full reference: `x-dl::field.text`). It is not a general mask engine: only `9` means "one digit"; letters cannot be typed.
 
 ## Props
 
-Constructor of `Devlib\Components\Field\Masked` (16 props: 2 own + 14 inherited). Blade names are kebab-case.
+Constructor of `Devlib\Components\Field\Masked` (20 props: 6 own + 14 inherited). Blade names are kebab-case.
 
 ### Own props
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
 | `mask` | `string`, `'999999.999999.9999'` | The pattern. Each `9` is one digit slot; every other character is a literal separator inserted automatically (`.`, `-`, space, `/`). Written to `data-dl-mask`; the number of `9`s is the required digit count, and `maxlength` is set to the total pattern length (`strlen($mask)`). The default is the 16-digit NIK. Example: `99.999.999.9-999.999` (15-digit NPWP). Do not put digits in the literal part (see pitfalls). |
+| `nik-birth` | `?string`, `null` | NIK mode: the `name` of the birth-date field (an `x-dl::field.date`) in the same form. When set (or `nik-gender`), typing the 16 digits fills the date from digits 7-12 and the message line below the box reports problems at once (see "NIK mode"). Written to `data-nik-birth`. |
+| `nik-gender` | `?string`, `null` | NIK mode: the `name` of the gender `select` in the same form. It is filled from the day part (a day above 40 means female). |
+| `nik-male` | `string`, `'M'` | The option value of the gender field that means male; used when filling and comparing. |
+| `nik-female` | `string`, `'F'` | The option value that means female. |
 | `invalid-text` | `?string`, `null` | Error message shown on blur when the digits are incomplete. `null` uses the dictionary text "Must be :n digits" with `:n` = the number of `9`s ("Harus 16 digit" in Indonesian), chosen by the language of the page when it is rendered. A custom text is used as given and is not translated. Written to `data-invalid`. |
 
 ### Inherited props
@@ -63,6 +67,15 @@ Consequences: nothing is shown for a literal before its first digit and none aft
 - Empty is valid for the field. "Must be filled" is the `required` prop (form-level).
 - The check is advisory: the form still submits an incomplete value, because `x-dl::form` validates only `required`. The server must check the digit count.
 - No checksum (the NIK date part, NPWP check digit) is verified.
+
+### NIK mode
+
+Set `nik-birth` and/or `nik-gender` to the `name` of the other fields in the same form (the lookup is by `name` inside the closest `<form>`, else the document). Meaning of the 16 digits: 6 area, 6 birth date as DDMMYY (women add 40 to the day), 4 sequence. Then:
+
+- Every `input` re-checks and, when the NIK is complete and valid, fills the birth date and the gender field (a two-digit year is read as 20yy when that person would be at least 17, otherwise 19yy).
+- The message line shows at once, not only on blur: fewer than 16 digits ("NIK has n of 16 digits."), an impossible date ("Digits 7-12 are not a valid birth date ..."), or a NIK that differs from a birth date or gender already chosen ("The NIK says ..."). Changing the date or gender field re-checks without overwriting.
+- In this mode the blur check of the plain mask is not used; the messages above replace it. The mode is for 16-digit masks.
+- The texts are translated when the page is rendered. The check is only advice; the server must verify the NIK, the date and the gender.
 
 ### Read-only, disabled and locked display
 

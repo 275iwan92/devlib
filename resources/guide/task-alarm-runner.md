@@ -16,6 +16,8 @@ Put ONE on the parent page that stays open (the Home shell). Use `x-dl::alarm-ru
 |---|---|---|---|
 | `items` | array | `[]` | Tasks from the server: `['id', 'text', 'done', 'due' => 'Y-m-d H:i', 'alarm' => bool]`. Used until the task screen has copied a newer list. |
 | `storage-key` | string | `dl-tasks` | The same key as `storage-key` of `x-dl::eisenhower`. The list copied there wins; rung tasks are remembered under `<key>-rung`. |
+| `label` | string | `Task due` | Title of the toast shown when a task rings (translated through the dictionary, written to `data-l-ring`). Change it when the items are not tasks, for example `Reminder` for event reminders. |
+| `label` | string | `Task due` | Title of the toast shown when a task rings (translated through the dictionary, written to `data-l-ring`). Change it when the items are not tasks, for example `Reminder` for event reminders. |
 
 ## Behavior
 

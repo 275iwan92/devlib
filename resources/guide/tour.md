@@ -41,3 +41,34 @@ Constructor of `Devlib\Components\Tour` (4 props). Use `:missions="$missions"` (
 - "Start over" (shown once there is progress) clears the progress of this key.
 - Progress lives in `localStorage` only: it does not follow the user to another device and is lost when site data is cleared.
 - Language: only the button labels are translated (All missions, Mission complete!, Next mission, Start over, steps, missions done, Close, No missions.).
+
+## Data and events
+
+- Data in: `missions` only. Nothing is requested and no custom event is fired; there is no `el.dlComponent` API.
+- Progress is stored in `localStorage` under `dl.tour.<key>` as `{done: [mission ids], seen: {mission id: [step numbers]}}`. Reading and writing are wrapped in try/catch, so with storage blocked the tour still works but forgets on reload.
+- The counters `n / total` are drawn by the script from that state; the server never learns the progress.
+
+## Rules and pitfalls
+
+- Give a different `key` per user (for example the user id), or two accounts on one device share progress; use a different key per tour on one page too.
+- Mission `id` must be unique; removing or renaming a mission leaves its old id in the stored progress, which is harmless.
+- `steps` are `[x, y, title, text]` with `x` and `y` in percent of the picture, so the dots stay on the right place at any width. Give `width` and `height` to avoid the layout jumping while the picture loads.
+- Keep the picture an honest screenshot with demo data only, under `public/`. Texts are data and are not translated.
+- Do not use hex colors or `<script>` in the screen around it: lint rules L001, L002 and L003 apply. There is no Tour-specific lint rule.
+
+## Example
+
+```blade
+<x-dl::tour title="Learn the order screen" :key="'u'.auth()->id()" :missions="[
+    ['id' => 'co-list', 'group' => 'Sales', 'title' => 'The order list', 'summary' => 'Find your way around.',
+     'image' => '/guide/co-list.png', 'width' => 1280, 'height' => 800,
+     'steps' => [[30, 11, 'New button', 'Starts an order.'], [60, 30, 'Filters', 'Narrow the list.']]],
+]" />
+```
+
+## Related
+
+- `x-dl::deck`: the same lesson that plays on its own.
+- `x-dl::chapters`: a searchable illustrated guide with the same step lists.
+- `x-dl::slideshow`: pictures that follow one another in a window.
+- `x-dl::shot`: one enlarged part of a screenshot with a ring.

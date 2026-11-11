@@ -45,3 +45,38 @@ Constructor of `Devlib\Components\Deck` (5 props). Use `:slides="$slides"` (arra
 - `walk`: the camera starts on the whole picture, then every 3.4 seconds zooms to the next step, moves the ring and shows the step title and text under the picture, and repeats. While playing, the slide stays long enough for all steps (3.4 seconds per step plus 1.5 seconds).
 - `hero` can be combined with `shot`. `flow` needs `items`.
 - With reduced motion the zoom, the orbs and the ring do not animate.
+
+## Data and events
+
+- Data in: `slides` only, written to the markup by the server. Nothing is requested.
+- No custom event is fired and nothing is saved in the browser. The script (`deck.js`) keeps the state (current slide, playing, timer) on the element.
+- Keyboard works when the deck has focus (`tabindex="0"`): arrow keys, space, and the browser's full screen.
+- Pictures (`image`, `shot.src`, `walk.src`) are plain urls and are requested by the browser when the slide is drawn.
+
+## Rules and pitfalls
+
+- Aim at 5 to 12 slides with at most 5 short items each; long text does not fit a slide.
+- Give `autoplay` only on a screen where sound or motion is expected; people who need time to read should be able to pause.
+- `flow` needs `items`.
+- `walk.steps` points are `[x%, y%, title, text]` in percent of the picture, the same as in `x-dl::chapters` and `x-dl::tour`, so one list can feed all three.
+- Keep screenshots under `public/` and free of real data. Slide texts are data and are not translated.
+- Do not use hex colors or `<script>` in the screen around it: lint rules L001, L002 and L003 apply. There is no Deck-specific lint rule.
+
+## Example
+
+```blade
+<x-dl::deck title="Create a customer order" :interval="8" :slides="[
+    ['hero' => true, 'tag' => 'Sales', 'title' => 'Create a customer order', 'lead' => 'Three minutes, three steps.'],
+    ['title' => 'The flow', 'flow' => true, 'items' => ['Quotation', 'Order', 'Confirm']],
+    ['title' => 'Press New', 'items' => ['Opens an empty order'], 'shot' => ['src' => '/guide/co-form.png', 'x' => 30, 'y' => 11]],
+    ['title' => 'Walk through', 'walk' => ['src' => '/guide/co-form.png', 'steps' => [[30, 11, 'New', 'Start here.'], [62, 40, 'Customer', 'Pick one.']]]],
+]" />
+```
+
+## Related
+
+- `x-dl::chapters`: the same steps as a searchable illustrated guide.
+- `x-dl::shot`: the zoom-and-ring picture used inside the slides.
+- `x-dl::slideshow`: screenshots one by one in a window.
+- `x-dl::tour`: the reader clicks the parts instead of watching.
+- `x-dl::ambient`: quiet background sound for a playing deck.
