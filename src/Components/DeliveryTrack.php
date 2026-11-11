@@ -106,7 +106,7 @@ class DeliveryTrack extends DevlibComponent
                         <li class="is-{{ $s['state'] }}"><i></i><b>{{ $s['label'] }}</b>@if ($s['time'])<small>{{ $s['time'] }}</small>@endif</li>
                     @endforeach
                 </ol>
-                @if ($stage === 'cancelled')<div class="dl-track__cancel"><i class="fa-solid fa-ban" aria-hidden="true"></i> Cancelled</div>@endif`n                @if ($stage === 'incident')<div class="dl-track__cancel"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Accident on the way</div>@endif
+                @if ($stage === 'cancelled')<div class="dl-track__cancel"><i class="fa-solid fa-ban" aria-hidden="true"></i> Cancelled</div>@endif@if ($stage === 'incident')<div class="dl-track__cancel"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Accident on the way</div>@endif
             </div>
             BLADE;
     }
