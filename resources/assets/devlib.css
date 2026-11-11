@@ -5379,3 +5379,13 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-lm__mod{background:var(--dl-accent);color:var(--dl-on-accent);margin-bottom:4px}.dl-lm__mod .dl-lm__ico{color:inherit}.dl-lm__mod:hover{background:var(--dl-accent);color:var(--dl-on-accent)}
 .dl-lm__ilcap{display:flex;align-items:center;gap:8px;margin-top:8px;padding:12px 10px 4px;border-top:1px solid var(--dl-side-line,rgba(255,255,255,.12));font-size:calc(10.5px * var(--dl-font-scale));font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--dl-side-muted)}.dl-lm__ilcap:first-child{margin-top:0;border-top:0}.dl-lm__ilcap i{width:16px;text-align:center}
 .dl-lm__bul{padding-left:30px}.dl-lm__dot{width:7px;height:7px;flex:none;border-radius:50%;box-sizing:border-box;border:2px solid var(--dl-side-muted)}.dl-lm__bul:hover .dl-lm__dot,.dl-lm__bul.is-active .dl-lm__dot{border-color:currentColor}
+
+/* x-dl::wallpaper: latar kaca dari SVG server-side; kutipan dijepit ke area aman (max 46% lebar, ukuran mengikuti lebar kotak) */
+.dl-wallpaper{position:relative;overflow:hidden;border-radius:var(--dl-radius,10px);container-type:inline-size;width:100%}
+.dl-wallpaper>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.dl-wallpaper__quote{position:absolute;max-width:46%;quotes:none;line-height:1.15;font-size:clamp(10px,5.2cqw,24px);color:var(--wp-ink);text-shadow:0 1px 14px #ffffffaa;overflow-wrap:anywhere;overflow:hidden}
+.dl-wallpaper--night .dl-wallpaper__quote{text-shadow:0 1px 14px #4f7bff99}
+.dl-wallpaper__quote--top-left,.dl-wallpaper__quote--bottom-left{left:6%;text-align:left}
+.dl-wallpaper__quote--top-right,.dl-wallpaper__quote--bottom-right{right:6%;text-align:right}
+.dl-wallpaper__quote--top-left,.dl-wallpaper__quote--top-right{top:10%}
+.dl-wallpaper__quote--bottom-left,.dl-wallpaper__quote--bottom-right{bottom:12%}

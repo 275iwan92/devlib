@@ -1018,6 +1018,11 @@ Saklar "Lihat sebagai": pil melayang dengan menu perangkat (Android phone, iPhon
 - Berkas: `src/Components/ViewAs.php`
 - Prop: href:string=(wajib), label:string='View as'
 
+## `<x-dl::wallpaper>`
+Latar (wallpaper) bergaya kaca bening: SVG dibuat di server dari bentuk + palet + seed, dengan satu kutipan di posisi acak. Tanpa JS, tanpa berkas gambar.
+- Berkas: `src/Components/Wallpaper.php`
+- Prop: kind:string='ribbon', palette:string='sage', quote:?string=NULL, seed:?int=NULL, quotePosition:?string=NULL, ratio:string='5/4'
+
 ## `<x-dl::warehouse-desk>`
 Form khusus Warehouse Map (user 2026-10-02, docs/warehouselayout_tier1.md): pemilih gedung + pintasan ke Buildings / Storage.
 - Berkas: `src/Components/WarehouseDesk.php`, tampilan `resources/views/components/warehouse-desk.blade.php`
