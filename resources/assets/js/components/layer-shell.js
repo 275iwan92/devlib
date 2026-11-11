@@ -443,18 +443,19 @@
       });
       // Ikon melayang: diseret ke mana saja (gerak > 4px = seret), diklik = membuka jendela.
       const fab = $(this.el, '[data-dl-ai-fab]');
+      try { this.aiFab = localStorage.getItem('dl-ai-fab') === '1'; } catch (e) { this.aiFab = false; }
+      this.syncAiFab();
       fab?.addEventListener('pointerdown', e => {
         const r = fab.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top; let moved = false;
         const move = ev => {
           if (!moved && Math.hypot(ev.clientX - e.clientX, ev.clientY - e.clientY) < 4) return;
           moved = true; Object.assign(fab.style, {right: 'auto', bottom: 'auto', left: Math.max(0, Math.min(innerWidth - 52, ev.clientX - dx)) + 'px', top: Math.max(0, Math.min(innerHeight - 52, ev.clientY - dy)) + 'px'});
         };
-        const up = () => { removeEventListener('pointermove', move); removeEventListener('pointerup', up); if (!moved) this.toggleAi(true); };
+        const up = () => { removeEventListener('pointermove', move); removeEventListener('pointerup', up); if (!moved) (this.ai?.api ? this.toggleAi(true) : this.askAiPassword()); };
         addEventListener('pointermove', move); addEventListener('pointerup', up);
       });
       addEventListener('keydown', e => {
-        if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.code === 'KeyA' && this.ai?.api) { e.preventDefault(); this.toggleAi(); }
-        else if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.code === 'KeyA' && this.aiUnlock) { e.preventDefault(); this.askAiPassword(); }
+        if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.code === 'KeyA' && (this.ai?.api || this.aiUnlock)) { e.preventDefault(); this.setAiFab(!this.aiFab); }
         else if (e.key === 'Escape' && w.classList.contains('is-on') && w.contains(document.activeElement)) this.toggleAi(false);
       });
     }
@@ -477,9 +478,19 @@
       });
     }
 
+    // Alt+A memunculkan / menyembunyikan ikon asisten (ingatan per peramban); ikon disembunyikan juga saat jendelanya terbuka.
+    setAiFab(on) {
+      this.aiFab = on; try { localStorage.setItem('dl-ai-fab', on ? '1' : '0'); } catch (e) {}
+      if (!on) { $(document, '.dl-ai-unlock')?.remove(); this.toggleAi(false); } else this.syncAiFab();
+    }
+
+    syncAiFab() {
+      $(this.el, '[data-dl-ai-fab]')?.classList.toggle('is-hidden', !this.aiFab || $(this.el, '[data-dl-drawer="ai"]').classList.contains('is-on'));
+    }
+
     toggleAi(on) {
       const w = $(this.el, '[data-dl-drawer="ai"]'); on = on ?? !w.classList.contains('is-on');
-      w.classList.toggle('is-on', on); $(this.el, '[data-dl-ai-fab]')?.classList.toggle('is-hidden', on); if (on) this.aiIn?.focus();
+      w.classList.toggle('is-on', on); this.syncAiFab(); if (on) this.aiIn?.focus();
     }
 
     openDrawer(id) {

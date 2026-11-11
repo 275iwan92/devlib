@@ -10,7 +10,7 @@
 
     {{-- Asisten: prop assistant terisi = chat pribadi user dengan asisten aplikasi (jawaban dari server); kosong = pratinjau. --}}
     @php $assistantLive = ! empty($assistant['api']['ask']); @endphp
-    @if ($assistantLive)<button type="button" class="dl-ai-fab" data-dl-ai-fab title="AI Assistant (Alt+A)" aria-label="AI Assistant"><i class="fa-solid fa-wand-magic-sparkles"></i></button>@endif
+    @if ($assistantLive || ! empty($assistant['unlock']))<button type="button" class="dl-ai-fab is-hidden" data-dl-ai-fab title="AI Assistant (Alt+A)" aria-label="AI Assistant"><i class="fa-solid fa-wand-magic-sparkles"></i></button>@endif
     <aside class="dl-drawer" data-dl-drawer="ai" data-dl="drawer asisten AI" data-dl-class="bagian Shell" data-dl-src="{{ $assistantLive ? 'sys_assistant_message + sys_assistant_metric, sys_help_topic, sys_app_menu' : 'registry menu (pratinjau)' }}"
         @if ($assistantLive) data-dl-assistant="{{ json_encode($assistant) }}" @endif
         @if (! $assistantLive && ! empty($assistant['unlock'])) data-dl-ai-unlock="{{ json_encode($assistant) }}" @endif>
