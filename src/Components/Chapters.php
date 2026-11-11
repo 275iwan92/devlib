@@ -68,7 +68,7 @@ class Chapters extends DevlibComponent
                                 </article>
                             @endif
                             <article class="dl-ch__card" data-ch-card data-g="{{ $t['group'] }}" data-t="{{ mb_strtolower($t['title'].' '.($t['summary'] ?? '').' '.$g['title'].' '.implode(' ', $t['flow'] ?? [])) }}" style="--h: {{ $g['hue'] ?? 215 }}">
-                                <x-dl::shot :src="$t['image']" :x="$s0[0]" :y="$s0[1]" :zoom="1.9" />
+                                <x-dl::shot :src="$t['image']" :anim="$t['anim'] ?? ''" :x="$s0[0]" :y="$s0[1]" :zoom="1.9" />
                                 <div class="dl-ch__cbody">
                                     <span class="dl-ch__tag">{{ $g['title'] }}</span>
                                     <h4><button type="button" data-ch-open="{{ $t['id'] }}">{{ $t['title'] }}</button></h4>
