@@ -185,6 +185,7 @@
         else if (topic) this.askAi(topic.dataset.label, topic.dataset.dlAiTopic);
         else if (page) { this.closeDrawers(); this.openPage?.(page.dataset.dlAiPage); }
         else if (fb) this.sendFeedback(fb);
+        else if (e.target.closest('[data-dl-ai-copy-table]')) navigator.clipboard?.writeText($$(e.target.closest('.dl-ai__tbl'), 'tr').map(tr => $$(tr, 'th,td').map(c => c.textContent).join('\t')).join('\n'));
         else if (cp) navigator.clipboard?.writeText($(cp.closest('.dl-ai__secret'), 'code').dataset.dlAiSecret || '');
       });
     }
@@ -216,10 +217,12 @@
         + (r.text ? `<div>${esc(r.text)}</div>` : '')
         + (r.steps?.length ? `<ol>${r.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>` : '')
         + (r.rows?.length ? `<div class="dl-ai__rows">${r.rows.map(x => `<div><span>${esc(x[0])}</span><b>${esc(x[1])}</b></div>`).join('')}</div>` : '')
+        + (r.secretTable ? `<div class="dl-ai__tbl"><table><thead><tr>${r.secretTable.head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${r.secretTable.rows.map(x => `<tr>${x.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table><button type="button" class="dl-btn dl-btn--sm dl-btn--secondary" data-dl-ai-copy-table><i class="fa-regular fa-copy"></i> Copy</button></div>` : '')
         + (r.secret ? `<div class="dl-ai__secret"><code data-dl-ai-secret="${esc(r.secret)}">${esc(r.secret)}</code><button type="button" class="dl-btn dl-btn--sm dl-btn--secondary" data-dl-ai-copy aria-label="Copy"><i class="fa-regular fa-copy"></i></button></div>` : '')
         + (r.note ? `<div class="dl-ai__note">${esc(r.note)}</div>` : '')
         + (r.actions?.length ? `<div class="dl-ai__acts">${r.actions.map(act).join('')}</div>` : '');
       this.aiBody.appendChild(card);
+      if (r.wide) $(this.el, '[data-dl-drawer="ai"]').classList.add('is-wide');
       if (id) {
         const fb = document.createElement('div'); fb.className = 'dl-ai__fb'; fb.dataset.id = id;
         fb.innerHTML = [[1, 'thumbs-up'], [-1, 'thumbs-down']].map(([v, ic]) => `<button type="button" data-dl-ai-fb="${v}" class="${feedback === v ? 'is-on' : ''}" aria-label="${esc(T(v > 0 ? 'sh_ai_good' : 'sh_ai_bad'))}"><i class="fa-${feedback === v ? 'solid' : 'regular'} fa-${ic}"></i></button>`).join('');
@@ -490,7 +493,7 @@
 
     toggleAi(on) {
       const w = $(this.el, '[data-dl-drawer="ai"]'); on = on ?? !w.classList.contains('is-on');
-      w.classList.toggle('is-on', on); this.syncAiFab(); if (on) this.aiIn?.focus();
+      w.classList.toggle('is-on', on); if (!on) w.classList.remove('is-wide'); this.syncAiFab(); if (on) this.aiIn?.focus();
     }
 
     openDrawer(id) {
@@ -504,6 +507,8 @@
 
     askAi(q, topic) {
       q = q.trim(); if (!q) return;
+      // /clear = kosongkan layar chat (hanya tampilan; tidak dikirim ke server, jendela kembali ke lebar awal).
+      if (q.toLowerCase() === '/clear') { this.aiBody.replaceChildren(); $(this.el, '[data-dl-drawer="ai"]').classList.remove('is-wide'); return; }
       if (this.ai?.api) return this.askServer(q, topic);
       this.addAi('me', q);
       const toks = q.toLowerCase().split(/\s+/).filter(t => t.length > 2);
