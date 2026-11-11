@@ -69,6 +69,7 @@ Constructor of `Devlib\Components\Gantt` (27 props; nothing is inherited from a 
 | `reason-required` | `bool` | `false` | Shows a free-text reason field (max 190 characters) in the impact panel. It is mandatory only when `move-url` is set: the accept button then refuses an empty reason and the text is sent to `move-url`. Without `move-url` the field is shown but ignored. |
 | `move-label` | `?string` | `null` | Text of the accept button in the impact panel; default is "Move into Draft". Translated. |
 | `empty-text` | `?string` | `null` | Shown instead of "No resource matches the filter" when the board has no task at all. Translated. |
+| `help` | `?string` | `null` | Replaces the fixed help line under the board ("Drag a block = ..." plus the Simulation / Live counter "n changes are not sent to the Live schedule until Submit. QC Hold ...") with this text. Use it when the board is not the production schedule (for example the Maintenance Project Board: "Drag a bar = change the days; changes are saved at once"). Translated. |
 
 Slot: `<x-slot:actions>` places extra toolbar content (for example a "Hot job" button) just before the Submit button.
 

@@ -58,6 +58,7 @@ class Gantt extends DevlibComponent
         public ?string $emptyText = null, // shown instead of "No resource matches the filter" when the board has no task at all
         public bool $modeSwitch = true, // false = no Simulation | Live switch (the board stays in the mode given by `simulation`)
         public bool $extras = true,     // false = the number cards, colour legend and filter chips are hidden (the dropdowns stay the only filter)
+        public ?string $help = null,    // set = this text replaces the fixed help line under the board (and the Simulation/Live counter); translated
         public ?array $linked = null,   // ['processes' => [key => label], 'machines' => [processKey => [rowKey]], 'defaults' => [processKey => rowKey], 'process' => key, 'machine' => rowKey]
     ) {
         // "All processes" (key '') shows every machine row; "All machines" is the empty choice of each Machine dropdown
@@ -113,7 +114,7 @@ class Gantt extends DevlibComponent
                 <div class="dl-gantt__legend" data-g2-legend @if (! $extras) hidden @endif></div>
                 <div class="dl-grid__chips" data-g2-chips hidden></div>
                 <div class="dl-gantt__wrap"><div class="dl-gantt__board" data-g2-board></div></div>
-                <p class="dl-gantt__help">@if ($linked){{ \Devlib\Lang::text('Drag a block = change the start time, or drop it on another machine row · drag the right edge = change the duration · click = short details · double-click = choose another machine.') }}@else{{ \Devlib\Lang::text('Drag a block = change the start time · drag the right edge = change the duration · click = short details · double-click = change the resource/process.') }}@endif <span data-g2-modehelp></span></p>
+                <p class="dl-gantt__help">@if ($help){{ \Devlib\Lang::text($help) }} <span data-g2-modehelp hidden></span>@elseif ($linked){{ \Devlib\Lang::text('Drag a block = change the start time, or drop it on another machine row · drag the right edge = change the duration · click = short details · double-click = choose another machine.') }}@else{{ \Devlib\Lang::text('Drag a block = change the start time · drag the right edge = change the duration · click = short details · double-click = change the resource/process.') }}@endif @unless ($help)<span data-g2-modehelp></span>@endunless</p>
             </div>
             BLADE;
     }
