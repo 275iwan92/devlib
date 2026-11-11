@@ -176,6 +176,7 @@
       const cb = $(dr, '[data-dl-ai-case]'); this.aiCase = 0;
       cb?.addEventListener('click', () => { this.aiCase = (this.aiCase + 1) % 3; cb.textContent = CASE_LABEL[CASES[this.aiCase]]; this.aiIn.value = applyCase(this.aiIn.value, CASES[this.aiCase]); this.aiIn.focus(); });
       this.aiIn.addEventListener('input', () => { if (!this.aiCase) return; const p = this.aiIn.selectionStart; this.aiIn.value = applyCase(this.aiIn.value, CASES[this.aiCase]); try { this.aiIn.setSelectionRange(p, p); } catch (e) {} });
+      try { this.aiUnlock = JSON.parse(dr.dataset.dlAiUnlock || 'null'); } catch (e) { this.aiUnlock = null; }
       if (!this.ai?.api) return;
       (this.ai.history || []).forEach(m => { this.addAi('me', m.q); this.addReply(m.reply, m.id, m.feedback); });
       this.aiBody.addEventListener('click', e => {
@@ -440,15 +441,45 @@
         const up = () => { removeEventListener('pointermove', move); removeEventListener('pointerup', up); };
         addEventListener('pointermove', move); addEventListener('pointerup', up);
       });
+      // Ikon melayang: diseret ke mana saja (gerak > 4px = seret), diklik = membuka jendela.
+      const fab = $(this.el, '[data-dl-ai-fab]');
+      fab?.addEventListener('pointerdown', e => {
+        const r = fab.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top; let moved = false;
+        const move = ev => {
+          if (!moved && Math.hypot(ev.clientX - e.clientX, ev.clientY - e.clientY) < 4) return;
+          moved = true; Object.assign(fab.style, {right: 'auto', bottom: 'auto', left: Math.max(0, Math.min(innerWidth - 52, ev.clientX - dx)) + 'px', top: Math.max(0, Math.min(innerHeight - 52, ev.clientY - dy)) + 'px'});
+        };
+        const up = () => { removeEventListener('pointermove', move); removeEventListener('pointerup', up); if (!moved) this.toggleAi(true); };
+        addEventListener('pointermove', move); addEventListener('pointerup', up);
+      });
       addEventListener('keydown', e => {
         if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.code === 'KeyA' && this.ai?.api) { e.preventDefault(); this.toggleAi(); }
+        else if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.code === 'KeyA' && this.aiUnlock) { e.preventDefault(); this.askAiPassword(); }
         else if (e.key === 'Escape' && w.classList.contains('is-on') && w.contains(document.activeElement)) this.toggleAi(false);
+      });
+    }
+
+    // Hotkey di login yang belum boleh memakai asisten: kotak password kecil; benar = halaman dimuat ulang dan asisten muncul (server menyimpan tanda buka kunci di sesi).
+    askAiPassword() {
+      if ($(document, '.dl-ai-unlock')) return;
+      const box = document.createElement('form'); box.className = 'dl-ai-unlock';
+      box.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i><input type="password" autocomplete="off" placeholder="Password" aria-label="Password"><button type="button" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>';
+      document.body.appendChild(box);
+      const input = $(box, 'input'); input.focus();
+      const close = () => box.remove();
+      $(box, 'button').addEventListener('click', close);
+      input.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+      box.addEventListener('submit', e => {
+        e.preventDefault();
+        fetch(this.aiUnlock.unlock, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': this.aiUnlock.csrf}, body: JSON.stringify({password: input.value})})
+          .then(r => r.ok ? location.reload() : (input.value = '', box.classList.add('is-bad'), input.focus()))
+          .catch(() => box.classList.add('is-bad'));
       });
     }
 
     toggleAi(on) {
       const w = $(this.el, '[data-dl-drawer="ai"]'); on = on ?? !w.classList.contains('is-on');
-      w.classList.toggle('is-on', on); if (on) this.aiIn?.focus();
+      w.classList.toggle('is-on', on); $(this.el, '[data-dl-ai-fab]')?.classList.toggle('is-hidden', on); if (on) this.aiIn?.focus();
     }
 
     openDrawer(id) {
