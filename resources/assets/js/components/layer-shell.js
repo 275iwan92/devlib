@@ -178,11 +178,13 @@
       if (!this.ai?.api) return;
       (this.ai.history || []).forEach(m => { this.addAi('me', m.q); this.addReply(m.reply, m.id, m.feedback); });
       this.aiBody.addEventListener('click', e => {
-        const open = e.target.closest('[data-dl-ai-open]'), topic = e.target.closest('[data-dl-ai-topic]'), page = e.target.closest('[data-dl-ai-page]'), fb = e.target.closest('[data-dl-ai-fb]');
+        const open = e.target.closest('[data-dl-ai-open]'), topic = e.target.closest('[data-dl-ai-topic]'), page = e.target.closest('[data-dl-ai-page]'), fb = e.target.closest('[data-dl-ai-fb]'), rev = e.target.closest('[data-dl-ai-reveal]'), cp = e.target.closest('[data-dl-ai-copy]');
         if (open) { const d = open.dataset; this.findItem(d.dlAiOpen) ? this.openTab(d.dlAiOpen) : this.openUrlTab(d.dlAiOpen, d.label, d.url, d.icon || undefined); this.closeDrawers(); }
         else if (topic) this.askAi(topic.dataset.label, topic.dataset.dlAiTopic);
         else if (page) { this.closeDrawers(); this.openPage?.(page.dataset.dlAiPage); }
         else if (fb) this.sendFeedback(fb);
+        else if (rev) this.toggleSecret(rev);
+        else if (cp) navigator.clipboard?.writeText($(cp.closest('.dl-ai__secret'), 'code').dataset.dlAiSecret || '');
       });
     }
 
@@ -213,6 +215,7 @@
         + (r.text ? `<div>${esc(r.text)}</div>` : '')
         + (r.steps?.length ? `<ol>${r.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>` : '')
         + (r.rows?.length ? `<div class="dl-ai__rows">${r.rows.map(x => `<div><span>${esc(x[0])}</span><b>${esc(x[1])}</b></div>`).join('')}</div>` : '')
+        + (r.secret ? `<div class="dl-ai__secret"><code data-dl-ai-secret="${esc(r.secret)}">••••••••</code><button type="button" class="dl-btn dl-btn--sm dl-btn--secondary" data-dl-ai-reveal>Reveal</button><button type="button" class="dl-btn dl-btn--sm dl-btn--secondary" data-dl-ai-copy aria-label="Copy"><i class="fa-regular fa-copy"></i></button></div>` : '')
         + (r.note ? `<div class="dl-ai__note">${esc(r.note)}</div>` : '')
         + (r.actions?.length ? `<div class="dl-ai__acts">${r.actions.map(act).join('')}</div>` : '');
       this.aiBody.appendChild(card);
@@ -222,6 +225,13 @@
         this.aiBody.appendChild(fb);
       }
       this.aiBody.scrollTop = this.aiBody.scrollHeight;
+    }
+
+    // Rahasia di kartu jawaban (mis. password): tersembunyi; Reveal menampilkannya 30 detik lalu menyembunyikannya lagi.
+    toggleSecret(btn) {
+      const code = $(btn.closest('.dl-ai__secret'), 'code'), show = btn.textContent === 'Reveal';
+      code.textContent = show ? code.dataset.dlAiSecret : '••••••••'; btn.textContent = show ? 'Hide' : 'Reveal';
+      clearTimeout(code._t); if (show) code._t = setTimeout(() => { code.textContent = '••••••••'; btn.textContent = 'Reveal'; }, 30000);
     }
 
     // Klik jempol yang sudah menyala = dicabut.
