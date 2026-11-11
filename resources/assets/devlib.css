@@ -95,6 +95,31 @@ body.dl-body:has(> .dl-print){overflow-y:auto}
 .dl-btn--glass:disabled{background:var(--dl-disabled);box-shadow:none;opacity:1}
 .dl-btn--glass.dl-btn--md{padding:0 22px;height:36px}.dl-btn--glass.dl-btn--sm{padding:0 16px;height:30px}.dl-btn--glass.dl-btn--lg{padding:0 30px;height:46px}
 @media (prefers-reduced-motion:reduce){.dl-btn--glass{transition:none}.dl-btn--glass:active{transform:none}}
+/* skin tombol (opt-in, variant baru; Jo 2026-11-11 "banyak ragam button"): soft, outline, gradient, metal, frost, glow, edge3d. Warna mengikuti token tema (--dl-accent). */
+.dl-btn--soft{border:none;color:var(--dl-ink);background:var(--dl-surface);border-radius:14px;box-shadow:-4px -4px 10px rgba(255,255,255,.85),4px 5px 12px rgba(120,132,150,.35)}
+.dl-btn--soft:hover{box-shadow:-3px -3px 8px rgba(255,255,255,.85),3px 4px 10px rgba(120,132,150,.4)}
+.dl-btn--soft:active{box-shadow:inset -3px -3px 7px rgba(255,255,255,.85),inset 3px 4px 9px rgba(120,132,150,.4)}
+.dl-btn--outline{background:transparent;color:var(--dl-accent-ink);box-shadow:inset 0 0 0 1.5px var(--dl-accent)}
+.dl-btn--outline:hover{background:color-mix(in srgb,var(--dl-accent) 12%,transparent)}
+.dl-btn--outline:active{background:color-mix(in srgb,var(--dl-accent) 22%,transparent)}
+.dl-btn--gradient{color:var(--dl-on-accent);background:linear-gradient(180deg,color-mix(in srgb,var(--dl-accent) 72%,#fff),var(--dl-accent) 55%,color-mix(in srgb,var(--dl-accent) 82%,#000));box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 6px rgba(15,22,45,.2)}
+.dl-btn--gradient:hover{filter:brightness(1.06)}
+.dl-btn--gradient:active{filter:brightness(.95);box-shadow:inset 0 2px 5px rgba(15,22,45,.3)}
+.dl-btn--metal{color:#20242b;background:linear-gradient(180deg,#f7f8fa,#d5d9df 55%,#c3c8d0);box-shadow:inset 0 1px 0 #fff,inset 0 0 0 1px rgba(110,120,135,.45),0 2px 5px rgba(15,22,45,.2);text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.dl-btn--metal:hover{background:linear-gradient(180deg,#fff,#dde1e6 55%,#ccd1d8)}
+.dl-btn--metal:active{background:linear-gradient(180deg,#c3c8d0,#d5d9df);box-shadow:inset 0 2px 5px rgba(15,22,45,.3),inset 0 0 0 1px rgba(110,120,135,.45)}
+.dl-btn--frost{color:var(--dl-ink-strong);background:rgba(255,255,255,.34);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 4px 14px rgba(15,22,45,.12);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.dl-btn--frost:hover{background:rgba(255,255,255,.5)}
+.dl-btn--frost:active{background:rgba(255,255,255,.26)}
+.dl-btn--glow{color:#d7e6ff;background:#0e1430;box-shadow:0 0 0 1px color-mix(in srgb,var(--dl-accent) 75%,#fff),0 0 14px color-mix(in srgb,var(--dl-accent) 65%,transparent)}
+.dl-btn--glow:hover{box-shadow:0 0 0 1px #fff,0 0 22px color-mix(in srgb,var(--dl-accent) 85%,transparent)}
+.dl-btn--glow:active{box-shadow:0 0 0 1px var(--dl-accent),0 0 8px color-mix(in srgb,var(--dl-accent) 55%,transparent)}
+.dl-btn--edge3d{color:var(--dl-on-accent);background:var(--dl-accent);box-shadow:0 4px 0 color-mix(in srgb,var(--dl-accent) 58%,#000),0 6px 10px rgba(15,22,45,.2)}
+.dl-btn--edge3d:hover{filter:brightness(1.07)}
+.dl-btn--edge3d:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--dl-accent) 58%,#000)}
+:is(.dl-btn--soft,.dl-btn--outline,.dl-btn--gradient,.dl-btn--metal,.dl-btn--frost,.dl-btn--glow,.dl-btn--edge3d):focus-visible{outline:2px solid var(--dl-accent);outline-offset:3px}
+:is(.dl-btn--soft,.dl-btn--outline,.dl-btn--gradient,.dl-btn--metal,.dl-btn--frost,.dl-btn--glow,.dl-btn--edge3d):disabled{opacity:.5;box-shadow:none;filter:none;transform:none;cursor:not-allowed}
+@media (prefers-reduced-motion:reduce){:is(.dl-btn--edge3d,.dl-btn--glow):active{transform:none}}
 .dl-alert{display:none;border:1px solid;border-radius:var(--dl-radius);padding:10px 12px;font-size:calc(13px * var(--dl-font-scale));margin-bottom:16px}
 .dl-alert.is-show{display:block}
 .dl-alert--danger{background:var(--dl-danger-soft);color:var(--dl-ink);border-color:var(--dl-danger-line)}
