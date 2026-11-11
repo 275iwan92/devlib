@@ -77,6 +77,8 @@ class LayerShell extends DevlibComponent
         // Aksi tambahan menu profil (opt-in; [] = tanpa aksi): [['key', 'label', 'icon' => 'fa-...', 'url']]; dipasang tepat sesudah Edit profile
         // (sebelum My devices dan Help & support) dan membuka url sebagai tab biasa (Jo 2026-11-10: Absen GPS (Mobile) sejajar Edit profile).
         public array $links = [],
+        // Modul yang anaknya ber-group terbuka di tempat (lihat x-dl::layer-menu inlineGroups); bawaan mati agar aplikasi lama tidak berubah.
+        public bool $inlineGroups = false,
     ) {
         $identity = Brand::identity();
         $this->brand ??= $identity['name'];
@@ -114,7 +116,7 @@ class LayerShell extends DevlibComponent
             }
 
             return array_filter([
-                'key' => $it['code'], 'label' => $it['label'], 'icon' => $it['icon'] ?? null, 'group' => $it['group'] ?? $group,
+                'key' => $it['code'], 'label' => $it['label'], 'icon' => $it['icon'] ?? null, 'group' => $it['group'] ?? $group, 'groupIcon' => $it['groupIcon'] ?? null,
                 'badge' => $it['badge'] ?? null, 'badgeTitle' => $it['badgeTitle'] ?? null, 'tone' => $tone[$it['badgeTone'] ?? ''] ?? null,
             ]);
         };

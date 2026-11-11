@@ -5375,3 +5375,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__foot-hint{margin-left:0;width:100%}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__panel .dl-actionbar .dl-btn{flex:1;min-height:48px}
 
+/* LayerMenu inlineGroups: modul terbuka di tempat; kelompok bertajuk + ikon, garis pembatas, butir bertitik. */
+.dl-lm__mod{background:var(--dl-accent);color:var(--dl-on-accent);margin-bottom:4px}.dl-lm__mod .dl-lm__ico{color:inherit}.dl-lm__mod:hover{background:var(--dl-accent);color:var(--dl-on-accent)}
+.dl-lm__ilcap{display:flex;align-items:center;gap:8px;margin-top:8px;padding:12px 10px 4px;border-top:1px solid var(--dl-side-line,rgba(255,255,255,.12));font-size:calc(10.5px * var(--dl-font-scale));font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--dl-side-muted)}.dl-lm__ilcap:first-child{margin-top:0;border-top:0}.dl-lm__ilcap i{width:16px;text-align:center}
+.dl-lm__bul{padding-left:30px}.dl-lm__dot{width:7px;height:7px;flex:none;border-radius:50%;box-sizing:border-box;border:2px solid var(--dl-side-muted)}.dl-lm__bul:hover .dl-lm__dot,.dl-lm__bul.is-active .dl-lm__dot{border-color:currentColor}

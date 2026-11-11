@@ -18,6 +18,8 @@
       // foldGroups: judul kelompok di layer akar bisa dilipat, diingat per browser. '1' = tiap judul sendiri-sendiri (daftar yang terlipat);
       // 'accordion' = satu kelompok terbuka sekali waktu (nama yang terbuka; belum ada = kelompok layar aktif, atau yang pertama).
       this.foldMode = this.el.dataset.foldGroups || '0';
+      // inlineGroups: modul yang anaknya ber-group terbuka di tempat (this.exp) sebagai satu daftar panjang, bukan layer baru.
+      this.inline = this.el.dataset.inlineGroups === '1'; this.exp = null;
       this.fold = new Set(); this.open = undefined;
       try {
         const f = JSON.parse(localStorage.getItem('dl-lm-' + this.el.dataset.id + '-fold') || 'null');
@@ -80,7 +82,15 @@
 
     depthOf(items) { return 1 + Math.max(0, ...items.map(n => n.items ? this.depthOf(n.items) : 0)); }
     count(n) { return n.items ? n.items.reduce((a, x) => a + this.count(x), 0) : 1; }
-    nodes(d) { return d ? this.path[d - 1].items : this.root; }
+    nodes(d) { return d ? this.path[d - 1].items : this.exp ? this.flat(this.exp) : this.root; }
+    canInline(n) { return this.inline && !!n.items && n.items.some(c => c.group); }
+    // Daun modul berurutan; cabang bertingkat diratakan (label cabang = judul kelompok), kelompok & ikonnya diwariskan.
+    flat(m) {
+      if (m._flat) return m._flat;
+      const out = [], walk = (items, g, gi) => items.forEach(c => c.items ? walk(c.items, c.group || c.label, c.groupIcon || c.icon) : out.push({...c, group: c.group || g, groupIcon: c.groupIcon || gi}));
+      walk(m.items, null, null);
+      return m._flat = out;
+    }
 
     // Jalur label ke layar akhir berkunci k (dipakai untuk prop active & posisi yang diingat).
     find(k, items = this.root, trail = []) {
@@ -104,7 +114,7 @@
       this.draw(false);
     }
 
-    save() { try { localStorage.setItem(this.key, JSON.stringify({path: this.path.map(n => n.label), sel: this.sel, view: this.views[this.view]?.key})); } catch (e) {} }
+    save() { try { localStorage.setItem(this.key, JSON.stringify({path: (this.exp ? [this.exp] : this.path).map(n => n.label), sel: this.sel, view: this.views[this.view]?.key})); } catch (e) {} }
 
     initViews() {
       const box = this.$('[data-lm-views]');
@@ -123,7 +133,7 @@
       this.root = this.views[i].items;
       this.$$('[data-lm-view]').forEach(b => { const on = +b.dataset.lmView === i; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', String(on)); });
       if (!changed && !animate) return;
-      this.path = [];
+      this.path = []; this.exp = null;
       if (this.st.show !== 'menu') this.show('menu');
       this.draw(animate);
       this.emit('dl:layer-menu-view', {key: this.views[i].key});
@@ -131,6 +141,7 @@
 
     // Satu panel per layer. Tanpa animasi saat pertama tampil (restore) supaya tidak "terbang" dari layer 1.
     draw(animate = true) {
+      if (this.inline && this.path.length && this.canInline(this.path[0])) { this.exp = this.path[0]; this.path = []; } else if (this.path.length) this.exp = null;
       const d = this.path.length;
       while (this.track.children.length > d + 1) this.track.lastChild.remove();
       for (let i = this.track.children.length; i <= d; i++) this.track.insertAdjacentHTML('beforeend', '<div class="dl-lm__pane"></div>');
@@ -145,7 +156,21 @@
       if (!animate) requestAnimationFrame(() => track.classList.remove('no-anim'));
     }
 
+    // Modul terbuka di tempat: kepala modul (klik = tutup), lalu kelompok bertajuk + ikon dengan garis pembatas dan butir bertitik; modul lain tersembunyi.
+    paneInline() {
+      const m = this.exp, counts = this.el.dataset.counts === '1';
+      let h = `<button type="button" class="dl-lm__a dl-lm__mod" data-lm-exp aria-expanded="true" title="${esc(m.label)}"><span class="dl-lm__ico"><i class="${esc(m.icon)}"></i></span><span class="dl-lm__t">${esc(m.label)}</span>${counts ? `<span class="dl-lm__n">${this.count(m)}</span>` : ''}<i class="fa-solid fa-chevron-up dl-lm__chev"></i></button><div class="dl-lm__il">`;
+      let g = null;
+      this.flat(m).forEach((n, x) => {
+        if (n.group && n.group !== g) { g = n.group; h += `<div class="dl-lm__ilcap">${n.groupIcon ? `<i class="${esc(n.groupIcon)}"></i>` : ''}<span>${esc(g)}</span></div>`; }
+        const badge = n.badge && !String(n.badge).startsWith('icon:') ? `<em class="dl-lm__badge is-${esc(n.tone || 'accent')}">${esc(n.badge)}</em>` : '';
+        h += `<a href="${esc(n.url || '#')}" class="dl-lm__a dl-lm__bul${n.key === this.sel ? ' is-active' : ''}" data-lm-x="${x}" title="${esc(n.label)}"><span class="dl-lm__dot"></span><span class="dl-lm__t">${esc(n.label)}</span>${badge}</a>`;
+      });
+      return h + '</div>';
+    }
+
     pane(d) {
+      if (!d && this.exp) return this.paneInline();
       const counts = this.el.dataset.counts === '1';
       // Judul seksi layer 1 (mis. OPERATIONAL) = pintu ke opening screen seperti logo, bila prop home aktif (tampilan tetap, hanya hover kecil).
       const cap = this.$('[data-lm-home]') ? ' data-lm-cap-home role="button" tabindex="0"' : '';
@@ -236,10 +261,12 @@
 
     click(e, t) {
       if (t.hasAttribute('data-lm-fold')) { this.toggleFold(t); return; }
+      if (t.hasAttribute('data-lm-exp')) { this.exp = null; this.draw(false); return; }
       if (t.hasAttribute('data-lm-back')) { this.setPeek(true); this.back(); return; }
       if (!t.hasAttribute('data-lm-x')) return;
       const d = [...this.track.children].indexOf(t.closest('.dl-lm__pane'));
       const n = this.nodes(d)[+t.dataset.lmX];
+      if (n.items && this.canInline(n)) { this.setPeek(true); this.exp = n; this.draw(false); return; }
       if (n.items) {
         this.setPeek(true); this.path = [...this.path.slice(0, d), n]; this.draw(); this.track.children[d + 1].querySelector('[data-lm-back]').focus({preventScroll: true});
         // Grup yang punya halaman pembuka (n.open = url): panel kanan ikut membuka halaman itu; menu kiri tetap turun satu layer.
@@ -252,7 +279,7 @@
       t.classList.add('is-active');
       this.save();
       this.setPeek(false);
-      const detail = {key: n.key, label: n.label, url: n.url || null, path: [...this.path.map(p => p.label), n.label]};
+      const detail = {key: n.key, label: n.label, url: n.url || null, path: [...(this.exp ? [this.exp] : this.path).map(p => p.label), n.label]};
       if (!this.emit('dl:layer-menu', detail, true)) { e.preventDefault(); return; }
       if (!n.url || n.url === '#') toast(Tf('open_preview', {x: detail.path.join(' › ')}));
     }

@@ -601,12 +601,12 @@ Teks antarmuka dari kamus Devlib\Lang (ID/EN); ikut berganti saat bahasa diganti
 ## `<x-dl::layer-menu>`
 Menu panel kiri berlapis (layer 1 modul -> layer 2 menu -> layer 3 sub -> layer 4 ...), SEMUA di panel yang sama:.
 - Berkas: `src/Components/LayerMenu.php`
-- Prop: items:array=[], title:?string=NULL, logo:?string=NULL, tagline:?string=NULL, id:string='layer', active:?string=NULL, user:?string=NULL, role:?string=NULL, login:?string=NULL, counts:bool=true, rootCaption:string='Modules', dock:?string=NULL, actions:array=[], views:array=[], initialView:?string=NULL, search:bool=false, collapsible:bool=true, home:bool=false, foldGroups:string='', footRole:?string=NULL
+- Prop: items:array=[], title:?string=NULL, logo:?string=NULL, tagline:?string=NULL, id:string='layer', active:?string=NULL, user:?string=NULL, role:?string=NULL, login:?string=NULL, counts:bool=true, rootCaption:string='Modules', dock:?string=NULL, actions:array=[], views:array=[], initialView:?string=NULL, search:bool=false, collapsible:bool=true, home:bool=false, foldGroups:string='', inlineGroups:bool=false, footRole:?string=NULL
 
 ## `<x-dl::layer-shell>`
 Kerangka aplikasi setelah login: navigasi x-dl::layer-menu di kiri, TANPA top bar; tab MDI, Ctrl+K, laci, modal. Satu-satunya menu utama.
 - Berkas: `src/Components/LayerShell.php`, tampilan `resources/views/components/layer-shell.blade.php`
-- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[], deviceAction:?string=NULL, devicesUrl:?string=NULL, links:array=[]
+- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[], deviceAction:?string=NULL, devicesUrl:?string=NULL, links:array=[], inlineGroups:bool=false
 
 ## `<x-dl::lines>`
 Tabel baris item dokumen (detail dari Master-Detail: PO, PR, CO, Stock In, ...).

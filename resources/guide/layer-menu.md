@@ -50,6 +50,7 @@ Constructor of `Devlib\Components\LayerMenu`: 19 props. Use `:prop="expr"` for a
 | `collapsible` | `bool`, `true` | Shows the minimize button. The mini state (one icon column) is stored per browser. See "Mini mode". |
 | `home` | `bool`, `false` | Makes logo and name a button (`data-lm-home`, focusable, Enter/Space) that fires `dl:layer-menu-action` with key `home`. In the shell this closes all tabs and shows the opening screen. |
 | `fold-groups` | `string`, `''` | Layer-1 group captions (`group`) become fold buttons. `''` = plain captions. `'1'` (any other non-empty value except `accordion`) = every caption folds on its own. `'accordion'` = one group open at a time (first load: the group of the active screen, else the first). Written as `data-fold-groups` (`0` when empty). |
+| `inline-groups` | `bool`, `false` | A root module whose children carry `group` (optional `groupIcon`) opens in place as one long list instead of sliding to the next layer: small-caps group titles with an icon, a divider line between groups, bulleted items, hover/active colour; the other modules are hidden meanwhile and a click on the module row closes it. Nested branches are flattened (the branch label becomes a group title). Modules without `group` children behave as before. |
 
 ### Slots
 

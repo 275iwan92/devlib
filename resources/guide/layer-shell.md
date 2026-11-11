@@ -44,6 +44,7 @@ Constructor of `Devlib\Components\LayerShell`: 17 props. Blade names are kebab-c
 | `without` | `array`, `[]` | Profile panel items to hide (opt-in, for simple applications). Recognised values: `notif`, `chat`, `ai`, `edit`, `help`, `setup`, `theme`. See "The without prop". |
 | `device-action` | `?string`, `null` | POST address that saves the chosen view (field `ui`, value `phone`). When set, the profile panel gets one more action, "Phone view", placed before Change password; it submits a hidden form and the project stores the cookie `ui` (see `Devlib\Device`, `x-dl::phone-shell`). `null` = no such action and the markup is exactly as before. |
 | `links` | `array`, `[]` | Extra profile actions `[['key', 'label', 'icon' => 'fa-...', 'url']]`, placed right after Edit profile (before My devices and Help & support); each opens its `url` as a tab. `[]` = no extra action and the markup is exactly as before. |
+| `inline-groups` | `bool`, `false` | Passed to `x-dl::layer-menu`: a module whose children have `group` (and optional `groupIcon` on the first item of a group) opens in place as one long grouped list instead of the Back drill. |
 | `devices-url` | `?string`, `null` | URL of the "My devices" screen. When set, the profile panel gets one more action, "My devices", placed between Edit profile and Help & support; it opens that URL as a tab. `null` = no such action and the markup is exactly as before. |
 
 ### Slots

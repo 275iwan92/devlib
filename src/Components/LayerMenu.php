@@ -27,6 +27,7 @@ use Devlib\Icon;
 //   foldGroups  = judul kelompok (`group`) di layer akar jadi tombol lipat, anak menunya tergulung ke atas di belakang judul (diingat per browser; mode
 //                 mini selalu terbuka). '1' = tiap judul sendiri-sendiri; 'accordion' = satu kelompok terbuka sekali waktu (awal: kelompok layar aktif).
 //                 Kosong = judul tetap teks biasa. x-dl::layer-shell memakai 'accordion' otomatis bila ada modul ber-`section`.
+//   inlineGroups = modul ber-kelompok (anak punya `group`, opsional `groupIcon`) terbuka di tempat sebagai satu daftar panjang, bukan turun layer; modul lain tersembunyi sementara.
 //   home        = logo + nama aplikasi bisa diklik -> event dl:layer-menu-action {key:'home'} (user 2026-10-02). Di
 //                 x-dl::layer-shell: semua tab ditutup dan opening screen tampil (Shell::goHome); posisi menu tetap.
 // Cabang boleh membawa `hub` (url) + `hubKey` (kunci tab): judul layer di atas daftar anaknya jadi bisa diklik -> event dl:layer-menu-open (halaman cabang terbuka, panel tidak bergeser).
@@ -66,6 +67,8 @@ class LayerMenu extends DevlibComponent
         public bool $collapsible = true,
         public bool $home = false,
         public string $foldGroups = '',
+        // inlineGroups: modul di layer akar yang anaknya punya `group` terbuka DI TEMPAT sebagai satu daftar panjang (kelompok bertajuk + ikon, garis pembatas, butir bertitik), modul lain tersembunyi sementara; klik kepala modul = tutup. Tanpa prop ini: turun layer seperti biasa.
+        public bool $inlineGroups = false,
         // Baris kecil di bawah nama pada baris pengguna (footer), mis. jabatan. null = pakai $role. Header panel Profile tetap memakai $role.
         public ?string $footRole = null,
     ) {
@@ -82,7 +85,7 @@ class LayerMenu extends DevlibComponent
     {
         return array_map(function ($it) {
             $n = ['label' => $it['label'], 'icon' => $this->fa($it['icon'] ?? 'fa-circle-dot')];
-            foreach (['key', 'url', 'open', 'hub', 'hubKey', 'hubLabel', 'badge', 'tone', 'group', 'pin'] as $k) {
+            foreach (['key', 'url', 'open', 'hub', 'hubKey', 'hubLabel', 'badge', 'tone', 'group', 'groupIcon', 'pin'] as $k) {
                 if (isset($it[$k])) {
                     $n[$k] = $it[$k];
                 }
@@ -117,7 +120,7 @@ class LayerMenu extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <aside {{ $attributes->class('dl-lm') }} {!! $dl() !!} data-dl-layer-menu data-id="{{ $id }}" data-active="{{ $active }}" data-counts="{{ $counts ? 1 : 0 }}" data-fold-groups="{{ $foldGroups === '' ? 0 : $foldGroups }}" data-root="{{ \Devlib\Lang::text($rootCaption) }}" data-dock="{{ $dock }}" data-tree="{{ $views ? '[]' : json_encode($tree()) }}" data-views="{{ json_encode($viewData()) }}" data-view="{{ $initialView }}">
+            <aside {{ $attributes->class('dl-lm') }} {!! $dl() !!} data-dl-layer-menu data-id="{{ $id }}" data-active="{{ $active }}" data-counts="{{ $counts ? 1 : 0 }}" data-inline-groups="{{ $inlineGroups ? 1 : 0 }}" data-fold-groups="{{ $foldGroups === '' ? 0 : $foldGroups }}" data-root="{{ \Devlib\Lang::text($rootCaption) }}" data-dock="{{ $dock }}" data-tree="{{ $views ? '[]' : json_encode($tree()) }}" data-views="{{ json_encode($viewData()) }}" data-view="{{ $initialView }}">
                 <div class="dl-lm__head" @if ($home) data-lm-home role="button" tabindex="0" title="{{ \Devlib\Lang::text('Opening screen (closes all tabs)') }}" @endif>
                     <span class="dl-logo-badge dl-logo-badge--sm">@if ($logo)<img src="{{ $logo }}" alt="{{ $title }}">@endif</span>
                     <span class="dl-lm__brand"><b>{{ $title }}<x-dl::env-badge part="title" variant="title" /><x-dl::env-badge part="version" variant="version" /></b>@if ($tagline)<small class="dl-lm__tag" data-lm-tag>{{ $tagline }}</small>@endif<small data-lm-mode hidden></small></span>
