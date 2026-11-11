@@ -165,8 +165,8 @@ class ObjectDocTest extends TestCase
 
     public function test_grid_and_form_list_every_constructor_property(): void
     {
-        $this->assertCount(31, ObjectDoc::grid()->props());
-        $this->assertCount(34, ObjectDoc::form()->props());
+        $this->assertCount(33, ObjectDoc::grid()->props());
+        $this->assertCount(35, ObjectDoc::form()->props());
         $grid = array_column(ObjectDoc::grid()->props(), null, 'name');
         $form = array_column(ObjectDoc::form()->props(), null, 'name');
 
