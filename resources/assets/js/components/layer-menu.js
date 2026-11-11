@@ -83,7 +83,8 @@
     depthOf(items) { return 1 + Math.max(0, ...items.map(n => n.items ? this.depthOf(n.items) : 0)); }
     count(n) { return n.items ? n.items.reduce((a, x) => a + this.count(x), 0) : 1; }
     nodes(d) { return d ? this.path[d - 1].items : this.exp ? this.flat(this.exp) : this.root; }
-    canInline(n) { return this.inline && !!n.items && n.items.some(c => c.group); }
+    // Modul ber-kelompok: anak punya group, atau anak = cabang yang isinya daun saja (kedalaman 2); lebih dalam tetap turun layer.
+    canInline(n) { return this.inline && !!n.items && n.items.some(c => c.group || c.items) && n.items.every(c => !c.items || c.items.every(x => !x.items)); }
     // Daun modul berurutan; cabang bertingkat diratakan (label cabang = judul kelompok), kelompok & ikonnya diwariskan.
     flat(m) {
       if (m._flat) return m._flat;
