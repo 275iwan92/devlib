@@ -13,6 +13,12 @@
             <x-dl::button size="sm" label="Kecil" /> <x-dl::button size="lg" label="Besar (login)" />
         </div>
     </x-dl::card>
+    <x-dl::card title="Glass" description="Pil kaca: biru-teal kiri, cahaya oranye kanan. Untuk aksi utama (Save, Confirm); satu per layar.">
+        <div class="dl-row">
+            <x-dl::button variant="glass" size="sm" label="Save" icon="save" /> <x-dl::button variant="glass" preset="save" /> <x-dl::button variant="glass" size="lg" label="Confirm" icon="confirm" />
+            <x-dl::button variant="glass" label="Disabled" disabled />
+        </div>
+    </x-dl::card>
     <x-dl::card title="Split button">
         <x-dl::split-button />
     </x-dl::card>

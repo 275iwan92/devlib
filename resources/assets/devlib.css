@@ -30,6 +30,8 @@
   --dl-logo:conic-gradient(from 200deg,#ff5f6d,#ffc371,#2f6fed,#8a5cf6,#ff5f6d);
   /* persegi dokumen Grid Transactional (.dl-doctag): 8 pasangan gradasi pilihan user 2026-10-02, tanpa kuning / hijau zaitun */
  --dl-doc-2a:#3f62d6; --dl-doc-4a:#17a59c;
+  /* tombol kaca (.dl-btn--glass, sampel Jo 2026-11-11): biru-teal kiri, krem tengah, cahaya oranye kanan; teks tetap --dl-ink-strong */
+  --dl-glass-a:color-mix(in srgb,color-mix(in srgb,var(--dl-accent) 45%,var(--dl-doc-4a)) 52%,#fff); --dl-glass-b:color-mix(in srgb,var(--dl-amber-2) 10%,#fff); --dl-glass-c:color-mix(in srgb,var(--dl-tangerine) 62%,#fff); --dl-glass-edge:color-mix(in srgb,var(--dl-accent) 55%,var(--dl-doc-4a));
 
   /* form (mockup UIUX_components_part1) */
   --dl-f-ink:#111827; --dl-f-label:#111827; --dl-f-muted:#1f2937;
@@ -85,6 +87,14 @@ body.dl-body:has(> .dl-print){overflow-y:auto}
 .dl-btn--ghost{background:transparent;color:var(--dl-ink)}.dl-btn--ghost:hover{background:var(--dl-hover)}
 .dl-btn--plain{background:var(--dl-surface);color:var(--dl-ink-strong);box-shadow:inset 0 0 0 1px var(--dl-border)}.dl-btn--plain:hover{background:var(--dl-surface-alt)}
 .dl-btn--link{background:none;border:none;padding:0;color:var(--dl-accent-ink);font-weight:600;font-size:calc(13px * var(--dl-font-scale))}.dl-btn--link:hover{text-decoration:underline}
+/* glass: pil kaca (gambar sampel diputar -90 derajat). Tepi gradasi lewat border-box; sorotan putih kiri atas; cahaya oranye kanan bawah; disabled = token --dl-disabled */
+.dl-btn--glass{border:2px solid transparent;border-radius:999px;color:var(--dl-ink-strong);background:radial-gradient(90% 150% at 8% -10%,rgba(255,255,255,.7),transparent 42%) padding-box,radial-gradient(70% 140% at 100% 110%,var(--dl-glass-c),transparent 72%) padding-box,linear-gradient(90deg,var(--dl-glass-a) 0%,var(--dl-glass-b) 62%,var(--dl-glass-c) 100%) padding-box,linear-gradient(90deg,var(--dl-glass-edge),var(--dl-amber-2)) border-box;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),6px 5px 16px color-mix(in srgb,var(--dl-tangerine) 30%,transparent),0 8px 18px rgba(15,22,45,.18);transition:transform .15s,box-shadow .15s,filter .15s}
+.dl-btn--glass:hover{background:radial-gradient(90% 150% at 8% -10%,rgba(255,255,255,.7),transparent 42%) padding-box,radial-gradient(70% 140% at 100% 110%,var(--dl-glass-c),transparent 72%) padding-box,linear-gradient(90deg,var(--dl-glass-a) 0%,var(--dl-glass-b) 62%,var(--dl-glass-c) 100%) padding-box,linear-gradient(90deg,var(--dl-glass-edge),var(--dl-amber-2)) border-box;filter:brightness(1.04) saturate(1.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),8px 6px 22px color-mix(in srgb,var(--dl-tangerine) 45%,transparent),0 10px 22px rgba(15,22,45,.2)}
+.dl-btn--glass:active{transform:translateY(1px) scale(.985);box-shadow:inset 0 3px 8px rgba(15,22,45,.22),0 2px 6px rgba(15,22,45,.15)}
+.dl-btn--glass:focus-visible{outline:2px solid var(--dl-accent);outline-offset:3px}
+.dl-btn--glass:disabled{background:var(--dl-disabled);box-shadow:none;opacity:1}
+.dl-btn--glass.dl-btn--md{padding:0 22px;height:36px}.dl-btn--glass.dl-btn--sm{padding:0 16px;height:30px}.dl-btn--glass.dl-btn--lg{padding:0 30px;height:46px}
+@media (prefers-reduced-motion:reduce){.dl-btn--glass{transition:none}.dl-btn--glass:active{transform:none}}
 .dl-alert{display:none;border:1px solid;border-radius:var(--dl-radius);padding:10px 12px;font-size:calc(13px * var(--dl-font-scale));margin-bottom:16px}
 .dl-alert.is-show{display:block}
 .dl-alert--danger{background:var(--dl-danger-soft);color:var(--dl-ink);border-color:var(--dl-danger-line)}
