@@ -128,6 +128,7 @@
 
       this.aiBody = $(this.el, '[data-dl-ai-body]');
       this.aiIn = $(this.el, '[data-dl-ai-input]');
+      this.initAiWindow();
       $(this.el, '[data-dl-ai-send]').addEventListener('click', () => { this.askAi(this.aiIn.value); this.aiIn.value = ''; });
       this.aiIn.addEventListener('keydown', e => { if (e.key === 'Enter') { this.askAi(this.aiIn.value); this.aiIn.value = ''; } });
       this.aiBody.addEventListener('click', e => { const c = e.target.closest('[data-dl-ai]'); if (c) this.askAi(c.dataset.dlAi); });
@@ -178,12 +179,11 @@
       if (!this.ai?.api) return;
       (this.ai.history || []).forEach(m => { this.addAi('me', m.q); this.addReply(m.reply, m.id, m.feedback); });
       this.aiBody.addEventListener('click', e => {
-        const open = e.target.closest('[data-dl-ai-open]'), topic = e.target.closest('[data-dl-ai-topic]'), page = e.target.closest('[data-dl-ai-page]'), fb = e.target.closest('[data-dl-ai-fb]'), rev = e.target.closest('[data-dl-ai-reveal]'), cp = e.target.closest('[data-dl-ai-copy]');
+        const open = e.target.closest('[data-dl-ai-open]'), topic = e.target.closest('[data-dl-ai-topic]'), page = e.target.closest('[data-dl-ai-page]'), fb = e.target.closest('[data-dl-ai-fb]'), cp = e.target.closest('[data-dl-ai-copy]');
         if (open) { const d = open.dataset; this.findItem(d.dlAiOpen) ? this.openTab(d.dlAiOpen) : this.openUrlTab(d.dlAiOpen, d.label, d.url, d.icon || undefined); this.closeDrawers(); }
         else if (topic) this.askAi(topic.dataset.label, topic.dataset.dlAiTopic);
         else if (page) { this.closeDrawers(); this.openPage?.(page.dataset.dlAiPage); }
         else if (fb) this.sendFeedback(fb);
-        else if (rev) this.toggleSecret(rev);
         else if (cp) navigator.clipboard?.writeText($(cp.closest('.dl-ai__secret'), 'code').dataset.dlAiSecret || '');
       });
     }
@@ -215,7 +215,7 @@
         + (r.text ? `<div>${esc(r.text)}</div>` : '')
         + (r.steps?.length ? `<ol>${r.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>` : '')
         + (r.rows?.length ? `<div class="dl-ai__rows">${r.rows.map(x => `<div><span>${esc(x[0])}</span><b>${esc(x[1])}</b></div>`).join('')}</div>` : '')
-        + (r.secret ? `<div class="dl-ai__secret"><code data-dl-ai-secret="${esc(r.secret)}">••••••••</code><button type="button" class="dl-btn dl-btn--sm dl-btn--secondary" data-dl-ai-reveal>Reveal</button><button type="button" class="dl-btn dl-btn--sm dl-btn--secondary" data-dl-ai-copy aria-label="Copy"><i class="fa-regular fa-copy"></i></button></div>` : '')
+        + (r.secret ? `<div class="dl-ai__secret"><code data-dl-ai-secret="${esc(r.secret)}">${esc(r.secret)}</code><button type="button" class="dl-btn dl-btn--sm dl-btn--secondary" data-dl-ai-copy aria-label="Copy"><i class="fa-regular fa-copy"></i></button></div>` : '')
         + (r.note ? `<div class="dl-ai__note">${esc(r.note)}</div>` : '')
         + (r.actions?.length ? `<div class="dl-ai__acts">${r.actions.map(act).join('')}</div>` : '');
       this.aiBody.appendChild(card);
@@ -225,13 +225,6 @@
         this.aiBody.appendChild(fb);
       }
       this.aiBody.scrollTop = this.aiBody.scrollHeight;
-    }
-
-    // Rahasia di kartu jawaban (mis. password): tersembunyi; Reveal menampilkannya 30 detik lalu menyembunyikannya lagi.
-    toggleSecret(btn) {
-      const code = $(btn.closest('.dl-ai__secret'), 'code'), show = btn.textContent === 'Reveal';
-      code.textContent = show ? code.dataset.dlAiSecret : '••••••••'; btn.textContent = show ? 'Hide' : 'Reveal';
-      clearTimeout(code._t); if (show) code._t = setTimeout(() => { code.textContent = '••••••••'; btn.textContent = 'Reveal'; }, 30000);
     }
 
     // Klik jempol yang sudah menyala = dicabut.
@@ -435,12 +428,36 @@
       try { return this.openTabs.get(this.activeTab)?.pane.querySelector('iframe').contentWindow.location.pathname.match(/\/v2\/s\/([^/?#]+)/)?.[1] || null; } catch (e) { return null; }
     }
 
+    // AI Assistant = jendela mengambang, bukan laci: tanpa backdrop, kepala jendela bisa digeser, X / Esc / Alt+A menutup (Alt+A membuka; hanya bila asisten aktif).
+    initAiWindow() {
+      const w = $(this.el, '[data-dl-drawer="ai"]'), head = $(w, '.dl-dr-head');
+      $(w, '[data-dl-ai-close]').addEventListener('click', () => this.toggleAi(false));
+      head.addEventListener('pointerdown', e => {
+        if (e.target.closest('button') || w.classList.contains('is-max')) return;
+        const r = w.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top;
+        Object.assign(w.style, {left: r.left + 'px', top: r.top + 'px', right: 'auto', bottom: 'auto'});
+        const move = ev => { w.style.left = Math.max(0, Math.min(innerWidth - 80, ev.clientX - dx)) + 'px'; w.style.top = Math.max(0, Math.min(innerHeight - 56, ev.clientY - dy)) + 'px'; };
+        const up = () => { removeEventListener('pointermove', move); removeEventListener('pointerup', up); };
+        addEventListener('pointermove', move); addEventListener('pointerup', up);
+      });
+      addEventListener('keydown', e => {
+        if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.code === 'KeyA' && this.ai?.api) { e.preventDefault(); this.toggleAi(); }
+        else if (e.key === 'Escape' && w.classList.contains('is-on') && w.contains(document.activeElement)) this.toggleAi(false);
+      });
+    }
+
+    toggleAi(on) {
+      const w = $(this.el, '[data-dl-drawer="ai"]'); on = on ?? !w.classList.contains('is-on');
+      w.classList.toggle('is-on', on); if (on) this.aiIn?.focus();
+    }
+
     openDrawer(id) {
+      if (id === 'ai') return this.toggleAi(true);
       $$(this.el, '.dl-drawer.is-on').forEach(d => d.classList.remove('is-on'));
       $(this.el, `[data-dl-drawer="${id}"]`).classList.add('is-on'); this.backdrop.classList.add('is-on');
     }
 
-    closeDrawers() { $$(this.el, '.dl-drawer.is-on').forEach(d => d.classList.remove('is-on')); $$(this.el, '.dl-ss.is-on').forEach(d => d.dlComponent?.close()); this.backdrop.classList.remove('is-on'); }
+    closeDrawers() { $$(this.el, '.dl-drawer.is-on:not([data-dl-drawer="ai"])').forEach(d => d.classList.remove('is-on')); $$(this.el, '.dl-ss.is-on').forEach(d => d.dlComponent?.close()); this.backdrop.classList.remove('is-on'); }
     addAi(role, txt) { const d = document.createElement('div'); d.className = 'dl-ai__msg dl-ai__msg--' + role; d.textContent = txt; this.aiBody.appendChild(d); this.aiBody.scrollTop = this.aiBody.scrollHeight; }
 
     askAi(q, topic) {
