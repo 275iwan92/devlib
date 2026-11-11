@@ -17,9 +17,11 @@
         <div class="dl-dr-head"><i class="fa-solid fa-wand-magic-sparkles dl-dr-ico dl-dr-ico--ai"></i><span class="dl-dr-title">{{ \Devlib\Lang::text('AI Assistant') }}</span>@unless ($assistantLive)<span class="dl-dr-note">{{ \Devlib\Lang::text('preview') }}</span>@endunless<button type="button" class="dl-dr-x dl-dr-max" data-dl-dr-max data-title-max="{{ \Devlib\Lang::text('Maximize') }}" data-title-restore="{{ \Devlib\Lang::text('Restore') }}" title="{{ \Devlib\Lang::text('Maximize') }}"><i class="fa-solid fa-expand"></i></button><button type="button" class="dl-dr-x" data-dl-ai-close><i class="fa-solid fa-xmark"></i></button></div>
         <div class="dl-ai" data-dl-ai-body>
             @if ($assistantLive)
+            @if (($assistant['hello'] ?? '') !== '' || ! empty($assistant['chips']))
             <div class="dl-ai__intro">{{ $assistant['hello'] ?? '' }}
                 @if (! empty($assistant['chips']))<div class="dl-ai__chips">@foreach ($assistant['chips'] as $chip)<button type="button" class="dl-ai__chip" data-dl-ai="{{ $chip }}">{{ $chip }}</button>@endforeach</div>@endif
             </div>
+            @endif
             @else
             <div class="dl-ai__intro">{!! \Devlib\Lang::text('Ask in plain words — e.g. <b>“open login”</b> or <b>“grid”</b>, and I will open it in a tab. This version is still a preview.') !!}
                 <div class="dl-ai__chips"><button type="button" class="dl-ai__chip" data-dl-ai="login">login</button><button type="button" class="dl-ai__chip" data-dl-ai="kanban">kanban</button><button type="button" class="dl-ai__chip" data-dl-ai="grid">grid</button></div>
