@@ -98,7 +98,7 @@ class DeliveryTrack extends DevlibComponent
                     <path class="dl-track__trail" data-dl-track-trail d="M60 120 C160 120 170 45 300 62 S450 140 540 52"/>
                     <path class="dl-track__flow" d="M60 120 C160 120 170 45 300 62 S450 140 540 52"/>
                     <g class="dl-track__node dl-track__node--from"><circle cx="60" cy="120" r="12"/><text x="60" y="150" text-anchor="middle">{{ $from }}</text></g>
-                    <g class="dl-track__node dl-track__node--to"><circle cx="540" cy="52" r="12"/><text x="540" y="30" text-anchor="middle">{{ $to }}</text></g>
+                    <g class="dl-track__node dl-track__node--to"><circle cx="540" cy="52" r="12"/><text x="590" y="30" text-anchor="end">{{ $to }}</text></g>
                     <g class="dl-track__truck" data-dl-track-truck><circle r="14"/><path class="dl-track__body" d="M-7 -4 h9 v8 h-9 z M2 -2 h5 l3 3 v3 h-8 z"/><path class="dl-track__x" d="M-5 -5 L5 5 M5 -5 L-5 5"/><path class="dl-track__warn" d="M0 -6.5 L7 5 L-7 5 Z M0 -2 V1.5 M0 3.4 H0.1"/></g>
                 </svg>
                 <ol class="dl-track__steps">
