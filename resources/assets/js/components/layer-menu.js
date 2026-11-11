@@ -83,13 +83,18 @@
     depthOf(items) { return 1 + Math.max(0, ...items.map(n => n.items ? this.depthOf(n.items) : 0)); }
     count(n) { return n.items ? n.items.reduce((a, x) => a + this.count(x), 0) : 1; }
     nodes(d) { return d ? this.path[d - 1].items : this.exp ? this.flat(this.exp) : this.root; }
-    // Modul ber-kelompok: anak punya group, atau anak = cabang yang isinya daun saja (kedalaman 2); lebih dalam tetap turun layer.
-    canInline(n) { return this.inline && !!n.items && n.items.some(c => c.group || c.items) && n.items.every(c => !c.items || c.items.every(x => !x.items)); }
-    // Daun modul berurutan; cabang bertingkat diratakan (label cabang = judul kelompok), kelompok & ikonnya diwariskan.
+    // Modul ber-kelompok: anaknya ber-group atau berupa cabang (cabang = judul kelompok).
+    canInline(n) { return this.inline && !!n.items && n.items.some(c => c.group || c.items); }
+    // Daftar baris modul: cabang tingkat 1 = judul kelompok (+ ikonnya); daun = butir; cabang yang lebih dalam dan punya halaman (open/hub) = butir yang membuka halamannya (nested), tanpa halaman = isinya diratakan.
     flat(m) {
       if (m._flat) return m._flat;
-      const out = [], walk = (items, g, gi) => items.forEach(c => c.items ? walk(c.items, c.group || c.label, c.groupIcon || c.icon) : out.push({...c, group: c.group || g, groupIcon: c.groupIcon || gi}));
-      walk(m.items, null, null);
+      const out = [], walk = (items, g, gi, top) => items.forEach(c => {
+        if (!c.items) out.push({...c, group: c.group || g, groupIcon: c.groupIcon || gi});
+        else if (top && !c.group) walk(c.items, c.label, c.icon, false);
+        else if (c.open || c.hub) out.push({...c, group: c.group || g, groupIcon: c.groupIcon || gi, nested: true});
+        else walk(c.items, g, gi, false);
+      });
+      walk(m.items, null, null, true);
       return m._flat = out;
     }
 
@@ -267,6 +272,7 @@
       if (!t.hasAttribute('data-lm-x')) return;
       const d = [...this.track.children].indexOf(t.closest('.dl-lm__pane'));
       const n = this.nodes(d)[+t.dataset.lmX];
+      if (this.exp && !d && n.nested) { e.preventDefault(); this.setPeek(false); this.emit('dl:layer-menu-open', {key: n.hubKey || n.key || n.label, label: n.hubLabel || n.label, url: n.open || n.hub, icon: n.icon}, true); return; }
       if (n.items && this.canInline(n)) { this.setPeek(true); this.exp = n; this.draw(false); return; }
       if (n.items) {
         this.setPeek(true); this.path = [...this.path.slice(0, d), n]; this.draw(); this.track.children[d + 1].querySelector('[data-lm-back]').focus({preventScroll: true});
