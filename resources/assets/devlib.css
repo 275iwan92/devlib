@@ -8,7 +8,7 @@
  *                (di atas latar gelap), tanpa abu-abu; abu-abu HANYA --dl-disabled; read-only dibedakan lewat latar.
  *                Sheet: judul kolom, nomor baris, sel baca-saja = token --dl-sheet-head / --dl-sheet-ro (satu tempat, semua layar).
  * Dipakai oleh : Semua layar v2 (devlib.test dan situs proyek pemakai) lewat _devlib/devlib.css.
- * Status       : Aktif. Redesign grid / sheet / form 2026-11-10: blok REDESIGN di akhir berkas.
+ * Status       : Aktif.
  * ===================================================================== */
 :root{
   /* warna */
@@ -4328,7 +4328,7 @@ label.dl-wb__catitem.is-on{border-color:var(--dl-accent);background:var(--dl-acc
 .dl-rfeed__text{white-space:pre-line}
 .dl-rfeed__note{font-size:calc(19px * var(--dl-font-scale));padding:12px 16px;background:var(--dl-accent-soft);border-radius:var(--dl-radius)}
 .dl-rfeed__body.dl-prose{max-width:none;margin:18px 0 0;padding:0;font-size:calc(21px * var(--dl-font-scale));line-height:1.75;color:var(--dl-ink)}
-.dl-rfeed__body table{display:block;max-width:100%;overflow-x:auto}
+.dl-rfeed__body.dl-prose table{display:block;max-width:100%;overflow-x:auto}
 .dl-rfeed__body td,.dl-rfeed__body th{overflow-wrap:normal;word-break:normal;min-width:5em}
 .dl-rfeed__body pre{max-width:100%;overflow-x:auto}
 .dl-rfeed__more{margin:22px 0 0}
@@ -5040,6 +5040,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-card--tone[data-tone=success]{--tc:var(--dl-green)}
 .dl-card--tone[data-tone=warn]{--tc:var(--dl-tangerine)}
 .dl-card--tone[data-tone=teal]{--tc:var(--dl-ch-teal)}
+.dl-card--tone[data-tone=pink]{--tc:var(--dl-pink)}.dl-card--tone[data-tone=orange]{--tc:var(--dl-orange)}.dl-card--tone[data-tone=danger]{--tc:var(--dl-danger)}.dl-card--tone[data-tone=lime]{--tc:var(--dl-lime)}
 .dl-card--tone .dl-card__head{background:color-mix(in srgb,var(--tc) 14%,var(--dl-surface));border-left:5px solid var(--tc);padding:9px 12px}
 .dl-card--tone .dl-card__head > div:first-child{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:start}
 .dl-card--tone .dl-card__head > div:first-child > i{grid-row:1 / 3;width:42px;height:42px;border-radius:var(--dl-radius-lg);display:grid;place-items:center;background:var(--tc);color:var(--dl-on-accent);font-size:calc(20px * var(--dl-font-scale))}
@@ -5059,7 +5060,6 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 /* Upload: tahap Processing = warna lain (violet) + garis bergerak, karena lama pembacaan di server tak terukur. */
 .dl-upload__progress.is-processing .dl-progress__bar{width:100% !important;background:repeating-linear-gradient(45deg,var(--dl-violet) 0 12px,color-mix(in srgb,var(--dl-violet) 70%,var(--dl-surface)) 12px 24px);background-size:34px 34px;animation:dl-upload-stripes 1s linear infinite}
 @keyframes dl-upload-stripes{to{background-position:34px 0}}
-.dl-card--tone[data-tone=pink]{--tc:var(--dl-pink)}.dl-card--tone[data-tone=orange]{--tc:var(--dl-orange)}.dl-card--tone[data-tone=danger]{--tc:var(--dl-danger)}.dl-card--tone[data-tone=lime]{--tc:var(--dl-lime)}
 [data-dl-upload-fallback][hidden]{display:none !important}
 
 /* ================= TIMELINE (garis waktu: titik berwarna per jenis, terbaru di atas) ================= */
@@ -5364,6 +5364,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-appr__summary b{color:var(--dl-accent-ink)}
 .dl-appr__lines th{background:color-mix(in srgb,var(--dl-accent) 14%,var(--dl-sheet-head));color:var(--dl-ink-strong);text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--dl-accent)}
 .dl-appr__cap{color:var(--dl-accent-ink)}
+
 /* x-dl::ambient: musik latar ambient (Web Audio), dua tombol jelas */
 .dl-ambient{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 10px;border-radius:999px;border:1px solid var(--dl-border);background:var(--dl-surface);color:var(--dl-ink);font-size:calc(13px * var(--dl-font-scale))}
 .dl-ambient>i{color:var(--dl-accent-ink)}

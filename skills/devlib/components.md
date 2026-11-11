@@ -339,7 +339,7 @@ Pilih dari data master (bukan ketik bebas) + isi otomatis field lain.
 - Prop: lookup:string='', fill:array=[], create:bool=false, params:array=[], serverSearch:bool=false, name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
 
 ## `<x-dl::field.masked>`
-Input bermask angka, mis. NIK 6.6.4 digit. Mode NIK (nikBirth / nikGender): NIK lengkap mengisi tanggal lahir dan jenis kelamin (perempuan = hari + 40) dan pesan langsung tampil di bawah kolom bila belum benar.
+Input bermask angka, mis. NIK 6.6.4 digit.
 - Berkas: `src/Components/Field/Masked.php`, tampilan `resources/views/components/field/masked.blade.php`
 - Prop: mask:string='999999.999999.9999', invalidText:?string=NULL, nikBirth:?string=NULL, nikGender:?string=NULL, nikMale:string='M', nikFemale:string='F', name:string='', label:string='', tooltip:?string=NULL, hint:?string=NULL, error:?string=NULL, value:mixed=NULL, placeholder:?string=NULL, required:bool=false, disabled:bool=false, readonly:bool=false, icon:?string=NULL, size:string='sm', i18n:?string=NULL, source:?string=NULL
 
@@ -461,7 +461,7 @@ Isi kotak Lupa Password. mode="email" (mockup forgot-password.html): isi email -
 ## `<x-dl::form>`
 Induk form (mockup UIUX_components_part1.html): judul + isi (kolom/baris field) + kaki berisi tombol tambahan opsional dan tombol split aksi.
 - Berkas: `src/Components/Form.php`
-- Prop: title:string='', action:?string=NULL, method:string='POST', actions:array=[…], extraAction:?string=NULL, extraIcon:string='📱', footer:bool=true, guard:bool=true, mode:string='edit', panel:?string=NULL, back:?string=NULL, newUrl:?string=NULL, kind:string='master', status:string='active', tabs:array=[], createdBy:?string=NULL, createdAt:?string=NULL, updatedBy:?string=NULL, updatedAt:?string=NULL, canReopen:bool=false, canInput:bool=true, subtitle:?string=NULL, pipeline:?bool=NULL, log:array=[], approvalLevels:int=0, approvalAt:int=0, canApprove:bool=false, actionField:string='_action', hide:array=[], hidden:array=[], stage:?string=NULL, printUrl:?string=NULL, strict:bool=false, deletable:bool=false
+- Prop: title:string='', action:?string=NULL, method:string='POST', actions:array=[…], extraAction:?string=NULL, extraIcon:string='📱', footer:bool=true, guard:bool=true, mode:string='edit', panel:?string=NULL, back:?string=NULL, newUrl:?string=NULL, kind:string='master', status:string='active', tabs:array=[], createdBy:?string=NULL, createdAt:?string=NULL, updatedBy:?string=NULL, updatedAt:?string=NULL, canReopen:bool=false, canInput:bool=true, subtitle:?string=NULL, pipeline:?bool=NULL, log:array=[], approvalLevels:int=0, approvalAt:int=0, canApprove:bool=false, actionField:string='_action', hide:array=[], hidden:array=[], stage:?string=NULL, printUrl:?string=NULL, strict:bool=false, deletable:bool=false, dense:bool=false
 
 ## `<x-dl::form.col>`
 Satu kolom form: field disusun ke bawah.
@@ -606,7 +606,7 @@ Menu panel kiri berlapis (layer 1 modul -> layer 2 menu -> layer 3 sub -> layer 
 ## `<x-dl::layer-shell>`
 Kerangka aplikasi setelah login: navigasi x-dl::layer-menu di kiri, TANPA top bar; tab MDI, Ctrl+K, laci, modal. Satu-satunya menu utama.
 - Berkas: `src/Components/LayerShell.php`, tampilan `resources/views/components/layer-shell.blade.php`
-- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[], deviceAction:?string=NULL, devicesUrl:?string=NULL
+- Prop: modules:array=[], user:array=[…], brand:?string=NULL, tagline:?string=NULL, logo:?string=NULL, logoutAction:string='', menuSource:string='sys_app_menu', chat:array=[], open:?string=NULL, helpUrl:?string=NULL, profilePage:?string=NULL, assistant:array=[], account:array=[], fresh:bool=false, drawers:array=[], without:array=[], deviceAction:?string=NULL, devicesUrl:?string=NULL, links:array=[]
 
 ## `<x-dl::lines>`
 Tabel baris item dokumen (detail dari Master-Detail: PO, PR, CO, Stock In, ...).
@@ -776,7 +776,7 @@ Cetakan lembar berbagian (laporan cetak / formulir lapangan): kop perusahaan, ju
 ## `<x-dl::profile-banner>`
 Banner profil orang / objek: foto di kiri, nama besar + baris keterangan + chip berkelompok (berlabel) + batang kelengkapan di sampingnya, tile KPI selebar penuh di bawahnya, lalu satu baris pemberitahuan.
 - Berkas: `src/Components/ProfileBanner.php`
-- Prop: name:string='', subtitle:?string=NULL, groups:array=[], progress:?float=NULL, progressText:?string=NULL
+- Prop: name:string='', subtitle:?string=NULL, groups:array=[], progress:?float=NULL, progressText:?string=NULL, progressLabel:?string=NULL, progressTone:string='auto', compact:bool=false, hue:?int=NULL, todo:array=[]
 
 ## `<x-dl::progress>`
 Batang kemajuan; tone otomatis dari nilai bila tone="auto" (>=80 hijau, >=50 kuning, sisanya merah).
@@ -881,7 +881,7 @@ Baris aksi LENGKET di dasar bagian Side Screen (user 2026-10-04): tombol form (R
 ## `<x-dl::side-screen.layout>`
 Isi Side Screen (user 2026-10-04): rel bagian VERTIKAL di kiri (menggantikan tab mendatar; 4 bagian Help / 11 bagian.
 - Berkas: `src/Components/SideScreen/Layout.php`
-- Prop: sections:array=[], active:?string=NULL, groups:array=[], hints:array=[], links:array=[], crumbs:array=[], param:string='tab'
+- Prop: sections:array=[], active:?string=NULL, groups:array=[], hints:array=[], links:array=[], crumbs:array=[], param:string='tab', rail:bool=true, tones:array=[]
 
 ## `<x-dl::skeleton>`
 Kerangka abu-abu berdenyut selama data dimuat. type: text | table | card | form.
@@ -1031,7 +1031,7 @@ Cuaca terkini dari internet (Open-Meteo, gratis tanpa kunci API), diambil oleh b
 ## `<x-dl::wh-map>`
 Peta gudang (warehouse map): denah satu gedung per lantai -- garis luar gedung (kotak, huruf L, atau bentuk apa pun),.
 - Berkas: `src/Components/WhMap.php`, tampilan `resources/views/components/wh-map.blade.php`
-- Prop: id:string='whmap', title:?string=NULL, width:float=0.0, height:float=0.0, outline:array=[], floors:array=[], bins:array=[], actions:array=[], floor:?int=NULL, selected:string|int|null=NULL, search:string='Search bin, item, lot...', empty:string='Click a bin on the map t…', saveUrl:?string=NULL, restackUrl:?string=NULL, source:?string=NULL, layer:array=[]
+- Prop: id:string='whmap', title:?string=NULL, width:float=0.0, height:float=0.0, outline:array=[], floors:array=[], bins:array=[], actions:array=[], floor:?int=NULL, selected:string|int|null=NULL, search:string='Search bin, item, lot...', empty:string='Click a bin on the map t…', saveUrl:?string=NULL, restackUrl:?string=NULL, source:?string=NULL, layer:array=[], moveUrl:?string=NULL
 
 ## `<x-dl::widget-board>`
 Papan widget (opening screen yang bisa diatur pemiliknya): kisi 12 kolom berisi widget dari katalog aplikasi.
