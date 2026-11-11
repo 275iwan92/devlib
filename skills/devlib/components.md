@@ -43,6 +43,11 @@ Strip notifikasi di atas dashboard: satu notifikasi = teks diam + tombol; dua at
 - Berkas: `src/Components/AlertStrip.php`
 - Prop: items:array=[]
 
+## `<x-dl::ambient>`
+Musik latar ambient yang dibuat di peramban lewat Web Audio API (pad akor lembut berganti pelan), tanpa berkas audio, tanpa hak cipta. Dua tombol: Play/Pause dan Mute. Bawaan DIAM; suara mulai hanya setelah pengguna menekan Play.
+- Berkas: `src/Components/Ambient.php`
+- Prop: label:string='Background music', volume:int=18, storageKey:string='dl-ambient'
+
 ## `<x-dl::announce>`
 Pengumuman bergantian (dari file teks lewat x-dl::frame announce="...").
 - Berkas: `src/Components/Announce.php`
@@ -856,7 +861,7 @@ Grid sel mirip spreadsheet; mendukung links (sel terhitung), reasonOnSave, reord
 ## `<x-dl::shot>`
 Potongan tangkapan layar: gambar penuh diperbesar di sekitar satu titik (x%, y%) dengan cincin penanda berdenyut. Dipakai kartu, langkah artikel, dan slide Panduan Pengguna supaya tiap langkah punya gambar yang fokus.
 - Berkas: `src/Components/Shot.php`
-- Prop: src:string='', x:float=50.0, y:float=50.0, zoom:float=2.2, ring:bool=true, ratio:string='16/10', alt:string='', source:?string=NULL
+- Prop: src:string='', x:float=50.0, y:float=50.0, zoom:float=2.2, ring:bool=true, ratio:string='16/10', alt:string='', anim:string='', source:?string=NULL
 
 ## `<x-dl::side-menu>`
 Menu panel samping (kiri ATAU kanan). Mode lebar: akordeon bertingkat (grup -> sub -> item), cari (buka otomatis.

@@ -5194,9 +5194,10 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 @media (max-width:900px){.dl-tour__play{grid-template-columns:1fr}.dl-tour__pop{width:min(240px,80%)}}
 /* x-dl::shot: potongan tangkapan layar diperbesar di satu titik + cincin berdenyut */
 .dl-shot{position:relative;aspect-ratio:var(--ratio,16/10);overflow:hidden;border-radius:10px;background:var(--dl-surface-alt);border:1px solid var(--dl-border)}
-.dl-shot>img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(var(--z,2));transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.dl-shot picture{display:contents}
+.dl-shot img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(var(--z,2));transition:transform .6s cubic-bezier(.2,.7,.2,1)}
 .dl-shot__ring{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:transparent;border:3px solid var(--dl-accent);animation:dl-tour-pulse 1.6s ease-out infinite;pointer-events:none}
-@media (prefers-reduced-motion:reduce){.dl-shot>img{transition:none}.dl-shot__ring{animation:none}}
+@media (prefers-reduced-motion:reduce){.dl-shot img{transition:none}.dl-shot__ring{animation:none}}
 /* x-dl::chapters: papan kartu (masonry) + bab bergambar */
 .dl-ch{font-family:var(--dl-font);color:var(--dl-ink)}
 .dl-ch [hidden]{display:none!important}
@@ -5210,7 +5211,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-ch__masonry{column-width:270px;column-gap:16px}
 .dl-ch__card{break-inside:avoid;margin:0 0 16px;border:1px solid var(--dl-border);border-radius:14px;background:var(--dl-surface);overflow:hidden;box-shadow:0 1px 2px color-mix(in srgb,var(--dl-ink) 8%,transparent);transition:transform .2s,box-shadow .2s;animation:dl-ch-in .45s both}
 .dl-ch__card:hover{transform:translateY(-3px);box-shadow:0 8px 22px color-mix(in srgb,var(--dl-ink) 14%,transparent)}
-.dl-ch__card:hover .dl-shot>img{transform:scale(calc(var(--z,2) * 1.08))}
+.dl-ch__card:hover .dl-shot img{transform:scale(calc(var(--z,2) * 1.08))}
 .dl-ch__card .dl-shot{border:0;border-radius:0}
 .dl-ch__cbody{display:grid;gap:6px;padding:12px 14px 14px}
 .dl-ch__cbody p{margin:0;font-size:calc(13.5px * var(--dl-font-scale));line-height:1.45}
@@ -5279,8 +5280,8 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-deck__bt i{width:10px;height:10px;border-radius:50%;background:var(--dl-border)}
 .dl-deck__clip{position:relative;overflow:hidden;aspect-ratio:16/9;background:var(--dl-surface-alt)}
 .dl-deck__clip img{display:block;width:100%;height:100%;object-fit:cover}
-.dl-deck__slide--shot.is-in.is-on .dl-deck__clip>img{animation:dl-deck-zin 9s ease-out both}
-.dl-deck__slide--shot.is-out.is-on .dl-deck__clip>img{animation:dl-deck-zout 9s ease-out both}
+.dl-deck__slide--shot.is-in.is-on .dl-deck__clip img{animation:dl-deck-zin 9s ease-out both}
+.dl-deck__slide--shot.is-out.is-on .dl-deck__clip img{animation:dl-deck-zout 9s ease-out both}
 .dl-deck__cam{position:absolute;inset:0;transition:transform 1.1s cubic-bezier(.4,0,.2,1)}
 .dl-deck__cam.is-zoom{transform:scale(2.2)}
 .dl-deck__ring{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:transparent;border:3px solid var(--dl-accent);opacity:0;transition:opacity .4s;animation:dl-tour-pulse 1.4s ease-out infinite}
@@ -5294,7 +5295,7 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 @keyframes dl-deck-zout{from{transform:scale(1.5)}to{transform:scale(1)}}
 @keyframes dl-deck-float{0%,100%{transform:translate(0,0)}50%{transform:translate(-24px,30px)}}
 @media (max-width:900px){.dl-deck__slide--shot{display:flex}.dl-deck__items--flow{grid-auto-flow:row}.dl-deck__slide--hero h2{font-size:calc(30px * var(--dl-font-scale))}}
-@media (prefers-reduced-motion:reduce){.dl-deck__orb,.dl-deck__ring,.dl-deck__slide--shot.is-on .dl-deck__clip>img{animation:none}.dl-deck__cam{transition:none}}
+@media (prefers-reduced-motion:reduce){.dl-deck__orb,.dl-deck__ring,.dl-deck__slide--shot.is-on .dl-deck__clip img{animation:none}.dl-deck__cam{transition:none}}
 /* ===================================================================
  * REDESIGN grid / sheet / form (Jo 2026-11-10: "lebih elegan, berwarna, langsung intuitif, ramah pengguna").
  * Satu tempat untuk SEMUA layar: layar pemakai tidak menulis gaya sendiri. Hanya token; teks tetap hitam di latar terang.
@@ -5356,3 +5357,11 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 .dl-appr__summary b{color:var(--dl-accent-ink)}
 .dl-appr__lines th{background:color-mix(in srgb,var(--dl-accent) 14%,var(--dl-sheet-head));color:var(--dl-ink-strong);text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--dl-accent)}
 .dl-appr__cap{color:var(--dl-accent-ink)}
+/* x-dl::ambient: musik latar ambient (Web Audio), dua tombol jelas */
+.dl-ambient{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 10px;border-radius:999px;border:1px solid var(--dl-border);background:var(--dl-surface);color:var(--dl-ink);font-size:calc(13px * var(--dl-font-scale))}
+.dl-ambient>i{color:var(--dl-accent-ink)}
+.dl-ambient__label{font-weight:700}
+.dl-ambient button{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border:1px solid var(--dl-border);border-radius:999px;background:var(--dl-surface);color:var(--dl-ink);font:inherit;font-weight:700;cursor:pointer}
+.dl-ambient button:hover,.dl-ambient button:focus-visible{background:var(--dl-hover);outline:2px solid var(--dl-accent-ink);outline-offset:1px}
+.dl-ambient button.is-on{background:var(--dl-accent);border-color:var(--dl-accent);color:var(--dl-on-accent)}
+.dl-deck__clip picture{display:contents}

@@ -98,7 +98,7 @@ class Chapters extends DevlibComponent
                     <article class="dl-ch__art" data-ch-art="{{ $t['id'] }}" hidden style="--h: {{ $g['hue'] ?? 215 }}">
                         <nav class="dl-ch__crumb"><button type="button" data-ch-back><i class="fa-solid fa-chevron-left"></i> {{ \Devlib\Lang::text('All tasks') }}</button><span>{{ $g['title'] }}</span></nav>
                         <div class="dl-ch__hero">
-                            <x-dl::shot :src="$t['image']" :x="50" :y="28" :zoom="1.15" :ring="false" />
+                            <x-dl::shot :src="$t['image']" :anim="$t['anim'] ?? ''" :x="50" :y="28" :zoom="1.15" :ring="false" />
                             <div>
                                 <span class="dl-ch__tag">{{ $g['title'] }}</span>
                                 <h2>{{ $t['title'] }}</h2>

@@ -13,7 +13,7 @@
 namespace Devlib\Components;
 
 // Shot: src = url gambar penuh; x, y = titik fokus (persen lebar/tinggi gambar); zoom = pembesaran (1 = utuh); ring = cincin berdenyut di titik;
-// ratio = rasio bingkai ('16/10'); alt = teks pengganti (kosong = hiasan). Titik tidak bergeser saat diperbesar karena gambar diperbesar dari titik itu.
+// anim = url animasi (WebP/GIF loop, sudah terbingkai): ditampilkan sebagai ganti zoom + cincin; bila gerak dikurangi (prefers-reduced-motion) dipakai src statis; ratio = rasio bingkai ('16/10'); alt = teks pengganti (kosong = hiasan). Titik tidak bergeser saat diperbesar karena gambar diperbesar dari titik itu.
 class Shot extends DevlibComponent
 {
     public function __construct(
@@ -24,6 +24,7 @@ class Shot extends DevlibComponent
         public bool $ring = true,
         public string $ratio = '16/10',
         public string $alt = '',
+        public string $anim = '',
         public ?string $source = null,
     ) {}
 
@@ -41,8 +42,12 @@ class Shot extends DevlibComponent
     {
         return <<<'BLADE'
             <div {{ $attributes->class('dl-shot') }} {!! $dl() !!} style="--ratio: {{ $ratio }}" @if ($alt === '') aria-hidden="true" @endif>
+                @if ($anim !== '')
+                    <picture><source media="(prefers-reduced-motion: reduce)" srcset="{{ $src }}"><img src="{{ $anim }}" alt="{{ $alt }}" style="--z: 1" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='{{ $src }}'"></picture>
+                @else
                 <img src="{{ $src }}" alt="{{ $alt }}" style="transform-origin: {{ $x }}% {{ $y }}%; --z: {{ $zoom }}" loading="lazy" decoding="async">
-                @if ($ring)<i class="dl-shot__ring" style="left: {{ $x }}%; top: {{ $y }}%"></i>@endif
+                @endif
+                @if ($ring && $anim === '')<i class="dl-shot__ring" style="left: {{ $x }}%; top: {{ $y }}%"></i>@endif
             </div>
             BLADE;
     }

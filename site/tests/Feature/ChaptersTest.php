@@ -43,6 +43,18 @@ class ChaptersTest extends TestCase
         $this->assertStringContainsString('data-ch-jump="ch-a-next"', $html, 'tugas A menaut ke B sebagai bacaan berikutnya');
     }
 
+    public function test_shot_anim_and_ambient(): void
+    {
+        $h = Blade::render('<x-dl::shot src="/a.png" anim="/a.webp" />');
+        $this->assertStringContainsString('prefers-reduced-motion', $h);
+        $this->assertStringContainsString('src="/a.webp"', $h);
+        $this->assertStringNotContainsString('dl-shot__ring', $h);
+        $a = Blade::render('<x-dl::ambient />');
+        foreach (['data-dl-ambient', 'data-am-play', 'data-am-mute'] as $n) {
+            $this->assertStringContainsString($n, $a, $n);
+        }
+    }
+
     public function test_deck_picture_slides(): void
     {
         $html = Blade::render('<x-dl::deck :slides="$s" />', ['s' => [

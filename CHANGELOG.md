@@ -9,6 +9,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **`x-dl::ambient` baru; `x-dl::shot` dan `x-dl::deck` menerima `anim`** (permintaan Jo 2026-11-11): musik latar ambient dibuat di peramban lewat Web Audio (tanpa berkas, Play/Pause dan Mute, diam sampai Play); `shot anim="url"` dan slide deck `shot.anim` menampilkan animasi WebP/GIF terbingkai, gambar diam bila gerak dikurangi atau gagal dimuat; deck `kb => 'none'`.
 - **`x-dl::shot` dan `x-dl::chapters` baru; `x-dl::deck` slide gambar** (permintaan Jo 2026-11-10, Panduan Pengguna gaya adminku): `shot` = potongan tangkapan layar diperbesar di satu titik dengan cincin berdenyut; `chapters` = papan kartu blog/Pinterest (pencarian, chip kelompok, kartu alur) yang membuka bab bergambar; `deck` kini punya slide `hero`, `shot` (bingkai peramban + zoom pelan), `walk` (kamera menyusuri langkah) dan `flow`. Panduan `shot.md`, `chapters.md`, `deck.md`; demo `shot`, `chapters`.
 - **`x-dl::org-chart` lebih terbaca dan mudah dipakai** (permintaan Jo 2026-11-10): kartu berwarna per departemen, chip departemen (menggantikan kotak pilih), tombol Level 1/2/3/All, geser dengan drag, minimap, Print, tombol `/` untuk cari, kartu "N Lowong" (mode baca), `people[].locked` (kartu gembok), Fit tidak di bawah 50%, kartu dan teks lebih besar.
 - **`x-dl::profile-banner` props `progressLabel` dan `progressTone`** (permintaan Jo 2026-11-10, menu Permintaan tmerp): nama batang kemajuan (bawaan Profile) dan nadanya (bawaan auto; accent untuk batang alur dokumen agar tahap awal tidak tampak merah).
