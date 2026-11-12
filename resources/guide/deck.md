@@ -46,6 +46,14 @@ Constructor of `Devlib\Components\Deck` (5 props). Use `:slides="$slides"` (arra
 - `hero` can be combined with `shot`. `flow` needs `items`.
 - With reduced motion the zoom, the orbs and the ring do not animate.
 
+## Narration (spoken slides)
+
+- A slide may carry `'say' => 'text'` (a string; for a `walk` slide a list with one sentence per step). When at least one slide has `say`, a speaker button and a small voice label appear in the bar.
+- The voice is the browser's own Web Speech voice, language `id-ID`. A female voice is preferred by name (Edge "Gadis", Google "Bahasa Indonesia", Apple "Damayanti"); male names (Ardi, Andika, ...) are avoided, then any `id` voice is used. The label shows the voice name, or "No Indonesian voice in this browser: the text stays, the voice is silent." when there is none (then the old timers drive Play).
+- Play with voice: the slide stays until its text has been read (plus a short pause), then the next slide starts; a `walk` slide reads each step while the camera is on it and ends after the last step (no loop). Next / Previous read the slide you land on. The speaker button mutes and unmutes.
+- Browsers refuse speech without a user gesture, so a deck with narration ignores `autoplay` and waits for the first click on Play.
+- The voice is produced in the viewer's browser (an online natural voice in Edge, a local voice elsewhere); no audio file is stored and the server sends nothing out. The voice differs per browser and device: check it on the machine that will present.
+
 ## Data and events
 
 - Data in: `slides` only, written to the markup by the server. Nothing is requested.
