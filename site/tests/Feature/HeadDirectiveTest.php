@@ -34,6 +34,7 @@ class HeadDirectiveTest extends TestCase
             $this->assertStringContainsString("/$v/devlib.css", $html);
             $this->assertStringContainsString("/$v/devlib.js", $html);
             $this->assertStringNotContainsString('all.min.css', $html);
+        $this->assertStringContainsString('/devlib.css', $html);
         } finally {
             File::deleteDirectory($out);
         }

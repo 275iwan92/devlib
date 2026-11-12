@@ -77,7 +77,7 @@ class DevlibServiceProvider extends ServiceProvider
     }
 
     // Alamat aset untuk @devlib. config devlib.cdn (mis. http://devlib-cdn.test) = aset dari situs aset terpisah (hasil devlib:cdn-build, berversi hash isi);
-    // kosong = disajikan paket ini lewat /_devlib/*. config devlib.icons: true (bawaan) = Font Awesome Free 6.5.1 yang ikut paket (offline); string = URL CSS ikon lain; false = tanpa ikon.
+    // kosong = disajikan paket ini lewat /_devlib/*. config devlib.icons: true (bawaan) = Font Awesome Free 6.5.1 yang ikut paket, SELALU dari origin aplikasi (font lintas origin butuh header CORS yang tidak ada di situs aset statis); string = URL CSS ikon lain; false = tanpa ikon.
     public static function headAssets(): array
     {
         $cdn = rtrim((string) config('devlib.cdn'), '/');
@@ -85,7 +85,7 @@ class DevlibServiceProvider extends ServiceProvider
         if ($cdn !== '') {
             $v = (string) (json_decode((string) @file_get_contents($cdn.'/latest.json'), true)['version'] ?? '');
             if ($v !== '') {
-                return ['icons' => $icons === true ? $cdn.'/'.$v.'/fa/css/all.min.css' : ($icons ?: null), 'css' => $cdn.'/'.$v.'/devlib.css', 'js' => $cdn.'/'.$v.'/devlib.js'];
+                return ['icons' => $icons === true ? route('devlib.asset', ['file' => 'fa/css/all.min.css']).'?v=6.5.1' : ($icons ?: null), 'css' => $cdn.'/'.$v.'/devlib.css', 'js' => $cdn.'/'.$v.'/devlib.js'];
             }
         }
 
