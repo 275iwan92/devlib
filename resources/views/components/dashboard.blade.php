@@ -10,6 +10,9 @@
     {{-- 1. Salam + jam + cuaca + Job Description & SOP: objek tersendiri --}}
     <x-dl::greeting-card :board="$d" />
 
+    {{-- $board['attention'] (HTML siap pakai dari server pemanggil, tepercaya): kabar mendesak tepat di bawah salam, mis. pengajuan yang menunggu keputusan user; kosong = tidak tampil. --}}
+    @if (! empty($d['attention'])){!! $d['attention'] !!}@endif
+
     {{-- Papan widget ($board['widgets']): menggantikan blok tetap di bawah; susunannya milik user (x-dl::widget-board). --}}
     {{-- Slot terisi = bagian widget milik pemanggil (mis. papan developer di devlib.test); sambutan di atas tetap sama. --}}
     @if (trim((string) $slot) !== '')

@@ -9,7 +9,8 @@
       this.docs = JSON.parse(this.el.dataset.docs || '[]');
       this.cols = JSON.parse(this.el.dataset.cols || '{}');
       this.me = this.el.dataset.me;
-      this.cur = this.docs[0] ? this.docs[0].id : null;
+      const want = new URLSearchParams(location.search).get('doc'); // ?doc=<id>: buka dokumen itu (tautan dari notifikasi / Home)
+      this.cur = this.docs.some(d => d.id === want) ? want : (this.docs[0] ? this.docs[0].id : null);
       this.log = JSON.parse(this.el.dataset.log || '[]');
       this.form = $(this.el, '[data-a-form]');
       this.icon = {SUBMITTED: 'fa-paper-plane', APPROVED: 'fa-check', REJECTED: 'fa-ban', HOLD: 'fa-pause'};
