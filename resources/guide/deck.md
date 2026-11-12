@@ -21,7 +21,7 @@ Generated markup:
 
 ## Props
 
-Constructor of `Devlib\Components\Deck` (5 props). Use `:slides="$slides"` (array expression).
+Constructor of `Devlib\Components\Deck` (6 props). Use `:slides="$slides"` (array expression).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -30,6 +30,7 @@ Constructor of `Devlib\Components\Deck` (5 props). Use `:slides="$slides"` (arra
 | `autoplay` | `bool`, `false` | `true` = starts playing when the page opens. |
 | `interval` | `int`, `7` | Seconds per slide while playing (minimum 2). |
 | `source` | `?string`, `null` | Data source text for the Developer mode label. |
+| `voice` | `?string`, `null` | Voice name for slides that carry an `audio` file (shown as the label in the bar), e.g. "Piper (Indonesia)". Used only when a slide has `audio`. |
 
 ## Behavior
 
