@@ -84,7 +84,7 @@
     count(n) { return n.items ? n.items.reduce((a, x) => a + this.count(x), 0) : 1; }
     nodes(d) { return d ? this.path[d - 1].items : this.exp ? this.flat(this.exp) : this.root; }
     // Modul ber-kelompok: anaknya ber-group atau berupa cabang (cabang = judul kelompok).
-    canInline(n) { return this.inline && !!n.items && n.items.some(c => c.group || c.items); }
+    canInline(n) { return this.inline && !n.drill && !!n.items && n.items.some(c => c.group || c.items); }
     // Daftar baris modul: cabang tingkat 1 = judul kelompok (+ ikonnya); daun = butir; cabang yang lebih dalam dan punya halaman (open/hub) = butir yang membuka halamannya (nested), tanpa halaman = isinya diratakan.
     flat(m) {
       if (m._flat) return m._flat;
@@ -214,6 +214,7 @@
           ? `<em class="dl-lm__badge dl-lm__badge--icon is-${esc(n.tone || 'accent')}" title="${esc(n.badgeTitle || '')}"><i class="${esc(String(n.badge).slice(5))}"></i></em>`
           : `<em class="dl-lm__badge is-${esc(n.tone || 'accent')}">${esc(n.badge)}</em>`) : '';
         const lbl = `<span class="dl-lm__ico"><i class="${esc(n.icon)}"></i></span><span class="dl-lm__t">${esc(n.label)}</span>${badge}`;
+        if (n.sep) h += '<div class="dl-lm__sep"></div>'; // garis pemisah sebelum baris ini (tanpa judul), mis. master di akhir menu modul
         // pin (hanya akar): baris menempel di dasar panel, dekat baris pengguna (mis. menu Keamanan).
         const row = n.items
           ? `<button type="button" class="dl-lm__a" data-lm-x="${x}" title="${esc(n.label)}">${lbl}${counts ? `<span class="dl-lm__n">${this.count(n)}</span>` : ''}<i class="fa-solid fa-chevron-right dl-lm__chev"></i></button>`
@@ -273,7 +274,7 @@
       const d = [...this.track.children].indexOf(t.closest('.dl-lm__pane'));
       const n = this.nodes(d)[+t.dataset.lmX];
       if (this.exp && !d && n.nested) { e.preventDefault(); this.setPeek(false); this.emit('dl:layer-menu-open', {key: n.hubKey || n.key || n.label, label: n.hubLabel || n.label, url: n.open || n.hub, icon: n.icon}, true); return; }
-      if (n.items && this.canInline(n)) { this.setPeek(true); this.exp = n; this.draw(false); return; }
+      if (n.items && !d && this.canInline(n)) { this.setPeek(true); this.exp = n; this.draw(false); return; }
       if (n.items) {
         this.setPeek(true); this.path = [...this.path.slice(0, d), n]; this.draw(); this.track.children[d + 1].querySelector('[data-lm-back]').focus({preventScroll: true});
         // Grup yang punya halaman pembuka (n.open = url): panel kanan ikut membuka halaman itu; menu kiri tetap turun satu layer.

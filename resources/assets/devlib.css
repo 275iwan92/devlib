@@ -2811,6 +2811,8 @@ html.dl-locked body{overflow:hidden}
 .dl-lm__title i{color:var(--dl-accent-ink);font-size:1.1em}
 .dl-lm__title b{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dl-lm__sep{height:1px;background:var(--dl-border);margin:4px 2px}
+/* garis pemisah antar-kelompok butir di panel menu (tanpa judul), mis. master di bawah menu modul: terang, terlihat di latar gelap */
+.dl-lm__pane>.dl-lm__sep{height:2px;border-radius:1px;background:currentColor;opacity:.4;margin:8px 14px}
 /* Chat & Profile naik dari bawah menutupi menu (lebar panel tetap); isinya permukaan terang seperti layar. */
 .dl-lm__ov{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;background:var(--dl-surface);color:var(--dl-ink);transform:translateY(100%);visibility:hidden;transition:transform .3s cubic-bezier(.2,.7,.2,1),visibility 0s .3s}
 .dl-lm__ov.is-on{transform:none;visibility:visible;transition:transform .3s cubic-bezier(.2,.7,.2,1),visibility 0s}

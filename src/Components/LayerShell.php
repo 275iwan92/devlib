@@ -111,19 +111,19 @@ class LayerShell extends DevlibComponent
                 // 'open' = url halaman pembuka grup (opsional); grup ber-open perlu key (kode) untuk tab-nya.
                 return array_filter(['label' => $it['label'], 'icon' => $it['icon'] ?? null, 'group' => $it['group'] ?? $group,
                     'open' => $it['open'] ?? null, 'key' => isset($it['open']) ? ($it['code'] ?? null) : null,
-                    'hub' => $it['hub'] ?? null, 'hubKey' => isset($it['hub']) ? ($it['hubKey'] ?? $it['code'] ?? null) : null, 'hubLabel' => $it['hubLabel'] ?? null,
+                    'hub' => $it['hub'] ?? null, 'hubKey' => isset($it['hub']) ? ($it['hubKey'] ?? $it['code'] ?? null) : null, 'hubLabel' => $it['hubLabel'] ?? null, 'sep' => $it['sep'] ?? null,
                     'items' => array_map(fn ($c) => $leaf($c, null), $it['items'])]);
             }
 
             return array_filter([
                 'key' => $it['code'], 'label' => $it['label'], 'icon' => $it['icon'] ?? null, 'group' => $it['group'] ?? $group, 'groupIcon' => $it['groupIcon'] ?? null,
-                'badge' => $it['badge'] ?? null, 'badgeTitle' => $it['badgeTitle'] ?? null, 'tone' => $tone[$it['badgeTone'] ?? ''] ?? null,
+                'badge' => $it['badge'] ?? null, 'badgeTitle' => $it['badgeTitle'] ?? null, 'tone' => $tone[$it['badgeTone'] ?? ''] ?? null, 'sep' => $it['sep'] ?? null,
             ]);
         };
 
         // Grup menu = submenu (dibuka ke panel berikutnya, ada breadcrumb), bukan judul + daftar panjang (user 2026-09-26).
         // 'section' (opsional) pada modul = judul kelompok di layer akar: modul berurutan dengan section sama tampil di bawah satu judul.
-        return array_map(fn ($m) => ['label' => $m['label'], 'icon' => $m['icon'] ?? null, 'pin' => $m['pin'] ?? null, 'group' => $m['section'] ?? null,
+        return array_map(fn ($m) => ['label' => $m['label'], 'icon' => $m['icon'] ?? null, 'pin' => $m['pin'] ?? null, 'drill' => $m['drill'] ?? null, 'group' => $m['section'] ?? null,
             'hub' => $m['hub'] ?? null, 'hubKey' => isset($m['hub']) ? ($m['hubKey'] ?? $m['code'] ?? null) : null, 'hubLabel' => $m['hubLabel'] ?? null, 'items' => collect($m['children'] ?? [])
             ->map(fn ($c) => $leaf(isset($c['items']) ? $c + ['icon' => 'fa-solid fa-folder'] : $c, null))
             ->values()->all()], $this->modules);
