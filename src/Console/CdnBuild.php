@@ -30,21 +30,30 @@ class CdnBuild extends Command
             $files[basename($css)] = (string) file_get_contents($css);
         }
         ksort($files);
-        $hash = substr(md5(implode('|', array_map(fn ($k, $v) => $k.md5($v), array_keys($files), $files))), 0, 12);
+        $fa = [];   // Font Awesome Free (css + webfonts) ikut, supaya ikon tidak bergantung pada CDN luar
+        foreach (File::allFiles($assets.'/fa') as $f) {
+            $fa['fa/'.str_replace('\\', '/', $f->getRelativePathname())] = $f->getPathname();
+        }
+        ksort($fa);
+        $hash = substr(md5(implode('|', array_map(fn ($k, $v) => $k.md5($v), array_keys($files), $files)).implode('|', array_map(fn ($k, $p) => $k.md5_file($p), array_keys($fa), $fa))), 0, 12);
         $dir = $out.'/'.$hash;
         File::ensureDirectoryExists($dir);
         foreach ($files as $name => $body) {
             File::put($dir.'/'.$name, $body);
         }
+        foreach ($fa as $rel => $path) {
+            File::ensureDirectoryExists(dirname($dir.'/'.$rel));
+            File::copy($path, $dir.'/'.$rel);
+        }
         // latest.json ditulis terakhir: versi baru baru "terlihat" setelah semua berkasnya lengkap.
-        File::put($out.'/latest.json', json_encode(['version' => $hash, 'built_at' => date('c'), 'files' => array_keys($files)], JSON_PRETTY_PRINT)."\n");
+        File::put($out.'/latest.json', json_encode(['version' => $hash, 'built_at' => date('c'), 'files' => [...array_keys($files), ...array_keys($fa)]], JSON_PRETTY_PRINT)."\n");
         // Tanpa .htaccess: CSS/JS lintas origin tidak butuh CORS; header cache diatur server situs aset (hash di jalur = aman immutable).
 
         $old = collect(File::directories($out))->sortByDesc(fn ($d) => filemtime($d))->slice((int) $this->option('keep'))->all();
         foreach ($old as $d) {
             File::deleteDirectory($d);
         }
-        $this->info("Aset DevLib dibangun: {$out}/{$hash} (".count($files).' berkas, js '.round(strlen($js) / 1024).' KB).');
+        $this->info("Aset DevLib dibangun: {$out}/{$hash} (".(count($files) + count($fa)).' berkas, js '.round(strlen($js) / 1024).' KB).');
 
         return self::SUCCESS;
     }

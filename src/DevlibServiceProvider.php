@@ -34,10 +34,12 @@ class DevlibServiceProvider extends ServiceProvider
             $root = realpath(__DIR__.'/../resources/assets');
             abort_unless($path && str_starts_with($path, $root.DIRECTORY_SEPARATOR), 404);
 
-            $type = str_ends_with($file, '.css') ? 'text/css' : 'application/javascript';
+            $type = match (strtolower(pathinfo($file, PATHINFO_EXTENSION))) {
+                'css' => 'text/css', 'woff2' => 'font/woff2', 'txt' => 'text/plain', default => 'application/javascript',
+            };
 
             return response()->file($path, ['Content-Type' => $type, 'Cache-Control' => self::cacheControl()]);
-        })->where('file', '[A-Za-z0-9._-]+')->name('devlib.asset');
+        })->where('file', '[A-Za-z0-9._/-]+')->name('devlib.asset');
 
         // Alamat ping bawaan untuk x-dl::net-line: 204 tanpa isi, tanpa sesi/login/cookie (tidak ada grup middleware web), hanya dibatasi lajunya.
         Route::middleware('throttle:120,1')->get('/devlib/ping', fn () => response()->noContent(204, ['Cache-Control' => 'no-store']))->name('devlib.ping');
@@ -75,19 +77,19 @@ class DevlibServiceProvider extends ServiceProvider
     }
 
     // Alamat aset untuk @devlib. config devlib.cdn (mis. http://devlib-cdn.test) = aset dari situs aset terpisah (hasil devlib:cdn-build, berversi hash isi);
-    // kosong = disajikan paket ini lewat /_devlib/*. config devlib.icons = URL CSS ikon (bawaan CDN Font Awesome; isi alamat lokal untuk offline, false = tanpa).
+    // kosong = disajikan paket ini lewat /_devlib/*. config devlib.icons: true (bawaan) = Font Awesome Free 6.5.1 yang ikut paket (offline); string = URL CSS ikon lain; false = tanpa ikon.
     public static function headAssets(): array
     {
         $cdn = rtrim((string) config('devlib.cdn'), '/');
-        $icons = config('devlib.icons', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css') ?: null;
+        $icons = config('devlib.icons', true);
         if ($cdn !== '') {
             $v = (string) (json_decode((string) @file_get_contents($cdn.'/latest.json'), true)['version'] ?? '');
             if ($v !== '') {
-                return ['icons' => $icons, 'css' => $cdn.'/'.$v.'/devlib.css', 'js' => $cdn.'/'.$v.'/devlib.js'];
+                return ['icons' => $icons === true ? $cdn.'/'.$v.'/fa/css/all.min.css' : ($icons ?: null), 'css' => $cdn.'/'.$v.'/devlib.css', 'js' => $cdn.'/'.$v.'/devlib.js'];
             }
         }
 
-        return ['icons' => $icons, 'css' => self::asset('devlib.css'), 'js' => self::asset('devlib.js')];
+        return ['icons' => $icons === true ? route('devlib.asset', ['file' => 'fa/css/all.min.css']).'?v=6.5.1' : ($icons ?: null), 'css' => self::asset('devlib.css'), 'js' => self::asset('devlib.js')];
     }
 
     // Perilaku JS = satu kelas per file (resources/assets/js): core (kelas induk + helper) -> komponen -> boot.

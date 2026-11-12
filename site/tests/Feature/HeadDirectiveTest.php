@@ -16,7 +16,7 @@ class HeadDirectiveTest extends TestCase
 
         $this->assertStringContainsString('/_devlib/devlib.css?v=', $html);
         $this->assertStringContainsString('/_devlib/devlib.js?v=', $html);
-        $this->assertStringContainsString('font-awesome', $html);
+        $this->assertStringContainsString('/_devlib/fa/css/all.min.css', $html);
     }
 
     public function test_cdn_build_writes_hashed_folder_and_latest_json_and_directive_points_to_it(): void
@@ -27,12 +27,13 @@ class HeadDirectiveTest extends TestCase
             $v = json_decode((string) file_get_contents($out.'/latest.json'), true)['version'];
             $this->assertFileExists("$out/$v/devlib.css");
             $this->assertFileExists("$out/$v/devlib.js");
+            $this->assertFileExists("$out/$v/fa/webfonts/fa-solid-900.woff2");
 
             config(['devlib.cdn' => 'file:///'.strtr($out, [chr(92) => '/']), 'devlib.icons' => false]);
             $html = Blade::render('@devlib');
             $this->assertStringContainsString("/$v/devlib.css", $html);
             $this->assertStringContainsString("/$v/devlib.js", $html);
-            $this->assertStringNotContainsString('font-awesome', $html);
+            $this->assertStringNotContainsString('all.min.css', $html);
         } finally {
             File::deleteDirectory($out);
         }

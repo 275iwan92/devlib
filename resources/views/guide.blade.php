@@ -11,10 +11,7 @@ Status       : Aktif.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Technical Guide — {{ config('devlib.brand.name', 'DevLib') }}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="{{ \Devlib\DevlibServiceProvider::asset('devlib.css') }}">
-    <x-dl::theme-boot />
-    <script src="{{ \Devlib\DevlibServiceProvider::asset('devlib.js') }}" defer></script>
+    @devlib
 </head>
 <body class="dl-body dl-guide">
     <nav class="dl-guide__nav" aria-label="Technical Guide index">
