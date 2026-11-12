@@ -47,7 +47,7 @@
     list() {
       const p = this.pending();
       $(this.el, '[data-a-count]').textContent = Tf('a_n_waiting', {n: p.length});
-      $(this.el, '[data-a-list]').innerHTML = p.map(d => `<button type="button" class="dl-appr__item ${d.id === this.cur ? 'is-active' : ''} ${d.held ? 'is-held' : ''}" data-a-id="${esc(d.id)}"><span class="dl-appr__row"><b>${esc(d.no)}</b><b>${this.rp(d.amount)}</b></span><span class="dl-appr__sub">${esc(d.party || '')} · ${esc(d.date ? fmt.date(d.date + 'T12:00:00+07:00') : '')}</span>${(l => l.at ? `<span class="dl-appr__lv">Level ${l.at} / ${l.n}</span>` : '')(this.level(d))}${d.held ? '<span class="dl-badge dl-badge--pill dl-badge--neutral">' + esc(T('a_held')) + '</span>' : ''}</button>`).join('')
+      $(this.el, '[data-a-list]').innerHTML = p.map(d => `<button type="button" class="dl-appr__item ${d.id === this.cur ? 'is-active' : ''} ${d.held ? 'is-held' : ''}" data-a-id="${esc(d.id)}"><span class="dl-appr__row"><b>${esc(d.no)}</b><b>${d.value != null ? esc(d.value) : this.rp(d.amount)}</b></span><span class="dl-appr__sub">${esc(d.party || '')} · ${esc(d.date ? fmt.date(d.date + 'T12:00:00+07:00') : '')}</span>${(l => l.at ? `<span class="dl-appr__lv">Level ${l.at} / ${l.n}</span>` : '')(this.level(d))}${d.held ? '<span class="dl-badge dl-badge--pill dl-badge--neutral">' + esc(T('a_held')) + '</span>' : ''}</button>`).join('')
         || '<div class="dl-empty"><span class="dl-empty__icon"><i class="fa-solid fa-circle-check"></i></span><b class="dl-empty__title">' + esc(T('a_all_done')) + '</b><p class="dl-empty__msg">' + esc(T('a_none_waiting')) + '</p></div>';
     }
 
