@@ -1,4 +1,5 @@
 /* DevLib · Deck (x-dl::deck): presentasi slide; Play = maju sendiri tiap data-interval detik (slide walk: data-ms), batang kemajuan, panah/spasi/F, layar penuh; slide walk = kamera menyusuri langkah di tangkapan layar.
+   Berkas suara (data-audio, mis. suara model Piper): bila ada, diputar sebagai ganti suara peramban; kalimat tanpa berkas tetap dibacakan suara peramban.
    Narasi suara (2026-11-12): slide yang membawa data-say dibacakan oleh suara peramban (Web Speech, id-ID, suara perempuan diutamakan); saat Play, slide maju bila bacaan selesai (bukan timer). Tanpa suara id-ID di peramban: teks tetap, timer lama. */
 (function (Devlib) {
   'use strict';
@@ -15,10 +16,11 @@
       this.prog = $(this.el, '[data-dk-prog]'); this.num = $(this.el, '[data-dk-n]'); this.playBtn = $(this.el, '[data-dk-play]');
       this.prev = $(this.el, '[data-dk-prev]'); this.next = $(this.el, '[data-dk-next]');
       this.voiceBtn = $(this.el, '[data-dk-voice]'); this.vstat = $(this.el, '[data-dk-vs]');
-      this.voiceOn = !!this.voiceBtn && 'speechSynthesis' in window;
+      this.voiceOn = !!this.voiceBtn && ('speechSynthesis' in window || !!this.el.dataset.voice);
+      this.player = null;
       ['click', 'keydown'].forEach(ev => this.el.addEventListener(ev, () => { this.touched = true; }, true));  // suara hanya setelah sentuhan pengguna (aturan peramban)
       if (this.voiceBtn) this.voiceBtn.addEventListener('click', () => this.toggleVoice());
-      if (this.voiceOn) { speechSynthesis.addEventListener('voiceschanged', () => this.status()); setTimeout(() => { this.late = true; this.status(); }, 2500); }  // daftar suara dimuat belakangan: pesan "tidak ada suara" baru tampil setelah menunggu
+      if (this.voiceOn && window.speechSynthesis) { speechSynthesis.addEventListener('voiceschanged', () => this.status()); setTimeout(() => { this.late = true; this.status(); }, 2500); }  // daftar suara dimuat belakangan: pesan "tidak ada suara" baru tampil setelah menunggu
       this.prev.addEventListener('click', () => this.go(this.i - 1));
       this.next.addEventListener('click', () => this.go(this.i + 1));
       this.playBtn.addEventListener('click', () => (this.playing ? this.stop() : this.play()));
@@ -28,7 +30,7 @@
         else if (e.key === 'ArrowRight') this.go(this.i + 1);
         else if (e.key === ' ') { e.preventDefault(); this.playBtn.click(); }
       });
-      if (window.speechSynthesis) window.addEventListener('beforeunload', () => speechSynthesis.cancel());
+      window.addEventListener('beforeunload', () => this.hush());
       this.go(0);
       // Peramban menolak suara tanpa sentuhan pengguna: deck bernarasi menunggu tombol Play.
       if (this.el.dataset.autoplay === '1' && this.slides.length && !this.voiceBtn) this.play();
@@ -43,6 +45,18 @@
       return v == null ? [] : [].concat(v).filter(Boolean);
     }
 
+    // Berkas suara slide ini sejajar dengan lines(): string (slide biasa) atau list per langkah; [] bila tidak ada.
+    audios() {
+      let v = null; try { v = JSON.parse(this.slides[this.i].dataset.audio || 'null'); } catch (e) {}
+      return v == null ? [] : [].concat(v);
+    }
+
+    // Hentikan suara yang sedang berbunyi (berkas dan suara peramban).
+    hush() {
+      if (this.player) { this.player.onended = this.player.onerror = null; this.player.pause(); }
+      if (window.speechSynthesis) speechSynthesis.cancel();
+    }
+
     // Suara perempuan id-ID: nama perempuan yang dikenal, lalu suara id bukan laki-laki, lalu suara id apa saja; null bila peramban tidak punya suara id.
     pick() {
       const vs = speechSynthesis.getVoices().filter(v => /^id[-_]/i.test(v.lang));
@@ -50,11 +64,19 @@
     }
 
     // Narasi aktif = tombol suara menyala, ada teks di slide, dan peramban punya suara id-ID.
-    speaks() { return this.voiceOn && this.touched && this.lines().length > 0 && !!this.pick(); }
+    speaks() { return this.voiceOn && this.touched && this.lines().length > 0 && (this.audios().some(Boolean) || (!!window.speechSynthesis && !!this.pick())); }
 
     // Bacakan satu kalimat; done() dipanggil saat selesai (atau bila gagal / macet, supaya presentasi tidak berhenti).
-    say(text, done) {
-      speechSynthesis.cancel();
+    say(text, done, url) {
+      this.hush();
+      if (url) {  // berkas suara: selesai saat berakhir; gagal / macet = lanjut juga
+        const tok = this.tok, a = this.player || (this.player = new Audio());
+        let fin = false; const end = () => { if (fin) return; fin = true; clearTimeout(guard); if (tok === this.tok) done(); };
+        const guard = setTimeout(end, 90000);
+        a.onended = end; a.onerror = end; a.src = url;
+        a.play().catch(end);
+        return;
+      }
       const u = new SpeechSynthesisUtterance(text), v = this.pick(), tok = this.tok;
       u.lang = 'id-ID'; if (v) u.voice = v; u.rate = 0.95; u.pitch = 1.05;
       let fin = false; const end = () => { if (fin) return; fin = true; clearTimeout(guard); if (tok === this.tok) done(); };
@@ -67,21 +89,22 @@
       this.voiceOn = !this.voiceOn;
       const ic = $(this.voiceBtn, 'i'); if (ic) ic.className = 'fa-solid fa-' + (this.voiceOn ? 'volume-high' : 'volume-xmark');
       this.voiceBtn.setAttribute('aria-pressed', this.voiceOn ? 'true' : 'false');
-      if (!this.voiceOn) speechSynthesis.cancel();
+      if (!this.voiceOn) this.hush();
       this.go(this.i);
     }
 
     // Keterangan di bawah tombol: suara apa yang dipakai, atau bahwa peramban tidak punya suara Indonesia.
     status() {
       if (!this.vstat) return;
-      if (this.voiceOn && !this.late && !speechSynthesis.getVoices().length) { this.vstat.textContent = ''; return; }
+      if (this.voiceOn && !this.late && window.speechSynthesis && !speechSynthesis.getVoices().length && !this.el.dataset.voice) { this.vstat.textContent = ''; return; }
+      if (this.voiceOn && this.el.dataset.voice && this.audios().some(Boolean)) { this.vstat.textContent = this.el.dataset.voice; return; }
       const v = this.voiceOn && 'speechSynthesis' in window ? this.pick() : null;
       this.vstat.textContent = !this.voiceOn ? '' : (v ? v.name.replace(/^Microsoft\s+/, '').replace(/\s*Online.*$/, '') : this.vstat.dataset.none);
     }
 
     go(k) {
       const n = this.slides.length; if (!n) return;
-      this.tok++; if (window.speechSynthesis) speechSynthesis.cancel();
+      this.tok++; this.hush();
       this.i = Math.max(0, Math.min(n - 1, k));
       this.slides.forEach((s, j) => { s.classList.toggle('is-on', j === this.i); s.classList.toggle('is-past', j < this.i); });
       this.num.textContent = (this.i + 1) + ' / ' + n;
@@ -89,7 +112,7 @@
       this.status();
       this.walk();
       const sp = this.speaks();
-      if (sp && !this.slides[this.i].hasAttribute('data-dk-walk')) this.say(this.lines().join(' '), () => this.after());
+      if (sp && !this.slides[this.i].hasAttribute('data-dk-walk')) this.say(this.lines().join(' '), () => this.after(), this.audios()[0]);
       if (this.playing) this.schedule(sp); else this.bar(0, false);
     }
 
@@ -110,7 +133,7 @@
       let steps = []; try { steps = JSON.parse(s.dataset.steps); } catch (e) {}
       if (!steps.length) return;
       const cam = $(s, '[data-dk-cam]'), ring = $(s, '[data-dk-ring]'), t = $(s, '[data-dk-ct]'), d = $(s, '[data-dk-cd]');
-      const say = this.lines(), voiced = this.speaks(), tok = this.tok;
+      const say = this.lines(), aud = this.audios(), voiced = this.speaks(), tok = this.tok;
       let k = -1;
       const tick = () => {
         if (tok !== this.tok) return;
@@ -122,7 +145,7 @@
           cam.classList.add('is-zoom'); t.textContent = (k + 1) + '. ' + p.t; d.textContent = p.d;
         }
         k++;
-        if (voiced && k > 0) { const line = say[k - 1] || steps[k - 1].d; this.walkTimer = setTimeout(() => this.say(line, () => { this.walkTimer = setTimeout(tick, 500); }), 700); }
+        if (voiced && k > 0) { const line = say[k - 1] || steps[k - 1].d; this.walkTimer = setTimeout(() => this.say(line, () => { this.walkTimer = setTimeout(tick, 500); }, aud[k - 1]), 700); }
         else this.walkTimer = setTimeout(tick, k === 0 ? 1500 : 3400);
       };
       tick();
@@ -148,7 +171,7 @@
 
     stop(done) {
       this.playing = false; clearTimeout(this.timer); this.icon('play');
-      if (window.speechSynthesis) { this.tok++; speechSynthesis.cancel(); }
+      this.tok++; this.hush();
       if (done) this.bar(100, false); else this.bar(0, false);
     }
 
