@@ -4772,8 +4772,8 @@ body.dl-on-phone :is(.dl-btn,summary){min-height:44px}
 /* x-dl::wallpaper: latar kaca dari SVG server-side; kutipan dijepit ke area aman (max 46% lebar, ukuran mengikuti lebar kotak) */
 .dl-wallpaper{position:relative;overflow:hidden;border-radius:var(--dl-radius,10px);container-type:inline-size;width:100%}
 .dl-wallpaper>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.dl-wallpaper__quote{position:absolute;max-width:46%;quotes:none;line-height:1.15;font-size:clamp(10px,5.2cqw,24px);color:var(--wp-ink);text-shadow:0 1px 14px #ffffffaa;overflow-wrap:anywhere;overflow:hidden}
-.dl-wallpaper--night .dl-wallpaper__quote{text-shadow:0 1px 14px #4f7bff99}
+.dl-wallpaper__quote{position:absolute;max-width:46%;quotes:none;line-height:1.15;font-size:clamp(10px,5.2cqw,24px);color:var(--wp-ink);text-shadow:0 1px 14px #ffffffaa;overflow-wrap:anywhere;overflow:hidden;max-height:36%;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4}
+.dl-wallpaper--night,.dl-wallpaper--soft.dl-wallpaper--night .dl-wallpaper__quote{text-shadow:0 1px 14px #4f7bff99}
 .dl-wallpaper__quote--top-left,.dl-wallpaper__quote--bottom-left{left:6%;text-align:left}
 .dl-wallpaper__quote--top-right,.dl-wallpaper__quote--bottom-right{right:6%;text-align:right}
 .dl-wallpaper__quote--top-left,.dl-wallpaper__quote--top-right{top:10%}
@@ -5391,4 +5391,4 @@ body.dl-phone-search .dl-grid__toolbar > :not(.dl-grid__search){display:none}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__foot-acts .dl-btn{flex:1;min-height:48px}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__foot-hint{margin-left:0;width:100%}
 :is(body.dl-on-phone,.dl-phone) .dl-ssl__panel .dl-actionbar .dl-btn{flex:1;min-height:48px}
-
+

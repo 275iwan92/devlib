@@ -21,7 +21,7 @@ Constructor of `Devlib\Components\Wallpaper` (6 props).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
-| `kind` | `string`, `'ribbon'` | Scene shape: `ribbon`, `bubbles`, `folds`, `orbs`. Anything else falls back to `ribbon`. Each kind has its own quote font (safe font stacks, no font files). |
+| `kind` | `string`, `'ribbon'` | Scene shape: `ribbon`, `waves`, `bubbles`, `shards`, `ripples`, `blob`, `folds`, `orbs`, `loop`, `panels`, `soft`, `cards` (12). Anything else falls back to `ribbon`. `soft` draws embossed controls on a dotted ground (dark with `night`), `cards` three frosted cards with empty text bars (no words). Each kind has its own quote font (safe font stacks, no font files). |
 | `palette` | `string`, `'sage'` | Colour set: `sage` (default), `sky`, `rose`, `mint`, `amber`, `violet`, `night` (dark, light text). Unknown falls back to `sage`. |
 | `quote` | `?string`, `null` | The quote text. `null` or empty draws no quote. Escaped and printed as given (not translated: pass it already in the display language). Long text is clipped inside a safe area of 46% of the width. |
 | `seed` | `?int`, `null` | Random seed. The same seed, kind and palette always give the same picture. `null` picks a new random seed on every render; pass a fixed number for a stable background. |
@@ -32,7 +32,7 @@ Constructor of `Devlib\Components\Wallpaper` (6 props).
 
 - Static: no script, no event, no state. The quote size follows the box width (container query, 10px to 24px).
 - The scene is drawn in a 600x480 canvas and cropped (`slice`) to the ratio, so very wide ratios hide the top and bottom.
-- `bubbles` and `ribbon` stand on a water line with a faded reflection; `folds` and `orbs` fill the whole box.
+- `ribbon`, `waves`, `bubbles`, `shards`, `ripples` and `blob` stand on a water line with a faded reflection; the other kinds fill the whole box. The quote is limited to 4 lines and 36% of the height, so small tiles clip it instead of overflowing.
 - Accessibility: the SVG is `aria-hidden`; the quote is plain text in a `q` element. Text colour comes from the palette (`--wp-ink`) and is chosen for contrast with that palette's background.
 
 ## Data and events
@@ -51,7 +51,7 @@ Constructor of `Devlib\Components\Wallpaper` (6 props).
 - Keep quotes short (about 60 characters); longer text is clipped, not wrapped beyond the safe area.
 - The quote is not translated; pass text already in the display language.
 - Do not draw controls on top without checking contrast; the `night` palette is dark, the others are light.
-- Opt-in object: nothing else in DevLib uses it yet. More shapes (`waves`, `shards`, `ripples`, `blob`, `loop`, `panels`, `soft`, `cards`), a built-in quote list and the module pack entry come in later steps.
+- Opt-in object: nothing else in DevLib uses it yet. A built-in quote list, more palettes work and the module pack entry come in later steps.
 - Lint: no own rule.
 
 ## Example
