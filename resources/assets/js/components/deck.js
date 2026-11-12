@@ -18,6 +18,7 @@
       this.voiceOn = !!this.voiceBtn && 'speechSynthesis' in window;
       ['click', 'keydown'].forEach(ev => this.el.addEventListener(ev, () => { this.touched = true; }, true));  // suara hanya setelah sentuhan pengguna (aturan peramban)
       if (this.voiceBtn) this.voiceBtn.addEventListener('click', () => this.toggleVoice());
+      if (this.voiceOn) { speechSynthesis.addEventListener('voiceschanged', () => this.status()); setTimeout(() => { this.late = true; this.status(); }, 2500); }  // daftar suara dimuat belakangan: pesan "tidak ada suara" baru tampil setelah menunggu
       this.prev.addEventListener('click', () => this.go(this.i - 1));
       this.next.addEventListener('click', () => this.go(this.i + 1));
       this.playBtn.addEventListener('click', () => (this.playing ? this.stop() : this.play()));
@@ -73,6 +74,7 @@
     // Keterangan di bawah tombol: suara apa yang dipakai, atau bahwa peramban tidak punya suara Indonesia.
     status() {
       if (!this.vstat) return;
+      if (this.voiceOn && !this.late && !speechSynthesis.getVoices().length) { this.vstat.textContent = ''; return; }
       const v = this.voiceOn && 'speechSynthesis' in window ? this.pick() : null;
       this.vstat.textContent = !this.voiceOn ? '' : (v ? v.name.replace(/^Microsoft\s+/, '').replace(/\s*Online.*$/, '') : this.vstat.dataset.none);
     }
