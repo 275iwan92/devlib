@@ -23,7 +23,8 @@ class DevlibServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'devlib');
         Blade::componentNamespace('Devlib\\Components', 'dl');
-        $this->commands([Console\QcReviews::class, Console\Lint::class, Console\Manifest::class, Console\Index::class]);  // php artisan qc:reviews -- untuk agen, sama di semua proyek; devlib:index selalu ada (tanpa IndexStore hanya mencetak petunjuk)
+        $this->commands([Console\QcReviews::class, Console\Lint::class, Console\Manifest::class, Console\Index::class, Console\CdnBuild::class]);
+        Blade::directive('devlib', fn () => "<?php echo view('devlib::partials.head')->render(); ?>");  // satu panggilan di <head>  // php artisan qc:reviews -- untuk agen, sama di semua proyek; devlib:index selalu ada (tanpa IndexStore hanya mencetak petunjuk)
 
         Route::get('/_devlib/{file}', function (string $file) {
             if ($file === 'devlib.js') {
@@ -71,6 +72,22 @@ class DevlibServiceProvider extends ServiceProvider
             : (@filemtime(__DIR__.'/../resources/assets/'.$file) ?: 0);
 
         return route('devlib.asset', ['file' => $file]).'?v='.$v;
+    }
+
+    // Alamat aset untuk @devlib. config devlib.cdn (mis. http://devlib-cdn.test) = aset dari situs aset terpisah (hasil devlib:cdn-build, berversi hash isi);
+    // kosong = disajikan paket ini lewat /_devlib/*. config devlib.icons = URL CSS ikon (bawaan CDN Font Awesome; isi alamat lokal untuk offline, false = tanpa).
+    public static function headAssets(): array
+    {
+        $cdn = rtrim((string) config('devlib.cdn'), '/');
+        $icons = config('devlib.icons', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css') ?: null;
+        if ($cdn !== '') {
+            $v = (string) (json_decode((string) @file_get_contents($cdn.'/latest.json'), true)['version'] ?? '');
+            if ($v !== '') {
+                return ['icons' => $icons, 'css' => $cdn.'/'.$v.'/devlib.css', 'js' => $cdn.'/'.$v.'/devlib.js'];
+            }
+        }
+
+        return ['icons' => $icons, 'css' => self::asset('devlib.css'), 'js' => self::asset('devlib.js')];
     }
 
     // Perilaku JS = satu kelas per file (resources/assets/js): core (kelas induk + helper) -> komponen -> boot.

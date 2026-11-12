@@ -481,7 +481,7 @@ bingkai layar penuh (gambar latar + widget + kotak isi) untuk HP/tablet/laptop/d
 ## `<x-dl::gantt>`
 Papan Gantt resource x waktu; mode linked = dropdown Process lalu Machine (hanya mesin mampu), sumbu dipas ke bar.
 - Berkas: `src/Components/Gantt.php`
-- Prop: rows:array=[], tasks:array=[], categories:array=[], start:int=8, end:int=20, pxPerHour:int=70, snap:int=15, idleHours:float=2.0, unscheduled:int=0, simulation:bool=true, submitLabel:?string='Submit to Master Schedul…', resourceLabel:string='Machine / Crew', source:?string=NULL, originDate:?string=NULL, lockUntil:string|int|float|null=NULL, nowAt:?float=NULL, impactUrl:?string=NULL, moveUrl:?string=NULL, draftLabel:?string=NULL, reasonRequired:bool=false, moveLabel:?string=NULL, bulkLabel:?string=NULL, bulkUrl:?string=NULL, emptyText:?string=NULL, modeSwitch:bool=true, extras:bool=true, linked:?array=NULL
+- Prop: rows:array=[], tasks:array=[], categories:array=[], start:int=8, end:int=20, pxPerHour:int=70, snap:int=15, idleHours:float=2.0, unscheduled:int=0, simulation:bool=true, submitLabel:?string='Submit to Master Schedul…', resourceLabel:string='Machine / Crew', source:?string=NULL, originDate:?string=NULL, lockUntil:string|int|float|null=NULL, nowAt:?float=NULL, impactUrl:?string=NULL, moveUrl:?string=NULL, draftLabel:?string=NULL, reasonRequired:bool=false, moveLabel:?string=NULL, bulkLabel:?string=NULL, bulkUrl:?string=NULL, emptyText:?string=NULL, modeSwitch:bool=true, extras:bool=true, help:?string=NULL, linked:?array=NULL
 
 ## `<x-dl::gauge>`
 Gauge setengah lingkaran: zona warna dari bands [[batas atas, tone]] + jarum + nilai.
