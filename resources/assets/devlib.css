@@ -4412,25 +4412,45 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-members select{font:inherit;font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink-strong);background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:6px;padding:5px 8px;min-width:0;width:100%}
 @media (max-width:560px){.dl-members__row{grid-template-columns:2rem 1fr auto}.dl-members__role{grid-column:2/4}}
 
-/* ---- Transfer (x-dl::transfer): dua kotak kiri-kanan, panah atau drag and drop; teks hitam, kotak tujuan bergaris teal saat drag ---- */
-.dl-transfer{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:14px;margin-top:16px;align-items:start}
-.dl-transfer__box{display:flex;flex-direction:column;gap:8px;border:1px solid var(--dl-border);border-radius:var(--dl-radius);background:var(--dl-surface);padding:10px;min-height:260px}
-.dl-transfer__box.is-over{border-color:var(--dl-teal);box-shadow:0 0 0 2px var(--dl-teal) inset}
-.dl-transfer__head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+/* ---- Transfer (x-dl::transfer): dual list. Dua kotak berfilter, tombol tengah bulat, baris dengan avatar inisial (centang bila terpilih), drag and drop dengan zona jatuh; teks hitam, aksen biru token ---- */
+.dl-transfer{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.9fr);gap:14px;margin-top:12px;align-items:stretch}
+.dl-transfer__box{position:relative;display:flex;flex-direction:column;gap:10px;border:1px solid var(--dl-border);border-radius:var(--dl-radius-lg);background:var(--dl-surface);padding:12px;min-height:340px;transition:border-color .15s,box-shadow .15s}
+.dl-transfer__box--right{background:var(--dl-surface-alt)}
+.dl-transfer__head{display:flex;align-items:center;gap:8px}
 .dl-transfer__title{text-transform:uppercase;letter-spacing:.05em;font-size:calc(12px * var(--dl-font-scale));color:var(--dl-ink-strong)}
-.dl-transfer__search{display:flex;align-items:center;gap:8px;border:1px solid var(--dl-border);border-radius:6px;padding:4px 8px;background:var(--dl-surface)}
-.dl-transfer__search input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink-strong)}
-.dl-transfer__list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow:auto}
-.dl-transfer__item{display:flex;align-items:center;gap:8px;border:1px solid var(--dl-border-soft);border-radius:6px;padding:6px 8px;background:var(--dl-surface);cursor:grab}
-.dl-transfer__item.is-dragging{opacity:.45}
-.dl-transfer__item.is-missing{border-color:var(--dl-danger)}
-.dl-transfer__grip{color:var(--dl-ink)}
-.dl-transfer__who{flex:1;min-width:0;color:var(--dl-ink-strong);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dl-transfer__item--row .dl-transfer__who{flex:1 1 38%}
-.dl-transfer__fields{display:flex;gap:6px;flex:1 1 62%;min-width:0}
-.dl-transfer__fields select{flex:1;min-width:0;font:inherit;font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink-strong);background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:6px;padding:4px 6px}
-.dl-transfer__empty{border:1px dashed var(--dl-border);border-radius:6px;padding:18px;text-align:center;color:var(--dl-ink)}
-@media (max-width:760px){.dl-transfer{grid-template-columns:1fr}.dl-transfer__item--row{flex-wrap:wrap}}
+.dl-transfer__pill{display:inline-flex;align-items:center;justify-content:center;min-width:26px;padding:1px 9px;border-radius:999px;border:1px solid var(--dl-border);background:var(--dl-surface);color:var(--dl-ink-strong);font-weight:700;font-size:calc(12px * var(--dl-font-scale));font-variant-numeric:tabular-nums}
+.dl-transfer__pill--on{background:var(--dl-accent);border-color:var(--dl-accent);color:var(--dl-white)}
+.dl-transfer__sel{margin-left:auto;color:var(--dl-accent-ink);font-weight:600;font-size:calc(12px * var(--dl-font-scale))}
+.dl-transfer__filter{display:flex;align-items:center;gap:8px;border:1px solid var(--dl-border);border-radius:999px;padding:6px 12px;background:var(--dl-surface);transition:border-color .15s,box-shadow .15s}
+.dl-transfer__filter:focus-within{border-color:var(--dl-accent);box-shadow:0 0 0 3px var(--dl-accent-soft)}
+.dl-transfer__filter i{color:var(--dl-ink)}
+.dl-transfer__filter input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink-strong)}
+.dl-transfer__list{display:flex;flex-direction:column;gap:6px;flex:1;max-height:460px;overflow:auto;padding:2px}
+.dl-transfer__item{display:flex;align-items:center;gap:10px;border:1px solid var(--dl-border-soft);border-radius:10px;padding:7px 10px;background:var(--dl-surface);cursor:grab;user-select:none;transition:background .12s,border-color .12s,box-shadow .12s,transform .12s,opacity .12s}
+.dl-transfer__item:hover{border-color:var(--dl-accent);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.dl-transfer__item:focus-visible{outline:2px solid var(--dl-accent);outline-offset:1px}
+.dl-transfer__item.is-selected{background:var(--dl-accent-soft);border-color:var(--dl-accent)}
+.dl-transfer__item.is-lifted{opacity:.4;transform:scale(.98)}
+.dl-transfer__item.is-missing{border-color:var(--dl-danger);background:var(--dl-danger-soft)}
+.dl-transfer__item.is-fresh{animation:dl-transfer-pop .7s ease-out}
+@keyframes dl-transfer-pop{0%{transform:scale(.94);background:var(--dl-accent-soft);box-shadow:0 0 0 3px var(--dl-accent-soft)}100%{transform:none}}
+.dl-transfer__avatar{flex:none;width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--dl-accent-soft);color:var(--dl-accent-ink);font-weight:700;font-size:calc(11px * var(--dl-font-scale));transition:background .12s,color .12s}
+.dl-transfer__item.is-selected .dl-transfer__avatar{background:var(--dl-accent);color:var(--dl-white)}
+.dl-transfer__who{display:flex;flex-direction:column;min-width:0;flex:1 1 40%;line-height:1.25}
+.dl-transfer__who b{color:var(--dl-ink-strong);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dl-transfer__who small{color:var(--dl-ink);font-family:var(--dl-font-mono);font-size:calc(11px * var(--dl-font-scale))}
+.dl-transfer__fields{display:flex;gap:6px;flex:1 1 60%;min-width:0}
+.dl-transfer__fields select{flex:1;min-width:0;font:inherit;font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink-strong);background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:8px;padding:5px 6px;cursor:pointer}
+.dl-transfer__fields select:focus{outline:2px solid var(--dl-accent);outline-offset:0}
+.dl-transfer__empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--dl-border);border-radius:10px;padding:24px;text-align:center;color:var(--dl-ink);min-height:120px}
+.dl-transfer__empty i{font-size:calc(26px * var(--dl-font-scale));color:var(--dl-accent-ink)}
+.dl-transfer__mid{display:flex;flex-direction:column;justify-content:center;gap:10px}
+.dl-transfer__act{width:42px;height:42px;border-radius:50%;border:1px solid var(--dl-accent);background:var(--dl-surface);color:var(--dl-accent-ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:calc(15px * var(--dl-font-scale));transition:background .12s,color .12s,transform .12s}
+.dl-transfer__act:hover:not(:disabled){background:var(--dl-accent);color:var(--dl-white);transform:scale(1.07)}
+.dl-transfer__act:disabled{opacity:.35;cursor:not-allowed;border-color:var(--dl-border)}
+.dl-transfer__drop{position:absolute;inset:0;border-radius:var(--dl-radius-lg);background:var(--dl-accent-soft);border:3px dashed var(--dl-accent);color:var(--dl-ink-strong);font-weight:700;display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none;font-size:calc(15px * var(--dl-font-scale))}
+.dl-transfer__box.is-over .dl-transfer__drop{display:flex}
+@media (max-width:860px){.dl-transfer{grid-template-columns:1fr}.dl-transfer__mid{flex-direction:row;justify-content:center}.dl-transfer__act i{transform:rotate(90deg)}.dl-transfer__item--row{flex-wrap:wrap}}
 
 /* Kolom teks di grid (satu isi per baris), hint miring, tombol langsung di baris form, nilai tampil polos. */
 .dl-grid__link--text{white-space:pre;font-variant-numeric:normal;color:var(--dl-ink-strong);display:block;min-width:2rem}

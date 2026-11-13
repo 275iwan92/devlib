@@ -1008,6 +1008,11 @@ Lampu status (scorecard): green | amber | red (+ label & keterangan). Dipakai di
 - Berkas: `src/Components/TrafficLight.php`
 - Prop: status:string='green', label:string='', note:?string=NULL
 
+## `<x-dl::transfer>`
+Dua kotak kiri-kanan (transfer / dual list): kiri = yang BELUM dijadwalkan, kanan = yang SUDAH; filter di kedua kotak, pilih banyak, tombol tengah atau drag and drop; baris kanan membawa pilihan tambahan (mis. mesin dan job).
+- Berkas: `src/Components/Transfer.php`
+- Prop: name:string='rows', items:array=[], rows:array=[], fields:array=[], idKey:string='id', leftTitle:string='Not scheduled', rightTitle:string='Scheduled', max:int=0
+
 ## `<x-dl::uat-accounts>`
 Ikon support kecil; diklik -> popup daftar akun uji coba (UAT). HAPUS dari login sebelum rilis produksi.
 - Berkas: `src/Components/UatAccounts.php`

@@ -408,6 +408,7 @@ final class Catalog
                 'field-toggle' => ['Toggle', $f('Toggle')], 'field-toggle-group' => ['Toggle Group', $f('ToggleGroup')], 'field-color' => ['Color', $f('Color')],
                 'code-chain' => ['Code Chain (linked dropdowns that build a code)', $c('CodeChain'), 'wide'], 'pick-matrix' => ['Pick Matrix (pilih pemenang per baris)', $c('PickMatrix'), 'wide'],
                 'member-list' => ['Member List (people + role, Add / Remove, limited rows)', $c('MemberList'), 'rw'],
+                'transfer' => ['Transfer (two boxes: not scheduled left, scheduled right; arrow or drag and drop)', $c('Transfer'), 'wide'],
             ]],
             'p2-select-add' => ['Select · Add New', 'fa-solid fa-circle-plus', ['select-add' => ['Select with Add New button (popup, save by JSON, new item selected)', $f('Select')]]],
             'p2-files' => ['Files', 'fa-solid fa-paperclip', ['field-upload' => ['Upload', $f('Upload')], 'field-signature' => ['Signature', $f('Signature')]]],
