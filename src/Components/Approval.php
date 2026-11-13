@@ -21,7 +21,7 @@ namespace Devlib\Components;
 //         'history' => [['action','by','at','note','plt']]]]
 // lineColumns: [kolom => label]; kolom berakhiran :money diformat Rupiah (mis. 'price:money').
 // :action = URL POST (id, action=approve|reject|hold, _reason) -> keputusan disimpan server lalu halaman dimuat ulang;
-// tanpa :action = simulasi di browser (demo DevLib). :log = Log Keputusan awal dari DB.
+// tanpa :action = simulasi di browser (demo DevLib). :log = Log Keputusan awal dari DB (baris: no, status, by, at, level, levels, note, url opsional = tautan ke rincian dokumen).
 // :single = satu dokumen saja (form yang dibuka dari grid): tanpa daftar kiri; doc 'readonly' => true (sudah diputuskan) tanpa tombol keputusan.
 // :back = alamat grid asal (mode single, simulasi): setelah keputusan final (Setujui/Reject) halaman kembali ke sana; Hold tetap di form.
 // Setiap keputusan = LOG (user 2026-09-30): siapa, kapan, aksi (APPROVED/REJECTED/HOLD), level & alasan. Tampil di

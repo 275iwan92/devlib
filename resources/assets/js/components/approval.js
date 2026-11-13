@@ -34,7 +34,7 @@
     logs() {
       const box = $(this.el, '[data-a-log]'); box.hidden = !this.log.length;
       const tone = {APPROVED: 'success', REJECTED: 'danger', HOLD: 'neutral'};
-      $(box, '[data-a-logrows]').innerHTML = this.log.map(l => `<li><span class="dl-badge dl-badge--pill dl-badge--${tone[l.status]}">${l.status}</span><div><b>${esc(l.no)}</b> · Level ${l.level} / ${l.levels}<small>${esc(l.by)} · ${esc(l.at)}</small>${l.note ? `<q>${esc(l.note)}</q>` : ''}</div></li>`).join('');
+      $(box, '[data-a-logrows]').innerHTML = this.log.map(l => `<li><span class="dl-badge dl-badge--pill dl-badge--${tone[l.status]}">${l.status}</span><div>${l.url ? `<a class="dl-appr__open" href="${esc(l.url)}" title="${esc(T('a_open_doc'))}"><b>${esc(l.no)}</b> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : `<b>${esc(l.no)}</b>`} · Level ${l.level} / ${l.levels}<small>${esc(l.by)} · ${esc(l.at)}</small>${l.note ? `<q>${esc(l.note)}</q>` : ''}</div></li>`).join('');
     }
 
     rp(v) {
