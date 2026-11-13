@@ -36,9 +36,9 @@ Constructor of `Devlib\Components\Transfer` (8 props). Use `:prop="expr"` for ar
 | `items` | `array`, `[]` | Everything that can be chosen: `[id => label]`. A label of the form `CODE · Name` is drawn as the name with the code under it, and the avatar shows the initials of the name. The left box shows the items whose id is not in `rows`; the right box shows the label of each row (an id that is not in `items` shows the raw id). Labels are data, not translated. |
 | `rows` | `array`, `[]` | The rows that are already in the right box at load, `[['id' => '27', 'machine_id' => '1', 'role' => 'Helper'], ...]`: `id` plus one value per field key. They are also the state that Undo returns to. |
 | `fields` | `array`, `[]` | The selects that every right-box row carries: `[['key' => 'machine_id', 'label' => 'Machine', 'options' => [value => label], 'required' => true, 'sticky' => true, 'default' => '']]`. `required` only marks a row with a red border while the value is empty (the server decides). `sticky` makes the people moved next start with the value of the last row (the same machine for a whole crew). `default` is the start value when there is no sticky value. The label is translated. |
-| `idKey` | `string`, `'id'` | Name of the posted key that carries the id of the person or item, for example `employee_id`. |
-| `leftTitle` | `string`, `'Not scheduled'` | Heading of the left box (upper-case by CSS). Translated. |
-| `rightTitle` | `string`, `'Scheduled'` | Heading of the right box. Translated. |
+| `id-key` | `string`, `'id'` | Name of the posted key that carries the id of the person or item, for example `employee_id` (prop `idKey` in PHP). |
+| `left-title` | `string`, `'Not scheduled'` | Heading of the left box (upper-case by CSS). Translated (prop `leftTitle` in PHP). |
+| `right-title` | `string`, `'Scheduled'` | Heading of the right box. Translated (prop `rightTitle` in PHP). |
 | `max` | `int`, `0` | Maximum rows in the right box; `0` = no limit. At the limit the move-right buttons are disabled and a bulk move stops at the limit. The server must still enforce the limit. |
 
 ## Behavior
@@ -51,6 +51,25 @@ Constructor of `Devlib\Components\Transfer` (8 props). Use `:prop="expr"` for ar
 - **Undo**: the Undo of the form calls `reset()` and the opening rows come back.
 - **Not covered**: sorting inside a box, and drag on touch screens.
 
+## Data and events
+
+### What the server receives
+
+Only the right box is posted: one group per row, `<name>[i][<id-key>]` plus `<name>[i][<field key>]` for every field, `i` from 0 without gaps, in the order of the right box (rows moved later come last). The left box posts nothing. An empty required field is posted as an empty string. Example for `name="crew"`, `id-key="employee_id"` and fields `machine_id` and `role`: `crew[0][employee_id]=43`, `crew[0][machine_id]=1`, `crew[0][role]=Helper`.
+
+### Events and JS
+
+The instance is `el.dlTransfer` with `reset()` (called by the Undo of the form). Every change marks the form unsaved through the dirty guard of DevLib. The object fires no custom events; the drag uses the native `dragstart`, `dragover`, `drop` and `dragend` events of the browser.
+
+## Rules and pitfalls
+
+- The object only helps to choose. The server MUST validate again: a person that does not exist, a person twice, a missing machine or job, the limit, and clashes with other assignments.
+- An id in `rows` that is not in `items` is shown as the raw id and cannot come back to the left list under a nicer label.
+- `required` is a hint (red border); it does not block the Save button.
+- `sticky` copies the value of the LAST right row, not of the row that happens to be selected; the first person moved gets `default`.
+- Touch screens cannot drag; the middle buttons and the double tap are the way there.
+- The label format `CODE · Name` (space, middle dot, space) is split for display only; the posted value is always the id.
+
 ## Example
 
 ```blade
@@ -60,3 +79,10 @@ Constructor of `Devlib\Components\Transfer` (8 props). Use `:prop="expr"` for ar
         ['key' => 'role', 'label' => 'Job', 'options' => $jobs, 'required' => true, 'default' => 'Co-operator'],
     ]" />
 ```
+
+## Related
+
+- `x-dl::member-list`: a short capped list of person + role only, no second box.
+- `x-dl::field.multi-select` and `x-dl::field.tags`: plain multiple choice without per-row selects.
+- `x-dl::lines`: document lines with quantities and prices.
+- `x-dl::kanban`: cards that move between workflow stages.
