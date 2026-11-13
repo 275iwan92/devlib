@@ -9,6 +9,7 @@ ditandai **Merusak:**. Hash di kurung menunjuk commit asal.
 
 ### Ditambahkan
 
+- **Nada warna asisten AI** (Jo 2026-11-13): ikon melayang membawa `data-tone` dan nama asisten dari prop `assistant` (`tone` = ok hijau / warn oranye, `name` = De / Jes); jendela mengikuti `reply.tone` jawaban server (ok / warn / danger merah) lewat `LayerShell.setAiTone`; merah sementara, buka ulang jendela = kembali ke nada benar terakhir. Token baru `--dl-warn`.
 - **`x-dl::org-chart` lebih terbaca dan mudah dipakai** (permintaan Jo 2026-11-10): kartu berwarna per departemen, chip departemen (menggantikan kotak pilih), tombol Level 1/2/3/All, geser dengan drag, minimap, Print, tombol `/` untuk cari, kartu "N Lowong" (mode baca), `people[].locked` (kartu gembok), Fit tidak di bawah 50%, kartu dan teks lebih besar.
 - **Rel `x-dl::side-screen.layout` berwarna (opt-in)** (permintaan Jo 2026-11-10, Edit profile): prop `tones` (nada per bagian: ubin ikon dan kepala bagian); `links` boleh bernada dan membawa perintah Shell (`notif`, `clockin`, `logout`; postMessage `{dl: "command"}` ke `x-dl::layer-shell`), caption kosong = tanpa judul; nada kartu baru `pink`, `orange`, `danger`, `lime`; ikon aksi menu profil berubin warna per aksi.
 - **`x-dl::layer-shell` prop `links` (opt-in, bawaan `[]`)** (permintaan Jo 2026-11-10): aksi tambahan menu profil `[['key','label','icon','url']]` tepat sesudah Edit profile; membuka `url` sebagai tab (JS `command()` kini membuka tab untuk setiap aksi ber-`data-url`, termasuk My devices). Tanpa `links` markup sama seperti sebelumnya.

@@ -24,7 +24,7 @@
   --dl-sheet-head:#e6ebf5; --dl-sheet-ro:#dde3f0;
   --dl-danger:#d0453f; --dl-danger-soft:#fdeceb; --dl-danger-line:#f6cfcd; --dl-badge:#e5484d;
   --dl-violet:#7a52d0; --dl-violet-soft:#faf7ff; --dl-violet-line:#d7c3ff; --dl-violet-ink:#6b4bb0; --dl-violet-msg:#f4f1fb;
-  --dl-amber:#b6852a; --dl-amber-2:#e5a324; --dl-green:#22b07d; --dl-orange:#d85a30; --dl-pink:#d4537e; --dl-lime:#639922;
+  --dl-amber:#b6852a; --dl-amber-2:#e5a324; --dl-green:#22b07d; --dl-orange:#d85a30; --dl-warn:#e07b00; --dl-pink:#d4537e; --dl-lime:#639922;
   --dl-tangerine:#ef7d1a; --dl-yellow:#e9c21c; --dl-teal:#1d4f4a;
   --dl-toast:#2f3a5e; --dl-overlay:rgba(20,27,48,.45); --dl-overlay-soft:rgba(20,27,48,.4);
   --dl-logo:conic-gradient(from 200deg,#ff5f6d,#ffc371,#2f6fed,#8a5cf6,#ff5f6d);
@@ -518,6 +518,12 @@ fieldset:disabled .dl-selectadd__btn,.dl-form.is-view .dl-selectadd__btn{display
 .dl-drawer.is-on{transform:none;visibility:visible}
 .dl-drawer[data-dl-drawer="chat"]{width:min(520px,92vw)}
 /* AI Assistant = jendela mengambang (Jo 2026-11-11): dibuka dari ikon melayang (.dl-ai-fab, kanan bawah, bisa diseret), awal di kanan bawah, digeser lewat kepalanya, ditutup dengan X / Esc / Alt+A; tanpa backdrop. Maximize = layar penuh. */
+/* Nada asisten (Jo 2026-11-13): ikon melayang ikut profil (data-tone dari server: ok = hijau, warn = oranye); jendela dan ikon memerah (danger) saat salah panggil nama; jendela hijau / oranye sesudah nama benar. */
+.dl-ai-fab__name{font-size:17px;font-weight:800;letter-spacing:.01em}
+.dl-ai-fab[data-tone="ok"]{background:var(--dl-success)}.dl-ai-fab[data-tone="warn"]{background:var(--dl-warn)}.dl-ai-fab[data-tone="danger"]{background:var(--dl-danger)}
+.dl-drawer[data-dl-drawer="ai"][data-tone="ok"]{border-color:var(--dl-success)}.dl-drawer[data-dl-drawer="ai"][data-tone="warn"]{border-color:var(--dl-warn)}.dl-drawer[data-dl-drawer="ai"][data-tone="danger"]{border-color:var(--dl-danger)}
+.dl-drawer[data-dl-drawer="ai"][data-tone="ok"] .dl-dr-head{background:var(--dl-success)}.dl-drawer[data-dl-drawer="ai"][data-tone="warn"] .dl-dr-head{background:var(--dl-warn)}.dl-drawer[data-dl-drawer="ai"][data-tone="danger"] .dl-dr-head{background:var(--dl-danger)}
+.dl-drawer[data-dl-drawer="ai"][data-tone] .dl-dr-head :is(.dl-dr-title,.dl-dr-ico,.dl-dr-x,.dl-dr-note){color:var(--dl-white)}
 .dl-ai-unlock{position:fixed;right:24px;bottom:24px;z-index:70;display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--dl-surface);color:var(--dl-ink-strong);border:1px solid var(--dl-border);border-radius:14px;box-shadow:0 12px 36px rgba(15,22,45,.28)}.dl-ai-unlock input{width:200px;border:0;outline:0;background:transparent;color:var(--dl-ink-strong);font-size:15px}.dl-ai-unlock button{border:0;background:transparent;color:var(--dl-ink-strong);cursor:pointer}.dl-ai-unlock.is-bad{border-color:var(--dl-ink-strong);outline:2px solid var(--dl-ink-strong)}
 .dl-ai-fab{position:fixed;right:24px;bottom:24px;z-index:60;width:52px;height:52px;border:0;border-radius:50%;background:var(--dl-ink-strong);color:var(--dl-surface);font-size:22px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;box-shadow:0 8px 24px rgba(15,22,45,.32)}.dl-ai-fab:active{cursor:grabbing}.dl-ai-fab.is-hidden{display:none}
 .dl-drawer[data-dl-drawer="ai"]{top:auto;left:auto;right:24px;bottom:24px;height:min(680px,calc(100vh - 48px));width:min(440px,92vw);border:1px solid var(--dl-border);border-radius:16px;box-shadow:0 18px 60px rgba(15,22,45,.28);transform:translateY(14px) scale(.98);opacity:0;transition:transform .2s,opacity .2s,visibility .2s;overflow:hidden}

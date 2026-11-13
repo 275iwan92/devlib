@@ -201,7 +201,7 @@
       this.aiBody.appendChild(wait); this.aiBody.scrollTop = this.aiBody.scrollHeight;
       this.aiPost(this.ai.api.ask, {q, topic: topic || null})
         // reply.refresh (mis. 'board'): jawaban itu mengubah sesuatu di layar -> bagian itu memuat ulang isinya.
-        .then(res => { wait.remove(); this.addReply(res.reply, res.id, null); if (res.reply?.refresh) document.dispatchEvent(new CustomEvent('dl:refresh', {detail: res.reply.refresh})); })
+        .then(res => { wait.remove(); if (res.reply?.tone) this.setAiTone(res.reply.tone); this.addReply(res.reply, res.id, null); if (res.reply?.refresh) document.dispatchEvent(new CustomEvent('dl:refresh', {detail: res.reply.refresh})); })
         .catch(() => { wait.remove(); this.addAi('bot', this.ai.failed || ''); });
     }
 
@@ -491,9 +491,18 @@
       $(this.el, '[data-dl-ai-fab]')?.classList.toggle('is-hidden', !this.aiFab || $(this.el, '[data-dl-drawer="ai"]').classList.contains('is-on'));
     }
 
+    // Nada warna asisten (Jo 2026-11-13): jendela mengikuti nada jawaban terakhir (ok hijau / warn oranye / danger merah); ikon tetap warna profil
+    // (this.ai.tone) kecuali merah. Merah hanya sementara: jendela dibuka ulang = kembali ke nada benar terakhir (atau netral).
+    setAiTone(tone) {
+      const w = $(this.el, '[data-dl-drawer="ai"]'), fab = $(this.el, '[data-dl-ai-fab]');
+      if (tone && tone !== 'danger') this.aiOk = tone;
+      if (tone) w.dataset.tone = tone; else delete w.dataset.tone;
+      if (fab) { const t = tone === 'danger' ? 'danger' : (this.ai?.tone || ''); if (t) fab.dataset.tone = t; else delete fab.dataset.tone; }
+    }
+
     toggleAi(on) {
       const w = $(this.el, '[data-dl-drawer="ai"]'); on = on ?? !w.classList.contains('is-on');
-      w.classList.toggle('is-on', on); if (!on) w.classList.remove('is-wide'); this.syncAiFab(); if (on) this.aiIn?.focus();
+      w.classList.toggle('is-on', on); if (!on) w.classList.remove('is-wide'); this.syncAiFab(); if (on) { this.setAiTone(this.aiOk || ''); this.aiIn?.focus(); }
     }
 
     openDrawer(id) {
