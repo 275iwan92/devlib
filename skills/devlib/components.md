@@ -893,6 +893,11 @@ Slideshow gambar dalam jendela modal: satu gambar besar + keterangan, tombol Seb
 - Berkas: `src/Components/Slideshow.php`
 - Prop: id:string='slideshow', title:?string=NULL, items:array=[], size:string='xl', open:bool=false, moreUrl:?string=NULL, moreLabel:string='Full guide'
 
+## `<x-dl::slot-board>`
+Papan slot satu layar (seperti kartu pemain ke petak): kiri kolam orang yang BELUM ditempatkan, kanan matriks baris x kolom (mis. shift x unit kerja/mesin); orang dipindah dengan seret, centang banyak lalu klik petak, atau klik dua kali untuk mengembalikan.
+- Berkas: `src/Components/SlotBoard.php`
+- Prop: name:string='slots', rows:array=[], cols:array=[], people:array=[], placed:array=[], locked:bool=false, poolTitle:string='Not scheduled', rowTitle:string='Shift'
+
 ## `<x-dl::spinner>`
 Tanda sedang memproses. overlay=true menutupi induknya (mis. kartu/grid) selama proses.
 - Berkas: `src/Components/Spinner.php`

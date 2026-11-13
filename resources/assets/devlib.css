@@ -4452,6 +4452,48 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-transfer__box.is-over .dl-transfer__drop{display:flex}
 @media (max-width:860px){.dl-transfer{grid-template-columns:1fr}.dl-transfer__mid{flex-direction:row;justify-content:center}.dl-transfer__act i{transform:rotate(90deg)}.dl-transfer__item--row{flex-wrap:wrap}}
 
+/* ---- SlotBoard (x-dl::slot-board): papan slot satu layar. Kolam kiri berisi bulatan inisial; matriks kanan baris x kolom; petak menyala saat diseret atau saat ada yang dicentang; teks hitam ---- */
+.dl-slots{display:grid;grid-template-columns:268px minmax(0,1fr);gap:10px;align-items:start}
+.dl-slots__pool{background:var(--dl-surface);border:2px solid var(--dl-border);border-radius:var(--dl-radius-lg);padding:10px;display:flex;flex-direction:column;gap:8px;transition:border-color .15s,background .15s}
+.dl-slots__pool.is-over{border-color:var(--dl-accent);background:var(--dl-accent-soft)}
+.dl-slots__head{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--dl-ink-strong)}
+.dl-slots__pill{display:inline-flex;min-width:28px;justify-content:center;padding:1px 9px;border-radius:999px;border:1.5px solid var(--dl-ink-strong);font-weight:700;font-size:calc(12px * var(--dl-font-scale));background:var(--dl-surface);color:var(--dl-ink-strong)}
+.dl-slots__search{display:flex;align-items:center;gap:8px;border:1.5px solid var(--dl-border);border-radius:999px;padding:4px 10px;background:var(--dl-surface)}
+.dl-slots__search:focus-within{border-color:var(--dl-accent);box-shadow:0 0 0 3px var(--dl-accent-soft)}
+.dl-slots__search input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:calc(12.5px * var(--dl-font-scale));color:var(--dl-ink-strong)}
+.dl-slots__chips{display:flex;flex-wrap:wrap;gap:4px}
+.dl-slots__chip{border:1.5px solid var(--dl-navy);border-radius:999px;padding:0 9px;background:var(--dl-surface);color:var(--dl-ink-strong);font-weight:700;font-size:calc(11px * var(--dl-font-scale));cursor:pointer}
+.dl-slots__chip.is-on{background:var(--dl-navy);color:var(--dl-white)}
+.dl-slots__tokens{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;max-height:clamp(170px,calc(100vh - 580px),400px);overflow:auto;padding:2px}
+.dl-slots__tok{width:40px;height:40px;margin:auto;border-radius:50%;border:3px solid var(--dl-border);background:var(--dl-accent-soft);color:var(--dl-navy);font-weight:800;font-size:calc(12px * var(--dl-font-scale));display:inline-flex;align-items:center;justify-content:center;cursor:grab;padding:0;transition:transform .12s,box-shadow .12s,background .12s}
+.dl-slots__tok:hover:not(:disabled){transform:scale(1.1);box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.dl-slots__tok:disabled{cursor:default;opacity:.85}
+.dl-slots__tok.is-sel{background:var(--dl-accent);border-color:var(--dl-accent);color:var(--dl-white);box-shadow:0 0 0 3px var(--dl-accent-soft)}
+.dl-slots__tok.is-flag{border:3px dashed var(--dl-warn);background:var(--dl-surface);color:var(--dl-warn)}
+.dl-slots__tok.is-flag.is-sel{background:var(--dl-warn);color:var(--dl-white)}
+.dl-slots__tok.is-lifted{opacity:.4}
+.dl-slots__empty{grid-column:1/-1;border:2px dashed var(--dl-border);border-radius:10px;padding:18px;text-align:center;color:var(--dl-ink)}
+.dl-slots__hint{margin:0;font-weight:600;font-size:calc(12px * var(--dl-font-scale));line-height:1.35;color:var(--dl-ink-strong)}
+.dl-slots__matrix{display:grid;grid-template-columns:150px repeat(var(--dl-slots-cols,1),minmax(110px,1fr));background:var(--dl-surface);border:2px solid var(--dl-border);border-radius:var(--dl-radius-lg);overflow:auto}
+.dl-slots__matrix>div{border-right:1px solid var(--dl-border-soft);border-bottom:1px solid var(--dl-border-soft);padding:6px;min-width:0}
+.dl-slots__corner,.dl-slots__colh{background:var(--dl-border-soft);color:var(--dl-ink-strong);font-weight:800;font-size:calc(12.5px * var(--dl-font-scale));text-align:center}
+.dl-slots__corner{text-align:left}
+.dl-slots__colh small,.dl-slots__rowh small{display:block;font-weight:600;font-size:calc(11px * var(--dl-font-scale))}
+.dl-slots__rowh{background:var(--dl-surface-alt);color:var(--dl-ink-strong)}
+.dl-slots__tag{display:inline-block;margin-top:2px;padding:0 8px;border-radius:999px;border:1.5px solid;font-weight:700;font-size:calc(11px * var(--dl-font-scale))}
+.dl-slots__tag.is-ok{border-color:var(--dl-success);color:var(--dl-success)}
+.dl-slots__tag.is-bad{border-color:var(--dl-danger);color:var(--dl-danger)}
+.dl-slots__cell{display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start;min-height:56px;transition:background .12s}
+.dl-slots__cell.is-over{background:var(--dl-accent-soft);outline:3px dashed var(--dl-accent);outline-offset:-4px}
+.dl-slots__cnt{width:100%;font-weight:800;font-size:calc(11.5px * var(--dl-font-scale));color:var(--dl-ink-strong)}
+.dl-slots__cnt.is-low{color:var(--dl-danger)}
+.dl-slots__p{width:46px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1px}
+.dl-slots__p .dl-slots__tok{width:34px;height:34px;font-size:calc(11px * var(--dl-font-scale))}
+.dl-slots__p small{font-weight:700;font-size:calc(10px * var(--dl-font-scale));line-height:1.1;color:var(--dl-ink-strong);max-width:46px;overflow:hidden;text-overflow:ellipsis}
+.dl-slots__drop{width:100%;text-align:center;font-weight:700;font-size:calc(11.5px * var(--dl-font-scale));border:2px dashed var(--dl-accent);border-radius:8px;padding:6px;background:var(--dl-accent-soft);color:var(--dl-ink-strong);cursor:pointer}
+.dl-slots[data-locked="1"] .dl-slots__pool{opacity:.9}
+@media (max-width:980px){.dl-slots{grid-template-columns:1fr}.dl-slots__tokens{grid-template-columns:repeat(8,1fr)}}
+
 /* Kolom teks di grid (satu isi per baris), hint miring, tombol langsung di baris form, nilai tampil polos. */
 .dl-grid__link--text{white-space:pre;font-variant-numeric:normal;color:var(--dl-ink-strong);display:block;min-width:2rem}
 .dl-hint--italic{font-style:italic}

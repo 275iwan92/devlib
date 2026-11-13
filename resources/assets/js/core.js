@@ -754,6 +754,7 @@ window.Devlib = window.Devlib || {};
       $$(form, '[data-dl-lines]').forEach(l => { if (l.dlLines && (clear || l.dataset.name in data)) l.dlLines.set(data[l.dataset.name] || []); });
       $$(form, '[data-dl-members]').forEach(m => m.dlMembers?.reset());
       $$(form, '[data-dl-transfer]').forEach(m => m.dlTransfer?.reset());
+      $$(form, '[data-dl-slots]').forEach(m => m.dlSlots?.reset());
       $$(form, '.dl-field.is-invalid').forEach(f => { f.classList.remove('is-invalid'); const e = $(f, '[data-dl-field-error]'); if (e) e.textContent = ''; });
       dirtyForms.delete(form); form.classList.remove('is-dirty');
     } finally { fillState.on = false; }
