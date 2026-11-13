@@ -20,7 +20,8 @@
       this.foldMode = this.el.dataset.foldGroups || '0';
       // inlineGroups: modul yang anaknya ber-group terbuka di tempat (this.exp) sebagai satu daftar panjang, bukan layer baru.
       this.inline = this.el.dataset.inlineGroups === '1'; this.exp = null;
-      this.fold = new Set(); this.open = undefined;
+      this.fold = new Set(); this.open = undefined; this.mopen = new Set();
+      try { this.mopen = new Set(JSON.parse(localStorage.getItem('dl-lm-' + this.el.dataset.id + '-mfold') || '[]')); } catch (e) {}
       try {
         const f = JSON.parse(localStorage.getItem('dl-lm-' + this.el.dataset.id + '-fold') || 'null');
         if (this.foldMode === 'accordion') this.open = f && !Array.isArray(f) ? f.open : undefined; else if (Array.isArray(f)) this.fold = new Set(f);
@@ -200,7 +201,13 @@
       nodes.forEach((n, x) => {
         if (n.group && n.group !== g) {
           g = n.group; shut();
-          if (!foldable) h += `<div class="dl-lm__cap"${d ? '' : cap}>${esc(g)}</div>`;
+          if (n.fold && !foldable) {
+            // Accordion per kelompok (prop fold di baris menu, layer mana pun): judul menutup sendiri, tertutup kecuali layar aktif ada di dalamnya;
+            // klik judul = daftar memanjang (mis. 14 master Procurement). Keadaan terbuka diingat per browser.
+            const mk = (d ? this.path[d - 1].label : '') + '|' + g, inside = nodes.filter(m => m.group === g), folded = !this.mopen.has(mk) && !inside.some(m => m.key && m.key === this.sel);
+            h += `<button type="button" class="dl-lm__cap dl-lm__cap--fold" data-lm-mfold="${esc(mk)}" aria-expanded="${folded ? 'false' : 'true'}"><span>${esc(g)}</span>${counts ? `<em class="dl-lm__cap-n">${inside.length}</em>` : ''}<i class="fa-solid fa-chevron-down"></i></button><div class="dl-lm__grp${folded ? ' is-folded' : ''}"${folded ? ' inert' : ''}><div>`;
+            open = true;
+          } else if (!foldable) h += `<div class="dl-lm__cap"${d ? '' : cap}>${esc(g)}</div>`;
           else {
             // Judul = tombol lipat; anak menunya dalam satu pembungkus yang menggulung ke atas di belakang judul.
             const folded = this.isFolded(g), tally = counts ? `<em class="dl-lm__cap-n">${size[g] || 0}</em>` : '';
@@ -245,6 +252,14 @@
     // Lipat / buka satu kelompok tanpa menggambar ulang panel (supaya gulungannya beranimasi).
     isFolded(g) { return this.foldMode === 'accordion' ? this.open !== g : this.fold.has(g); }
 
+    // Accordion satu kelompok bertanda fold (lihat draw): buka / tutup, diingat per browser.
+    toggleMFold(t) {
+      const k = t.dataset.lmMfold, shut = t.getAttribute('aria-expanded') === 'true', grp = t.nextElementSibling;
+      shut ? this.mopen.delete(k) : this.mopen.add(k);
+      t.setAttribute('aria-expanded', String(!shut)); grp.classList.toggle('is-folded', shut); grp.inert = shut;
+      try { localStorage.setItem('dl-lm-' + this.el.dataset.id + '-mfold', JSON.stringify([...this.mopen])); } catch (e) {}
+    }
+
     toggleFold(t) {
       const g = t.dataset.lmFold;
       if (this.foldMode === 'accordion') this.open = this.open === g ? null : g;
@@ -268,6 +283,7 @@
 
     click(e, t) {
       if (t.hasAttribute('data-lm-fold')) { this.toggleFold(t); return; }
+      if (t.hasAttribute('data-lm-mfold')) { this.toggleMFold(t); return; }
       if (t.hasAttribute('data-lm-exp')) { this.exp = null; this.draw(false); return; }
       if (t.hasAttribute('data-lm-back')) { this.setPeek(true); this.back(); return; }
       if (!t.hasAttribute('data-lm-x')) return;

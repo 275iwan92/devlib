@@ -117,7 +117,7 @@ class LayerShell extends DevlibComponent
 
             return array_filter([
                 'key' => $it['code'], 'label' => $it['label'], 'icon' => $it['icon'] ?? null, 'group' => $it['group'] ?? $group, 'groupIcon' => $it['groupIcon'] ?? null,
-                'badge' => $it['badge'] ?? null, 'badgeTitle' => $it['badgeTitle'] ?? null, 'tone' => $tone[$it['badgeTone'] ?? ''] ?? null, 'sep' => $it['sep'] ?? null,
+                'badge' => $it['badge'] ?? null, 'badgeTitle' => $it['badgeTitle'] ?? null, 'tone' => $tone[$it['badgeTone'] ?? ''] ?? null, 'sep' => $it['sep'] ?? null, 'fold' => $it['fold'] ?? null,
             ]);
         };
 
