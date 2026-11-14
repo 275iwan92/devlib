@@ -4,10 +4,10 @@
  * REMARK
  * Tujuan       : Latar (wallpaper) bergaya kaca bening: SVG dibuat di server dari bentuk + palet + seed, dengan satu kutipan di posisi acak. Tanpa JS, tanpa berkas gambar.
  * Sumber hulu  : Komponen generik DevLib; tidak membaca data proyek (kutipan diberikan pemanggil).
- * Input        : kind (ribbon, waves, bubbles, shards, ripples, blob, folds, orbs, loop, panels, soft, cards), palette (sage bawaan, sky, rose, mint, amber, violet, night), quote, seed, quotePosition (kosong = acak dari seed), ratio.
+ * Input        : kind (ribbon, waves, bubbles, shards, ripples, blob, folds, orbs, loop, panels, soft, cards), palette (sage bawaan, sky, rose, mint, amber, violet, night), quote, seed, quotePosition (kosong = acak dari seed), ratio, static (seed tetap dari kind+palette+quote), autoQuote (kutipan bawaan Indonesia bila quote kosong).
  * Output       : <div class="dl-wallpaper"> berisi <svg> dan <q>; mengisi lebar induk, tinggi menurut rasio.
  * Dipakai oleh : layar proyek (latar kartu sapaan, login, dashboard: opt-in); halaman peragaan Backgrounds > Wallpaper.
- * Status       : Review (W1 empat bentuk awal; W2 delapan bentuk lain).
+ * Status       : Review (W1 empat bentuk awal; W2 delapan bentuk lain; W3 kutipan bawaan, static, posisi menghindari bentuk utama).
  */
 
 namespace Devlib\Components;
@@ -46,7 +46,26 @@ class Wallpaper extends DevlibComponent
         'cards' => ["'Segoe UI',Arial,sans-serif", 400, 'normal'],
     ];
 
+    // Kutipan bawaan (Indonesia, pendek): dipakai bila prop `auto-quote` menyala dan `quote` kosong.
+    public const QUOTES = [
+        'Mulai dari yang kecil, selesaikan dengan baik.',
+        'Satu langkah hari ini cukup.',
+        'Pelan-pelan asal sampai.',
+        'Rapi hari ini, tenang besok.',
+        'Kerjakan yang penting dulu.',
+        'Hari baik dimulai dari napas yang tenang.',
+        'Yang konsisten akan menang.',
+        'Selesai lebih baik daripada sempurna.',
+        'Terima kasih sudah bertahan hari ini.',
+        'Kecil tapi terus, lama-lama jadi besar.',
+        'Fokus pada satu hal, lalu satu lagi.',
+        'Istirahat juga bagian dari kerja.',
+    ];
+
     private static int $count = 0;
+
+    // Pusat bentuk utama (0..1 dari lebar), diisi oleh bentuk yang punya satu pusat; null = tidak ada.
+    private ?float $focus = null;
 
     private int $s;
 
@@ -59,14 +78,19 @@ class Wallpaper extends DevlibComponent
         public ?int $seed = null,
         public ?string $quotePosition = null,
         public string $ratio = '5/4',
+        public bool $static = false,
+        public bool $autoQuote = false,
     ) {
         $this->kind = in_array($kind, self::KINDS, true) ? $kind : 'ribbon';
         $this->palette = isset(self::PALETTES[$palette]) ? $palette : 'sage';
         $this->ratio = preg_match('#^\d+(\.\d+)?/\d+(\.\d+)?$#', $ratio) ? $ratio : '5/4';
         $this->quotePosition = in_array($quotePosition, self::POSITIONS, true) ? $quotePosition : null;
-        $this->seed = $seed ?? random_int(1, 2147483646);
+        $this->seed = $seed ?? ($static ? (crc32($this->kind.'|'.$this->palette.'|'.($quote ?? '')) % 2147483646) + 1 : random_int(1, 2147483646));
         $this->s = max(1, $this->seed % 2147483647);
         $this->uid = 'dlwp'.(++self::$count);
+        if (($this->quote === null || $this->quote === '') && $autoQuote) {
+            $this->quote = self::QUOTES[($this->seed >> 3) % count(self::QUOTES)];
+        }
     }
 
     public function tag(): string
@@ -100,6 +124,7 @@ class Wallpaper extends DevlibComponent
     // SVG penuh (viewBox 600x480, diiris ke kotak lewat slice).
     public function svg(): string
     {
+        $this->focus = null;
         $this->s = max(1, $this->seed % 2147483647);
         $p = self::PALETTES[$this->palette];
         $u = $this->uid;
@@ -139,6 +164,7 @@ class Wallpaper extends DevlibComponent
     private function ribbon(array $p, string $u, int $W, int $H, bool $waves = false): array
     {
         $cx = $W * (.35 + $this->rnd() * .3);
+        $this->focus = $cx / $W;
         $cy = $H * (.42 + $this->rnd() * .1);
         $defs = $this->grad('g'.$u, '#ffffff', $p['a'], .85, .35).$this->grad('h'.$u, '#ff9ec7', '#7fd0ff', .9, .9, 1, 0);
         $body = '';
@@ -204,6 +230,7 @@ class Wallpaper extends DevlibComponent
     private function shards(array $p, string $u, int $W, int $H): array
     {
         $cx = $W * (.35 + $this->rnd() * .3);
+        $this->focus = $cx / $W;
         $cy = $H * (.42 + $this->rnd() * .1);
         $defs = $this->grad('g'.$u, '#ffffff', $p['a'], .85, .35).$this->grad('h'.$u, '#ff9ec7', '#7fd0ff', .9, .9, 1, 0);
         $body = '';
@@ -221,6 +248,7 @@ class Wallpaper extends DevlibComponent
     private function ripples(array $p, string $u, int $W, int $H): array
     {
         $cx = $W * (.35 + $this->rnd() * .3);
+        $this->focus = $cx / $W;
         $this->rnd();
         $hz = $H * .8;
         $defs = $this->grad('g'.$u, '#ffffff', $p['a'], .85, .35).$this->grad('h'.$u, '#ff9ec7', '#7fd0ff', .9, .9, 1, 0);
@@ -236,6 +264,7 @@ class Wallpaper extends DevlibComponent
     private function blob(array $p, string $u, int $W, int $H): array
     {
         $cx = $W * (.35 + $this->rnd() * .3);
+        $this->focus = $cx / $W;
         $cy = $H * (.42 + $this->rnd() * .1);
         $defs = $this->grad('g'.$u, '#ffffff', $p['a'], .85, .35).$this->grad('h'.$u, '#ff9ec7', '#7fd0ff', .9, .9, 1, 0)
             ."<filter id=\"t{$u}\"><feTurbulence baseFrequency=\".012\" numOctaves=\"2\" seed=\"".(int) floor($this->rnd() * 99)."\"/><feDisplacementMap in=\"SourceGraphic\" scale=\"80\"/></filter>";
@@ -356,8 +385,15 @@ class Wallpaper extends DevlibComponent
             return $this->quotePosition;
         }
         $this->svg();
+        $r = $this->rnd();
+        if ($this->focus !== null) {
+            // Bentuk utama di satu sisi: kutipan ke sisi seberang; atas/bawah dari seed.
+            $side = $this->focus < .5 ? 'right' : 'left';
 
-        return self::POSITIONS[(int) floor($this->rnd() * count(self::POSITIONS))];
+            return ($r < .5 ? 'top-' : 'bottom-').$side;
+        }
+
+        return self::POSITIONS[(int) floor($r * count(self::POSITIONS))];
     }
 
     public function quoteStyle(): string

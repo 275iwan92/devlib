@@ -17,7 +17,7 @@ Extra HTML attributes (`id`, `class`, `style`, `data-*`) are merged into the roo
 
 ## Props
 
-Constructor of `Devlib\Components\Wallpaper` (6 props).
+Constructor of `Devlib\Components\Wallpaper` (8 props).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -25,7 +25,9 @@ Constructor of `Devlib\Components\Wallpaper` (6 props).
 | `palette` | `string`, `'sage'` | Colour set: `sage` (default), `sky`, `rose`, `mint`, `amber`, `violet`, `night` (dark, light text). Unknown falls back to `sage`. |
 | `quote` | `?string`, `null` | The quote text. `null` or empty draws no quote. Escaped and printed as given (not translated: pass it already in the display language). Long text is clipped inside a safe area of 46% of the width. |
 | `seed` | `?int`, `null` | Random seed. The same seed, kind and palette always give the same picture. `null` picks a new random seed on every render; pass a fixed number for a stable background. |
-| `quote-position` | `?string`, `null` | `top-left`, `bottom-left`, `top-right`, `bottom-right`. `null` chooses one from the seed (random but stable with a fixed seed); an unknown value is treated as `null`. |
+| `quote-position` | `?string`, `null` | `top-left`, `bottom-left`, `top-right`, `bottom-right`. `null` chooses one from the seed (random but stable with a fixed seed); for kinds with one main shape (`ribbon`, `waves`, `shards`, `ripples`, `blob`) the quote goes to the side opposite the shape, top or bottom by seed, so it avoids the shape; an unknown value is treated as `null`. |
+| `static` | `bool`, `false` | `true` with no `seed`: the seed is derived from `kind` + `palette` + `quote`, so every render gives the same picture without you choosing a number. An explicit `seed` always wins. |
+| `auto-quote` | `bool`, `false` | `true` with an empty `quote`: picks one of 12 built-in Indonesian quotes (`Wallpaper::QUOTES`) from the seed (stable with `seed` or `static`). A given `quote` always wins. |
 | `ratio` | `string`, `'5/4'` | CSS aspect ratio `width/height` of the box (digits only, e.g. `16/9`); an invalid value falls back to `5/4`. The width fills the parent; the scene is sliced to fit. |
 
 ## Behavior
@@ -51,7 +53,7 @@ Constructor of `Devlib\Components\Wallpaper` (6 props).
 - Keep quotes short (about 60 characters); longer text is clipped, not wrapped beyond the safe area.
 - The quote is not translated; pass text already in the display language.
 - Do not draw controls on top without checking contrast; the `night` palette is dark, the others are light.
-- Opt-in object: nothing else in DevLib uses it yet. A built-in quote list, more palettes work and the module pack entry come in later steps.
+- Opt-in object: nothing else in DevLib uses it yet. Wiring into greeting card, login and dashboard, and the module pack entry, come in a later step.
 - Lint: no own rule.
 
 ## Example
