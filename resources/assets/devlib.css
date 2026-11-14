@@ -4494,6 +4494,18 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-slots[data-locked="1"] .dl-slots__pool{opacity:.9}
 @media (max-width:980px){.dl-slots{grid-template-columns:1fr}.dl-slots__tokens{grid-template-columns:repeat(8,1fr)}}
 
+/* ---- WeekFill (x-dl::week-fill): isi jam sekali ke hari terpilih; chip hari bulat, tombol Apply, teks hitam ---- */
+.dl-weekfill{display:flex;flex-direction:column;gap:10px;border:2px solid var(--dl-border);border-radius:var(--dl-radius-lg);background:var(--dl-surface-alt);padding:12px;margin-bottom:12px}
+.dl-weekfill__days{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.dl-weekfill__chip{border:2px solid var(--dl-navy);border-radius:999px;padding:5px 16px;background:var(--dl-surface);color:var(--dl-ink-strong);font-weight:700;font-size:calc(14px * var(--dl-font-scale));cursor:pointer;transition:background .12s,color .12s,transform .12s}
+.dl-weekfill__chip:hover{transform:translateY(-1px)}
+.dl-weekfill__chip.is-on{background:var(--dl-navy);color:var(--dl-white)}
+.dl-weekfill__presets{margin-left:8px;font-weight:600;font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink-strong)}
+.dl-weekfill__presets button{border:0;background:transparent;padding:0;color:var(--dl-accent-ink);text-decoration:underline;cursor:pointer;font:inherit}
+.dl-weekfill__fields{display:grid;grid-template-columns:repeat(4,minmax(110px,1fr)) auto;gap:10px;align-items:end}
+.dl-weekfill__net{margin:0;min-height:1.2em;font-weight:700;font-size:calc(13px * var(--dl-font-scale));color:var(--dl-ink-strong)}
+@media (max-width:760px){.dl-weekfill__fields{grid-template-columns:1fr 1fr}}
+
 /* Kolom teks di grid (satu isi per baris), hint miring, tombol langsung di baris form, nilai tampil polos. */
 .dl-grid__link--text{white-space:pre;font-variant-numeric:normal;color:var(--dl-ink-strong);display:block;min-width:2rem}
 .dl-hint--italic{font-style:italic}

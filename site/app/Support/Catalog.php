@@ -410,6 +410,7 @@ final class Catalog
                 'member-list' => ['Member List (people + role, Add / Remove, limited rows)', $c('MemberList'), 'rw'],
                 'transfer' => ['Transfer (two boxes: not scheduled left, scheduled right; arrow or drag and drop)', $c('Transfer'), 'wide'],
                 'slot-board' => ['Slot Board (people pool + rows x columns matrix; drag, tick and click a slot)', $c('SlotBoard'), 'wide'],
+                'week-fill' => ['Week Fill (day chips + four times once, Apply to the chosen days)', $c('WeekFill'), 'wide'],
             ]],
             'p2-select-add' => ['Select · Add New', 'fa-solid fa-circle-plus', ['select-add' => ['Select with Add New button (popup, save by JSON, new item selected)', $f('Select')]]],
             'p2-files' => ['Files', 'fa-solid fa-paperclip', ['field-upload' => ['Upload', $f('Upload')], 'field-signature' => ['Signature', $f('Signature')]]],

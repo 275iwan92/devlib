@@ -1031,7 +1031,7 @@ Saklar "Lihat sebagai": pil melayang dengan menu perangkat (Android phone, iPhon
 ## `<x-dl::wallpaper>`
 Latar (wallpaper) bergaya kaca bening: SVG dibuat di server dari bentuk + palet + seed, dengan satu kutipan di posisi acak. Tanpa JS, tanpa berkas gambar.
 - Berkas: `src/Components/Wallpaper.php`
-- Prop: kind:string='ribbon', palette:string='sage', quote:?string=NULL, seed:?int=NULL, quotePosition:?string=NULL, ratio:string='5/4'
+- Prop: kind:string='ribbon', palette:string='sage', quote:?string=NULL, seed:?int=NULL, quotePosition:?string=NULL, ratio:string='5/4', static:bool=false, autoQuote:bool=false
 
 ## `<x-dl::warehouse-desk>`
 Form khusus Warehouse Map (user 2026-10-02, docs/warehouselayout_tier1.md): pemilih gedung + pintasan ke Buildings / Storage.
@@ -1042,6 +1042,11 @@ Form khusus Warehouse Map (user 2026-10-02, docs/warehouselayout_tier1.md): pemi
 Cuaca terkini dari internet (Open-Meteo, gratis tanpa kunci API), diambil oleh browser. Bawaan: tempat = posisi perangkat (Geolocation, nama kota dari reverse geocoding); gagal/ditolak -> lokasi dari IP pengakses (ipapi.co); gagal lagi -> city/lat/lon tempat cadangan.
 - Berkas: `src/Components/Weather.php`
 - Prop: locate:bool=true, city:?string=NULL, lat:?float=NULL, lon:?float=NULL, variant:string='glass', ipFallback:bool=true
+
+## `<x-dl::week-fill>`
+Bilah "isi sekali" untuk pola jam mingguan: pilih hari lewat chip (Mon..Sun, preset Weekdays / All / Clear), isi jam masuk, mulai dan selesai istirahat, jam pulang SEKALI di empat isian yang disediakan layar (slot), lalu Apply menyalin ke isian hari yang dipilih di form yang sama.
+- Berkas: `src/Components/WeekFill.php`
+- Prop: map:array=[], days:array=[…], selected:array=[…], applyLabel:string='Apply to selected days'
 
 ## `<x-dl::wh-map>`
 Peta gudang (warehouse map): denah satu gedung per lantai -- garis luar gedung (kotak, huruf L, atau bentuk apa pun),.
