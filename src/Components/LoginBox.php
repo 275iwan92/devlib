@@ -33,6 +33,9 @@ class LoginBox extends DevlibComponent
         public ?string $tagline = null,
         // Akun untuk ikon bantuan (part support): null = daftar contoh bawaan x-dl::uat-accounts; lihat x-dl::uat-accounts untuk bentuknya.
         public ?array $uatAccounts = null,
+        // Latar wallpaper (opt-in): nama bentuk x-dl::wallpaper (ribbon, orbs, ...); null = tanpa latar.
+        public ?string $wallpaper = null,
+        public string $wallpaperPalette = 'sage',
     ) {}
 
     public function tag(): string

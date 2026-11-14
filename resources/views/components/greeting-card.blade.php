@@ -3,7 +3,8 @@
     $u = $d['user'] ?? [];
     $id = $key();
 @endphp
-<div {{ $attributes }} {!! $dl() !!}>
+<div {{ $attributes->class(['dl-greet--wp' => ! empty($d['wallpaper'])]) }} {!! $dl() !!}>
+@if (! empty($d['wallpaper']))<x-dl::wallpaper :kind="$d['wallpaper']" :palette="$d['wallpaper_palette'] ?? 'sage'" static ratio="16/9" class="dl-wallpaper--backdrop" />@endif
 @php($fx = ! empty($d['animate']))
 <section @class(['dl-dash__hero', 'dl-dash__hero--fx' => $fx]) @if ($fx) data-dl-hero-fx @endif>
     @if ($fx)

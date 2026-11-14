@@ -4899,6 +4899,11 @@ body.dl-on-phone :is(.dl-btn,summary){min-height:44px}
 .dl-wallpaper__quote--top-right,.dl-wallpaper__quote--bottom-right{right:6%;text-align:right}
 .dl-wallpaper__quote--top-left,.dl-wallpaper__quote--top-right{top:10%}
 .dl-wallpaper__quote--bottom-left,.dl-wallpaper__quote--bottom-right{bottom:12%}
+/* Wallpaper sebagai latar (opt-in, x-dl::wallpaper class dl-wallpaper--backdrop): mengisi induk, di belakang isi. */
+.dl-wallpaper--backdrop{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto!important;border-radius:inherit;z-index:0;pointer-events:none}
+.dl-wallpaper--backdrop>.dl-wallpaper__quote{display:none}
+.dl-loginbox--wp,.dl-greet--wp{position:relative;isolation:isolate;overflow:hidden;border-radius:var(--dl-radius-xl,14px)}
+.dl-loginbox--wp>:not(.dl-wallpaper--backdrop),.dl-greet--wp>:not(.dl-wallpaper--backdrop){position:relative;z-index:1}
 
 /* LocationKinds: ubin kategori lokasi expandable (details name, tanpa JS). Teks = token ink; redup hanya via opacity. */
 .dl-lk{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}

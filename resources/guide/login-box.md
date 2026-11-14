@@ -30,7 +30,7 @@ The root also carries `data-dl`, `data-dl-class` and `data-dl-src` (developer ca
 
 ## Props
 
-Constructor of `Devlib\Components\LoginBox` (9 props). Blade names are kebab-case; use `:prop="expr"` for anything that is not a plain string. `can="module.action"` works as on every DevLib component (without the ability nothing is rendered).
+Constructor of `Devlib\Components\LoginBox` (11 props). Blade names are kebab-case; use `:prop="expr"` for anything that is not a plain string. `can="module.action"` works as on every DevLib component (without the ability nothing is rendered).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
@@ -44,6 +44,8 @@ Constructor of `Devlib\Components\LoginBox` (9 props). Blade names are kebab-cas
 | `brand` | `?string`, `null` | Name given to the `x-dl::brand` of the `brand` part. `null` = the application identity (`Brand::identity()`, config `devlib.brand.*`, or the `devlib.brand` binding). |
 | `tagline` | `?string`, `null` | Tagline of the same brand badge; `null` = identity tagline. |
 | `uat-accounts` | `?array`, `null` | Accounts listed by the help icon (part `support`), in the shape `x-dl::uat-accounts` takes (`label => login`, or `label => ['login' =>, 'password' =>]` for click-to-fill rows). `null` = the built-in sample list. Not translated.
+| `wallpaper` | `?string`, `null` | Opt-in backdrop: a `x-dl::wallpaper` kind (`ribbon`, `orbs`, ...) drawn behind the form (static picture, no quote). `null` = no backdrop; the box looks exactly as before. |
+| `wallpaper-palette` | `string`, `'sage'` | Palette of that backdrop (`sage`, `sky`, `rose`, `mint`, `amber`, `violet`, `night`). Ignored without `wallpaper`. |
 
 ### The `show` parts
 

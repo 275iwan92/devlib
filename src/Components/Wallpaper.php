@@ -7,7 +7,7 @@
  * Input        : kind (ribbon, waves, bubbles, shards, ripples, blob, folds, orbs, loop, panels, soft, cards), palette (sage bawaan, sky, rose, mint, amber, violet, night), quote, seed, quotePosition (kosong = acak dari seed), ratio, static (seed tetap dari kind+palette+quote), autoQuote (kutipan bawaan Indonesia bila quote kosong).
  * Output       : <div class="dl-wallpaper"> berisi <svg> dan <q>; mengisi lebar induk, tinggi menurut rasio.
  * Dipakai oleh : layar proyek (latar kartu sapaan, login, dashboard: opt-in); halaman peragaan Backgrounds > Wallpaper.
- * Status       : Review (W1 empat bentuk awal; W2 delapan bentuk lain; W3 kutipan bawaan, static, posisi menghindari bentuk utama).
+ * Status       : Review (W4 latar login-box, greeting-card, dashboard; W1 empat bentuk awal; W2 delapan bentuk lain; W3 kutipan bawaan, static, posisi menghindari bentuk utama).
  */
 
 namespace Devlib\Components;

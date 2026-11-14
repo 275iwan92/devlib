@@ -631,7 +631,7 @@ Layar kunci: menutup aplikasi setelah tidak ada aktivitas `idle` menit (0 = hany
 ## `<x-dl::login-box>`
 Isi kotak login. Cukup SEBUT bagian yang tampil, berurutan, dipisah koma:.
 - Berkas: `src/Components/LoginBox.php`, tampilan `resources/views/components/login-box.blade.php`
-- Prop: show:string='lang, title, username, p…', action:string='', button:string='Sign in', error:?string=NULL, username:string='', forgotUrl:string='#', registerUrl:string='#', brand:?string=NULL, tagline:?string=NULL, uatAccounts:?array=NULL
+- Prop: show:string='lang, title, username, p…', action:string='', button:string='Sign in', error:?string=NULL, username:string='', forgotUrl:string='#', registerUrl:string='#', brand:?string=NULL, tagline:?string=NULL, uatAccounts:?array=NULL, wallpaper:?string=NULL, wallpaperPalette:string='sage'
 
 ## `<x-dl::login-card>`
 Kartu login karyawan baru yang bisa dicetak: nama, kode, username, password awal. Dipakai di dalam x-dl::modal; tombol Print hanya mencetak kartunya.

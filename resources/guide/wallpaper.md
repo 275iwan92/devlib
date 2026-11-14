@@ -53,7 +53,7 @@ Constructor of `Devlib\Components\Wallpaper` (8 props).
 - Keep quotes short (about 60 characters); longer text is clipped, not wrapped beyond the safe area.
 - The quote is not translated; pass text already in the display language.
 - Do not draw controls on top without checking contrast; the `night` palette is dark, the others are light.
-- Opt-in object: nothing else in DevLib uses it yet. Wiring into greeting card, login and dashboard, and the module pack entry, come in a later step.
+- Opt-in object: `x-dl::login-box` (props `wallpaper`, `wallpaper-palette`) and `x-dl::greeting-card` / `x-dl::dashboard` (board keys `wallpaper`, `wallpaper_palette`) can draw it as a backdrop (class `dl-wallpaper--backdrop`, quote hidden). A pack that includes those objects pulls this one in automatically; it is not part of Core.
 - Lint: no own rule.
 
 ## Example
@@ -67,5 +67,5 @@ Constructor of `Devlib\Components\Wallpaper` (8 props).
 ## Related
 
 - `x-dl::button` with `variant="glass"`: the glass button that sits well on top of this background.
-- `x-dl::greeting-card`, `x-dl::login`: planned places to use it as a backdrop (later step).
+- `x-dl::greeting-card`, `x-dl::dashboard`, `x-dl::login-box`: take it as a backdrop through their own opt-in prop.
 - `skills/devlib/components.md`: generated prop list.

@@ -1,4 +1,5 @@
-<div class="dl-loginbox" {!! $dl() !!} data-dl-loginbox data-error="{{ $error }}">
+<div @class(['dl-loginbox', 'dl-loginbox--wp' => $wallpaper]) {!! $dl() !!} data-dl-loginbox data-error="{{ $error }}">
+    @if ($wallpaper)<x-dl::wallpaper :kind="$wallpaper" :palette="$wallpaperPalette" static ratio="1/1" class="dl-wallpaper--backdrop" />@endif
     @if (array_intersect(['lang', 'support'], $parts()))
         <div class="dl-loginbox__top">
             @if (in_array('support', $parts(), true))<x-dl::uat-accounts :accounts="$uatAccounts ?? \Devlib\Components\UatAccounts::SAMPLE" />@endif
