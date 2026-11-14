@@ -4514,13 +4514,13 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-hbars__day{border:0;background:transparent;padding:0;text-align:left;font:inherit;font-weight:700;color:var(--dl-ink-strong);cursor:pointer}
 .dl-hbars__day:hover{text-decoration:underline}
 .dl-hbars__track{position:relative;height:34px;border:2px solid var(--dl-border);border-radius:8px;background-color:var(--dl-surface);background-image:linear-gradient(to right,var(--dl-border-soft) 1px,transparent 1px);background-size:calc(100% / var(--hb-n,24)) 100%;touch-action:none;cursor:crosshair}
-.dl-hbars__bar{position:absolute;top:3px;bottom:3px;border-radius:6px;background:var(--dl-navy);color:var(--dl-white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:calc(12px * var(--dl-font-scale));cursor:grab;overflow:hidden;white-space:nowrap}
+.dl-hbars__bar{position:absolute;top:3px;bottom:3px;border-radius:6px;background:var(--dl-navy);color:var(--dl-white);display:flex;align-items:flex-start;justify-content:center;padding-top:2px;font-weight:700;font-size:calc(12px * var(--dl-font-scale));cursor:grab;overflow:hidden;white-space:nowrap}
 .dl-hbars__bar span{pointer-events:none}
 .dl-hbars__bar.is-drag{background:var(--dl-accent);cursor:grabbing}
 .dl-hbars__bar.is-night{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.25) 0 6px,transparent 6px 12px);cursor:not-allowed}
 .dl-hbars__h{position:absolute;top:0;bottom:0;width:8px;cursor:ew-resize;background:rgba(255,255,255,.55)}
 .dl-hbars__h--l{left:0}.dl-hbars__h--r{right:0}
-.dl-hbars__brk{position:absolute;top:3px;bottom:3px;background:repeating-linear-gradient(90deg,var(--dl-surface) 0 3px,var(--dl-border) 3px 6px);border:1px solid var(--dl-ink-strong);border-radius:4px;opacity:.9;pointer-events:none}
+.dl-hbars__brk{position:absolute;bottom:5px;height:7px;z-index:3;background:repeating-linear-gradient(90deg,var(--dl-white) 0 4px,var(--dl-warn) 4px 8px);border-radius:4px;pointer-events:none}
 .dl-hbars__net{text-align:right;font-weight:700;color:var(--dl-ink-strong);font-size:calc(13px * var(--dl-font-scale))}
 .dl-hbars__net.is-off{font-weight:600}
 .dl-hbars__hint{margin:0;font-weight:600;font-size:calc(12px * var(--dl-font-scale));color:var(--dl-ink-strong)}

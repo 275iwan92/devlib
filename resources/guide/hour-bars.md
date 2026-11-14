@@ -1,6 +1,6 @@
 ## Overview
 
-`<x-dl::hour-bars>` draws one bar per day on a 24-hour axis (Mon to Sun) for a weekly hours pattern. The user drags in an empty area to create the working hours of a day, drags the bar to move it, drags an end of the bar to change the clock in or clock out, and clicks a day name to set that day off. The break is drawn as a light band inside the bar and the net hours of the day stand at the right. The bars do not store anything themselves: they read and write the per-day time fields that the screen keeps in the same form, so the fields stay the source that is saved.
+`<x-dl::hour-bars>` draws one bar per day on a 24-hour axis (Mon to Sun) for a weekly hours pattern. The user drags in an empty area to create the working hours of a day, drags the bar to move it, drags an end of the bar to change the clock in or clock out, and clicks a day name to set that day off. The break is drawn as a striped strip at the bottom of the bar and the net hours of the day stand at the right. The bars do not store anything themselves: they read and write the per-day time fields that the screen keeps in the same form, so the fields stay the source that is saved.
 
 Use it on top of seven day rows (clock in, break start, break end, clock out) when people should see and shape the week at a glance: shift master, office hours, machine hours. Do NOT use it for dated schedules (`x-dl::gantt`, `x-dl::calendar`), for one time range (`x-dl::field.time`), or without the per-day fields.
 
