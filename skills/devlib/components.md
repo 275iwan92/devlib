@@ -528,6 +528,11 @@ Teks petunjuk satu paragraf (penjelasan kecil di bawah judul / field).
 - Berkas: `src/Components/Hint.php`
 - Prop: note:bool=false, as:string='p', italic:bool=false
 
+## `<x-dl::hour-bars>`
+Batang jam per hari (Mon..Sun) pada sumbu 00-24: tarik di area kosong untuk membuat jam kerja, geser batang untuk memindah, tarik ujung untuk mengubah jam masuk / pulang; istirahat tampil sebagai ruas terang di dalam batang; klik nama hari untuk meliburkan.
+- Berkas: `src/Components/HourBars.php`
+- Prop: fields:array=[], days:array=[…], from:int=0, to:int=24, snap:int=15, readonly:bool=false
+
 ## `<x-dl::icon>`
 Ikon baku: sebut ARTINYA (save, delete, print, ...), bukan nama Font Awesome.
 - Berkas: `src/Components/Icon.php`

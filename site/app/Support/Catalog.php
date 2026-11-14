@@ -411,6 +411,7 @@ final class Catalog
                 'transfer' => ['Transfer (two boxes: not scheduled left, scheduled right; arrow or drag and drop)', $c('Transfer'), 'wide'],
                 'slot-board' => ['Slot Board (people pool + rows x columns matrix; drag, tick and click a slot)', $c('SlotBoard'), 'wide'],
                 'week-fill' => ['Week Fill (day chips + four times once, Apply to the chosen days)', $c('WeekFill'), 'wide'],
+                'hour-bars' => ['Hour Bars (one draggable bar per day on a 24-hour axis; reads and writes the per-day time fields)', $c('HourBars'), 'wide'],
             ]],
             'p2-select-add' => ['Select · Add New', 'fa-solid fa-circle-plus', ['select-add' => ['Select with Add New button (popup, save by JSON, new item selected)', $f('Select')]]],
             'p2-files' => ['Files', 'fa-solid fa-paperclip', ['field-upload' => ['Upload', $f('Upload')], 'field-signature' => ['Signature', $f('Signature')]]],
