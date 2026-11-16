@@ -22,12 +22,13 @@ Use it for a decorative or labelled glyph inside text, a menu row or a card head
 
 ## Props
 
-Constructor of `Devlib\Components\Icon` (2 props; nothing is inherited from `DevlibComponent`).
+Constructor of `Devlib\Components\Icon` (3 props; nothing is inherited from `DevlibComponent`).
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
 | `name` | `string`, `'info'` | The icon **meaning**. Looked up in `Devlib\Icon::MAP`; the result is written as the Font Awesome class next to `fa-solid`. A name that is not in the map is used as-is, so a raw class such as `fa-gear` or `fa-fire` also works (the `fa-` prefix is required; a bare `fire` draws nothing). Because `fa-solid` is hard-coded, only solid icons work; brand icons do not. Not translated. |
 | `label` | `?string`, `null` | Accessible text. `null` (default): the icon is decorative and gets `aria-hidden="true"`. A string: written to both `title` (hover tooltip) and `aria-label`, and `aria-hidden` is not written. Translated through the dictionary (`label` is a standard text prop); wrap data values in `raw()`. |
+| `set` | `string`, `''` | Opt-in icon set. Empty (default): Font Awesome, unchanged. `line4`: uniform 4px rounded line icons drawn as inline SVG (`currentColor`, `1em`), for the 20 meanings listed below; a meaning not in the set falls back to Font Awesome. The wrapper is `<span class="dl-icon-line4">` containing `<svg class="dl-icon dl-icon--line4">`. |
 
 Extra HTML attributes (`class`, `style`, `id`, `data-*`, `onclick`...) are merged onto the `<i>`; `class` is appended to the generated classes. `can="module.action"` is supported by the base class `DevlibComponent`: without the ability nothing is rendered.
 
@@ -39,6 +40,8 @@ Extra HTML attributes (`class`, `style`, `id`, `data-*`, `onclick`...) are merge
 | Grid and navigation | `search`, `filter`, `sort`, `columns`, `group`, `density`, `expand-row`, `more`, `expand`, `collapse`, `next`, `prev`, `menu`, `home` |
 | Status and info | `info`, `warning`, `error`, `success`, `help`, `support`, `notification`, `chat`, `ai`, `code` |
 | Data and modules | `user`, `users`, `password`, `email`, `phone`, `calendar`, `time`, `money`, `file`, `attachment`, `settings`, `logout` |
+
+Set `line4` (`Devlib\IconLine4::PATHS`): `settings`, `percent`, `qr`, `info`, `list`, `power`, `email`, `user`, `warning`, `attachment`, `notification`, `hash`, `arrow`, `time`, `more` (three dots, horizontal), `open`, `cloud`, `wifi`, `image`, `refresh`. `percent`, `list`, `power`, `hash`, `arrow`, `cloud` and `wifi` have no Font Awesome meaning yet, so only this set draws them.
 
 The catalog page `basic-icons` renders the whole map live.
 
@@ -73,6 +76,7 @@ Copied in shape from the catalog (`basic-icons`):
 <x-dl::icon name="save" />
 <x-dl::icon name="delete" label="Delete" />
 <x-dl::icon name="fa-fire" style="color:#c62828" />
+<x-dl::icon name="settings" set="line4" />
 
 @foreach (\Devlib\Icon::MAP as $name => $fa)
     <div><x-dl::icon :name="$name" /> {{ $name }}</div>

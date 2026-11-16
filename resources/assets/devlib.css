@@ -761,6 +761,7 @@ body.dl-page-body{overflow:auto;height:auto;min-height:100vh}
 .dl-sample > *{flex:1;min-width:260px}
 .dl-sample > div:not(.dl-themepick){display:flex;flex-direction:column;gap:10px;align-items:flex-start;background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius-lg);padding:14px}
 .dl-sample > div:not(.dl-themepick) > .dl-field,.dl-sample > div:not(.dl-themepick) > .dl-alert{align-self:stretch;margin:0}
+.dl-icon-line4{display:inline-flex;vertical-align:-.125em;line-height:1}
 .dl-icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
 .dl-icons div{display:flex;align-items:center;gap:8px;background:var(--dl-surface);border:1px solid var(--dl-border);border-radius:var(--dl-radius);padding:8px 10px;font-size:calc(12px * var(--dl-font-scale))}
 .dl-icons i{color:var(--dl-accent-ink);width:18px;text-align:center}

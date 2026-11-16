@@ -536,7 +536,7 @@ Batang jam per hari (Mon..Sun) pada sumbu 00-24: tarik di area kosong untuk memb
 ## `<x-dl::icon>`
 Ikon baku: sebut ARTINYA (save, delete, print, ...), bukan nama Font Awesome.
 - Berkas: `src/Components/Icon.php`
-- Prop: name:string='info', label:?string=NULL
+- Prop: name:string='info', label:?string=NULL, set:string=''
 
 ## `<x-dl::icon-button>`
 Tombol ikon persegi (kolom Aksi grid, toolbar). icon = arti baku (edit, delete, open, ...).
