@@ -28,7 +28,7 @@ Constructor of `Devlib\Components\Icon` (3 props; nothing is inherited from `Dev
 |---|---|---|
 | `name` | `string`, `'info'` | The icon **meaning**. Looked up in `Devlib\Icon::MAP`; the result is written as the Font Awesome class next to `fa-solid`. A name that is not in the map is used as-is, so a raw class such as `fa-gear` or `fa-fire` also works (the `fa-` prefix is required; a bare `fire` draws nothing). Because `fa-solid` is hard-coded, only solid icons work; brand icons do not. Not translated. |
 | `label` | `?string`, `null` | Accessible text. `null` (default): the icon is decorative and gets `aria-hidden="true"`. A string: written to both `title` (hover tooltip) and `aria-label`, and `aria-hidden` is not written. Translated through the dictionary (`label` is a standard text prop); wrap data values in `raw()`. |
-| `set` | `string`, `''` | Opt-in icon set. Empty (default): Font Awesome, unchanged. `line4`: uniform 4px rounded line icons drawn as inline SVG (`currentColor`, `1em`), for the 20 meanings listed below; a meaning not in the set falls back to Font Awesome. The wrapper is `<span class="dl-icon-line4">` containing `<svg class="dl-icon dl-icon--line4">`. |
+| `set` | `string`, `''` | Opt-in icon set. Empty (default): Font Awesome, unchanged. `line4`: uniform 4px rounded line icons drawn as inline SVG (`currentColor`, `1em`), for the 40 meanings listed below; a meaning not in the set falls back to Font Awesome. The wrapper is `<span class="dl-icon-line4">` containing `<svg class="dl-icon dl-icon--line4">`. |
 
 Extra HTML attributes (`class`, `style`, `id`, `data-*`, `onclick`...) are merged onto the `<i>`; `class` is appended to the generated classes. `can="module.action"` is supported by the base class `DevlibComponent`: without the ability nothing is rendered.
 
@@ -41,7 +41,7 @@ Extra HTML attributes (`class`, `style`, `id`, `data-*`, `onclick`...) are merge
 | Status and info | `info`, `warning`, `error`, `success`, `help`, `support`, `notification`, `chat`, `ai`, `code` |
 | Data and modules | `user`, `users`, `password`, `email`, `phone`, `calendar`, `time`, `money`, `file`, `attachment`, `settings`, `logout` |
 
-Set `line4` (`Devlib\IconLine4::PATHS`): `settings`, `percent`, `qr`, `info`, `list`, `power`, `email`, `user`, `warning`, `attachment`, `notification`, `hash`, `arrow`, `time`, `more` (three dots, horizontal), `open`, `cloud`, `wifi`, `image`, `refresh`. `percent`, `list`, `power`, `hash`, `arrow`, `cloud` and `wifi` have no Font Awesome meaning yet, so only this set draws them.
+Set `line4` (`Devlib\IconLine4::PATHS`): `settings`, `percent`, `qr`, `info`, `list`, `power`, `email`, `user`, `warning`, `attachment`, `notification`, `hash`, `arrow`, `time`, `more` (three dots, horizontal), `open`, `cloud`, `wifi`, `image`, `refresh`. Second batch: `target`, `delete`, `download`, `music`, `send`, `shield`, `camera`, `search`, `home`, `location`, `users`, `star`, `tag`, `chat`, `at`, `lock`, `close`, `success` (check mark), `new` (plus), `bag`. `percent`, `list`, `power`, `hash`, `arrow`, `cloud`, `wifi`, `target`, `music`, `send`, `shield`, `camera`, `location`, `star`, `tag`, `at` and `bag` have no Font Awesome meaning yet, so only this set draws them.
 
 The catalog page `basic-icons` renders the whole map live.
 
