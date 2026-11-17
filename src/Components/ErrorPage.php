@@ -57,7 +57,7 @@ class ErrorPage extends DevlibComponent
             <div {{ $attributes->class(['dl-error', 'dl-error--full' => $full]) }} {!! $dl() !!}>
                 <div class="dl-error__card">
                     <span class="dl-error__icon dl-error__icon--{{ $tone }}"><i class="fa-solid {{ $ic }}"></i></span>
-                    <div class="dl-error__code">{{ $code === 'offline' ? '' : $code }}</div>
+                    <div class="dl-error__code">{{ in_array($code, ['offline', 'construction'], true) ? '' : $code }}</div>
                     <h1 class="dl-error__title">{{ $title ?? \Devlib\Lang::text($t) }}</h1>
                     <p class="dl-error__msg">{{ $message ?? \Devlib\Lang::text($m) }}</p>
                     @if ($note)<p class="dl-error__msg"><mark class="dl-error__note">{{ $note }}</mark></p>@endif

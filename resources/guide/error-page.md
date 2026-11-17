@@ -14,7 +14,7 @@ Generated markup:
 <div class="dl-error dl-error--full" data-dl="x-dl::error-page code=404" data-dl-class="ErrorPage ← DevlibComponent" data-dl-src="—">
   <div class="dl-error__card">
     <span class="dl-error__icon dl-error__icon--accent"><i class="fa-solid fa-compass"></i></span>
-    <div class="dl-error__code">404</div>                 <!-- empty for code="offline" -->
+    <div class="dl-error__code">404</div>                 <!-- empty for code="offline" and "construction" -->
     <h1 class="dl-error__title">Page not found</h1>
     <p class="dl-error__msg">The address you opened does not exist or has been moved.</p>
     <div class="dl-error__actions">
@@ -31,7 +31,7 @@ Constructor of `Devlib\Components\ErrorPage` (8 props, none inherited). Use `:fu
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
-| `code` | `string`, `'404'` | Selects the built-in preset from `ErrorPage::CODES`: `403`, `404`, `419`, `500`, `503`, `offline`, `construction` (lower-case, exact match). Printed as the big code text (empty text for `offline`). Any other value (for example `429`) uses the fallback preset below and the value is still printed as the code. |
+| `code` | `string`, `'404'` | Selects the built-in preset from `ErrorPage::CODES`: `403`, `404`, `419`, `500`, `503`, `offline`, `construction` (lower-case, exact match). Printed as the big code text (empty text for `offline` and `construction`). Any other value (for example `429`) uses the fallback preset below and the value is still printed as the code. |
 | `title` | `?string`, `null` | Heading. `null` uses the preset title. Translated through the dictionary (standard text prop); a given text replaces the preset title entirely. |
 | `message` | `?string`, `null` | Explanation paragraph. `null` uses the preset message. Translated. Replaces the preset message entirely. |
 | `home` | `string`, `'/'` | URL of the Home button and the fallback of the Back button (used when the browser cannot go back). Not translated. |
@@ -58,7 +58,7 @@ Inherited from `DevlibComponent` (no constructor props): `can="module.action"` h
 ## Behavior
 
 - **Icon and colour.** The tone gives the icon circle its colour: `danger` red, `warn` amber, `accent` the theme accent. Colours follow the theme tokens, so light, dark and custom themes work; sizes follow `--dl-font-scale`.
-- **Code size.** `46px` bold with letter spacing; the code `div` stays in the DOM (empty) for `offline` so the layout is the same.
+- **Code size.** `46px` bold with letter spacing; the code `div` stays in the DOM (empty) for `offline` and `construction` so the layout is the same.
 - **Buttons.** `Back` is `x-dl::back-button :fallback="$home"`: the script goes to the previous screen when the visitor came from the same site (and `window.DL_BACK_HISTORY` is not `false`), otherwise follows the link to `home`. `Home` is an `x-dl::button` (secondary, house icon) with `href=home`. Both labels are fixed English words (`Back` is always `Back`; `Home` goes through the dictionary only when the app sets `devlib.translate_fixed`).
 - **Language.** Preset title/message and the tooltip of Back are translated at render time. Texts you pass in `title` / `message` are translated too when they exist in the dictionary; otherwise they are shown as given.
 - **Previews.** In `site/resources/views/demos/error-pages.blade.php` the six presets are put in a `div.dl-errors-grid` (auto-fill columns of 320px minimum; the cards lose their shadow and max width) with `:full="false"` and `home="#"`.
