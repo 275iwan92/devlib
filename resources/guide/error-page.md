@@ -27,15 +27,18 @@ Generated markup:
 
 ## Props
 
-Constructor of `Devlib\Components\ErrorPage` (5 props, none inherited). Use `:full="false"` for the boolean.
+Constructor of `Devlib\Components\ErrorPage` (8 props, none inherited). Use `:full="false"` for the boolean.
 
 | Prop | Type, default | Meaning and effect |
 |---|---|---|
-| `code` | `string`, `'404'` | Selects the built-in preset from `ErrorPage::CODES`: `403`, `404`, `419`, `500`, `503`, `offline` (lower-case, exact match). Printed as the big code text (empty text for `offline`). Any other value (for example `429`) uses the fallback preset below and the value is still printed as the code. |
+| `code` | `string`, `'404'` | Selects the built-in preset from `ErrorPage::CODES`: `403`, `404`, `419`, `500`, `503`, `offline`, `construction` (lower-case, exact match). Printed as the big code text (empty text for `offline`). Any other value (for example `429`) uses the fallback preset below and the value is still printed as the code. |
 | `title` | `?string`, `null` | Heading. `null` uses the preset title. Translated through the dictionary (standard text prop); a given text replaces the preset title entirely. |
 | `message` | `?string`, `null` | Explanation paragraph. `null` uses the preset message. Translated. Replaces the preset message entirely. |
 | `home` | `string`, `'/'` | URL of the Home button and the fallback of the Back button (used when the browser cannot go back). Not translated. |
 | `full` | `bool`, `true` | `true` adds `dl-error--full`: `min-height:100vh/100dvh` and a gradient background, for a real error page. `false` removes it, for an inline preview. |
+| `note` | `?string`, `null` | Short highlighted note under the explanation (a `<mark class="dl-error__note">`), e.g. the reason a screen is closed. `null` prints nothing. Plain text, not translated. |
+| `eta` | `?string`, `null` | Expected return time as ISO 8601 with a zone (`2026-11-17T16:30:00+07:00`). When set, the card prints `Expected back:` with a live countdown (`[N]d HH:MM:SS`) driven by `error-page.js`. `null` prints nothing. |
+| `eta-label` | `?string`, `null` | Human readable text of the expected time (`17-Nov-2026 16:30`) printed beside the countdown. `null` prints the raw `eta` string. |
 
 Presets (`ErrorPage::CODES`, `code => [title, message, icon, tone]`, texts in English and translated at render):
 
@@ -47,6 +50,7 @@ Presets (`ErrorPage::CODES`, `code => [title, message, icon, tone]`, texts in En
 | `500` | A system error occurred | `fa-triangle-exclamation` | `danger` |
 | `503` | Under maintenance | `fa-screwdriver-wrench` | `accent` |
 | `offline` | No connection | `fa-wifi` | `danger` |
+| `construction` | Under construction | `fa-helmet-safety` | `warn` |
 | (other) | An error occurred / "Please try again." | `fa-circle-exclamation` | `danger` |
 
 Inherited from `DevlibComponent` (no constructor props): `can="module.action"` hides the whole page for users without the ability (not meaningful for a real error page); extra attributes (`class`, `id`, `style`, `data-*`) are merged onto the root `div`.
@@ -64,7 +68,7 @@ Inherited from `DevlibComponent` (no constructor props): `can="module.action"` h
 ## Data and events
 
 - Input: only the props. Nothing is posted, no request is made, no custom `dl:*` event is emitted.
-- Only the Back button has a script (`resources/assets/js/components/back.js`, selector `[data-dl-back]`); the card itself has none, so there is no `el.dlComponent` on the error root.
+- Only two parts have a script: the Back button (`resources/assets/js/components/back.js`, selector `[data-dl-back]`) and the countdown (`resources/assets/js/components/error-page.js`, selector `[data-dl-eta]`, present only when `eta` is set); the card itself has none, so there is no `el.dlComponent` on the error root. The countdown counts from the browser clock to `eta`; at zero it prints the translated `Almost ready, this page will reload by itself.` and reloads the page every 60 seconds.
 - Constants available to PHP: `ErrorPage::CODES` (array above) and `info()` (returns `[title, message, icon, tone]` for the current code, falling back to the generic preset). The demo iterates `array_keys(ErrorPage::CODES)`.
 
 ## Rules and pitfalls
@@ -105,6 +109,14 @@ Inline preview of all presets (as in the catalog demo):
     @endforeach
 </div>
 ```
+
+## Under construction
+
+```blade
+<x-dl::error-page code="construction" note="Check Material Availability: stock calculation is being corrected." eta="2026-11-17T16:30:00+07:00" eta-label="17-Nov-2026 16:30" :home="url('/v2')" />
+```
+
+A screen that is closed on purpose while it is fixed. Wrap it in the normal layout; keep `eta` in a zone-aware ISO string so every browser counts to the same moment.
 
 ## Related
 

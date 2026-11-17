@@ -869,6 +869,10 @@ final class Lang
         'lbl.358' => ['lebar 600 px atau lebih, bukan HP landscape', 'width 600 px or more, not a phone sideways'],
         'lbl.359' => ['tinggi di bawah 480 px tetapi pointer utama bukan sentuh', 'height under 480 px but the main pointer is not touch'],
         'lbl.360' => ['hanya di https atau localhost: salin memakai cadangan', 'only works on https or localhost: the copy uses the fallback'],
+        'lbl.361' => ['Sedang dibangun', 'Under construction'],
+        'lbl.362' => ['Halaman ini sedang diperbaiki sekarang. Silakan kembali nanti; data Anda aman.', 'This page is being improved right now. Please come back later; your data is safe.'],
+        'lbl.363' => ['Perkiraan kembali', 'Expected back'],
+        'lbl.364' => ['Hampir siap, halaman ini dimuat ulang sendiri.', 'Almost ready, this page will reload by itself.'],
         // Production Output (layar entry hasil produksi di mesin), 2026-10-13.
         'od.perhour' => ['TARGET PER JAM', 'TARGET PER HOUR'], 'od.qty' => ['TARGET QTY', 'TARGET QTY'], 'od.duration' => ['TARGET DURASI', 'TARGET DURATION'],
         'od.unit_h' => ['/jam', '/hour'], 'od.hours' => ['jam', 'h'], 'od.minutes' => ['mnt', 'min'],

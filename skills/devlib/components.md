@@ -271,7 +271,7 @@ Teks lingkungan: akhiran judul logo ('- mockup', part title), VERSI kecil dan pu
 ## `<x-dl::error-page>`
 Halaman kesalahan baku (403, 404, 419, 500, 503, offline): kode, judul, penjelasan, tombol Back & Beranda. full=false untuk pratinjau di dalam halaman.
 - Berkas: `src/Components/ErrorPage.php`
-- Prop: code:string='404', title:?string=NULL, message:?string=NULL, home:string='/', full:bool=true
+- Prop: code:string='404', title:?string=NULL, message:?string=NULL, home:string='/', full:bool=true, note:?string=NULL, eta:?string=NULL, etaLabel:?string=NULL
 
 ## `<x-dl::feed>`
 Umpan gaya blog / berita (user 2026-10-07): banyak narasi dibaca berurutan di satu halaman, tanpa membuka satu per satu.
