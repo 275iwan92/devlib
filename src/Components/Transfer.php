@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Dua kotak kiri-kanan (transfer / dual list): kiri = yang BELUM dijadwalkan, kanan = yang SUDAH; filter di kedua kotak, pilih banyak, tombol tengah atau drag and drop; baris kanan membawa pilihan tambahan (mis. mesin dan job).
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : name, items [id => label], rows [[id, <key> => nilai]], fields [[key, label, options, sticky, default, required]], idKey, leftTitle, rightTitle, max.
+ * Input        : name, items [id => label], rows [[id, <key> => nilai]], fields [[key, label, options, sticky, default, required]], idKey, leftTitle, rightTitle, max, balanced (dua kotak sama lebar, baris satu garis tanpa avatar: nama kiri, kode kanan; untuk daftar sederhana tanpa field per baris).
  * Output       : Input hidden name[i][<idKey>] dan name[i][<key>] per baris kanan, ikut terkirim bersama form; perubahan menandai form belum disimpan dan Undo form mengembalikan isi awal (core.js fillForm -> el.dlTransfer.reset()). Gaya .dl-transfer di devlib.css.
  * Dipakai oleh : (proyek) layar Shift Crew; demo katalog transfer.
  * Status       : Aktif (DevLib). Pasangan JS: components/transfer.js.
@@ -31,6 +31,7 @@ class Transfer extends DevlibComponent
         public string $leftTitle = 'Not scheduled',
         public string $rightTitle = 'Scheduled',
         public int $max = 0,
+        public bool $balanced = false,
     ) {}
 
     public function tag(): string
@@ -55,7 +56,7 @@ class Transfer extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class('dl-transfer') }} {!! $dl() !!} data-dl-transfer data-config="{{ json_encode($config()) }}">
+            <div {{ $attributes->class(['dl-transfer', 'dl-transfer--balanced' => $balanced]) }} {!! $dl() !!} data-dl-transfer data-config="{{ json_encode($config()) }}">
                 <section class="dl-transfer__box" data-t-box="left">
                     <header class="dl-transfer__head"><b class="dl-transfer__title">{{ \Devlib\Lang::text($leftTitle) }}</b><span class="dl-transfer__pill" data-t-count="left"></span><span class="dl-transfer__sel" data-t-sel="left" hidden></span></header>
                     <label class="dl-transfer__filter"><i class="fa-solid fa-magnifying-glass"></i><input type="search" data-t-filter="left" placeholder="{{ \Devlib\Lang::text('Filter...') }}" aria-label="{{ \Devlib\Lang::text('Filter...') }}"></label>

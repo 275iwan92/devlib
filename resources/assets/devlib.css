@@ -4451,6 +4451,14 @@ input::placeholder,textarea::placeholder{color:color-mix(in srgb,var(--dl-ink) 7
 .dl-transfer__act:disabled{opacity:.35;cursor:not-allowed;border-color:var(--dl-border)}
 .dl-transfer__drop{position:absolute;inset:0;border-radius:var(--dl-radius-lg);background:var(--dl-accent-soft);border:3px dashed var(--dl-accent);color:var(--dl-ink-strong);font-weight:700;display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none;font-size:calc(15px * var(--dl-font-scale))}
 .dl-transfer__box.is-over .dl-transfer__drop{display:flex}
+.dl-transfer--balanced{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;margin-top:8px}
+.dl-transfer--balanced .dl-transfer__box{min-height:0;padding:10px;gap:8px}
+.dl-transfer--balanced .dl-transfer__list{min-height:320px;max-height:320px;gap:3px}
+.dl-transfer--balanced .dl-transfer__item{padding:5px 10px;border-radius:6px;gap:8px}
+.dl-transfer--balanced .dl-transfer__avatar{display:none}
+.dl-transfer--balanced .dl-transfer__who{flex-direction:row;align-items:baseline;justify-content:space-between;gap:12px;flex:1 1 auto}
+.dl-transfer--balanced .dl-transfer__who b{flex:1;min-width:0}
+.dl-transfer--balanced .dl-transfer__who small{flex:none}
 @media (max-width:860px){.dl-transfer{grid-template-columns:1fr}.dl-transfer__mid{flex-direction:row;justify-content:center}.dl-transfer__act i{transform:rotate(90deg)}.dl-transfer__item--row{flex-wrap:wrap}}
 
 /* ---- SlotBoard (x-dl::slot-board): papan slot satu layar. Kolam kiri berisi bulatan inisial; matriks kanan baris x kolom; petak menyala saat diseret atau saat ada yang dicentang; teks hitam ---- */
