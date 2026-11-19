@@ -592,6 +592,7 @@ final class Lang
         'oc_expand' => ['Buka cabang', 'Expand branch'],
         'oc_collapse' => ['Lipat cabang', 'Collapse branch'],
         'oc_top' => ['Puncak', 'Top'],
+        'oc_unlinked' => ['Belum terhubung', 'Not linked'],
         'oc_open' => ['Buka bawahan', 'Open subordinates'],
         'pmx_none' => ['Tidak ada objek.', 'No objects.'],
         'ph_kind_mobile' => ['seluler', 'cellular'],

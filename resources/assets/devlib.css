@@ -2069,6 +2069,7 @@ td.dl-print__no{text-align:center}
 .dl-org__crumbs button{border:0;background:none;padding:2px 4px;font:inherit;font-weight:600;color:var(--dl-accent-ink);cursor:pointer;text-decoration:underline dotted}
 .dl-org__crumbs button:hover{text-decoration-style:solid}
 .dl-org__crumbs i{font-size:.75em;color:var(--dl-ink-strong)}
+.dl-org__crumbs-sp{flex:1}
 .dl-org.is-paged [data-o-level]{display:none}
 .dl-org__drill{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .dl-org__drill i{font-size:.75em}

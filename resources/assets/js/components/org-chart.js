@@ -150,6 +150,13 @@
     // Halaman bagan: null = puncak (semua kartu tanpa atasan + bawahan langsungnya); id = kartu itu + bawahan langsungnya.
     paging() { return this.paged && !this.q && !this.dept; }
 
+    // Kartu tanpa atasan DAN tanpa bawahan (data yatim) tidak ikut halaman puncak; dikumpulkan di halaman "*" (Belum terhubung) supaya puncak hanya berisi pohon sungguhan.
+    orphans() { return this.kids(null).filter(n => !this.kids(n.id).length); }
+    pageRoots() {
+      if (this.pg === '*') return this.orphans();
+      return this.pg == null ? this.kids(null).filter(n => this.kids(n.id).length) : [this.byId(this.pg)];
+    }
+
     goPage(id) {
       this.pg = id; this.render(); this.fit(); this.render();
       this.canvas.scrollLeft = (this.canvas.scrollWidth - this.canvas.clientWidth) / 2; this.canvas.scrollTop = 0;
@@ -157,10 +164,10 @@
 
     // Remah roti: Top > ... > kartu aktif; tiap bagian tombol yang membuka halaman atasannya.
     crumbs() {
-      const path = []; for (let n = this.pg == null ? null : this.byId(this.pg); n && path.length < 200; n = this.byId(n.parent)) path.unshift(n);
+      const path = []; for (let n = this.pg == null || this.pg === '*' ? null : this.byId(this.pg); n && path.length < 200; n = this.byId(n.parent)) path.unshift(n);
       const bar = $(this.el, '[data-o-crumbs]'); if (!bar) return;
       bar.hidden = !this.paging();
-      bar.innerHTML = `<button type="button" data-o-page="">${esc(T('oc_top'))}</button>` + path.map((n, i) => `<i class="fa-solid fa-chevron-right"></i>${i === path.length - 1 ? `<b>${esc(n.title)}</b>` : `<button type="button" data-o-page="${esc(n.id)}">${esc(n.title)}</button>`}`).join('');
+      bar.innerHTML = `<button type="button" data-o-page="">${esc(T('oc_top'))}</button>` + path.map((n, i) => `<i class="fa-solid fa-chevron-right"></i>${i === path.length - 1 ? `<b>${esc(n.title)}</b>` : `<button type="button" data-o-page="${esc(n.id)}">${esc(n.title)}</button>`}`).join('') + (this.orphans().length ? `<span class="dl-org__crumbs-sp"></span>${this.pg === '*' ? `<b>${esc(T('oc_unlinked'))} (${this.orphans().length})</b>` : `<button type="button" data-o-page="*">${esc(T('oc_unlinked'))} (${this.orphans().length})</button>`}` : '');
     }
 
     pbranch(n, leaf) {
@@ -171,7 +178,7 @@
     branch(n) { const c = this.kids(n.id), open = !this.collapsed.has(String(n.id)); return `<li>${this.card(n)}${c.length && open ? `<ul>${this.group(c)}</ul>` : ''}</li>`; }
 
     render() {
-      this.tree.innerHTML = this.paging() ? `<ul>${(this.pg == null ? this.kids(null) : [this.byId(this.pg)]).map(n => this.pbranch(n, false)).join('')}</ul>` : `<ul>${this.group(this.kids(null))}</ul>`;
+      this.tree.innerHTML = this.paging() ? `<ul>${this.pageRoots().map(n => this.pbranch(n, false)).join('')}</ul>` : `<ul>${this.group(this.kids(null))}</ul>`;
       this.crumbs();
       this.el.classList.toggle('has-q', !!(this.q || this.dept));
       $$(this.el, '[data-o-dept]').forEach(b => b.classList.toggle('is-on', b.dataset.oDept === this.dept));
