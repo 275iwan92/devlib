@@ -17,7 +17,7 @@ namespace Devlib\Components;
 // (beserta bawahannya; tidak boleh ke bawahannya sendiri), Undo, Simpan (dl:orgchart-save), Unduh HTML,
 // cari pegawai (sorot + buka cabang + gulir), lipat/buka cabang, zoom, tombol Level 1/2/3/All, geser (pan) dengan drag, minimap, Print.
 // Kartu berwarna per departemen (hue dari nama); lowong tanpa bawahan di satu induk digabung jadi "N Lowong" (hanya mode baca).
-// nodes: [['id', 'parent' => id|null, 'title' => jabatan, 'dept', 'people' => [nama | ['name','photo','locked'=>bool]]]]; locked = kartu gembok (nama sudah disamarkan oleh server).
+// nodes: [['id', 'parent' => id|null, 'title' => jabatan, 'dept', 'deptHref'?, 'people' => [nama | ['name','photo','href'?,'locked'=>bool]]]]; href / deptHref = tautan di nama pegawai / nama departemen pada kartu (opsional); locked = kartu gembok (nama sudah disamarkan oleh server).
 // departments: daftar nama departemen -> chip berwarna; klik chip menyorot kartu departemen itu (bersama pencarian, tanpa mengubah garis struktur).
 class OrgChart extends DevlibComponent
 {
