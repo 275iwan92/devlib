@@ -1919,6 +1919,11 @@ td.dl-print__no{text-align:center}
 .dl-print__sign i{display:block;height:44px;border-bottom:1px solid var(--dl-pr-sign);margin:0 10px}
 .dl-print__sign b{display:block;margin-top:3px;font-weight:500}
 .dl-print__sign small{color:var(--dl-pr-muted)}
+/* A5 lanskap (148mm) rapat: nota 1-3 baris harus muat SATU lembar (Jo 2026-11-19); ruang tanda tangan dan jarak penutup dikecilkan, hanya untuk A5 */
+.dl-print[data-paper="a5"] .dl-print__sign{margin-top:8px}
+.dl-print[data-paper="a5"] .dl-print__sign i{height:30px}
+.dl-print[data-paper="a5"] .dl-print__words{margin:4px 0 5px}
+.dl-print[data-paper="a5"] .dl-print__notes{margin:4px 0}
 .dl-print__foot{display:flex;justify-content:space-between;margin-top:8px;padding-top:4px;border-top:1px solid var(--dl-pr-line2);color:var(--dl-pr-faint);font-size:8.5px}
 .dl-print.is-bw .dl-print__sheet{filter:grayscale(1)}
 .dl-print.is-bw .dl-print__table th,.dl-print.is-bw .dl-print__words,.dl-print.is-bw .dl-print__notes{background:var(--dl-pr-paper)}
