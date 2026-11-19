@@ -1865,7 +1865,7 @@ form.is-dirty .dl-form__title::after{content:" • belum disimpan";color:var(--d
 .dl-print__pages{display:flex;flex-direction:column;align-items:center;gap:16px;overflow-x:auto;padding-bottom:10px}
 .dl-print__sheet{width:var(--dl-pw);height:var(--dl-ph);flex:none;background:var(--dl-pr-paper);color:var(--dl-pr-ink);box-shadow:0 4px 18px rgba(15,22,45,.18);font-family:var(--dl-font);font-size:10.5px;line-height:1.35}
 .dl-print__sheet{position:relative;overflow:hidden}
-.dl-print__sheet[data-wm]::before{content:attr(data-wm);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:calc(var(--dl-pw) * .16);font-weight:900;letter-spacing:.04em;white-space:nowrap;color:var(--dl-pr-neg);opacity:.13;pointer-events:none;z-index:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dl-print__sheet[data-wm]::before{/* cap air di lapisan PALING ATAS (z-index 2 di atas isi z-index 1; Jo 2026-11-19), tembus pandang dan tidak menangkap klik */content:attr(data-wm);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:calc(var(--dl-pw) * .16);font-weight:900;letter-spacing:.04em;white-space:nowrap;color:var(--dl-pr-neg);opacity:.13;pointer-events:none;z-index:2;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .dl-print__sheet[data-wm] .dl-print__inner{position:relative;z-index:1}
 .dl-print__inner{height:100%;padding:var(--dl-pad);display:flex;flex-direction:column;overflow:hidden}
 [data-p-body]{flex:1;min-height:0}
