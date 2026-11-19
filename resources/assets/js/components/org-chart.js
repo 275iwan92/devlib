@@ -125,10 +125,10 @@
 
     card(n, drill = false) {
       const P = this.ppl(n), c = this.kids(n.id), lock = P.some(p => p.locked);
-      return `<div class="dl-org__card ${P.length ? '' : 'is-vacant'} ${lock ? 'is-locked' : ''} ${this.hit(n) ? 'is-hit' : ''}" style="${this.dh(n)}" data-o-node="${esc(n.id)}" ${this.edit ? 'data-o-drop' : ''}>
+      return `<div class="dl-org__card ${P.length ? '' : 'is-vacant'} ${lock ? 'is-locked' : ''} ${this.hit(n) ? 'is-hit' : ''}" style="${this.dh(n)}" ${n.lv ? `data-lv="${+n.lv}"` : ''} data-o-node="${esc(n.id)}" ${this.edit ? 'data-o-drop' : ''}>
         ${this.edit ? `<span class="dl-org__grip" draggable="true" data-o-grip title="${esc(T('oc_drag'))}"><i class="fa-solid fa-grip-vertical"></i></span>` : ''}
         <div class="dl-org__who">${P.length ? `<span class="dl-org__avs">${P.slice(0, 3).map(p => `<span class="dl-org__av ${p.locked ? 'is-locked' : ''}" style="--h:${this.hue(p.name)}" title="${esc(p.name)}">${this.av(p)}</span>`).join('')}</span>` : '<span class="dl-org__av is-empty"><i class="fa-solid fa-user-plus"></i></span>'}
-          <span class="dl-org__txt"><b>${P.length ? P.slice(0, 2).map(p => this.lnk(p.name, p.href)).join(', ') + (P.length > 2 ? ` +${P.length - 2}` : '') : esc(T('oc_vacant'))}</b><small>${esc(n.title)}</small>${n.dept && n.showDept !== false ? `<em>${this.lnk(n.dept, n.deptHref)}</em>` : ''}</span></div>
+          <span class="dl-org__txt"><b>${P.length ? P.slice(0, 2).map(p => this.lnk(p.name, p.href)).join(', ') + (P.length > 2 ? ` +${P.length - 2}` : '') : esc(T('oc_vacant'))}</b><small>${esc(n.title)}</small>${n.dept && n.showDept !== false ? `<em>${this.lnk(n.dept, n.deptHref)}</em>` : ''}</span>${n.lvIcon ? `<i class="fa-solid ${esc(n.lvIcon)} dl-org__lvi"></i>` : ''}</div>
         ${drill ? `<button type="button" class="dl-org__fold dl-org__drill" data-o-drill="${esc(n.id)}" title="${esc(T('oc_open'))}">${c.length} <i class="fa-solid fa-chevron-right"></i></button>` : this.paging() ? '' : c.length ? `<button type="button" class="dl-org__fold" data-o-fold title="${esc(T(this.collapsed.has(String(n.id)) ? 'oc_expand' : 'oc_collapse'))}">${this.collapsed.has(String(n.id)) ? `+${c.length}` : '−'}</button>` : ''}
       </div>`;
     }

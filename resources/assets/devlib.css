@@ -2050,6 +2050,9 @@ td.dl-print__no{text-align:center}
 /* Varian pill (Jo 2026-11-19 "tree tetap, boleh lebih kreatif"): kartu = stadion berwarna per departemen dengan bibir bawah gelap + bayangan jatuh, teks di kartu putih yang menjorok ke kanan, avatar bercincin putih; garis pohon ungu-biru bertitik. Struktur DOM dan perilaku sama dengan varian biasa. */
 .dl-org--pill{--dl-f-line:#7a7fd6}
 .dl-org--pill .dl-org__card{--bs:hsl(var(--dh) 55% 40%);--bd:hsl(var(--dh) 58% 24%);min-width:262px;max-width:310px;margin-bottom:5px;padding:7px 8px 7px 7px;border:0;border-radius:99em;background:var(--bs);box-shadow:0 5px 0 var(--bd),-5px 12px 16px rgba(16,22,58,.28)}
+.dl-org--pill .dl-org__card[data-lv="1"]{--bs:#1a2799;--bd:#0e1670}.dl-org--pill .dl-org__card[data-lv="2"]{--bs:#141c63;--bd:#080c35}.dl-org--pill .dl-org__card[data-lv="3"]{--bs:#22cdf5;--bd:#0a9ccb}.dl-org--pill .dl-org__card[data-lv="4"]{--bs:#a3abf5;--bd:#4b5be0}.dl-org--pill .dl-org__card[data-lv="5"]{--bs:#e0e8fb;--bd:#3a74e0}
+.dl-org--pill .dl-org__lvi{position:relative;z-index:1;flex:none;align-self:center;margin:0 4px 0 8px;font-size:20px;color:#fff}
+.dl-org--pill .dl-org__card[data-lv="3"] .dl-org__lvi,.dl-org--pill .dl-org__card[data-lv="4"] .dl-org__lvi,.dl-org--pill .dl-org__card[data-lv="5"] .dl-org__lvi{color:#1c2250}
 .dl-org--pill .dl-org__card.is-vacant{--bs:hsl(var(--dh) 18% 72%);--bd:hsl(var(--dh) 18% 56%);background:var(--bs);border:0}
 .dl-org--pill .dl-org__card.is-locked{background:var(--bs)}
 .dl-org--pill .dl-org__card.is-hit{box-shadow:0 0 0 3px var(--dl-amber-2),0 5px 0 var(--bd),-5px 12px 16px rgba(16,22,58,.28)}
