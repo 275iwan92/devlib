@@ -60,7 +60,7 @@ class OrgChart extends DevlibComponent
                     <span class="dl-org__spacer"></span>
                     <div class="dl-grid__search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" placeholder="{{ \Devlib\Lang::text('Search employee / position...') }}" data-o-search aria-label="{{ \Devlib\Lang::text('Search employee') }}"></div>
                 </div>
-                @if ($departments)<div class="dl-org__depts" role="group" aria-label="{{ \Devlib\Lang::text('Department') }}"><button type="button" class="dl-org__chip" data-o-dept="">{{ \Devlib\Lang::text('All departments') }}</button>@foreach ($departments as $d)<button type="button" class="dl-org__chip" data-o-dept="{{ $d }}">{{ $d }}</button>@endforeach</div>@endif
+                @if ($departments)<select class="dl-org__dept" data-o-dept-select aria-label="{{ \Devlib\Lang::text('Department') }}"><option value="">{{ \Devlib\Lang::text('All departments') }}</option>@foreach ($departments as $d)<option value="{{ $d }}">{{ $d }}</option>@endforeach</select>@endif
                 <nav class="dl-org__crumbs" data-o-crumbs aria-label="{{ \Devlib\Lang::text('Position path') }}" hidden></nav>
                 <div class="dl-org__stage"><div class="dl-org__canvas" data-o-canvas><div class="dl-org__tree" data-o-tree></div></div><div class="dl-org__mini" data-o-mini hidden aria-hidden="true"></div></div>
             </div>

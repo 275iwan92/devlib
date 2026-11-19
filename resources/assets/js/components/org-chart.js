@@ -23,7 +23,8 @@
       this.dept = '';
       this.drag = null;
       this.pan = null;
-      $$(this.el, '[data-o-dept]').forEach(b => b.dataset.oDept && b.style.setProperty('--dh', this.hue(b.dataset.oDept)));
+      // Filter departemen = dropdown (Jo 2026-11-19, hemat ruang; menggantikan deretan chip).
+      $(this.el, '[data-o-dept-select]')?.addEventListener('change', e => { this.dept = e.target.value; this.focus(); });
       this.el.addEventListener('dragstart', e => { const g = e.target.closest('[data-o-grip]'); if (!g) return; this.drag = g.closest('[data-o-node]').dataset.oNode; g.closest('.dl-org__card').classList.add('is-drag'); e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', this.drag); e.dataTransfer.setDragImage(g.closest('.dl-org__card'), 20, 20); } catch (x) {} });
       this.el.addEventListener('dragend', () => { this.drag = null; $$(this.el, '.is-drag,.is-target,.is-deny').forEach(x => x.classList.remove('is-drag', 'is-target', 'is-deny')); });
       this.el.addEventListener('dragover', e => { const t = e.target.closest('[data-o-drop]'); if (!t || this.drag == null) return; e.preventDefault(); $$(this.el, '.is-target,.is-deny').forEach(x => x.classList.remove('is-target', 'is-deny')); const bad = t.dataset.oNode === this.drag || this.isUnder(t.dataset.oNode, this.drag); t.classList.add(bad ? 'is-deny' : 'is-target'); e.dataTransfer.dropEffect = bad ? 'none' : 'move'; });
@@ -38,7 +39,6 @@
         const z = x.closest('[data-o-zoom]');
         if (z) { const k = +z.dataset.oZoom; if (k) this.zoom = Math.min(1.6, Math.max(0.3, Math.round((this.zoom + k * 0.1) * 10) / 10)); else this.fit(); return this.render(); }
         const lv = x.closest('[data-o-level]'); if (lv) { this.levelTo(+lv.dataset.oLevel); this.render(); this.fit(); return this.render(); }
-        const dp = x.closest('[data-o-dept]'); if (dp) { this.dept = this.dept === dp.dataset.oDept ? '' : dp.dataset.oDept; return this.focus(); }
         const mm = x.closest('[data-o-mini]'); if (mm) return this.miniJump(e, mm);
         if (x.closest('[data-o-html]')) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([this.page()], {type: 'text/html'})); a.download = 'struktur-organisasi.html'; a.click(); }
         if (x.closest('[data-o-print]')) { const w = window.open(URL.createObjectURL(new Blob([this.page()], {type: 'text/html'}))); if (w) w.addEventListener('load', () => w.print()); }
@@ -181,7 +181,7 @@
       this.tree.innerHTML = this.paging() ? `<ul>${this.pageRoots().map(n => this.pbranch(n, false)).join('')}</ul>` : `<ul>${this.group(this.kids(null))}</ul>`;
       this.crumbs();
       this.el.classList.toggle('has-q', !!(this.q || this.dept));
-      $$(this.el, '[data-o-dept]').forEach(b => b.classList.toggle('is-on', b.dataset.oDept === this.dept));
+      const ds = $(this.el, '[data-o-dept-select]'); if (ds) ds.value = this.dept;
       const u = $(this.el, '[data-o-undo]'); if (u) u.disabled = !this.undo.length;
       this.applyZoom();
     }
