@@ -294,6 +294,8 @@ a.dl-astrip__item:hover{text-decoration:underline}
 .dl-field__box{position:relative;display:flex;align-items:center;background:var(--dl-surface);border:1px solid var(--dl-f-line);border-radius:var(--dl-radius-sm);transition:border-color .2s,box-shadow .2s}
 .dl-field__box:focus-within{border-color:var(--dl-accent)}
 .dl-input{flex:1;min-width:0;width:100%;border:none;outline:none;background:none;padding:calc(5px * var(--dl-density)) 8px;font-size:calc(12.5px * var(--dl-font-scale));color:var(--dl-f-ink);font-family:inherit}
+/* Isian yang diisi otomatis browser (autofill) tidak boleh menimpa warna isian: Chrome mengecat latar abu-biru dan teks putih (Jo 2026-11-19, login) */
+.dl-input:-webkit-autofill,.dl-input:-webkit-autofill:hover,.dl-input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 1000px var(--dl-surface) inset;box-shadow:0 0 0 1000px var(--dl-surface) inset;-webkit-text-fill-color:var(--dl-f-ink);caret-color:var(--dl-f-ink);transition:background-color 600000s 0s}
 textarea.dl-input{resize:none;min-height:28px;line-height:1.3;overflow:hidden;display:block}
 .dl-input--boxed{border:1px solid var(--dl-f-line);border-radius:var(--dl-radius-sm);background:var(--dl-surface)}
 .dl-input--boxed:focus{border-color:var(--dl-accent)}
