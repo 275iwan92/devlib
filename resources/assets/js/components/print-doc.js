@@ -9,9 +9,37 @@
     static selector = '[data-dl-pdoc]';
 
     init() {
+      this.zoomBar();
       this.paginate();
       this.fit();
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this.paginate(); this.fit(); });
+    }
+
+    // Zoom lembar x-dl::print-sheet (.dl-psheet): batang - / persen / + / Fit di atas lembar, Ctrl+roda mouse; awal = Fit lebar (tidak lebih dari 100%).
+    // CSS zoom dipakai pada .dl-psheet__page; saat cetak CSS memaksa 100%. Lembar x-dl::print-doc (.dl-pdoc) tidak disentuh.
+    zoomBar() {
+      const root = this.el, page = root.querySelector(':scope > .dl-psheet__page');
+      if (!root.classList.contains('dl-psheet') || !page) return;
+      const bar = document.createElement('div');
+      bar.className = 'dl-psheet__zoom';
+      bar.innerHTML = '<button type="button" data-z="-" title="Zoom out" aria-label="Zoom out">&minus;</button><output>100%</output>'
+        + '<button type="button" data-z="+" title="Zoom in" aria-label="Zoom in">+</button><button type="button" data-z="fit" title="Fit width">Fit</button>';
+      root.insertBefore(bar, root.firstChild);
+      const out = bar.querySelector('output');
+      let z = 1;
+      const set = v => { z = Math.min(2, Math.max(0.3, Math.round(v * 100) / 100)); page.style.zoom = z; out.textContent = Math.round(z * 100) + '%'; };
+      const fit = () => {
+        page.style.zoom = 1;
+        const cs = getComputedStyle(root), room = root.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        set(Math.min(1, room / page.offsetWidth));
+      };
+      bar.addEventListener('click', e => {
+        const b = e.target.closest('button[data-z]');
+        if (!b) return;
+        b.dataset.z === 'fit' ? fit() : set(z + (b.dataset.z === '+' ? 0.1 : -0.1));
+      });
+      root.addEventListener('wheel', e => { if (e.ctrlKey) { e.preventDefault(); set(z + (e.deltaY < 0 ? 0.1 : -0.1)); } }, {passive: false});
+      fit();
     }
 
     // Gaya Color / B&W: pecah ulang baris ke lembar memakai tinggi yang TERUKUR (bukan perkiraan server), jadi item tidak pernah menimpa

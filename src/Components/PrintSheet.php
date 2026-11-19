@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Cetakan lembar berbagian (laporan cetak / formulir lapangan): kop perusahaan, judul + kode formulir, baris info, bagian bernomor berisi tabel / kotak pihak / catatan, tanda tangan, kaki. Melengkapi x-dl::print-doc (dokumen transaksi satu tabel).
  * Sumber hulu  : Layar pemanggil menyerahkan data mentah; kop perusahaan dari Devlib\PrintDoc\Document::companyOf() (satu sumber dengan semua cetakan).
- * Input        : title, code, info [teks], sections [['title' (kosong = tanpa judul), 'no', 'blocks' => [...]]], signatures [['role','name']], note, landscape.
+ * Input        : plain (true = tampilan layar: tanpa kop, kertas, info, tanda tangan dan kaki; hanya tabel, tetap ada zoom), title, code, info [teks], sections [['title' (kosong = tanpa judul), 'no', 'blocks' => [...]]], signatures [['role','name']], note, landscape.
  *                blocks: ['type' => 'table', 'heading', 'columns' => [['key','label','align' => left|center|right,'width' (mm),'mono']], 'rows' => [[key => teks | ['text','sub','rowspan','bold','class'] | false (sel tertutup rowspan)]], 'note', 'empty']
  *                        ['type' => 'parties', 'items' => [['label','lines' => [teks]]]]   ['type' => 'text', 'text']
  * Output       : <div.dl-psheet> satu lembar A4 (portrait atau landscape) yang tumbuh ke bawah dan terpotong per halaman saat dicetak; header tabel diulang.
@@ -27,6 +27,7 @@ class PrintSheet extends DevlibComponent
         public ?string $note = null,
         public bool $landscape = false,
         public ?string $footer = null,
+        public bool $plain = false,
     ) {}
 
     public function tag(): string

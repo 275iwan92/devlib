@@ -3304,7 +3304,14 @@ a.dl-ycal__d:hover{background:var(--dl-hover);outline:1px solid var(--dl-accent)
 .dl-psheet__sign{margin-top:8mm;break-inside:avoid}
 .dl-psheet__sign>div>i{height:14mm}
 .dl-psheet__foot{margin-top:auto;padding-top:2mm}
-@media print{.dl-psheet{background:none;padding:0;border-radius:0;display:block}.dl-psheet__page{min-height:0;padding:0}}
+@media print{.dl-psheet{background:none;padding:0;border-radius:0;display:block}.dl-psheet__page{min-height:0;padding:0}.dl-psheet__zoom{display:none}.dl-psheet__page{zoom:1!important}}
+/* Zoom lembar (Jo 2026-11-19 "handler zoom in and out"): batang kecil di atas lembar, tombol -, persen, +, Fit; Ctrl+roda mouse juga; dicetak selalu 100%. */
+.dl-psheet__zoom{align-self:flex-end;position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:4px;margin:0 0 6px;padding:3px 5px;background:var(--dl-surface);color:var(--dl-ink);border:1px solid var(--dl-border);border-radius:var(--dl-radius-sm)}
+.dl-psheet__zoom button{min-width:30px;height:28px;padding:0 8px;border:1px solid var(--dl-border);border-radius:var(--dl-radius-sm);background:var(--dl-surface);color:var(--dl-ink);font-weight:700;cursor:pointer}.dl-psheet__zoom button:hover{background:var(--dl-accent-soft)}
+.dl-psheet__zoom output{min-width:44px;text-align:center;font-weight:700}
+/* Plain (Jo 2026-11-19 "bentuk text, bukan print out, tanpa logo"): tabel layar tanpa kertas A4; huruf layar, zoom tetap ada. */
+.dl-psheet.is-plain{background:none;padding:0;border-radius:0;overflow-x:auto}.dl-psheet.is-plain .dl-psheet__page{width:100%;min-height:0;padding:0;background:var(--dl-surface);color:var(--dl-ink)}
+.dl-psheet.is-plain .dl-psheet__sec{margin-top:0}.dl-psheet.is-plain .dl-psheet__tbl{font-size:13px}.dl-psheet.is-plain .dl-psheet__tbl th{font-size:12px;padding:5px 8px;background:var(--dl-accent-soft);border-color:var(--dl-border);color:var(--dl-ink)}.dl-psheet.is-plain .dl-psheet__tbl td{padding:4px 8px;border-color:var(--dl-border)}
 
 /* ---- Dashboard (opening screen) ---- */
 .dl-dash{display:flex;flex-direction:column;gap:14px;text-align:left;max-width:1320px;margin:0 auto;padding:4px 0 24px}

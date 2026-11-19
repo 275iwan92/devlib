@@ -2,19 +2,21 @@
     $co = $company();
     $cell = fn ($v) => is_array($v) ? $v : ['text' => $v];
 @endphp
-<div {{ $attributes->class(['dl-psheet', 'is-landscape' => $landscape]) }} {!! $dl() !!} data-dl-pdoc data-paper="a4" data-orientation="{{ $landscape ? 'landscape' : 'portrait' }}">
+<div {{ $attributes->class(['dl-psheet', 'is-landscape' => $landscape, 'is-plain' => $plain]) }} {!! $dl() !!} data-dl-pdoc data-paper="a4" data-orientation="{{ $landscape ? 'landscape' : 'portrait' }}">
     <section class="dl-psheet__page">
+        @unless ($plain)
         <header class="dl-psheet__kop">
             @include('devlib::partials.print-doc-co', ['co' => $co, 'npwp' => false])
             <div class="dl-psheet__title"><h1>{{ $t($title) }}</h1>@if ($code)<b>{{ $code }}</b>@endif</div>
         </header>
-        @if ($info)
+        @endunless
+        @if ($info && ! $plain)
             <div class="dl-psheet__info">@foreach ($info as $line)<div>{{ $line }}</div>@endforeach</div>
         @endif
 
         @foreach ($sections as $i => $s)
             <section class="dl-psheet__sec">
-                @if (! empty($s['title']))<h2><span>{{ $s['no'] ?? $i + 1 }}</span>{{ $t($s['title']) }}</h2>@endif
+                @if (! empty($s['title']) && ! $plain)<h2><span>{{ $s['no'] ?? $i + 1 }}</span>{{ $t($s['title']) }}</h2>@endif
                 @foreach ($s['blocks'] ?? [] as $b)
                     @if (($b['type'] ?? 'table') === 'parties')
                         <div class="dl-psheet__parties" style="grid-template-columns:repeat({{ max(1, count($b['items'])) }},1fr)">
@@ -59,6 +61,6 @@
                 @foreach ($signatures as $s)<div><span>{{ $t($s['role']) }}</span><i></i><b>({{ $s['name'] ?? '' }})</b></div>@endforeach
             </div>
         @endif
-        <footer class="dl-pdoc__foot dl-psheet__foot"><span>{{ $footer ?? trim($t('Printed on').' '.\Devlib\Locale::stamp(now())) }}</span></footer>
+        @unless ($plain)<footer class="dl-pdoc__foot dl-psheet__foot"><span>{{ $footer ?? trim($t('Printed on').' '.\Devlib\Locale::stamp(now())) }}</span></footer>@endunless
     </section>
 </div>
