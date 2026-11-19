@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Struktur organisasi (Organization-Structure-Mockup + org chart aplikasi): pohon bergaris, kartu jabatan.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : nodes, editable, title, source, departments, variant ('' | 'pill').
+ * Input        : nodes, editable, title, source, departments, variant ('' | 'pill'), paged.
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : org-chart (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -18,6 +18,7 @@ namespace Devlib\Components;
 // cari pegawai (sorot + buka cabang + gulir), lipat/buka cabang, zoom, tombol Level 1/2/3/All, geser (pan) dengan drag, minimap, Print.
 // Kartu berwarna per departemen (hue dari nama); lowong tanpa bawahan di satu induk digabung jadi "N Lowong" (hanya mode baca).
 // nodes: [['id', 'parent' => id|null, 'title' => jabatan, 'dept', 'deptHref'?, 'people' => [nama | ['name','photo','href'?,'locked'=>bool]]]]; href / deptHref = tautan di nama pegawai / nama departemen pada kartu (opsional); locked = kartu gembok (nama sudah disamarkan oleh server).
+// paged (hanya baca): tree halaman-per-halaman, satu kartu + bawahan langsungnya per halaman, tombol di kartu membuka bawahannya, remah roti kembali; cari / chip departemen menampilkan pohon penuh.
 // variant: 'pill' = kartu bergaya kartu-pil (dasar berwarna per departemen + kartu putih menjorok + avatar bercincin; pohon dan perilaku sama).
 // departments: daftar nama departemen -> chip berwarna; klik chip menyorot kartu departemen itu (bersama pencarian, tanpa mengubah garis struktur).
 class OrgChart extends DevlibComponent
@@ -29,6 +30,7 @@ class OrgChart extends DevlibComponent
         public ?string $source = null,
         public array $departments = [],
         public string $variant = '',
+        public bool $paged = false,
     ) {}
 
     public function tag(): string
@@ -44,7 +46,7 @@ class OrgChart extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class(['dl-org', 'dl-org--pill' => $variant === 'pill']) }} {!! $dl() !!} data-dl-org data-nodes="{{ json_encode($nodes) }}" data-editable="{{ $editable ? 1 : 0 }}" data-title="{{ $title }}">
+            <div {{ $attributes->class(['dl-org', 'dl-org--pill' => $variant === 'pill']) }} {!! $dl() !!} data-dl-org data-nodes="{{ json_encode($nodes) }}" data-editable="{{ $editable ? 1 : 0 }}" data-paged="{{ $paged && ! $editable ? 1 : 0 }}" data-title="{{ $title }}">
                 <div class="dl-org__bar">
                     @if ($editable)
                         <x-dl::button variant="secondary" size="sm" icon="undo" label="Undo" data-o-undo />
@@ -59,6 +61,7 @@ class OrgChart extends DevlibComponent
                     <div class="dl-grid__search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" placeholder="{{ \Devlib\Lang::text('Search employee / position...') }}" data-o-search aria-label="{{ \Devlib\Lang::text('Search employee') }}"></div>
                 </div>
                 @if ($departments)<div class="dl-org__depts" role="group" aria-label="{{ \Devlib\Lang::text('Department') }}"><button type="button" class="dl-org__chip" data-o-dept="">{{ \Devlib\Lang::text('All departments') }}</button>@foreach ($departments as $d)<button type="button" class="dl-org__chip" data-o-dept="{{ $d }}">{{ $d }}</button>@endforeach</div>@endif
+                <nav class="dl-org__crumbs" data-o-crumbs aria-label="{{ \Devlib\Lang::text('Position path') }}" hidden></nav>
                 <div class="dl-org__stage"><div class="dl-org__canvas" data-o-canvas><div class="dl-org__tree" data-o-tree></div></div><div class="dl-org__mini" data-o-mini hidden aria-hidden="true"></div></div>
             </div>
             BLADE;

@@ -10,6 +10,9 @@
     init() {
       this.nodes = JSON.parse(this.el.dataset.nodes || '[]');
       this.edit = this.el.dataset.editable === '1';
+      // Mode halaman (hanya baca, Jo 2026-11-19 "tree link page by page"): satu halaman = satu kartu + bawahan langsungnya; tombol di kartu membuka halaman bawahannya, remah roti di atas kembali ke atasan. Cari / chip departemen menampilkan pohon penuh.
+      this.paged = this.el.dataset.paged === '1' && !this.edit; this.pg = null;
+      this.el.classList.toggle('is-paged', this.paged);
       this.tree = $(this.el, '[data-o-tree]');
       this.canvas = $(this.el, '[data-o-canvas]');
       this.mini = $(this.el, '[data-o-mini]');
@@ -27,6 +30,8 @@
       this.el.addEventListener('drop', e => { const t = e.target.closest('[data-o-drop]'); if (!t || this.drag == null) return; e.preventDefault(); const d = this.drag; this.drag = null; this.move(d, t.dataset.oNode); });
       this.el.addEventListener('click', e => {
         const x = e.target;
+        const dr = x.closest('[data-o-drill]'); if (dr) return this.goPage(dr.dataset.oDrill);
+        const pg = x.closest('[data-o-page]'); if (pg) return this.goPage(pg.dataset.oPage || null);
         const f = x.closest('[data-o-fold]'); if (f) { const id = f.closest('[data-o-node]').dataset.oNode; this.collapsed.has(id) ? this.collapsed.delete(id) : this.collapsed.add(id); return this.render(); }
         if (x.closest('[data-o-undo]')) { const u = this.undo.pop(); if (u) { this.byId(u[0]).parent = u[1]; this.render(); toast(T('oc_undone')); } return; }
         if (x.closest('[data-o-save]')) { this.el.dispatchEvent(new CustomEvent('dl:orgchart-save', {bubbles: true, detail: {nodes: this.nodes.map(n => ({id: n.id, parent: n.parent ?? null}))}})); toast(Tf('oc_saved', {n: this.undo.length}), 'success'); this.undo.length = 0; return this.render(); }
@@ -118,13 +123,13 @@
     // Warna departemen = hue dari nama departemen (stabil); tanpa departemen = hue bawaan CSS.
     dh(n) { return n.dept ? `--dh:${this.hue(n.dept)}` : ''; }
 
-    card(n) {
+    card(n, drill = false) {
       const P = this.ppl(n), c = this.kids(n.id), lock = P.some(p => p.locked);
       return `<div class="dl-org__card ${P.length ? '' : 'is-vacant'} ${lock ? 'is-locked' : ''} ${this.hit(n) ? 'is-hit' : ''}" style="${this.dh(n)}" data-o-node="${esc(n.id)}" ${this.edit ? 'data-o-drop' : ''}>
         ${this.edit ? `<span class="dl-org__grip" draggable="true" data-o-grip title="${esc(T('oc_drag'))}"><i class="fa-solid fa-grip-vertical"></i></span>` : ''}
         <div class="dl-org__who">${P.length ? `<span class="dl-org__avs">${P.slice(0, 3).map(p => `<span class="dl-org__av ${p.locked ? 'is-locked' : ''}" style="--h:${this.hue(p.name)}" title="${esc(p.name)}">${this.av(p)}</span>`).join('')}</span>` : '<span class="dl-org__av is-empty"><i class="fa-solid fa-user-plus"></i></span>'}
           <span class="dl-org__txt"><b>${P.length ? P.slice(0, 2).map(p => this.lnk(p.name, p.href)).join(', ') + (P.length > 2 ? ` +${P.length - 2}` : '') : esc(T('oc_vacant'))}</b><small>${esc(n.title)}</small>${n.dept && n.showDept !== false ? `<em>${this.lnk(n.dept, n.deptHref)}</em>` : ''}</span></div>
-        ${c.length ? `<button type="button" class="dl-org__fold" data-o-fold title="${esc(T(this.collapsed.has(String(n.id)) ? 'oc_expand' : 'oc_collapse'))}">${this.collapsed.has(String(n.id)) ? `+${c.length}` : '−'}</button>` : ''}
+        ${drill ? `<button type="button" class="dl-org__fold dl-org__drill" data-o-drill="${esc(n.id)}" title="${esc(T('oc_open'))}">${c.length} <i class="fa-solid fa-chevron-right"></i></button>` : this.paging() ? '' : c.length ? `<button type="button" class="dl-org__fold" data-o-fold title="${esc(T(this.collapsed.has(String(n.id)) ? 'oc_expand' : 'oc_collapse'))}">${this.collapsed.has(String(n.id)) ? `+${c.length}` : '−'}</button>` : ''}
       </div>`;
     }
 
@@ -142,10 +147,32 @@
       return c.filter(k => !v.includes(k)).map(k => this.branch(k)).join('') + `<li>${this.vacantCard(v)}</li>`;
     }
 
+    // Halaman bagan: null = puncak (semua kartu tanpa atasan + bawahan langsungnya); id = kartu itu + bawahan langsungnya.
+    paging() { return this.paged && !this.q && !this.dept; }
+
+    goPage(id) {
+      this.pg = id; this.render(); this.fit(); this.render();
+      this.canvas.scrollLeft = (this.canvas.scrollWidth - this.canvas.clientWidth) / 2; this.canvas.scrollTop = 0;
+    }
+
+    // Remah roti: Top > ... > kartu aktif; tiap bagian tombol yang membuka halaman atasannya.
+    crumbs() {
+      const path = []; for (let n = this.pg == null ? null : this.byId(this.pg); n && path.length < 200; n = this.byId(n.parent)) path.unshift(n);
+      const bar = $(this.el, '[data-o-crumbs]'); if (!bar) return;
+      bar.hidden = !this.paging();
+      bar.innerHTML = `<button type="button" data-o-page="">${esc(T('oc_top'))}</button>` + path.map((n, i) => `<i class="fa-solid fa-chevron-right"></i>${i === path.length - 1 ? `<b>${esc(n.title)}</b>` : `<button type="button" data-o-page="${esc(n.id)}">${esc(n.title)}</button>`}`).join('');
+    }
+
+    pbranch(n, leaf) {
+      const c = this.kids(n.id);
+      return `<li>${this.card(n, leaf && c.length)}${!leaf && c.length ? `<ul>${c.map(k => this.pbranch(k, true)).join('')}</ul>` : ''}</li>`;
+    }
+
     branch(n) { const c = this.kids(n.id), open = !this.collapsed.has(String(n.id)); return `<li>${this.card(n)}${c.length && open ? `<ul>${this.group(c)}</ul>` : ''}</li>`; }
 
     render() {
-      this.tree.innerHTML = `<ul>${this.group(this.kids(null))}</ul>`;
+      this.tree.innerHTML = this.paging() ? `<ul>${(this.pg == null ? this.kids(null) : [this.byId(this.pg)]).map(n => this.pbranch(n, false)).join('')}</ul>` : `<ul>${this.group(this.kids(null))}</ul>`;
+      this.crumbs();
       this.el.classList.toggle('has-q', !!(this.q || this.dept));
       $$(this.el, '[data-o-dept]').forEach(b => b.classList.toggle('is-on', b.dataset.oDept === this.dept));
       const u = $(this.el, '[data-o-undo]'); if (u) u.disabled = !this.undo.length;
