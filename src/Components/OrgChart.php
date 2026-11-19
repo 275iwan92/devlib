@@ -4,7 +4,7 @@
  * REMARK
  * Tujuan       : Struktur organisasi (Organization-Structure-Mockup + org chart aplikasi): pohon bergaris, kartu jabatan.
  * Sumber hulu  : Komponen generik DevLib; data masuk lewat prop, tanpa tabel/model proyek.
- * Input        : nodes, editable, title, source, departments.
+ * Input        : nodes, editable, title, source, departments, variant ('' | 'pill').
  * Output       : Markup Blade inline (render() kelas ini).
  * Dipakai oleh : org-chart (layar katalog/proyek).
  * Status       : Aktif (DevLib).
@@ -18,6 +18,7 @@ namespace Devlib\Components;
 // cari pegawai (sorot + buka cabang + gulir), lipat/buka cabang, zoom, tombol Level 1/2/3/All, geser (pan) dengan drag, minimap, Print.
 // Kartu berwarna per departemen (hue dari nama); lowong tanpa bawahan di satu induk digabung jadi "N Lowong" (hanya mode baca).
 // nodes: [['id', 'parent' => id|null, 'title' => jabatan, 'dept', 'deptHref'?, 'people' => [nama | ['name','photo','href'?,'locked'=>bool]]]]; href / deptHref = tautan di nama pegawai / nama departemen pada kartu (opsional); locked = kartu gembok (nama sudah disamarkan oleh server).
+// variant: 'pill' = kartu bergaya kartu-pil (dasar berwarna per departemen + kartu putih menjorok + avatar bercincin; pohon dan perilaku sama).
 // departments: daftar nama departemen -> chip berwarna; klik chip menyorot kartu departemen itu (bersama pencarian, tanpa mengubah garis struktur).
 class OrgChart extends DevlibComponent
 {
@@ -27,6 +28,7 @@ class OrgChart extends DevlibComponent
         public string $title = 'Organization Structure',
         public ?string $source = null,
         public array $departments = [],
+        public string $variant = '',
     ) {}
 
     public function tag(): string
@@ -42,7 +44,7 @@ class OrgChart extends DevlibComponent
     public function render()
     {
         return <<<'BLADE'
-            <div {{ $attributes->class('dl-org') }} {!! $dl() !!} data-dl-org data-nodes="{{ json_encode($nodes) }}" data-editable="{{ $editable ? 1 : 0 }}" data-title="{{ $title }}">
+            <div {{ $attributes->class(['dl-org', 'dl-org--pill' => $variant === 'pill']) }} {!! $dl() !!} data-dl-org data-nodes="{{ json_encode($nodes) }}" data-editable="{{ $editable ? 1 : 0 }}" data-title="{{ $title }}">
                 <div class="dl-org__bar">
                     @if ($editable)
                         <x-dl::button variant="secondary" size="sm" icon="undo" label="Undo" data-o-undo />
